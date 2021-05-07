@@ -10,6 +10,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
@@ -28,8 +30,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     private var fireBaseAuth : FirebaseAuth? = null
     private var fireBaseUser : FirebaseUser? = null
-
     private var googleApiClient : GoogleApiClient? = null
+    var fbFirestore : FirebaseFirestore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,21 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             finish()
         } else{
             userName = fireBaseUser!!.displayName
+        }
+
+        fireBaseAuth = FirebaseAuth.getInstance()
+        fbFirestore = FirebaseFirestore.getInstance()
+        Log.d(TAG,"got instance from Firestore successfully")
+
+        var userInfo = Users()
+        userInfo.uid = fireBaseAuth?.uid
+        userInfo.userId = fireBaseAuth?.currentUser?.email
+        fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
+
+
+        bt_firestore_test.setOnClickListener{
+            val nextIntent = Intent(this@MainActivity, MyPageActivity::class.java)
+            startActivity(nextIntent)
         }
     }
 }
