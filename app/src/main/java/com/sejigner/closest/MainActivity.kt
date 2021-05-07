@@ -15,6 +15,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
+    private var userName : String? = null
+
+    private var fireBaseAuth : FirebaseAuth? = null
+    private var fireBaseUser : FirebaseUser? = null
+    private var googleApiClient : GoogleApiClient? = null
+    private var fbFirestore : FirebaseFirestore? = null
     companion object {
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
@@ -25,13 +31,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         Toast.makeText(this, "Google Play Services error",Toast.LENGTH_SHORT).show()
     }
-
-    private var userName : String? = null
-
-    private var fireBaseAuth : FirebaseAuth? = null
-    private var fireBaseUser : FirebaseUser? = null
-    private var googleApiClient : GoogleApiClient? = null
-    var fbFirestore : FirebaseFirestore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
