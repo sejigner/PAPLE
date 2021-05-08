@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val tvUpdateLocation: TextView = findViewById(R.id.tv_update_location)
+        val tvUpdateCoordinates: TextView = findViewById(R.id.tv_update_location)
+        val tvCurrentLocation : TextView = findViewById(R.id.tv_address)
 
         googleApiClient = GoogleApiClient.Builder(this)
             .enableAutoManage(this, this)
@@ -80,9 +81,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
 
 
-        tvUpdateLocation.setOnClickListener{
+        tvUpdateCoordinates.setOnClickListener{
             getCoordinates()
-            getLocation()
+            tvCurrentLocation.text = getLocation()
         }
 
         bt_firestore_test.setOnClickListener{
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    private fun getLocation() {
+    private fun getLocation() : String {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var userLocation : Location = getCoordinates()
         if(userLocation != null) {
@@ -138,6 +139,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 currentLocation = mResultList[0].getAddressLine(0)
                 currentLocation = currentLocation.substring(11)
             }
+
         }
+        return currentLocation
     }
 }
