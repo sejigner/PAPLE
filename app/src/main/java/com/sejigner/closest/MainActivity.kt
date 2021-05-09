@@ -114,8 +114,8 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         return currentCoordinates!!
     }
     override fun onLocationChanged(location: Location) {
-        tvGpsLocation = findViewById(R.id.tv_coordinates)
-        tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
+        latitude = getCoordinates().latitude
+        longitude = getCoordinates().longitude
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == locationPermissionCode) {
