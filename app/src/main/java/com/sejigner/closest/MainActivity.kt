@@ -82,6 +82,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             Log.d("CheckCoordinates", "$latitude, $longitude")
         } else Log.d("CheckCoordinates", "Fail to get coordinates")
 
+        // definite the user's location address
+        tvCurrentLocation.text = getLocation()
+
         // userInfos are set to FireStore under the document "uid"
         var userInfo = Users()
         userInfo.uid = fireBaseAuth?.uid
