@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
 import android.location.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,7 +33,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private var googleApiClient : GoogleApiClient? = null
     private var fbFirestore : FirebaseFirestore? = null
     private lateinit var locationManager : LocationManager
-    private lateinit var tvGpsLocation: TextView
     private val locationPermissionCode = 2
     private var currentLocation : String = ""
     var latitude : Double? = null
@@ -97,6 +98,27 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             tvCurrentLocation.text = getLocation()
         }
 
+        // Button to save location data on FireStore
+        bt_save_coordinates_test.setOnClickListener{
+            if(latitude != null && longitude != null) {
+                val pairCoordinates : Pair<Double, Double> = Pair(latitude!!,longitude!!)
+                        if(userInfo.uid != null) {
+                            val uid = userInfo.uid
+                            userInfo.latlng = pairCoordinates
+                            fbFirestore?.collection("users")?.document("$uid")?.update(mapOf("latlng" to pairCoordinates))?.addOnSuccessListener(this,
+                                    OnSuccessListener {
+                                        Log.d("CheckFirestore","set users' coordinates on firestore successfully")
+                                        Toast.makeText(this, "위치정보를 저장했어요.",Toast.LENGTH_SHORT).show()
+                                    })
+                                    ?.addOnFailureListener {
+                                        Log.d("CheckFirestore", "fail to set coordinates on firestore")
+                                        Toast.makeText(this, "위치정보를 저장하지 못했어요.",Toast.LENGTH_SHORT).show()
+                                    }
+                        }
+            }
+        }
+
+        // Button to move to MyPage for test
         bt_firestore_test.setOnClickListener{
             val nextIntent = Intent(this@MainActivity, MyPageActivity::class.java)
             startActivity(nextIntent)
