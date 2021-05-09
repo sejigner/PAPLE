@@ -75,6 +75,14 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG,"got instance from Firestore successfully")
 
+        // definite the user's location coordinates
+        latitude = getCoordinates().latitude
+        longitude = getCoordinates().longitude
+        if(latitude != null && longitude != null) {
+            Log.d("CheckCoordinates", "$latitude, $longitude")
+        } else Log.d("CheckCoordinates", "Fail to get coordinates")
+
+        // userInfos are set to FireStore under the document "uid"
         var userInfo = Users()
         userInfo.uid = fireBaseAuth?.uid
         userInfo.userId = fireBaseAuth?.currentUser?.email
