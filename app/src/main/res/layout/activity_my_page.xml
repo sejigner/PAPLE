@@ -10,7 +10,7 @@
         android:id="@+id/et_birth_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="143dp"
+        android:layout_marginTop="136dp"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +21,7 @@
         android:id="@+id/et_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="2dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -37,4 +37,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_gender" />
+
+    <TextView
+        android:id="@+id/user_birth_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/user_birth_year"
+        app:layout_constraintBottom_toBottomOf="@+id/et_birth_year"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/user_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_gender"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_gender"
+        app:layout_constraintEnd_toStartOf="@+id/et_gender"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/sp_birth_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_save" />
+
+    <Spinner
+        android:id="@+id/sp_gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_birth_year" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
