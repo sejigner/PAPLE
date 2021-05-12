@@ -6,4 +6,9 @@
     <string name="location_update">위치정보 업데이트</string>
     <string name="user_birth_year">생년</string>
     <string name="user_gender">성별</string>
+
+    <string-array name="gender_array">
+        <item>female</item>
+        <item>male</item>
+    </string-array>
 </resources>
