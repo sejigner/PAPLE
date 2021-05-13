@@ -4,10 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Point
 import android.location.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
+import java.lang.NullPointerException
 import java.util.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -35,8 +36,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private lateinit var locationManager : LocationManager
     private val locationPermissionCode = 2
     private var currentLocation : String = ""
-    var latitude : Double? = null
-    var longitude : Double? = null
+    private var latitude : Double? = null
+    private var longitude : Double? = null
+    private var locationGps : Location? = null
+    private var locationNetwork : Location? = null
+    private var currentCoordinates : Location? = null
 
     companion object {
         const val TAG = "MainActivity"
@@ -76,12 +80,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG,"got instance from Firestore successfully")
 
-        // definite the user's location coordinates
-        latitude = getCoordinates().latitude
-        longitude = getCoordinates().longitude
-        if(latitude != null && longitude != null) {
-            Log.d("CheckCoordinates", "$latitude, $longitude")
-        } else Log.d("CheckCoordinates", "Fail to get coordinates")
+
 
         // definite the user's location address
         tvCurrentLocation.text = getLocation()
@@ -124,21 +123,71 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             startActivity(nextIntent)
         }
     }
-    private fun getCoordinates() : Location {
-        var currentCoordinates : Location?
+    private fun getCoordinates() {
+        val uid = fireBaseAuth?.currentUser?.uid
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+
+        var hasGps : Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        var hasNetwork : Boolean = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        if(hasGps || hasNetwork) {
+
+            if(hasGps) {
+                if (ActivityCompat.checkSelfPermission(
+                                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,                    android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                            ,locationPermissionCode)
+                }
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object : LocationListener {
+                    override fun onLocationChanged(location: Location) {
+                        if(location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                        }
+                    }
+                })
+
+                val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                if (localGpsLocation != null) {
+                    locationGps = localGpsLocation
+                }
+
+
+            }
+
+            if(hasNetwork) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object : LocationListener {
+                    override fun onLocationChanged(location: Location) {
+                        if(location != null) {
+                            latitude = location.latitude
+                            longitude = location.longitude
+                        }
+                    }
+                })
+
+                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                if (localNetworkLocation != null) {
+                    locationNetwork = localNetworkLocation
+                }
+
+            }
+
+            if(locationGps != null && locationNetwork != null) {
+                if(locationGps!!.accuracy > locationNetwork!!.accuracy) {
+                    latitude = locationGps!!.latitude
+                    longitude= locationGps!!.longitude
+                    currentCoordinates = locationGps
+                } else {
+                    latitude = locationNetwork!!.latitude
+                    longitude= locationNetwork!!.longitude
+                    currentCoordinates = locationNetwork
+                }
+            }
+        } else {
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-        val locationProvider = LocationManager.GPS_PROVIDER
-        currentCoordinates = locationManager?.getLastKnownLocation(locationProvider)
-        return currentCoordinates!!
     }
-    override fun onLocationChanged(location: Location) {
-        latitude = getCoordinates().latitude
-        longitude = getCoordinates().longitude
-    }
+    /*
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == locationPermissionCode) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -148,11 +197,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    }*/
 
     private fun getLocation() : String {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var userLocation : Location = getCoordinates()
+        var userLocation : Location ?= currentCoordinates
         if(userLocation != null) {
             latitude = userLocation.latitude
             longitude =  userLocation.longitude
@@ -175,5 +224,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         }
         return currentLocation
+    }
+
+    override fun onLocationChanged(location: Location) {
+        TODO("Not yet implemented")
     }
 }
