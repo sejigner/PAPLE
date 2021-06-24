@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_initialSetting"
+    tools:context=".InitialSetting">
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/montserrat_extra_light"
+        android:text="Welcome!"
+        android:textColor="#8e8e8e"
+        android:textSize="38sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_inputRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/noto_sans_cjj_kr_regular"
+        android:text="환영합니다:)\n기본정보를 입력해주세요"
+        android:textColor="@color/txt_initialSetting"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
+
+    <TextView
+        android:id="@+id/tv_advice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:alpha=".4"
+        android:text="작성 후 변경이 불가하오니, 신중히 작성해주세요:)"
+        android:textSize="12sp"
+        android:textColor="@color/txt_initialSetting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_inputRequest" />
+
+    <TextView
+        android:id="@+id/tv_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/user_gender"
+        android:textSize="12sp"
+        android:textColor="@color/txt_initialSetting"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@id/tv_advice" />
+
+    <TextView
+        android:id="@+id/tv_birth_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/user_birth_year"
+        android:textSize="12sp"
+        android:textColor="@color/txt_initialSetting"
+        app:layout_constraintStart_toStartOf="@id/tv_gender"
+        app:layout_constraintTop_toBottomOf="@id/tv_gender"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/rg_gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_gender"
+        app:layout_constraintStart_toEndOf="@id/tv_gender"
+        app:layout_constraintTop_toTopOf="@+id/tv_gender"
+        app:layout_constraintWidth_percent="0.7">
+
+
+        <RadioButton
+            android:button="@android:color/transparent"
+            android:id="@+id/rb_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_initial_setting_normal"
+            android:gravity="center"
+            android:text="@string/gender_female"
+            android:textColor="@color/btn_initial_setting_selector"
+            android:paddingLeft="16dp"
+            android:paddingTop="3dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="3dp"
+            app:layout_constraintDimensionRatio="2.875"
+             />
+
+        <RadioButton
+            android:button="@android:color/transparent"
+            android:id="@+id/rb_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_initial_setting_normal"
+            android:gravity="center"
+            android:text="@string/gender_male"
+            android:textColor="@color/btn_initial_setting_selector"
+            android:layout_marginStart="10dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="3dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="3dp"
+            app:layout_constraintDimensionRatio="2.875"
+             />
+
+    </RadioGroup>
+
+
+    <NumberPicker
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_birth_year"
+        app:layout_constraintStart_toEndOf="@id/tv_birth_year"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="6"
+        android:solidColor="@color/bg_initialSetting"
+        />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:textSize="38sp"
+        android:textColor="@color/txt_initialSetting"
+        app:layout_constraintDimensionRatio="2.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="@font/montserrat_extra_light"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

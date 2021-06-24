@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
 
 
+
         // definite the user's location address
         tvCurrentLocation.text = getLocation()
 
