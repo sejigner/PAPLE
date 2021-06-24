@@ -1,5 +1,5 @@
 # Closest
-## Git Flow를 활용한 브랜치 전략
+## Git Flow를 활용한 브랜치 관리
 
 1. Github Issue에 이슈 생성
 2. $ git flow feature start <이슈 번호>-<이슈 제목>
