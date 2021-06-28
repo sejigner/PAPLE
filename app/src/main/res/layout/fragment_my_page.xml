@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FragmentChat"
+    tools:context=".fragment.FragmentMyPage"
     >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Fragment Chat!" />
+        android:text="Fragment My Page" />
 
 </FrameLayout>
