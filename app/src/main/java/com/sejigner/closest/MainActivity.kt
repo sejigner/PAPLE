@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -20,6 +22,10 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sejigner.closest.fragment.FragmentChat
+import com.sejigner.closest.fragment.FragmentHome
+import com.sejigner.closest.fragment.FragmentMyPage
+import com.sejigner.closest.fragment.MainViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 import java.lang.NullPointerException
@@ -28,7 +34,6 @@ import java.util.*
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private var userName : String? = null
-
     private var fireBaseAuth : FirebaseAuth? = null
     private var fireBaseUser : FirebaseUser? = null
     private var googleApiClient : GoogleApiClient? = null
@@ -41,6 +46,15 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private var locationGps : Location? = null
     private var locationNetwork : Location? = null
     private var currentCoordinates : Location? = null
+
+    private val fragmentHome by lazy { FragmentHome() }
+    private val fragmentChat by lazy { FragmentChat() }
+    private val fragmentMyPage by lazy { FragmentMyPage() }
+
+    private val fragments : List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
+
+    private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
+
 
     companion object {
         const val TAG = "MainActivity"
@@ -58,6 +72,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         setContentView(R.layout.activity_main)
         val tvUpdateCoordinates: TextView = findViewById(R.id.tv_update_location)
         val tvCurrentLocation : TextView = findViewById(R.id.tv_address)
+
+        initViewPager()
+        initNavigationBar()
 
         googleApiClient = GoogleApiClient.Builder(this)
             .enableAutoManage(this, this)
@@ -124,6 +141,47 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             startActivity(nextIntent)
         }
     }
+
+    private fun initNavigationBar() {
+        bnv_main.run {
+            setOnNavigationItemSelectedListener {
+                val page = when(it.itemId) {
+                    R.id.home -> 0
+                    R.id.chat -> 1
+                    R.id.my_page -> 2
+                    else -> 0
+                }
+
+                if (page!=vp_main.currentItem) {
+                    vp_main.currentItem = page
+                }
+
+                true
+            }
+            selectedItemId = R.id.home
+        }
+    }
+
+    private fun initViewPager() {
+        vp_main.run {
+            adapter = pagerAdapter
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    val navigation = when(position) {
+                        0 -> R.id.home
+                        1 -> R.id.chat
+                        2 -> R.id.my_page
+                        else -> R.id.home
+                    }
+
+                    if(bnv_main.selectedItemId != navigation) {
+                        bnv_main.selectedItemId = navigation
+                    }
+                }
+            })
+        }
+    }
+
     private fun getCoordinates() {
         val uid = fireBaseAuth?.currentUser?.uid
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

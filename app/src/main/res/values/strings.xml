@@ -8,6 +8,9 @@
     <string name="user_gender">성별</string>
     <string name="gender_male">남성</string>
     <string name="gender_female">여성</string>
+    <string name="home">HOME</string>
+    <string name="chat">CHAT</string>
+    <string name="my_page">My PAGE</string>
 
     <string-array name="gender_array">
         <item>female</item>
