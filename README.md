@@ -16,3 +16,5 @@
 5. $ git init으로 git 생성
 6. $ git remote add origin 깃 url
 7. $ git pull origin develop(또는 원하는 Git Branch) 
+8. $ git flow init (최초 1회)
+9. Git Flow 활용 브랜치 관리 방법 따르기
