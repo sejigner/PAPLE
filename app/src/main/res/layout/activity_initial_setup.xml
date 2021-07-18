@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_initialSetting"
-    tools:context=".InitialSetting">
+    tools:context=".InitialSetupActivity">
 
     <TextView
         android:id="@+id/tv_welcome"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_inputRequest" />
 
     <TextView
-        android:id="@+id/tv_gender"
+        android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -55,6 +55,27 @@
         android:textColor="@color/txt_initialSetting"
         app:layout_constraintStart_toStartOf="@id/tv_welcome"
         app:layout_constraintTop_toBottomOf="@id/tv_advice" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/rg_gender"
+        app:layout_constraintEnd_toEndOf="@id/rg_gender"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        android:hint="닉네임을 입력해주세요"
+        android:id="@+id/et_nickname"/>
+
+    <TextView
+        android:id="@+id/tv_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/user_gender"
+        android:textSize="12sp"
+        android:textColor="@color/txt_initialSetting"
+        app:layout_constraintStart_toStartOf="@id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
 
     <TextView
         android:id="@+id/tv_birth_year"
@@ -130,7 +151,14 @@
         />
 
     <TextView
-        android:id="@+id/textView"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="정보를 입력해주셔야 서비스 이용이 가능합니다. "
+
+
+    <TextView
+        android:id="@+id/tv_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Done"

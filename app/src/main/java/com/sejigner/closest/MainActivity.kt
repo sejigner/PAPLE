@@ -5,14 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.auth.api.Auth
@@ -28,7 +27,6 @@ import com.sejigner.closest.fragment.FragmentMyPage
 import com.sejigner.closest.fragment.MainViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
-import java.lang.NullPointerException
 import java.util.*
 
 class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
         Log.d(TAG, "onConnectionFailed $connectionResult ")
 
-        Toast.makeText(this, "Google Play Services error",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "구글 플레이 서비스에 오류가 있어요 :(",Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +73,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         initViewPager()
         initNavigationBar()
+
 
         googleApiClient = GoogleApiClient.Builder(this)
             .enableAutoManage(this, this)
@@ -91,6 +90,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             finish()
         } else{
             userName = fireBaseUser!!.displayName
+            initInitialSetup()
         }
 
         fireBaseAuth = FirebaseAuth.getInstance()
@@ -139,6 +139,23 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         bt_firestore_test.setOnClickListener{
             val nextIntent = Intent(this@MainActivity, MyPageActivity::class.java)
             startActivity(nextIntent)
+        }
+    }
+
+    private fun initInitialSetup() {
+        fbFirestore = FirebaseFirestore.getInstance()
+        val uid = fireBaseAuth?.uid
+        val docRef = fbFirestore?.collection("users")?.document("$uid")
+        docRef?.get()?.addOnSuccessListener { document ->
+                if(document!=null) {
+                    val isInitialSetup = document.getString("isInitialSetup")
+                    Log.d("TAG", "isInitialSetup: $isInitialSetup")
+                    if(isInitialSetup == null) {
+                        val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
+                        startActivity(setupIntent)
+                    }
+            }
+
         }
     }
 

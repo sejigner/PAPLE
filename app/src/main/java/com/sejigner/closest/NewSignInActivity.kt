@@ -45,6 +45,7 @@ class NewSignInActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, MainActivity::class.java))
                 finish()
                 Log.d("@MainActivity", "onVerificationCompleted Success")
+
             }
 
             // Called when verification is failed add log statement to see the exception

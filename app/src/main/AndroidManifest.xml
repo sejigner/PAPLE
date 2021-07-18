@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InitialSetting"/>
+        <activity android:name=".InitialSetupActivity"/>
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".MainActivity" />
