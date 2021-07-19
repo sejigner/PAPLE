@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.NumberPicker
-import android.widget.RadioGroup
 import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -36,12 +35,12 @@ class MyPageActivity : AppCompatActivity() {
         val date = Calendar.getInstance()
         val year = date.get(Calendar.YEAR)
         Log.d("Year", "$year")
-        numberPicker_birth_year.minValue = date.get(Calendar.YEAR) - 80
-        numberPicker_birth_year.maxValue = date.get(Calendar.YEAR) - 12
-        numberPicker_birth_year.value = 1994
-        Log.d("Year", "${numberPicker_birth_year.minValue}~${numberPicker_birth_year.maxValue}")
+        numberPicker_birth_year_my_page.minValue = date.get(Calendar.YEAR) - 80
+        numberPicker_birth_year_my_page.maxValue = date.get(Calendar.YEAR) - 12
+        numberPicker_birth_year_my_page.value = 1994
+        Log.d("Year", "${numberPicker_birth_year_my_page.minValue}~${numberPicker_birth_year_my_page.maxValue}")
 
-        numberPicker_birth_year.setOnValueChangedListener { picker : NumberPicker, oldVal, newVal ->
+        numberPicker_birth_year_my_page.setOnValueChangedListener { picker : NumberPicker, oldVal, newVal ->
             Log.d("MyPageActivity", "oldVal : ${oldVal}, newVal : $newVal")
             val picked = picker.toString()
             birthYear = picked
@@ -49,15 +48,12 @@ class MyPageActivity : AppCompatActivity() {
 
 
             // 유저의 성별 저장
-            rg_gender.setOnCheckedChangeListener(object  :
-            RadioGroup.OnCheckedChangeListener{
-                override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-                    when (checkedId) {
-                        R.id.rb_female -> gender = "female"
-                        R.id.rb_male -> gender = "male"
-                    }
+            rg_gender.setOnCheckedChangeListener { group, checkedId ->
+                when (checkedId) {
+                    R.id.rb_female -> gender = "female"
+                    R.id.rb_male -> gender = "male"
                 }
-            })
+            }
 
             // 유저의 정보 저장
             bt_save.setOnClickListener {
@@ -66,13 +62,13 @@ class MyPageActivity : AppCompatActivity() {
                     val gender: String = et_gender.text.toString()
                     if (birthYear == null || gender == null) Toast.makeText(this@MyPageActivity, "정보를 입력하세요.", Toast.LENGTH_SHORT).show()
                     else {
-                        setInfoOnFirestore(birthYear, gender)
+                        setInfoToFirestore(birthYear, gender)
                     }
                 }
                 }
         }
     }
-    private fun setInfoOnFirestore(birthYear: String, gender: String) {
+    private fun setInfoToFirestore(birthYear: String, gender: String) {
         fbFirestore?.collection("users")?.document("$uid")?.update(mapOf("birthYear" to birthYear, "gender" to gender))?.addOnSuccessListener(this,
                 OnSuccessListener {
                     Log.d("MyPageActivity", "set users' infos on firestore successfully")

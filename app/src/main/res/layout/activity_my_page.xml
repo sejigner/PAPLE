@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <NumberPicker
-        android:id="@+id/numberPicker_birth_year"
+        android:id="@+id/numberPicker_birth_year_my_page"
         android:layout_width="85dp"
         android:layout_height="184dp"
         android:layout_marginTop="23dp"
