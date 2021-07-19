@@ -104,11 +104,11 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
         // userInfos are set to FireStore under the document "uid"
         var userInfo = Users()
-        userInfo.uid = fireBaseAuth?.uid
+        val uid = fireBaseAuth?.uid
         // fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
 
 
-            val uid = userInfo.uid
+
             val docRef = fbFirestore?.collection("users")?.document("$uid")
             docRef?.get()?.addOnSuccessListener { document ->
                 if(document!=null) {
@@ -133,15 +133,17 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         bt_save_coordinates_test.setOnClickListener{
             if(latitude != null && longitude != null) {
                 val pairCoordinates : Pair<Double, Double> = Pair(latitude!!,longitude!!)
-                        if(userInfo.uid != null) {
-                            val uid = userInfo.uid
+                        if(uid != null) {
                             userInfo.latlng = pairCoordinates
-                            fbFirestore?.collection("users")?.document("$uid")?.update(mapOf("latlng" to pairCoordinates))?.addOnSuccessListener(this,
-                                    OnSuccessListener {
-                                        Log.d("CheckFirestore","set users' coordinates on firestore successfully")
-                                        Toast.makeText(this, "위치정보를 저장했어요.",Toast.LENGTH_SHORT).show()
-                                    })
-                                    ?.addOnFailureListener {
+                            fbFirestore?.collection("users")?.document("$uid")?.update(mapOf("latlng" to pairCoordinates))?.addOnSuccessListener(this
+                            ) {
+                                Log.d(
+                                    "CheckFirestore",
+                                    "set users' coordinates on firestore successfully"
+                                )
+                                Toast.makeText(this, "위치정보를 저장했어요.", Toast.LENGTH_SHORT).show()
+                            }
+                                ?.addOnFailureListener {
                                         Log.d("CheckFirestore", "fail to set coordinates on firestore")
                                         Toast.makeText(this, "위치정보를 저장하지 못했어요.",Toast.LENGTH_SHORT).show()
                                     }
