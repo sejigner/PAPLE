@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             finish()
         } else{
             userName = fireBaseUser!!.displayName
-            initInitialSetup()
         }
 
         fireBaseAuth = FirebaseAuth.getInstance()
@@ -106,8 +105,23 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         // userInfos are set to FireStore under the document "uid"
         var userInfo = Users()
         userInfo.uid = fireBaseAuth?.uid
-        userInfo.userId = fireBaseAuth?.currentUser?.email
-        fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
+        // fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
+
+
+            val uid = userInfo.uid
+            val docRef = fbFirestore?.collection("users")?.document("$uid")
+            docRef?.get()?.addOnSuccessListener { document ->
+                if(document!=null) {
+                    val isUserNickName = document.get("strNickname")
+                    Log.d("TAG", "strNickname: $isUserNickName")
+                    if(isUserNickName == null) {
+                        val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
+                        startActivity(setupIntent)
+                        // fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
+                    }
+                }
+
+            }
 
 
         tvUpdateCoordinates.setOnClickListener{
@@ -148,9 +162,9 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         val docRef = fbFirestore?.collection("users")?.document("$uid")
         docRef?.get()?.addOnSuccessListener { document ->
                 if(document!=null) {
-                    val isInitialSetup = document.getString("isInitialSetup")
-                    Log.d("TAG", "isInitialSetup: $isInitialSetup")
-                    if(isInitialSetup == null) {
+                    val isInfoSetup = document.get("infoSetup")
+                    Log.d("TAG", "isInfoSetup: $isInfoSetup")
+                    if(isInfoSetup == false) {
                         val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
                         startActivity(setupIntent)
                     }

@@ -29,6 +29,7 @@ class InitialSetupActivity : AppCompatActivity() {
     private var nickname : String? = null
     private val date: Calendar = Calendar.getInstance()
     private val year = date.get(Calendar.YEAR)
+    private var userInfo = Users()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,30 +68,29 @@ class InitialSetupActivity : AppCompatActivity() {
         // 유저의 생년 저장
 
         Log.d("Year", "$year")
-        numberPicker_birth_year_my_page.minValue = date.get(Calendar.YEAR) - 80
-        numberPicker_birth_year_my_page.maxValue = date.get(Calendar.YEAR) - 12
-        numberPicker_birth_year_my_page.value = 1994
+        numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
+        numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
+        numberPicker_birth_year_initial_setup.value = 1994
         Log.d(
             "Year",
-            "${numberPicker_birth_year_my_page.minValue}~${numberPicker_birth_year_my_page.maxValue}"
+            "${numberPicker_birth_year_initial_setup.minValue}~${numberPicker_birth_year_initial_setup.maxValue}"
         )
 
-        numberPicker_birth_year_my_page.setOnValueChangedListener { picker: NumberPicker, oldVal, newVal ->
+        numberPicker_birth_year_initial_setup.setOnValueChangedListener { picker: NumberPicker, oldVal, newVal ->
             Log.d("InitialSetupActivity", "oldVal : ${oldVal}, newVal : $newVal")
-            val picked = picker.toString()
-            birthYear = picked
-            Log.d("MyPageActivity", "User's birthday's been set as $picked")
+            birthYear = newVal.toString()
+            Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
 
         }
     }
 
         private val textWatcherNickname = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                TODO("Not yet implemented")
+
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -98,19 +98,11 @@ class InitialSetupActivity : AppCompatActivity() {
             }
         }
 
-        // 파이어스토어 User 정보의 isInitialSetup 값을 True로 설정하여 최초 1회 설정만 가능하게 함
+        // 파이어스토어 User 정보의 isInitialSetup 값을 true로 설정하여 최초 1회 설정만 가능하게 함
         private fun setInitialSetupToFireStore() {
-
-            fbFireStore = FirebaseFirestore.getInstance()
+            fbFireStore?.collection("users")?.document("$uid")?.set(userInfo)
             fbFireStore?.collection("users")?.document("$uid")
-                ?.update(mapOf("isInitialSetup" to true))?.addOnSuccessListener(this,
-                OnSuccessListener {
-                    Log.d("isInitialSetup", "set data to Firestore")
-
-                })
-                ?.addOnFailureListener {
-                    Log.d("isInitialSetup", "fail to set data to Firestore")
-                }
+                ?.update(mapOf("birthYear" to birthYear, "gender" to gender, "strNickname" to nickname))?.addOnFailureListener { Log.d("setInitial","fail") }
         }
 
 

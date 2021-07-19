@@ -10,17 +10,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 
 class OtpActivity : AppCompatActivity() {
 
     // get reference of the firebase auth
     lateinit var auth: FirebaseAuth
+    lateinit var fbFirestore : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_otp)
 
         auth=FirebaseAuth.getInstance()
+        fbFirestore=FirebaseFirestore.getInstance()
 
         // get storedVerificationId from the intent
         val storedVerificationId= intent.getStringExtra("storedVerificationId")
@@ -43,6 +46,7 @@ class OtpActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) {task ->
                 if (task.isSuccessful) {
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
