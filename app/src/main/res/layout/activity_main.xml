@@ -25,51 +25,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <Button
-        android:id="@+id/bt_firestore_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Page"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.648" />
 
-    <TextView
-        android:id="@+id/tv_update_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/location_update"
-        app:layout_constraintBottom_toTopOf="@+id/bt_firestore_test"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="주소"
-        app:layout_constraintBottom_toTopOf="@+id/bt_firestore_test"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_update_location"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/bt_save_coordinates_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="위치 저장하기"
-        app:layout_constraintBottom_toTopOf="@+id/bt_firestore_test"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

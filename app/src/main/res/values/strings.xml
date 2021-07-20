@@ -12,8 +12,4 @@
     <string name="chat">CHAT</string>
     <string name="my_page">My PAGE</string>
 
-    <string-array name="gender_array">
-        <item>female</item>
-        <item>male</item>
-    </string-array>
 </resources>
