@@ -4,19 +4,13 @@ import android.content.Intent
 import android.location.*
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.firebase.geofire.GeoFire
-import com.firebase.geofire.GeoLocation
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.FragmentHome
@@ -26,13 +20,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener,
-    LocationListener {
+
+class MainActivity : AppCompatActivity() {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var googleApiClient: GoogleApiClient? = null
     private var fbFirestore: FirebaseFirestore? = null
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
@@ -41,6 +34,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
 
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
+
 
 
     companion object {
@@ -56,11 +50,6 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         initViewPager()
         initNavigationBar()
 
-
-        googleApiClient = GoogleApiClient.Builder(this)
-            .enableAutoManage(this, this)
-            .addApi(Auth.GOOGLE_SIGN_IN_API)
-            .build()
 
         userName = ANONYMOUS
 
@@ -135,23 +124,4 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             })
         }
     }
-
-    override fun onLocationChanged(location: Location) {
-
-        Log.d("MainActivity", "onLocationChanged")
-
-        var userId : String ?= FirebaseAuth.getInstance().currentUser?.uid
-        var ref : DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
-
-        var geoFire : GeoFire = GeoFire(ref)
-        geoFire.setLocation(userId, GeoLocation(location.latitude, location.longitude))
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d(TAG, "onConnectionFailed $connectionResult ")
-
-        Toast.makeText(this, "구글 플레이 서비스에 오류가 있어요 :(", Toast.LENGTH_SHORT).show()
-    }
-
-
 }
