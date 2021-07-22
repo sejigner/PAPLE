@@ -90,6 +90,7 @@ class FragmentHome : Fragment() {
         val geoQuery : GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude,longitude), radius)
         geoQuery.removeAllListeners()
 
+        // recursive method 이용
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener{
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
                 if (!userFound&&key!=fireBaseUser?.uid) {
