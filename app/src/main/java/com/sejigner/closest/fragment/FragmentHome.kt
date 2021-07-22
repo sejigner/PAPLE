@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.*
 import android.os.Bundle
@@ -12,11 +13,14 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQuery
+import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,8 +40,8 @@ class FragmentHome : Fragment() {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var currentAddress: String = ""
-    private var latitude: Double? = null
-    private var longitude: Double? = null
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +64,63 @@ class FragmentHome : Fragment() {
         tv_update_location.setOnClickListener {
             getCurrentLocation()
         }
+
+        bt_sign_out_test.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent  = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
+            startActivity(intent)
+        }
+
+        iv_send.setOnClickListener {
+
+
+            getClosestUser()
+        }
+    }
+
+    private var radius : Double = 1.0
+    private var userFound : Boolean = false
+    private var userFoundId : String = ""
+
+    private fun getClosestUser() {
+        getCurrentLocation()
+
+        val userLocation : DatabaseReference = FirebaseDatabase.getInstance().reference.child("Users")
+        val geoFire = GeoFire(userLocation)
+        val geoQuery : GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude,longitude), radius)
+        geoQuery.removeAllListeners()
+
+        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener{
+            override fun onKeyEntered(key: String?, location: GeoLocation?) {
+                if (!userFound&&key!=fireBaseUser?.uid) {
+                    userFound = true
+                    if (key != null) {
+                        userFoundId = key
+                    }
+                }
+            }
+
+            override fun onKeyExited(key: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onKeyMoved(key: String?, location: GeoLocation?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onGeoQueryReady() {
+                if(!userFound)
+                {
+                    radius++
+                    getClosestUser()
+                }
+            }
+
+            override fun onGeoQueryError(error: DatabaseError?) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
     private fun getCurrentLocation() {
