@@ -67,33 +67,32 @@ class FragmentHome : Fragment() {
 
         bt_sign_out_test.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-            val intent  = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
+            val intent = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
             startActivity(intent)
         }
 
         iv_send.setOnClickListener {
-
-
             getClosestUser()
         }
     }
 
-    private var radius : Double = 1.0
-    private var userFound : Boolean = false
-    private var userFoundId : String = ""
+    private var radius: Double = 1.0
+    private var userFound: Boolean = false
+    private var userFoundId: String = ""
 
     private fun getClosestUser() {
         getCurrentLocation()
 
-        val userLocation : DatabaseReference = FirebaseDatabase.getInstance().reference.child("Users")
+        val userLocation: DatabaseReference =
+            FirebaseDatabase.getInstance().reference.child("Users")
         val geoFire = GeoFire(userLocation)
-        val geoQuery : GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude,longitude), radius)
+        val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
 
         // recursive method 이용
-        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener{
+        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
-                if (!userFound&&key!=fireBaseUser?.uid) {
+                if (!userFound && key != fireBaseUser?.uid) {
                     userFound = true
                     if (key != null) {
                         userFoundId = key
@@ -110,8 +109,7 @@ class FragmentHome : Fragment() {
             }
 
             override fun onGeoQueryReady() {
-                if(!userFound)
-                {
+                if (!userFound) {
                     radius++
                     getClosestUser()
                 }
