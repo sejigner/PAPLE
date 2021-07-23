@@ -15,7 +15,6 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -28,20 +27,27 @@ import com.sejigner.closest.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.io.IOException
 import java.util.*
+import kotlin.math.roundToInt
+
 
 
 class FragmentHome : Fragment() {
+
+    companion object {
+        const val TAG = "FlightLog"
+    }
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-
+    private var fbFirestore: FirebaseFirestore? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var currentAddress: String = ""
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private var userCurrentLocation: Location ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,20 +80,50 @@ class FragmentHome : Fragment() {
         iv_send.setOnClickListener {
             getClosestUser()
         }
+
+        bt_send.setOnClickListener {
+            performSendAnonymousMessage()
+        }
+
+    }
+
+    class PaperplaneMessage(val id: String, val text: String, val fromId : String, val toId : String, val flightDistance : Float, val timestamp: Long)
+
+    private fun performSendAnonymousMessage() {
+
+
+        getClosestUser()
+        if(userFoundId != "") {
+            var toId = userFoundId
+            val reference = FirebaseDatabase.getInstance().getReference("/paperplanes").push()
+            val text = et_message_paper.text.toString()
+            val fromId = FirebaseAuth.getInstance().uid!!
+            val distance = flightDistance
+
+            val paperplaneMessage = PaperplaneMessage(reference.key!!, text, fromId, toId, distance,System.currentTimeMillis()/1000 )
+            reference.setValue(paperplaneMessage).addOnSuccessListener {
+                Log.d(TAG,"Saved our paper plane message: ${reference.key}")
+            }
+        }
     }
 
     private var radius: Double = 1.0
     private var userFound: Boolean = false
     private var userFoundId: String = ""
+    private lateinit var userFoundLocation: Location
+    private var flightDistance: Float = 0.0f
 
     private fun getClosestUser() {
         getCurrentLocation()
+        fbFirestore = FirebaseFirestore.getInstance()
 
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("Users")
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
+        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+
 
         // recursive method 이용
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
@@ -96,6 +132,11 @@ class FragmentHome : Fragment() {
                     userFound = true
                     if (key != null) {
                         userFoundId = key
+
+                        userFoundLocation = Location(location.toString())
+                        var distance = userFoundLocation.distanceTo(userCurrentLocation)
+                        // 거리 소숫점 두번째 자리 반올림
+                        flightDistance = (distance*100).roundToInt() / 10f
                     }
                 }
             }
@@ -142,6 +183,7 @@ class FragmentHome : Fragment() {
             // getting the last known or current location
             latitude = location.latitude
             longitude = location.longitude
+            userCurrentLocation = location
             getAddress(location.latitude, location.longitude)
 
         }
