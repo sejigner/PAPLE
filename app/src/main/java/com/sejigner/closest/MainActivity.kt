@@ -56,12 +56,16 @@ class MainActivity : AppCompatActivity() {
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
+/*
         if (fireBaseUser == null) {
-            startActivity(Intent(this@MainActivity, SignInActivity::class.java))
-            finish()
+            val intent = Intent(this, NewSignInActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         } else {
             userName = fireBaseUser!!.displayName
         }
+
+ */
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fbFirestore = FirebaseFirestore.getInstance()

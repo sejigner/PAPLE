@@ -18,17 +18,21 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         this.supportActionBar?.hide()
-        val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
         transparentStatusAndNavigation()
         Handler().postDelayed({
-            if (user != null) {
-                startActivity(Intent(applicationContext,MainActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(applicationContext,NewSignInActivity::class.java))
-                finish()
-            }
+            verifyUserIsLoggedIn()
         },time)
+    }
+
+    private fun verifyUserIsLoggedIn() {
+        val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            startActivity(Intent(applicationContext,MainActivity::class.java))
+            finish()
+        } else {
+            startActivity(Intent(applicationContext,NewSignInActivity::class.java))
+            finish()
+        }
     }
 
     private fun Activity.transparentStatusAndNavigation(
