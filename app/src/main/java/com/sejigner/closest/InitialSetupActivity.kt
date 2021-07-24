@@ -11,7 +11,9 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sejigner.closest.fragment.FragmentHome
 import kotlinx.android.synthetic.main.activity_initial_setup.*
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_female
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_male
@@ -22,11 +24,9 @@ class InitialSetupActivity : AppCompatActivity() {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var fbFireStore: FirebaseFirestore? = null
+    private var fbDatabase : FirebaseDatabase? = null
     private var uid: String? = null
     private var lastTimePressed = 0L
-    private var gender: String? = null
-    private var birthYear: String? = null
-    private var nickname : String? = null
     private val date: Calendar = Calendar.getInstance()
     private val year = date.get(Calendar.YEAR)
     private var userInfo = Users()
@@ -38,21 +38,22 @@ class InitialSetupActivity : AppCompatActivity() {
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
         fbFireStore = FirebaseFirestore.getInstance()
+        fbDatabase = FirebaseDatabase.getInstance()
         uid = fireBaseAuth!!.currentUser?.uid
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)
 
 
         rb_female.setOnClickListener {
-            gender = "female"
+            userInfo.gender = "female"
         }
 
         rb_male.setOnClickListener {
-            gender = "male"
+            userInfo.gender = "male"
         }
 
         tv_done.setOnClickListener {
-            if ((nickname == null || birthYear == null || gender == null))
+            if ((userInfo.strNickname == null || userInfo.birthYear == null || userInfo.gender == null))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
                 // 개인정보 확인 다이얼로그 구현
@@ -78,7 +79,7 @@ class InitialSetupActivity : AppCompatActivity() {
 
         numberPicker_birth_year_initial_setup.setOnValueChangedListener { picker: NumberPicker, oldVal, newVal ->
             Log.d("InitialSetupActivity", "oldVal : ${oldVal}, newVal : $newVal")
-            birthYear = newVal.toString()
+            userInfo.birthYear = newVal.toString()
             Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
 
         }
@@ -94,15 +95,15 @@ class InitialSetupActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                nickname = s.toString()
+                userInfo.strNickname = s.toString()
             }
         }
-
-        // 파이어스토어 User 정보의 isInitialSetup 값을 true로 설정하여 최초 1회 설정만 가능하게 함
+    
         private fun setInitialSetupToFireStore() {
-            fbFireStore?.collection("users")?.document("$uid")?.set(userInfo)
-            fbFireStore?.collection("users")?.document("$uid")
-                ?.update(mapOf("birthYear" to birthYear, "gender" to gender, "strNickname" to nickname))?.addOnFailureListener { Log.d("setInitial","fail") }
+           val database = fbDatabase?.reference
+            database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
+                Log.d(FragmentHome.TAG,"Saved Users info to Firebase Realtime database: ${database.key}")
+            }
         }
 
 

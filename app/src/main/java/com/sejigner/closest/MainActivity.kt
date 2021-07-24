@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.FragmentHome
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var fbFirestore: FirebaseFirestore? = null
+    private var fbDatabase: FirebaseDatabase? = null
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
     private val fragmentMyPage by lazy { FragmentMyPage() }
@@ -34,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
 
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-
 
 
     companion object {
@@ -55,38 +56,26 @@ class MainActivity : AppCompatActivity() {
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
-
-/*
-        if (fireBaseUser == null) {
-            val intent = Intent(this, NewSignInActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        } else {
-            userName = fireBaseUser!!.displayName
-        }
-
- */
+        fbDatabase = FirebaseDatabase.getInstance()
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG, "got instance from Firestore successfully")
 
-        val uid = fireBaseAuth?.uid
-        // fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
 
-        // 파이어스토어에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
-        val docRef = fbFirestore?.collection("users")?.document("$uid")
-        docRef?.get()?.addOnSuccessListener { document ->
-            if (document != null) {
-                val isUserNickName = document.get("strNickname")
-                Log.d("TAG", "strNickname: $isUserNickName")
-                if (isUserNickName == null) {
+        // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
+        val uid = fireBaseAuth?.uid
+        val reference = fbDatabase?.reference
+        reference?.child("Users")?.child(uid!!)?.child("strNickname")?.get()
+            ?.addOnSuccessListener { it ->
+                if (it.value != null) {
+                    Log.d(TAG, "Checked, User Info already set - user nickname : $it.value")
+                } else {
                     val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
                     startActivity(setupIntent)
-                    // fbFirestore?.collection("users")?.document(fireBaseAuth?.uid.toString())?.set(userInfo)
                 }
             }
-        }
+
     }
 
     private fun initNavigationBar() {

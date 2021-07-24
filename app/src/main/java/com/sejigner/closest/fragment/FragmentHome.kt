@@ -40,7 +40,6 @@ class FragmentHome : Fragment() {
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     private var fbFirestore: FirebaseFirestore? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
@@ -122,7 +121,6 @@ class FragmentHome : Fragment() {
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
-        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
 
 
         // recursive method 이용
@@ -134,9 +132,11 @@ class FragmentHome : Fragment() {
                         userFoundId = key
 
                         userFoundLocation = Location(location.toString())
-                        var distance = userFoundLocation.distanceTo(userCurrentLocation)
+                        Log.d(TAG,userFoundLocation.toString()+userCurrentLocation)
+                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toFloat()
+                        Log.d(TAG,distance.toString())
                         // 거리 소숫점 두번째 자리 반올림
-                        flightDistance = (distance*100).roundToInt() / 10f
+                        flightDistance = String.format("%.3f", distance).toFloat()
                     }
                 }
             }
@@ -226,7 +226,7 @@ class FragmentHome : Fragment() {
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
         var userId: String? = FirebaseAuth.getInstance().currentUser?.uid
-        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location")
 
         var geoFire = GeoFire(ref)
         geoFire.setLocation(

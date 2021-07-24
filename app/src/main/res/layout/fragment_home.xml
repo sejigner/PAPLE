@@ -19,7 +19,7 @@
             android:layout_marginTop="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/bt_sign_out_test" />
 
         <TextView
             android:id="@+id/tv_address"
@@ -40,7 +40,7 @@
             android:text="위치 저장하기"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_address" />
+            app:layout_constraintTop_toBottomOf="@+id/bt_send" />
 
 
         <ImageView
