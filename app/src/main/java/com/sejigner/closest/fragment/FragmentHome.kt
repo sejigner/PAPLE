@@ -44,7 +44,7 @@ class FragmentHome : Fragment() {
     private var currentAddress: String = ""
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-    private var userCurrentLocation: Location ?= null
+    private var userCurrentLocation: Location? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,22 +84,42 @@ class FragmentHome : Fragment() {
 
     }
 
-    class PaperplaneMessage(val id: String, val text: String, val fromId : String, val toId : String, val flightDistance : Float, val timestamp: Long)
+    class PaperplaneMessage(
+        val id: String,
+        val text: String,
+        val fromId: String,
+        val toId: String,
+        val flightDistance: Float,
+        val timestamp: Long
+    ) {
+        constructor() : this("","","","",0.0f,0L)
+    }
 
     private fun performSendAnonymousMessage() {
-        val uid = FirebaseAuth.getInstance().uid
         getClosestUser()
-        if(userFoundId != "") {
+        if (userFoundId != "") {
             var toId = userFoundId
             val text = et_message_paper.text.toString()
             val fromId = FirebaseAuth.getInstance().uid!!
             val distance = flightDistance
-            val paperPlaneReference = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$fromId/$toId")
+            val paperPlaneReference =
+                FirebaseDatabase.getInstance().getReference("/PaperPlanes/$fromId/$toId")
+            val paperPlaneToReference =
+                FirebaseDatabase.getInstance().getReference("/PaperPlanes/$toId/$fromId")
 
-            val paperplaneMessage = PaperplaneMessage(paperPlaneReference.key!!, text, fromId, toId, distance,System.currentTimeMillis()/1000 )
+            val paperplaneMessage = PaperplaneMessage(
+                paperPlaneReference.key!!,
+                text,
+                fromId,
+                toId,
+                distance,
+                System.currentTimeMillis() / 1000
+            )
+            // 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
             paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
                 Log.d(TAG, "The message has been flown")
             }
+            paperPlaneToReference.setValue(paperplaneMessage)
         }
     }
 
@@ -129,11 +149,12 @@ class FragmentHome : Fragment() {
                         userFoundId = key
 
                         userFoundLocation = Location(location.toString())
-                        Log.d(TAG,userFoundLocation.toString()+userCurrentLocation)
-                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toFloat()
-                        Log.d(TAG,distance.toString())
+                        Log.d(TAG, userFoundLocation.toString() + userCurrentLocation)
+
+                        val distance = userFoundLocation.distanceTo(userCurrentLocation)
                         // 거리 소숫점 두번째 자리 반올림
                         flightDistance = String.format("%.3f", distance).toFloat()
+                        Log.d(TAG, "${flightDistance.toString()}")
                     }
                 }
             }

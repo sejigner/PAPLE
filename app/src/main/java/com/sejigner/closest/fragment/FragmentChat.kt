@@ -1,56 +1,90 @@
 package com.sejigner.closest.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.sejigner.closest.R
+import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.arrived_paperplane.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 class FragmentChat : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-    : View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
+            : View? {
         return inflater.inflate(R.layout.fragment_chat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = GroupieAdapter()
-
-        adapter.add(PaperPlanes())
-        adapter.add(PaperPlanes())
-        adapter.add(PaperPlanes())
-        adapter.add(PaperPlanes())
-        adapter.add(PaperPlanes())
-
-        rv_chat.adapter = adapter
-
-
+        // runDialog()
         fetchPapers()
 
     }
 
-    private fun fetchPapers() {
-        FirebaseDatabase.getInstance().getReference("")
+    private fun runDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.arrived_paperplane, null)
+        val dialogText = dialogView.findViewById<TextView>(R.id.tv_paperplane_message_dialog)
+
+        builder.setView(dialogView).setPositiveButton("답장하기") { dialogInterface, i ->
+        }.setNegativeButton("버리기") { dialogInterface, i ->
+        }.show()
     }
 
+    private fun fetchPapers() {
+
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val adapter = GroupAdapter<GroupieViewHolder>()
+                snapshot.children.forEach{
+                    val paperplane = it.getValue(FragmentHome.PaperplaneMessage::class.java)
+                    if(paperplane!=null) {
+                        adapter.add(PaperPlanes(paperplane))
+                    }
+
+                }
+                rv_paperplane.adapter = adapter
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
 
 }
 
-class PaperPlanes: Item<GroupieViewHolder>() {
+class PaperPlanes(val paperplaneMessage : FragmentHome.PaperplaneMessage) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
-        return R.layout.latest_chat_row
+        return R.layout.arrived_paperplane
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.tv_paperplane_message.text = paperplaneMessage.text
+        viewHolder.itemView.tv_paperplane_distance.text = paperplaneMessage.flightDistance.toString()
+        viewHolder.itemView.tv_paperplane_time.text = paperplaneMessage.timestamp.toString()
 
+        viewHolder.itemView.setOnClickListener {
+             runDialog()
+        }
     }
 }
