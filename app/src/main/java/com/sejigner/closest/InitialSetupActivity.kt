@@ -98,7 +98,7 @@ class InitialSetupActivity : AppCompatActivity() {
                 userInfo.strNickname = s.toString()
             }
         }
-    
+
         private fun setInitialSetupToFireStore() {
            val database = fbDatabase?.reference
             database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {

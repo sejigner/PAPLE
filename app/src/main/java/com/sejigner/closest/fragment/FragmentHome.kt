@@ -27,8 +27,6 @@ import com.sejigner.closest.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.io.IOException
 import java.util.*
-import kotlin.math.roundToInt
-
 
 
 class FragmentHome : Fragment() {
@@ -89,24 +87,23 @@ class FragmentHome : Fragment() {
     class PaperplaneMessage(val id: String, val text: String, val fromId : String, val toId : String, val flightDistance : Float, val timestamp: Long)
 
     private fun performSendAnonymousMessage() {
-
-
+        val uid = FirebaseAuth.getInstance().uid
         getClosestUser()
         if(userFoundId != "") {
             var toId = userFoundId
-            val reference = FirebaseDatabase.getInstance().getReference("/paperplanes").push()
             val text = et_message_paper.text.toString()
             val fromId = FirebaseAuth.getInstance().uid!!
             val distance = flightDistance
+            val paperPlaneReference = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$fromId/$toId")
 
-            val paperplaneMessage = PaperplaneMessage(reference.key!!, text, fromId, toId, distance,System.currentTimeMillis()/1000 )
-            reference.setValue(paperplaneMessage).addOnSuccessListener {
-                Log.d(TAG,"Saved our paper plane message: ${reference.key}")
+            val paperplaneMessage = PaperplaneMessage(paperPlaneReference.key!!, text, fromId, toId, distance,System.currentTimeMillis()/1000 )
+            paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
+                Log.d(TAG, "The message has been flown")
             }
         }
     }
 
-    private var radius: Double = 1.0
+    private var radius: Double = 0.0
     private var userFound: Boolean = false
     private var userFoundId: String = ""
     private lateinit var userFoundLocation: Location
@@ -117,7 +114,7 @@ class FragmentHome : Fragment() {
         fbFirestore = FirebaseFirestore.getInstance()
 
         val userLocation: DatabaseReference =
-            FirebaseDatabase.getInstance().reference.child("Users")
+            FirebaseDatabase.getInstance().reference.child("User-Location")
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()

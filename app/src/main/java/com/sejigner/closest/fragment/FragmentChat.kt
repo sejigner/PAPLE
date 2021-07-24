@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -23,27 +24,33 @@ class FragmentChat : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = GroupieAdapter()
-        setupDummyRows()
 
-    }
-
-    class LatestChatRow : Item<GroupieViewHolder>() {
-        override fun getLayout(): Int {
-            return R.layout.latest_chat_row
-        }
-
-        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        }
-    }
-
-    private fun setupDummyRows() {
-        val adapter = GroupieAdapter()
-
-        adapter.add(LatestChatRow())
-        adapter.add(LatestChatRow())
-        adapter.add(LatestChatRow())
+        adapter.add(PaperPlanes())
+        adapter.add(PaperPlanes())
+        adapter.add(PaperPlanes())
+        adapter.add(PaperPlanes())
+        adapter.add(PaperPlanes())
 
         rv_chat.adapter = adapter
+
+
+        fetchPapers()
+
+    }
+
+    private fun fetchPapers() {
+        FirebaseDatabase.getInstance().getReference("")
+    }
+
+
+}
+
+class PaperPlanes: Item<GroupieViewHolder>() {
+    override fun getLayout(): Int {
+        return R.layout.latest_chat_row
+    }
+
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
     }
 }
