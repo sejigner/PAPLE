@@ -1,13 +1,13 @@
 package com.sejigner.closest.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
-import kotlinx.android.synthetic.main.fragment_dialog.*
+import kotlinx.android.synthetic.main.fragment_dialog_first.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -15,10 +15,10 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialog.newInstance] factory method to
+ * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialog : DialogFragment() {
+class FragmentDialogFirst : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: String? = null
@@ -40,14 +40,14 @@ class FragmentDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_first, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tv_dialog_message.text = message
-        tv_dialog_distance.text = distance
-        tv_dialog_time.text = time
+        tv_dialog_message_first.text = message
+        tv_dialog_distance_first.text = distance
+        tv_dialog_time_first.text = time
     }
 
     companion object {
@@ -62,7 +62,7 @@ class FragmentDialog : DialogFragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(message: String, distance : String, time: String) =
-            FragmentDialog().apply {
+            FragmentDialogFirst().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putString("distance", distance)

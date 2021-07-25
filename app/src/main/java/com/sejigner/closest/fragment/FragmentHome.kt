@@ -128,6 +128,8 @@ class FragmentHome : Fragment() {
             paperPlaneToReference.setValue(paperplaneMessage)
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(TAG, "Receiver 실패")
+            }.addOnSuccessListener {
+                Toast.makeText(requireActivity(),"당신의 종이비행기가 ${flightDistance}m 거리의 누군가에게 도달했어요!",Toast.LENGTH_LONG).show()
             }
         }
     }
