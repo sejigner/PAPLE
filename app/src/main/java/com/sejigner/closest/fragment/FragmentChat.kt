@@ -42,7 +42,7 @@ class FragmentChat : Fragment() {
     private fun fetchPapers() {
 
         val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$uid")
+        val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val adapter = GroupAdapter<GroupieViewHolder>()

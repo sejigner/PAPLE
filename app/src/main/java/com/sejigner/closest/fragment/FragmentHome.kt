@@ -110,6 +110,8 @@ class FragmentHome : Fragment() {
                 FirebaseDatabase.getInstance().getReference("/PaperPlanes/$fromId/$toId")
             val paperPlaneToReference =
                 FirebaseDatabase.getInstance().getReference("/PaperPlanes/$toId/$fromId")
+            val paperPlaneReceiverReference =
+                FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
             val paperplaneMessage = PaperplaneMessage(
                 paperPlaneReference.key!!,
@@ -124,6 +126,9 @@ class FragmentHome : Fragment() {
                 Log.d(TAG, "The message has been flown $flightDistance away")
             }
             paperPlaneToReference.setValue(paperplaneMessage)
+            paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+                Log.d(TAG, "Receiver 실패")
+            }
         }
     }
 
