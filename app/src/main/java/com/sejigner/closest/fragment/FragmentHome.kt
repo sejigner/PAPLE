@@ -27,6 +27,8 @@ import com.sejigner.closest.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.io.IOException
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 
 class FragmentHome : Fragment() {
@@ -64,6 +66,8 @@ class FragmentHome : Fragment() {
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
+        getClosestUser()
+
         tv_update_location.setOnClickListener {
             getCurrentLocation()
         }
@@ -89,14 +93,14 @@ class FragmentHome : Fragment() {
         val text: String,
         val fromId: String,
         val toId: String,
-        val flightDistance: Float,
+        val flightDistance: Double,
         val timestamp: Long
     ) {
-        constructor() : this("","","","",0.0f,0L)
+        constructor() : this("", "", "", "", 0.0, 0L)
     }
 
     private fun performSendAnonymousMessage() {
-        getClosestUser()
+
         if (userFoundId != "") {
             var toId = userFoundId
             val text = et_message_paper.text.toString()
@@ -117,7 +121,7 @@ class FragmentHome : Fragment() {
             )
             // 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
             paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
-                Log.d(TAG, "The message has been flown")
+                Log.d(TAG, "The message has been flown $flightDistance away")
             }
             paperPlaneToReference.setValue(paperplaneMessage)
         }
@@ -127,7 +131,7 @@ class FragmentHome : Fragment() {
     private var userFound: Boolean = false
     private var userFoundId: String = ""
     private lateinit var userFoundLocation: Location
-    private var flightDistance: Float = 0.0f
+    private var flightDistance: Double = 0.0
 
     private fun getClosestUser() {
         getCurrentLocation()
@@ -151,10 +155,11 @@ class FragmentHome : Fragment() {
                         userFoundLocation = Location(location.toString())
                         Log.d(TAG, userFoundLocation.toString() + userCurrentLocation)
 
-                        val distance = userFoundLocation.distanceTo(userCurrentLocation)
+                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
                         // 거리 소숫점 두번째 자리 반올림
-                        flightDistance = String.format("%.3f", distance).toFloat()
-                        Log.d(TAG, "${flightDistance.toString()}")
+                        flightDistance = String.format("%.2f", distance).toDouble()
+                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
+
                     }
                 }
             }

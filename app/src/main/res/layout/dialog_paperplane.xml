@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/tv_paperplane_message_dialog"
+        android:id="@+id/tv_dialog_message"
         android:textAlignment="center"
         android:text="paperplane message"
         android:textSize="18sp"
@@ -18,14 +18,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_paperplane_message_dialog"
+        app:layout_constraintTop_toBottomOf="@id/tv_dialog_message"
         app:layout_constraintStart_toStartOf="parent"
         android:text="distance"
         android:textSize="12sp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_paperplane_message_dialog"
+        app:layout_constraintTop_toBottomOf="@id/tv_dialog_message"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="time"
         android:textSize="12sp"/>

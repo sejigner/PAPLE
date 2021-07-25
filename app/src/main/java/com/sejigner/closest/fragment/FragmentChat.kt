@@ -14,7 +14,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.sejigner.closest.R
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.arrived_paperplane.view.*
@@ -33,15 +32,16 @@ class FragmentChat : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         // runDialog()
         fetchPapers()
 
     }
 
     private fun runDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = AlertDialog.Builder(requireActivity())
         val dialogView = layoutInflater.inflate(R.layout.arrived_paperplane, null)
-        val dialogText = dialogView.findViewById<TextView>(R.id.tv_paperplane_message_dialog)
+        val dialogText = dialogView.findViewById<TextView>(R.id.tv_dialog_message)
 
         builder.setView(dialogView).setPositiveButton("답장하기") { dialogInterface, i ->
         }.setNegativeButton("버리기") { dialogInterface, i ->
@@ -59,6 +59,22 @@ class FragmentChat : Fragment() {
                     val paperplane = it.getValue(FragmentHome.PaperplaneMessage::class.java)
                     if(paperplane!=null) {
                         adapter.add(PaperPlanes(paperplane))
+                    }
+
+                    adapter.setOnItemClickListener { item, view ->
+
+                        val paperPlanes = item as PaperPlanes
+                        val message = paperPlanes.paperplaneMessage.text
+                        val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
+                        val time = paperPlanes.paperplaneMessage.timestamp.toString()
+
+
+                        val dialog = FragmentDialog.newInstance(message,distance,time)
+                        val fm = parentFragmentManager
+                        dialog.show(fm,"papaerplane mesage")
+
+
+                        // runDialog()
                     }
 
                 }
@@ -82,9 +98,5 @@ class PaperPlanes(val paperplaneMessage : FragmentHome.PaperplaneMessage) : Item
         viewHolder.itemView.tv_paperplane_message.text = paperplaneMessage.text
         viewHolder.itemView.tv_paperplane_distance.text = paperplaneMessage.flightDistance.toString()
         viewHolder.itemView.tv_paperplane_time.text = paperplaneMessage.timestamp.toString()
-
-        viewHolder.itemView.setOnClickListener {
-             runDialog()
-        }
     }
 }
