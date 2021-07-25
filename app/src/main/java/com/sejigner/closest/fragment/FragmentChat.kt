@@ -38,15 +38,6 @@ class FragmentChat : Fragment() {
 
     }
 
-    private fun runDialog() {
-        val builder = AlertDialog.Builder(requireActivity())
-        val dialogView = layoutInflater.inflate(R.layout.arrived_paperplane, null)
-        val dialogText = dialogView.findViewById<TextView>(R.id.tv_dialog_message)
-
-        builder.setView(dialogView).setPositiveButton("답장하기") { dialogInterface, i ->
-        }.setNegativeButton("버리기") { dialogInterface, i ->
-        }.show()
-    }
 
     private fun fetchPapers() {
 
@@ -72,9 +63,6 @@ class FragmentChat : Fragment() {
                         val dialog = FragmentDialog.newInstance(message,distance,time)
                         val fm = parentFragmentManager
                         dialog.show(fm,"papaerplane mesage")
-
-
-                        // runDialog()
                     }
 
                 }
