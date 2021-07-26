@@ -99,7 +99,7 @@ class FragmentHome : Fragment() {
         val toId: String,
         val flightDistance: Double,
         val timestamp: Long,
-        var returned : Boolean = false
+        var isReplied : Boolean = false
     ) {
         constructor() : this("", "", "", "", 0.0, 0L, false)
     }
