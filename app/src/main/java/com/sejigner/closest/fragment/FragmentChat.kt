@@ -1,11 +1,9 @@
 package com.sejigner.closest.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -60,7 +58,7 @@ class FragmentChat : Fragment() {
                         val time = paperPlanes.paperplaneMessage.timestamp.toString()
 
 
-                        val dialog = FragmentDialog.newInstance(message,distance,time)
+                        val dialog = FragmentDialogFirst.newInstance(message,distance,time)
                         val fm = parentFragmentManager
                         dialog.show(fm,"papaerplane mesage")
                     }

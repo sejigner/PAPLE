@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.firebase.geofire.GeoFire
@@ -29,6 +30,9 @@ import java.io.IOException
 import java.util.*
 import kotlin.math.round
 import kotlin.math.roundToInt
+
+private const val TAG = "MainActivity"
+private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 
 class FragmentHome : Fragment() {
@@ -94,9 +98,10 @@ class FragmentHome : Fragment() {
         val fromId: String,
         val toId: String,
         val flightDistance: Double,
-        val timestamp: Long
+        val timestamp: Long,
+        var returned : Boolean = false
     ) {
-        constructor() : this("", "", "", "", 0.0, 0L)
+        constructor() : this("", "", "", "", 0.0, 0L, false)
     }
 
     private fun performSendAnonymousMessage() {
@@ -119,7 +124,8 @@ class FragmentHome : Fragment() {
                 fromId,
                 toId,
                 distance,
-                System.currentTimeMillis() / 1000
+                System.currentTimeMillis() / 1000,
+                false
             )
             // 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
             paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
@@ -129,7 +135,11 @@ class FragmentHome : Fragment() {
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(TAG, "Receiver 실패")
             }.addOnSuccessListener {
-                Toast.makeText(requireActivity(),"당신의 종이비행기가 ${flightDistance}m 거리의 누군가에게 도달했어요!",Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireActivity(),
+                    "당신의 종이비행기가 ${flightDistance}m 거리의 누군가에게 도달했어요!",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
