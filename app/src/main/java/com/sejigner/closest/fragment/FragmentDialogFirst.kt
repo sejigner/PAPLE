@@ -1,13 +1,21 @@
 package com.sejigner.closest.fragment
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
-import kotlinx.android.synthetic.main.fragment_dialog_first.*
+import kotlinx.android.synthetic.main.fragment_dialog_reply.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +31,11 @@ class FragmentDialogFirst : DialogFragment() {
     private var message: String? = null
     private var distance: String? = null
     private var time: String? = null
+    private var toId: String? = null
+    private var fromId: String?= null
+    private var isReplied: Boolean ?= null
+    private var replyTime: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +43,10 @@ class FragmentDialogFirst : DialogFragment() {
             message = it.getString("message")
             distance = it.getString("distance")
             time = it.getString("time")
+            toId = it.getString("toId")
+            fromId = it.getString("fromId")
+            isReplied = it.getBoolean("isReplied")
+
 
 
         }
@@ -40,14 +57,89 @@ class FragmentDialogFirst : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_first, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_reply, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+
+        val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
+        var textEntered : String = ""
+
+        val btnCancel = view.findViewById<View>(R.id.iv_back_reply) as? ImageView
+        val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_reply) as? TextView
+        val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
+
+
+
+        btnCancel?.setOnClickListener {
+            dismiss()
+        }
+
+        btnDiscard?.setOnClickListener {
+            // Firebase 내 해당 데이터 삭제
+
+            dismiss()
+        }
+
+        btnCancel?.setOnClickListener {
+            dismiss()
+        }
+
+        btnDiscard?.setOnClickListener {
+            // Firebase 내 해당 데이터 삭제
+            dismiss()
+        }
+
+        btnReply?.setOnClickListener {
+            // 보내기와 동일, 단 isReplied = true 처리
+            dismiss()
+        }
+
         tv_dialog_message_first.text = message
-        tv_dialog_distance_first.text = distance
+        tv_dialog_distance_first.text = distance.toString()
         tv_dialog_time_first.text = time
+
+        textEntered = etReply?.text.toString()
+
+        btnReply?.setOnClickListener {
+            if(textEntered != "") {
+                val paperPlaneReceiverReference =
+                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+                val paperplaneMessage = FragmentHome.PaperplaneMessage(
+                    paperPlaneReceiverReference.key!!,
+                    textEntered,
+                    fromId!!,
+                    toId!!,
+                    distance!!.toDouble(),
+                    System.currentTimeMillis() / 1000,
+                    true)
+                paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+                    Log.d(TAG, "Reply 실패")
+                }.addOnSuccessListener {
+                    Toast.makeText(
+                        requireActivity(),
+                        "당신의 답장 종이비행기가 ${distance}m 거리의 누군가에게 도달했어요!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+
+            } else {
+                Toast.makeText(requireActivity(), "메세지를 입력해주세요.",Toast.LENGTH_SHORT ).show()
+            }
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
+        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     companion object {
@@ -59,14 +151,20 @@ class FragmentDialogFirst : DialogFragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment FragmentDialog.
          */
+
+        const val TAG = "PaperDialog"
+
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: String) =
+        fun newInstance(message: String, distance : String, time: String, toId: String, fromId: String, isReplied: Boolean ) =
             FragmentDialogFirst().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putString("distance", distance)
                     putString("time", time)
+                    putString("toId", toId)
+                    putString("fromId", fromId)
+                    putBoolean("isReplied", isReplied)
                 }
             }
     }

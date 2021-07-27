@@ -111,15 +111,12 @@ class FragmentHome : Fragment() {
             val text = et_message_paper.text.toString()
             val fromId = FirebaseAuth.getInstance().uid!!
             val distance = flightDistance
-            val paperPlaneReference =
-                FirebaseDatabase.getInstance().getReference("/PaperPlanes/$fromId/$toId")
-            val paperPlaneToReference =
-                FirebaseDatabase.getInstance().getReference("/PaperPlanes/$toId/$fromId")
+
             val paperPlaneReceiverReference =
                 FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
             val paperplaneMessage = PaperplaneMessage(
-                paperPlaneReference.key!!,
+                paperPlaneReceiverReference.key!!,
                 text,
                 fromId,
                 toId,
@@ -127,11 +124,14 @@ class FragmentHome : Fragment() {
                 System.currentTimeMillis() / 1000,
                 false
             )
-            // 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
+
+            /* 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
             paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
                 Log.d(TAG, "The message has been flown $flightDistance away")
             }
             paperPlaneToReference.setValue(paperplaneMessage)
+
+             */
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(TAG, "Receiver 실패")
             }.addOnSuccessListener {
@@ -182,11 +182,10 @@ class FragmentHome : Fragment() {
             }
 
             override fun onKeyExited(key: String?) {
-                TODO("Not yet implemented")
             }
 
             override fun onKeyMoved(key: String?, location: GeoLocation?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onGeoQueryReady() {
@@ -197,7 +196,7 @@ class FragmentHome : Fragment() {
             }
 
             override fun onGeoQueryError(error: DatabaseError?) {
-                TODO("Not yet implemented")
+
             }
         })
 

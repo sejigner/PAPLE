@@ -23,6 +23,11 @@ class FragmentDialogSecond : DialogFragment() {
     private var message: String? = null
     private var distance: String? = null
     private var time: String? = null
+    private var toId: String? = null
+    private var fromId: String?= null
+    private var isReplied: Boolean ?= null
+    private var replyTime: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +35,9 @@ class FragmentDialogSecond : DialogFragment() {
             message = it.getString("message")
             distance = it.getString("distance")
             time = it.getString("time")
+            toId = it.getString("toId")
+            fromId = it.getString("fromId")
+            isReplied = it.getBoolean("isReplied")
 
 
         }
@@ -40,7 +48,7 @@ class FragmentDialogSecond : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_first, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_reply, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +75,9 @@ class FragmentDialogSecond : DialogFragment() {
                     putString("message", message)
                     putString("distance", distance)
                     putString("time", time)
+                    putString("toId", toId)
+                    putString("fromId", fromId)
+                    putBoolean("isReplied", isReplied!!)
                 }
             }
     }

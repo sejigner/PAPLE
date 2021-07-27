@@ -43,28 +43,33 @@ class FragmentChat : Fragment() {
         val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val adapter = GroupAdapter<GroupieViewHolder>()
+                val adapterHorizontal = GroupAdapter<GroupieViewHolder>()
+                val adapterVertical = GroupAdapter<GroupieViewHolder>()
                 snapshot.children.forEach{
                     val paperplane = it.getValue(FragmentHome.PaperplaneMessage::class.java)
                     if(paperplane!=null) {
-                        adapter.add(PaperPlanes(paperplane))
+                        adapterHorizontal.add(PaperPlanes(paperplane))
                     }
 
-                    adapter.setOnItemClickListener { item, view ->
+                    adapterHorizontal.setOnItemClickListener { item, view ->
 
                         val paperPlanes = item as PaperPlanes
                         val message = paperPlanes.paperplaneMessage.text
                         val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
                         val time = paperPlanes.paperplaneMessage.timestamp.toString()
+                        val toId = paperPlanes.paperplaneMessage.toId
+                        val fromId = paperPlanes.paperplaneMessage.fromId
+                        var isReplied = paperPlanes.paperplaneMessage.isReplied
 
 
-                        val dialog = FragmentDialogFirst.newInstance(message,distance,time)
-                        val fm = parentFragmentManager
+                        val dialog = FragmentDialogFirst.newInstance(message,distance,time,toId, fromId, isReplied)
+                        val fm = childFragmentManager
                         dialog.show(fm,"papaerplane mesage")
                     }
 
                 }
-                rv_paperplane.adapter = adapter
+                rv_paperplane.adapter = adapterHorizontal
+                rv_chat.adapter = adapterVertical
             }
 
             override fun onCancelled(error: DatabaseError) {
