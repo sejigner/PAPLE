@@ -121,7 +121,7 @@ class FragmentHome : Fragment() {
                 fromId,
                 toId,
                 distance,
-                System.currentTimeMillis() / 1000,
+                System.currentTimeMillis() / 1000L,
                 false
             )
 
@@ -164,7 +164,7 @@ class FragmentHome : Fragment() {
         // recursive method 이용
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
-                if (!userFound && key != fireBaseUser?.uid) {
+                if ((!userFound) && key != fireBaseUser?.uid) {
                     userFound = true
                     if (key != null) {
                         userFoundId = key

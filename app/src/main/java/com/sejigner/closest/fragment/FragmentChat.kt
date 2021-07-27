@@ -34,6 +34,11 @@ class FragmentChat : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onResume()
+        fetchPapers()
+    }
+
 
     private fun fetchPapers() {
 

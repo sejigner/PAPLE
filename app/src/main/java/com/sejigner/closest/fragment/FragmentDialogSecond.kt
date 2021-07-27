@@ -1,5 +1,7 @@
 package com.sejigner.closest.fragment
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,7 +28,6 @@ class FragmentDialogSecond : DialogFragment() {
     private var toId: String? = null
     private var fromId: String?= null
     private var isReplied: Boolean ?= null
-    private var replyTime: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +44,13 @@ class FragmentDialogSecond : DialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
+        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +64,15 @@ class FragmentDialogSecond : DialogFragment() {
         tv_dialog_message_second.text = message
         tv_dialog_distance_second.text = distance
         tv_dialog_time_second.text = time
+
+        // 버리기 -> 파이어베이스 데이터 삭제
+        tv_dialog_discard_second.setOnClickListener {
+            dismiss()
+        }
+
+        tv_dialog_start_chat.setOnClickListener {
+            dismiss()
+        }
     }
 
     companion object {
