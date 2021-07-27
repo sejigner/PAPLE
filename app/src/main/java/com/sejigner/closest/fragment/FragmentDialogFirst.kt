@@ -57,7 +57,7 @@ class FragmentDialogFirst : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_reply, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_first, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +69,7 @@ class FragmentDialogFirst : DialogFragment() {
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
         var textEntered : String = ""
 
-        val btnCancel = view.findViewById<View>(R.id.iv_back_reply) as? ImageView
+        val btnCancel = view.findViewById<View>(R.id.iv_back_reply_second) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_reply) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
 

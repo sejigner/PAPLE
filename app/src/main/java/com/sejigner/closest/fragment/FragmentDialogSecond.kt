@@ -48,7 +48,7 @@ class FragmentDialogSecond : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_reply, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_second, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +69,7 @@ class FragmentDialogSecond : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: String) =
+        fun newInstance(message: String, distance : String, time: String, toId : String, fromId : String, isReplied : Boolean) =
             FragmentDialogSecond().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
@@ -77,7 +77,7 @@ class FragmentDialogSecond : DialogFragment() {
                     putString("time", time)
                     putString("toId", toId)
                     putString("fromId", fromId)
-                    putBoolean("isReplied", isReplied!!)
+                    putBoolean("isReplied", isReplied)
                 }
             }
     }

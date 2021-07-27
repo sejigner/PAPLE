@@ -30,8 +30,6 @@ class FragmentChat : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        // runDialog()
         fetchPapers()
 
     }
@@ -51,22 +49,39 @@ class FragmentChat : Fragment() {
                         adapterHorizontal.add(PaperPlanes(paperplane))
                     }
 
-                    adapterHorizontal.setOnItemClickListener { item, view ->
+                    if (!paperplane!!.isReplied) {
+                        adapterHorizontal.setOnItemClickListener { item, view ->
 
-                        val paperPlanes = item as PaperPlanes
-                        val message = paperPlanes.paperplaneMessage.text
-                        val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                        val time = paperPlanes.paperplaneMessage.timestamp.toString()
-                        val toId = paperPlanes.paperplaneMessage.toId
-                        val fromId = paperPlanes.paperplaneMessage.fromId
-                        var isReplied = paperPlanes.paperplaneMessage.isReplied
+                            val paperPlanes = item as PaperPlanes
+                            val message = paperPlanes.paperplaneMessage.text
+                            val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
+                            val time = paperPlanes.paperplaneMessage.timestamp.toString()
+                            val toId = paperPlanes.paperplaneMessage.toId
+                            val fromId = paperPlanes.paperplaneMessage.fromId
+                            var isReplied = paperPlanes.paperplaneMessage.isReplied
 
 
-                        val dialog = FragmentDialogFirst.newInstance(message,distance,time,toId, fromId, isReplied)
-                        val fm = childFragmentManager
-                        dialog.show(fm,"papaerplane mesage")
+                            val dialog = FragmentDialogFirst.newInstance(message,distance,time,toId, fromId, isReplied)
+                            val fm = childFragmentManager
+                            dialog.show(fm,"papaerplane mesage")
+                        }
+                    } else {
+                        adapterHorizontal.setOnItemClickListener { item, view ->
+
+                            val paperPlanes = item as PaperPlanes
+                            val message = paperPlanes.paperplaneMessage.text
+                            val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
+                            val time = paperPlanes.paperplaneMessage.timestamp.toString()
+                            val toId = paperPlanes.paperplaneMessage.toId
+                            val fromId = paperPlanes.paperplaneMessage.fromId
+                            var isReplied = paperPlanes.paperplaneMessage.isReplied
+
+
+                            val dialog = FragmentDialogSecond.newInstance(message,distance,time,toId, fromId, isReplied)
+                            val fm = childFragmentManager
+                            dialog.show(fm,"papaerplane mesage")
+                        }
                     }
-
                 }
                 rv_paperplane.adapter = adapterHorizontal
                 rv_chat.adapter = adapterVertical

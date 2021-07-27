@@ -5,27 +5,27 @@
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_frame"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.FragmentDialogReply">
+    tools:context=".fragment.FragmentDialogFirst">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:layout_marginStart="8dp"
-            android:id="@+id/iv_back_reply"
+            android:id="@+id/iv_back_reply_second"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/cl_content_message"/>
+            app:layout_constraintBottom_toTopOf="@id/cl_content_message_second"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:padding="10dp"
             android:layout_marginTop="4dp"
-            android:id="@+id/cl_content_message"
+            android:id="@+id/cl_content_message_second"
             android:background="@drawable/dialog_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back_reply"
+            app:layout_constraintTop_toBottomOf="@id/iv_back_reply_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -75,9 +75,9 @@
             android:textSize="12sp"
             android:text="버리기"
             android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/iv_back_reply"
-            app:layout_constraintTop_toTopOf="@id/iv_back_reply"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back_reply"/>
+            app:layout_constraintStart_toEndOf="@id/iv_back_reply_second"
+            app:layout_constraintTop_toTopOf="@id/iv_back_reply_second"
+            app:layout_constraintBottom_toBottomOf="@id/iv_back_reply_second"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:padding="10dp"
@@ -85,7 +85,7 @@
             android:id="@+id/cl_content_reply"
             android:background="@drawable/dialog_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_content_message"
+            app:layout_constraintTop_toBottomOf="@id/cl_content_message_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
