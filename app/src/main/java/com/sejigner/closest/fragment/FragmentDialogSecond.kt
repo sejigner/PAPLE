@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
 
@@ -67,12 +68,23 @@ class FragmentDialogSecond : DialogFragment() {
 
         // 버리기 -> 파이어베이스 데이터 삭제
         tv_dialog_discard_second.setOnClickListener {
+            removePaper()
             dismiss()
         }
 
+
         tv_dialog_start_chat.setOnClickListener {
+            // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것
+            removePaper()
             dismiss()
         }
+    }
+
+    private fun removePaper() {
+        val paperPlaneReceiverReference =
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId")
+        paperPlaneReceiverReference.removeValue()
+        dismiss()
     }
 
     companion object {

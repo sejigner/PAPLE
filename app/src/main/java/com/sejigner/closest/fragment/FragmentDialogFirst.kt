@@ -85,15 +85,6 @@ class FragmentDialogFirst : DialogFragment() {
             dismiss()
         }
 
-        btnCancel?.setOnClickListener {
-            dismiss()
-        }
-
-        btnDiscard?.setOnClickListener {
-            // Firebase 내 해당 데이터 삭제
-            dismiss()
-        }
-
         btnReply?.setOnClickListener {
             // 보내기와 동일, 단 isReplied = true 처리
             dismiss()
