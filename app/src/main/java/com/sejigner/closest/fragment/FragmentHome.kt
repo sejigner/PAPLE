@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.*
+import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.io.IOException
 import java.util.*
@@ -90,18 +91,6 @@ class FragmentHome : Fragment() {
             performSendAnonymousMessage()
         }
 
-    }
-
-    class PaperplaneMessage(
-        val id: String,
-        val text: String,
-        val fromId: String,
-        val toId: String,
-        val flightDistance: Double,
-        val timestamp: Long,
-        var isReplied : Boolean = false
-    ) {
-        constructor() : this("", "", "", "", 0.0, 0L, false)
     }
 
     private fun performSendAnonymousMessage() {

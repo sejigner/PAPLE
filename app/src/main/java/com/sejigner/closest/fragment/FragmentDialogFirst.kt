@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
+import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -100,7 +101,7 @@ class FragmentDialogFirst : DialogFragment() {
             if(textEntered != "") {
                 val paperPlaneReceiverReference =
                     FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$toId")
-                val paperplaneMessage = FragmentHome.PaperplaneMessage(
+                val paperplaneMessage = PaperplaneMessage(
                     paperPlaneReceiverReference.key!!,
                     textEntered,
                     toId!!,
