@@ -93,7 +93,7 @@
                 android:textColor="@color/black"
                 android:id="@+id/et_dialog_message_first"
                 android:textAlignment="center"
-                android:text="reply"
+                android:hint="메세지를 입력하세요."
                 android:textSize="18sp"
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"

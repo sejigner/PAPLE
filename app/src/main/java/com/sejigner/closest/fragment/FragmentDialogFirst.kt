@@ -61,10 +61,10 @@ class FragmentDialogFirst : DialogFragment() {
         return inflater.inflate(R.layout.fragment_dialog_first, container, false)
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
 
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
@@ -95,9 +95,10 @@ class FragmentDialogFirst : DialogFragment() {
         tv_dialog_distance_first.text = distance.toString()
         tv_dialog_time_first.text = time
 
-        textEntered = etReply?.text.toString()
+
 
         btnReply?.setOnClickListener {
+            textEntered = etReply?.text.toString()
             if(textEntered != "") {
                 val paperPlaneReceiverReference =
                     FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$toId")
