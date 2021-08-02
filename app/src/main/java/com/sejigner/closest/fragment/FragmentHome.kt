@@ -71,6 +71,7 @@ class FragmentHome : Fragment() {
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
+        getCurrentLocation()
         getClosestUser()
 
         tv_update_location.setOnClickListener {
@@ -179,8 +180,14 @@ class FragmentHome : Fragment() {
 
             override fun onGeoQueryReady() {
                 if (!userFound) {
-                    radius++
-                    getClosestUser()
+                    if(radius<10) {
+                        radius++
+                        getClosestUser()
+                    } else {
+                        Toast.makeText(requireActivity(),"10km 이내에 유저가 없어요.",Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
                 }
             }
 

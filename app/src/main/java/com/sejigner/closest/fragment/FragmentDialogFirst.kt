@@ -86,11 +86,6 @@ class FragmentDialogFirst : DialogFragment() {
             dismiss()
         }
 
-        btnReply?.setOnClickListener {
-            // 보내기와 동일, 단 isReplied = true 처리
-            dismiss()
-        }
-
         tv_dialog_message_first.text = message
         tv_dialog_distance_first.text = distance.toString()
         tv_dialog_time_first.text = time
@@ -118,6 +113,7 @@ class FragmentDialogFirst : DialogFragment() {
                         "당신의 답장 종이비행기가 ${distance}m 거리의 누군가에게 도달했어요!",
                         Toast.LENGTH_LONG
                     ).show()
+                    removePaper()
                     dismiss()
                 }
 
