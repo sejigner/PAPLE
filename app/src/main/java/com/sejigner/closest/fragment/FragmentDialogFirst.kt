@@ -68,7 +68,7 @@ class FragmentDialogFirst : DialogFragment() {
 
 
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
-        var textEntered : String = ""
+        var textEntered = ""
 
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
@@ -122,12 +122,6 @@ class FragmentDialogFirst : DialogFragment() {
                 Toast.makeText(requireActivity(), "메세지를 입력해주세요.",Toast.LENGTH_SHORT ).show()
             }
         }
-
-        tv_dialog_discard_first.setOnClickListener {
-            removePaper()
-            dismiss()
-        }
-
     }
 
     private fun removePaper() {
