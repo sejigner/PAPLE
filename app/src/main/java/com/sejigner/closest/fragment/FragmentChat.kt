@@ -27,6 +27,7 @@ class FragmentChat : Fragment() {
     private val adapterHorizontal = GroupAdapter<GroupieViewHolder>()
     private val adapterVertical = GroupAdapter<GroupieViewHolder>()
     private val uid = FirebaseAuth.getInstance().uid
+    private val keyList = ArrayList<String>()
 
 
     override fun onCreateView(
@@ -56,6 +57,7 @@ class FragmentChat : Fragment() {
         adapterHorizontal.clear()
         planesMap.values.forEach {
             adapterHorizontal.add(PaperPlanes(it))
+
             if (!it.isReplied) {
                 adapterHorizontal.setOnItemClickListener { item, view ->
 
@@ -112,13 +114,14 @@ class FragmentChat : Fragment() {
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-                
-                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
-                    planesMap[snapshot.key!!] = paperplane
-                    refreshRecyclerViewPlanes()
+                val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
-                Log.d(TAG, "Child added successfully" )
+                planesMap[snapshot.key!!] = paperplane
+                keyList.add(snapshot.key!!)
+                refreshRecyclerViewPlanes()
+
+                Log.d(TAG, "Child added successfully")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -127,12 +130,17 @@ class FragmentChat : Fragment() {
                 planesMap[snapshot.key!!] = paperplane
                 refreshRecyclerViewPlanes()
 
-                Log.d(TAG, "Child added successfully" )
+                Log.d(TAG, "Child added successfully")
 
             }
             // int diaryIndex = mDiaryID.indexOf(dataSnapshot.getKey());
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
+                val index : Int = keyList.indexOf(snapshot.key)
+                adapterHorizontal.removeGroupAtAdapterPosition(index)
+                keyList.removeAt(index)
+
 
             }
 
