@@ -159,13 +159,33 @@ class FragmentHome : Fragment() {
                     if (key != null) {
                         userFoundId = key
 
+                        var locationFoundLat  = 0.0
+                        var locationFoundLng  = 0.0
                         userFoundLocation = Location(location.toString())
-                        Log.d(TAG, userFoundLocation.toString() + userCurrentLocation)
+                        var ref: DatabaseReference = userLocation.child(userFoundId).child("l")
+                        ref.get().addOnSuccessListener {
+                            val map: List<Object> = it.value as List<Object>
+                            var locationFoundLat = 0.0
+                            var locationFoundLng = 0.0
 
-                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
-                        // 거리 소숫점 두번째 자리 반올림
-                        flightDistance = String.format("%.2f", distance).toDouble()
-                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
+                            locationFoundLat = map[0].toString().toDouble()
+                            locationFoundLng = map[1].toString().toDouble()
+
+                            val locationFound : Location = Location("")
+                            locationFound.latitude = locationFoundLat
+                            locationFound.longitude = locationFoundLng
+
+                            val distance : Float = locationFound.distanceTo(userCurrentLocation)
+                            flightDistance = round((distance.toDouble())*100)/100
+                        }
+//
+//                        Log.d(TAG, userFoundLocation.toString() + "현재 위치:"+ userCurrentLocation)
+//
+//                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
+//                        Log.d(TAG, distance.toString())
+//                        // 거리 소숫점 두번째 자리 반올림
+//                        flightDistance = String.format("%.2f", distance).toDouble()
+//                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
 
                     }
                 }
