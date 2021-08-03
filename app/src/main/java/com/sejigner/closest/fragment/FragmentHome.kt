@@ -2,12 +2,14 @@ package com.sejigner.closest.fragment
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.location.*
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -73,6 +75,8 @@ class FragmentHome : Fragment() {
         getCurrentLocation()
         getClosestUser()
 
+        tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
         tv_update_location.setOnClickListener {
             getCurrentLocation()
         }
@@ -83,14 +87,14 @@ class FragmentHome : Fragment() {
             startActivity(intent)
         }
 
-        iv_send.setOnClickListener {
-            getClosestUser()
-        }
-
-        bt_send.setOnClickListener {
+        iv_paper_plane_home.setOnClickListener {
             performSendAnonymousMessage()
         }
 
+    }
+
+    private fun setTextPartner() {
+        tv_distance_home.text = getString(R.string.flight_distance_home, flightDistance)
     }
 
     private fun performSendAnonymousMessage() {
@@ -243,7 +247,7 @@ class FragmentHome : Fragment() {
 
             }
         })
-
+        setTextPartner()
     }
 
     private fun getCurrentLocation() {
@@ -300,7 +304,7 @@ class FragmentHome : Fragment() {
             currentAddress = currentAddress.substring(4)
             Log.d("CheckCurrentLocation", "$currentAddress")
         }
-        tv_address.text = currentAddress
+        tv_update_location.text = currentAddress
         setLocationToDatabase(latitude, longitude)
 
 
