@@ -119,6 +119,7 @@ class FragmentDialogFirst : DialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     dismiss()
+                    removePaper()
                 }
 
 
@@ -128,17 +129,16 @@ class FragmentDialogFirst : DialogFragment() {
         }
 
         tv_dialog_discard_first.setOnClickListener {
-            removePaper()
             dismiss()
+            removePaper()
         }
 
     }
 
     private fun removePaper() {
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
         paperPlaneReceiverReference.removeValue()
-        dismiss()
     }
 
     override fun onStart() {

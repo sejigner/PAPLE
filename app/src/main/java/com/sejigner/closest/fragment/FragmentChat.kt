@@ -6,13 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.arrived_paperplane.view.*
@@ -106,19 +104,27 @@ class FragmentChat : Fragment() {
         }
     }
 
+    private fun removeItemRecyclerViewPlanes() {
+
+        planesMap.values.forEach {
+        val position = adapterHorizontal.getItem()
+         adapterHorizontal.removeGroupAtAdapterPosition(position)
+        }
+    }
+
     private fun listenForPlanes() {
         val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-                
-                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
-                    planesMap[snapshot.key!!] = paperplane
-                    refreshRecyclerViewPlanes()
+                val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
-                Log.d(TAG, "Child added successfully" )
+                planesMap[snapshot.key!!] = paperplane
+                refreshRecyclerViewPlanes()
+
+                Log.d(TAG, "Child added successfully")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -127,13 +133,18 @@ class FragmentChat : Fragment() {
                 planesMap[snapshot.key!!] = paperplane
                 refreshRecyclerViewPlanes()
 
-                Log.d(TAG, "Child added successfully" )
+                Log.d(TAG, "Child changed detected")
 
             }
             // int diaryIndex = mDiaryID.indexOf(dataSnapshot.getKey());
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
+                planesMap[snapshot.key!!] = paperplane
+                removeItemRecyclerViewPlanes()
+
+                Log.d(TAG, "Child removed successfully")
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -145,6 +156,8 @@ class FragmentChat : Fragment() {
             }
         })
     }
+
+
 
     private fun fetchPapers() {
 
