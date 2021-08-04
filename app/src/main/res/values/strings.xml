@@ -8,10 +8,13 @@
     <string name="user_gender">성별</string>
     <string name="gender_male">남성</string>
     <string name="gender_female">여성</string>
+    <string name="log_out">로그아웃</string>
     <string name="home">HOME</string>
     <string name="chat">CHAT</string>
     <string name="my_page">My PAGE</string>
-    <string name="km">km</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="flight_distance">%1$sm 거리의 유저에게 도달했어요 :)</string>
+    <string name="meter">m</string>
+    <string name="distance">거리</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
 </resources>

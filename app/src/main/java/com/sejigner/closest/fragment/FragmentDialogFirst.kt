@@ -68,7 +68,7 @@ class FragmentDialogFirst : DialogFragment() {
 
 
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
-        var textEntered : String = ""
+        var textEntered = ""
 
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
@@ -83,11 +83,6 @@ class FragmentDialogFirst : DialogFragment() {
         btnDiscard?.setOnClickListener {
             // Firebase 내 해당 데이터 삭제
             removePaper()
-            dismiss()
-        }
-
-        btnReply?.setOnClickListener {
-            // 보내기와 동일, 단 isReplied = true 처리
             dismiss()
         }
 
@@ -118,6 +113,7 @@ class FragmentDialogFirst : DialogFragment() {
                         "당신의 답장 종이비행기가 ${distance}m 거리의 누군가에게 도달했어요!",
                         Toast.LENGTH_LONG
                     ).show()
+                    removePaper()
                     dismiss()
                     removePaper()
                 }
@@ -129,10 +125,9 @@ class FragmentDialogFirst : DialogFragment() {
         }
 
         tv_dialog_discard_first.setOnClickListener {
-            dismiss()
             removePaper()
+            dismiss()
         }
-
     }
 
     private fun removePaper() {

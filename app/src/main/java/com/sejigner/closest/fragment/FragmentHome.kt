@@ -2,12 +2,14 @@ package com.sejigner.closest.fragment
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.location.*
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,11 +22,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.*
+import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.io.IOException
@@ -71,7 +72,10 @@ class FragmentHome : Fragment() {
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
+        getCurrentLocation()
         getClosestUser()
+
+        tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
         tv_update_location.setOnClickListener {
             getCurrentLocation()
@@ -83,15 +87,12 @@ class FragmentHome : Fragment() {
             startActivity(intent)
         }
 
-        iv_send.setOnClickListener {
-            getClosestUser()
-        }
-
-        bt_send.setOnClickListener {
+        iv_paper_plane_home.setOnClickListener {
             performSendAnonymousMessage()
         }
 
     }
+
 
     private fun performSendAnonymousMessage() {
 
@@ -104,6 +105,10 @@ class FragmentHome : Fragment() {
             val paperPlaneReceiverReference =
                 FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
+            val acquaintanceRecordFromReference =
+                FirebaseDatabase.getInstance().getReference("/Acquaintances/$fromId")
+            val acquaintanceRecordToReference =
+                FirebaseDatabase.getInstance().getReference("/Acquaintances/$toId")
             val paperplaneMessage = PaperplaneMessage(
                 paperPlaneReceiverReference.key!!,
                 text,
@@ -126,10 +131,24 @@ class FragmentHome : Fragment() {
             }.addOnSuccessListener {
                 Toast.makeText(
                     requireActivity(),
-                    "당신의 종이비행기가 ${flightDistance}m 거리의 누군가에게 도달했어요!",
+                    "종이비행기가 ${flightDistance}m 거리의 유저에게 도달했어요!",
                     Toast.LENGTH_LONG
                 ).show()
+
+                acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "소통 기록 저장 - 발신자: $fromId")
+                    }
+                acquaintanceRecordToReference.child(fromId).child("haveMet").setValue(true)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "소통 기록 저장 - 수신자: $toId")
+                    }
+                getClosestUser()
             }
+        }
+        else {
+            Toast.makeText(requireActivity(), "10km 이내에 유저가 없어요.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -154,19 +173,53 @@ class FragmentHome : Fragment() {
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
                 if ((!userFound) && key != fireBaseUser?.uid) {
-                    userFound = true
-                    if (key != null) {
-                        userFoundId = key
+                    val uid = fireBaseUser?.uid
+                    FirebaseDatabase.getInstance().getReference("/Acquaintances/$uid")
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (!snapshot.hasChild(key!!)) {
 
-                        userFoundLocation = Location(location.toString())
-                        Log.d(TAG, userFoundLocation.toString() + userCurrentLocation)
+                                    userFound = true
 
-                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
-                        // 거리 소숫점 두번째 자리 반올림
-                        flightDistance = String.format("%.2f", distance).toDouble()
-                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
+                                    userFoundId = key
 
-                    }
+                                    userFoundLocation = Location(location.toString())
+                                    var ref: DatabaseReference =
+                                        userLocation.child(userFoundId).child("l")
+                                    ref.get().addOnSuccessListener {
+                                        val map: List<Object> = it.value as List<Object>
+                                        var locationFoundLat = 0.0
+                                        var locationFoundLng = 0.0
+
+                                        locationFoundLat = map[0].toString().toDouble()
+                                        locationFoundLng = map[1].toString().toDouble()
+
+                                        val locationFound: Location = Location("")
+                                        locationFound.latitude = locationFoundLat
+                                        locationFound.longitude = locationFoundLng
+
+                                        val distance: Float =
+                                            locationFound.distanceTo(userCurrentLocation)
+                                        flightDistance = round((distance.toDouble()) * 100) / 100
+                                    }
+//
+//                        Log.d(TAG, userFoundLocation.toString() + "현재 위치:"+ userCurrentLocation)
+//
+//                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
+//                        Log.d(TAG, distance.toString())
+//                        // 거리 소숫점 두번째 자리 반올림
+//                        flightDistance = String.format("%.2f", distance).toDouble()
+//                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+
+                            }
+                        })
+                    Log.d(TAG, "전에 만난 적이 있는 유저를 만났습니다.")
+
+
                 }
             }
 
@@ -179,8 +232,15 @@ class FragmentHome : Fragment() {
 
             override fun onGeoQueryReady() {
                 if (!userFound) {
-                    radius++
-                    getClosestUser()
+                    if (radius < 10) {
+                        radius++
+                        getClosestUser()
+                    } else {
+                        Toast.makeText(requireActivity(), "10km 이내에 유저가 없어요.", Toast.LENGTH_SHORT)
+                            .show()
+                        return
+                    }
+
                 }
             }
 
@@ -188,7 +248,6 @@ class FragmentHome : Fragment() {
 
             }
         })
-
     }
 
     private fun getCurrentLocation() {
@@ -245,7 +304,7 @@ class FragmentHome : Fragment() {
             currentAddress = currentAddress.substring(4)
             Log.d("CheckCurrentLocation", "$currentAddress")
         }
-        tv_address.text = currentAddress
+        tv_update_location.text = currentAddress
         setLocationToDatabase(latitude, longitude)
 
 

@@ -1,84 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context=".fragment.FragmentChat">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bg_initialSetting">
+
+            <Button
+                android:id="@+id/bt_sign_out_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/log_out"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
+            android:textColor="@color/black"
             android:id="@+id/tv_update_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="@string/location_update"
-            android:layout_marginTop="50dp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/iv_paper_plane_home"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bt_sign_out_test" />
-
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="주소"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_update_location"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/bt_save_coordinates_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="위치 저장하기"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bt_send" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
         <ImageView
-            android:id="@+id/iv_send"
-            android:src="@mipmap/ic_launcher"
+            android:id="@+id/iv_paper_plane_home"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_paper_plane"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <EditText
-            android:layout_marginTop="16dp"
             android:id="@+id/et_message_paper"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_send"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            />
-        <Button
-            android:id="@+id/bt_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="보내기"
-            app:layout_constraintTop_toBottomOf="@id/et_message_paper"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-
-        <Button
-            android:id="@+id/bt_sign_out_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/bg_initialSetting"
+            android:hint="@string/hint_home"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="20dp"
-            android:text="로그아웃"/>
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
