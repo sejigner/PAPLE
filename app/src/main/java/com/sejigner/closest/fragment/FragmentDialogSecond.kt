@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
 
@@ -75,7 +77,9 @@ class FragmentDialogSecond : DialogFragment() {
 
 
         tv_dialog_start_chat.setOnClickListener {
-            // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것
+            // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
+            val intent = Intent(view.context,ChatLogActivity::class.java)
+            startActivity(intent)
             removePaper()
             dismiss()
         }
