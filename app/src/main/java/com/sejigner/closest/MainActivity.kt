@@ -66,11 +66,11 @@ class MainActivity : AppCompatActivity() {
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = fireBaseAuth?.uid
-        val reference = fbDatabase?.reference
-        reference?.child("Users")?.child(uid!!)?.child("strNickname")?.get()
+        val reference = fbDatabase?.reference?.child("Users")?.child(uid!!)?.child("strNickname")
+        reference?.get()
             ?.addOnSuccessListener { it ->
                 if (it.value != null) {
-                    Log.d(TAG, "Checked, User Info already set - user nickname : $it.value")
+                    Log.d(TAG, "Checked, User Info already set - user nickname : ${it.value}")
                 } else {
                     val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
                     startActivity(setupIntent)

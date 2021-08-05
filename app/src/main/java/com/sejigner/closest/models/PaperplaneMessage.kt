@@ -9,5 +9,5 @@ data class PaperplaneMessage(
     val timestamp: Long,
     var isReplied : Boolean = false
 ) {
-    constructor() : this("", "", "", "", 0.0, 0L, false)
+    constructor() : this("", "", "", "", 0.0, -1, false)
 }
