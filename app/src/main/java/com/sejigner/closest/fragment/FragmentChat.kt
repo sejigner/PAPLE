@@ -10,11 +10,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
+import com.sejigner.closest.models.ChatMessage
+import com.sejigner.closest.models.LatestChatMessage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.arrived_paperplane.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.latest_chat_row.view.*
 
 class FragmentChat : Fragment() {
 
@@ -25,7 +28,8 @@ class FragmentChat : Fragment() {
     private val adapterHorizontal = GroupAdapter<GroupieViewHolder>()
     private val adapterVertical = GroupAdapter<GroupieViewHolder>()
     private val uid = FirebaseAuth.getInstance().uid
-    private val keyList = ArrayList<String>()
+    private val planeKeyList = ArrayList<String>()
+    private val messageKeyList = ArrayList<String>()
 
 
     override fun onCreateView(
@@ -46,10 +50,12 @@ class FragmentChat : Fragment() {
 
         // fetchPapers()
         listenForPlanes()
+        listenForLatestMessages()
 
     }
 
     val planesMap = HashMap<String, PaperplaneMessage>()
+    val messagesMap = HashMap<String, LatestChatMessage>()
 
     private fun refreshRecyclerViewPlanes() {
         adapterHorizontal.clear()
@@ -106,6 +112,25 @@ class FragmentChat : Fragment() {
         }
     }
 
+    private fun refreshRecyclerViewMessages() {
+        adapterVertical.clear()
+        messagesMap.values.forEach {
+            adapterVertical.add(LatestMessages(it))
+
+
+            adapterVertical.setOnItemClickListener { item, view ->
+
+                val latestMessages = item as LatestMessages
+                val nickname = latestMessages.latestChatMessage.nickname
+                val message = latestMessages.latestChatMessage.message
+                val time = latestMessages.latestChatMessage.time
+
+                // ChatLogActivity 연결
+            }
+
+        }
+    }
+
 
     private fun listenForPlanes() {
         val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid")
@@ -117,7 +142,7 @@ class FragmentChat : Fragment() {
                 val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
                 planesMap[snapshot.key!!] = paperplane
-                keyList.add(snapshot.key!!)
+                planeKeyList.add(snapshot.key!!)
                 refreshRecyclerViewPlanes()
 
                 Log.d(TAG, "Child added successfully")
@@ -135,9 +160,9 @@ class FragmentChat : Fragment() {
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
-                val index : Int = keyList.indexOf(snapshot.key)
+                val index: Int = planeKeyList.indexOf(snapshot.key)
                 adapterHorizontal.removeGroupAtAdapterPosition(index)
-                keyList.removeAt(index)
+                planeKeyList.removeAt(index)
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -150,6 +175,48 @@ class FragmentChat : Fragment() {
         })
     }
 
+    private fun listenForLatestMessages() {
+        val fromId = uid
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$fromId")
+
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+
+
+                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+
+                messagesMap[snapshot.key!!] = latestChatMessage
+                messageKeyList.add(snapshot.key!!)
+                refreshRecyclerViewMessages()
+
+                Log.d(TAG, "Child added successfully")
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+
+                messagesMap[snapshot.key!!] = latestChatMessage
+                refreshRecyclerViewMessages()
+
+                Log.d(TAG, "Child changed detected")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
+                val index: Int = messageKeyList.indexOf(snapshot.key)
+                adapterVertical.removeGroupAtAdapterPosition(index)
+                messageKeyList.removeAt(index)
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
 
 
     private fun fetchPapers() {
@@ -237,5 +304,18 @@ class PaperPlanes(val paperplaneMessage: PaperplaneMessage) :
         viewHolder.itemView.tv_paperplane_distance.text =
             paperplaneMessage.flightDistance.toString()
         viewHolder.itemView.tv_paperplane_time.text = paperplaneMessage.timestamp.toString()
+    }
+}
+
+class LatestMessages(val latestChatMessage: LatestChatMessage) :
+    Item<GroupieViewHolder>() {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.tv_user_nickname.text = latestChatMessage.nickname
+        viewHolder.itemView.tv_message.text = latestChatMessage.message
+        viewHolder.itemView.tv_time.text = latestChatMessage.time
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.latest_chat_row
     }
 }
