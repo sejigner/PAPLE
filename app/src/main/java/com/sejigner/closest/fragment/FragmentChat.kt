@@ -10,11 +10,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
+import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_initial_setup.view.*
 import kotlinx.android.synthetic.main.arrived_paperplane.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
@@ -55,7 +57,7 @@ class FragmentChat : Fragment() {
     }
 
     val planesMap = HashMap<String, PaperplaneMessage>()
-    val messagesMap = HashMap<String, LatestChatMessage>()
+    val messagesMap = HashMap<String, ChatMessage>()
 
     private fun refreshRecyclerViewPlanes() {
         adapterHorizontal.clear()
@@ -120,10 +122,6 @@ class FragmentChat : Fragment() {
 
             adapterVertical.setOnItemClickListener { item, view ->
 
-                val latestMessages = item as LatestMessages
-                val nickname = latestMessages.latestChatMessage.nickname
-                val message = latestMessages.latestChatMessage.message
-                val time = latestMessages.latestChatMessage.time
 
                 // ChatLogActivity 연결
             }
@@ -177,13 +175,13 @@ class FragmentChat : Fragment() {
 
     private fun listenForLatestMessages() {
         val fromId = uid
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$fromId")
+        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
 
-                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
 
                 messagesMap[snapshot.key!!] = latestChatMessage
                 messageKeyList.add(snapshot.key!!)
@@ -193,7 +191,7 @@ class FragmentChat : Fragment() {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
 
                 messagesMap[snapshot.key!!] = latestChatMessage
                 refreshRecyclerViewMessages()
@@ -219,78 +217,6 @@ class FragmentChat : Fragment() {
     }
 
 
-    private fun fetchPapers() {
-
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val adapterHorizontal = GroupAdapter<GroupieViewHolder>()
-                val adapterVertical = GroupAdapter<GroupieViewHolder>()
-                snapshot.children.forEach {
-                    val paperplane = it.getValue(PaperplaneMessage::class.java)
-                    if (paperplane != null) {
-                        adapterHorizontal.add(PaperPlanes(paperplane))
-                    }
-
-                    if (!paperplane!!.isReplied) {
-                        adapterHorizontal.setOnItemClickListener { item, view ->
-
-                            val paperPlanes = item as PaperPlanes
-                            val message = paperPlanes.paperplaneMessage.text
-                            val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                            val time = paperPlanes.paperplaneMessage.timestamp.toString()
-                            val toId = paperPlanes.paperplaneMessage.toId
-                            val fromId = paperPlanes.paperplaneMessage.fromId
-                            var isReplied = paperPlanes.paperplaneMessage.isReplied
-
-
-                            val dialog = FragmentDialogFirst.newInstance(
-                                message,
-                                distance,
-                                time,
-                                toId,
-                                fromId,
-                                isReplied
-                            )
-                            val fm = childFragmentManager
-                            dialog.show(fm, "papaerplane mesage")
-                        }
-                    } else {
-                        adapterHorizontal.setOnItemClickListener { item, view ->
-
-                            val paperPlanes = item as PaperPlanes
-                            val message = paperPlanes.paperplaneMessage.text
-                            val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                            val time = paperPlanes.paperplaneMessage.timestamp.toString()
-                            val toId = paperPlanes.paperplaneMessage.toId
-                            val fromId = paperPlanes.paperplaneMessage.fromId
-                            var isReplied = paperPlanes.paperplaneMessage.isReplied
-
-
-                            val dialog = FragmentDialogSecond.newInstance(
-                                message,
-                                distance,
-                                time,
-                                toId,
-                                fromId,
-                                isReplied
-                            )
-                            val fm = childFragmentManager
-                            dialog.show(fm, "papaerplane mesage")
-                        }
-                    }
-                }
-                rv_paperplane.adapter = adapterHorizontal
-                rv_chat.adapter = adapterVertical
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-    }
-
 }
 
 class PaperPlanes(val paperplaneMessage: PaperplaneMessage) :
@@ -307,12 +233,30 @@ class PaperPlanes(val paperplaneMessage: PaperplaneMessage) :
     }
 }
 
-class LatestMessages(val latestChatMessage: LatestChatMessage) :
+class LatestMessages(val latestChatMessage: ChatMessage) :
     Item<GroupieViewHolder>() {
+    var chatPartnerUser: Users? = null
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.tv_user_nickname.text = latestChatMessage.nickname
-        viewHolder.itemView.tv_message.text = latestChatMessage.message
-        viewHolder.itemView.tv_time.text = latestChatMessage.time
+        viewHolder.itemView.tv_message.text = latestChatMessage.text
+        viewHolder.itemView.tv_time.text = latestChatMessage.timestamp.toString()
+
+        val chatPartnerId: String
+        if (latestChatMessage.fromId == FirebaseAuth.getInstance().uid) {
+            chatPartnerId = latestChatMessage.toId
+        } else {
+            chatPartnerId = latestChatMessage.fromId
+        }
+
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$chatPartnerId")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                chatPartnerUser = p0.getValue(Users::class.java)
+                viewHolder.itemView.tv_user_nickname.text = chatPartnerUser?.strNickname
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     override fun getLayout(): Int {
