@@ -80,6 +80,7 @@ class FragmentDialogReplied : DialogFragment() {
             val intent = Intent(view.context,ChatLogActivity::class.java)
             intent.putExtra(FragmentChat.USER_KEY, fromId)
             startActivity(intent)
+            removePaper()
             dismiss()
         }
     }
