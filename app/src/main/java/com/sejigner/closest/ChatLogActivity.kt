@@ -8,7 +8,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.fragment.FragmentDialogSecond
+import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.models.ChatMessage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -33,7 +33,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         rv_chat_log.adapter = adapter
         fbDatabase = FirebaseDatabase.getInstance()
-        partnerUid = intent.getStringExtra(FragmentDialogSecond.USER_KEY)
+        partnerUid = intent.getStringExtra(FragmentDialogReplied.USER_KEY)
 
         val ref = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("strNickname")
             ref?.get()?.addOnSuccessListener {
@@ -95,7 +95,7 @@ class ChatLogActivity : AppCompatActivity() {
     private fun performSendMessage() {
         val text = et_message_chat_log.text.toString()
         val fromId = FirebaseAuth.getInstance().uid
-        val toId = intent.getStringExtra(FragmentDialogSecond.USER_KEY)
+        val toId = intent.getStringExtra(FragmentDialogReplied.USER_KEY)
 
         if(fromId == null) return
         val fromRef = FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$toId").push()

@@ -14,7 +14,7 @@
     <string name="my_page">My PAGE</string>
     <string name="flight_distance">%1$sm 거리의 유저에게 도달했어요 :)</string>
     <string name="meter">m</string>
-    <string name="distance">거리</string>
+    <string name="distance">%1$sm</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
 </resources>

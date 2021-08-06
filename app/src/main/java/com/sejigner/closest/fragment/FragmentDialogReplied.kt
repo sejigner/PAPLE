@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
@@ -21,10 +20,10 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogSecond.newInstance] factory method to
+ * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogSecond : DialogFragment() {
+class FragmentDialogReplied : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: String? = null
@@ -107,7 +106,7 @@ class FragmentDialogSecond : DialogFragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(message: String, distance : String, time: String, toId : String, fromId : String, isReplied : Boolean) =
-            FragmentDialogSecond().apply {
+            FragmentDialogReplied().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putString("distance", distance)
