@@ -12,11 +12,9 @@ import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
 import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
-import com.sejigner.closest.models.LatestChatMessage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.activity_initial_setup.view.*
 import kotlinx.android.synthetic.main.arrived_paperplane.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
@@ -27,7 +25,7 @@ class FragmentChat : Fragment() {
         const val TAG = "FragmentChat"
     }
 
-    private val adapterHorizontal = GroupAdapter<GroupieViewHolder>()
+    private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
     private val adapterVertical = GroupAdapter<GroupieViewHolder>()
     private val uid = FirebaseAuth.getInstance().uid
     private val planeKeyList = ArrayList<String>()
@@ -46,7 +44,7 @@ class FragmentChat : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv_paperplane.adapter = adapterHorizontal
+        rv_paperplane_first.adapter = adapterHorizontalFirst
         rv_chat.adapter = adapterVertical
 
 
@@ -60,12 +58,11 @@ class FragmentChat : Fragment() {
     val messagesMap = HashMap<String, ChatMessage>()
 
     private fun refreshRecyclerViewPlanes() {
-        adapterHorizontal.clear()
+        adapterHorizontalFirst.clear()
         planesMap.values.forEach {
-            adapterHorizontal.add(PaperPlanes(it))
-
+            adapterHorizontalFirst.add(PaperPlanes(it))
             if (!it.isReplied) {
-                adapterHorizontal.setOnItemClickListener { item, view ->
+                adapterHorizontalFirst.setOnItemClickListener { item, view ->
 
                     val paperPlanes = item as PaperPlanes
                     val message = paperPlanes.paperplaneMessage.text
@@ -85,10 +82,11 @@ class FragmentChat : Fragment() {
                         isReplied
                     )
                     val fm = childFragmentManager
-                    dialog.show(fm, "papaerplane mesage")
+                    dialog.show(fm, "first paper")
+
                 }
             } else {
-                adapterHorizontal.setOnItemClickListener { item, view ->
+                adapterHorizontalFirst.setOnItemClickListener { item, view ->
 
                     val paperPlanes = item as PaperPlanes
                     val message = paperPlanes.paperplaneMessage.text
@@ -108,9 +106,10 @@ class FragmentChat : Fragment() {
                         isReplied
                     )
                     val fm = childFragmentManager
-                    dialog.show(fm, "papaerplane mesage")
+                    dialog.show(fm, "second paper")
                 }
             }
+
         }
     }
 
@@ -138,7 +137,6 @@ class FragmentChat : Fragment() {
 
 
                 val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
-
                 planesMap[snapshot.key!!] = paperplane
                 planeKeyList.add(snapshot.key!!)
                 refreshRecyclerViewPlanes()
@@ -159,7 +157,7 @@ class FragmentChat : Fragment() {
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
                 val index: Int = planeKeyList.indexOf(snapshot.key)
-                adapterHorizontal.removeGroupAtAdapterPosition(index)
+                adapterHorizontalFirst.removeGroupAtAdapterPosition(index)
                 planeKeyList.removeAt(index)
             }
 
@@ -222,7 +220,7 @@ class FragmentChat : Fragment() {
 class PaperPlanes(val paperplaneMessage: PaperplaneMessage) :
     Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
-        return R.layout.arrived_paperplane
+        return R.layout.arrived_paperplane_first
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
