@@ -78,7 +78,7 @@ class FragmentDialogReplied : DialogFragment() {
         tv_dialog_start_chat.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
             val intent = Intent(view.context,ChatLogActivity::class.java)
-            intent.putExtra(USER_KEY, fromId)
+            intent.putExtra(FragmentChat.USER_KEY, fromId)
             startActivity(intent)
             dismiss()
         }
@@ -92,8 +92,6 @@ class FragmentDialogReplied : DialogFragment() {
     }
 
     companion object {
-
-        val USER_KEY = "USER_KEY"
 
         /**
          * Use this factory method to create a new instance of

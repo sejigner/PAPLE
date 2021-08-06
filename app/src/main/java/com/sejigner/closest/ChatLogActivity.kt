@@ -8,6 +8,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.models.ChatMessage
 import com.xwray.groupie.GroupAdapter
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.chat_to_row.view.*
 class ChatLogActivity : AppCompatActivity() {
 
     companion object {
-        val TAG = "ChatLog"
+        const val TAG = "ChatLog"
     }
 
     val adapter = GroupAdapter<GroupieViewHolder>()
@@ -33,7 +34,10 @@ class ChatLogActivity : AppCompatActivity() {
 
         rv_chat_log.adapter = adapter
         fbDatabase = FirebaseDatabase.getInstance()
-        partnerUid = intent.getStringExtra(FragmentDialogReplied.USER_KEY)
+        partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
+
+
+
 
         val ref = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("strNickname")
             ref?.get()?.addOnSuccessListener {
@@ -59,15 +63,18 @@ class ChatLogActivity : AppCompatActivity() {
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                Log.d(TAG, "onChildAdded")
+
                 if (chatMessage != null) {
                     Log.d(TAG, chatMessage.text)
+
                     if(chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                         adapter.add(ChatFromItem(chatMessage.text))
                     } else {
                         adapter.add(ChatToItem(chatMessage.text))
                     }
                 }
+
+                rv_chat_log.scrollToPosition(adapter.itemCount - 1)
 
             }
 
@@ -95,7 +102,10 @@ class ChatLogActivity : AppCompatActivity() {
     private fun performSendMessage() {
         val text = et_message_chat_log.text.toString()
         val fromId = FirebaseAuth.getInstance().uid
-        val toId = intent.getStringExtra(FragmentDialogReplied.USER_KEY)
+        val toId = partnerUid
+
+
+
 
         if(fromId == null) return
         val fromRef = FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$toId").push()

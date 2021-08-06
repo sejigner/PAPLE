@@ -1,6 +1,7 @@
-package com.sejigner.closest.fragment
+ package com.sejigner.closest.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
 import com.sejigner.closest.Users
@@ -25,6 +27,7 @@ class FragmentChat : Fragment() {
 
     companion object {
         const val TAG = "FragmentChat"
+        const val USER_KEY = "USER_KEY"
     }
 
     private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
@@ -128,12 +131,16 @@ class FragmentChat : Fragment() {
             adapterVertical.clear()
             messagesMap.values.forEach {
                 adapterVertical.add(LatestMessages(it))
-
-
                 adapterVertical.setOnItemClickListener { item, view ->
-
-
                     // ChatLogActivity 연결
+                    val intent = Intent(requireActivity(), ChatLogActivity::class.java)
+                    val chatPartnerId : String = if (it.fromId == FirebaseAuth.getInstance().uid) {
+                        it.toId
+                    } else {
+                        it.fromId
+                    }
+                    intent.putExtra(USER_KEY, chatPartnerId)
+                    startActivity(intent)
                 }
 
             }
@@ -281,8 +288,8 @@ class FragmentChat : Fragment() {
         Item<GroupieViewHolder>() {
         var chatPartnerUser: Users? = null
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            viewHolder.itemView.tv_message.text = latestChatMessage.text
-            viewHolder.itemView.tv_time.text = latestChatMessage.timestamp.toString()
+            viewHolder.itemView.tv_chat_message.text = latestChatMessage.text
+            viewHolder.itemView.tv_chat_time.text = latestChatMessage.timestamp.toString()
 
             val chatPartnerId: String
             if (latestChatMessage.fromId == FirebaseAuth.getInstance().uid) {
@@ -295,7 +302,7 @@ class FragmentChat : Fragment() {
             ref.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
                     chatPartnerUser = p0.getValue(Users::class.java)
-                    viewHolder.itemView.tv_user_nickname.text = chatPartnerUser?.strNickname
+                    viewHolder.itemView.tv_chat_nickname.text = chatPartnerUser?.strNickname
                 }
 
                 override fun onCancelled(error: DatabaseError) {

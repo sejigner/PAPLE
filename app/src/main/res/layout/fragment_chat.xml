@@ -65,11 +65,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_chat"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
