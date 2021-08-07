@@ -4,33 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_initialSetting"
     android:orientation="vertical"
     tools:context=".fragment.FragmentChat">
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintview_paper"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintview_first"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="112dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tv_first_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/first_plane"
+                android:textColor="@color/black"
                 android:textSize="12sp"
-                android:text="처음 날아온 비행기"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="8dp"
                 android:id="@+id/rv_paperplane_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,22 +45,25 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="8dp"
             android:id="@+id/constraintview_second"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            app:layout_constraintTop_toBottomOf="@id/constraintview_first"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_height="112dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintview_first">
 
             <TextView
                 android:id="@+id/tv_replied_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/returned_plane"
+                android:textColor="@color/black"
                 android:textSize="12sp"
-                android:text="되돌아온 비행기"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="8dp"
                 android:id="@+id/rv_paperplane_replied"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,35 +73,43 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_replied_plane" />
 
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintTop_toBottomOf="@id/constraintview_second"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintview_second">
+
+            <TextView
+                android:textSize="12sp"
+                android:id="@+id/tv_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chatting"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_chat"
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_chat" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
 </FrameLayout>

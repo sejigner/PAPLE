@@ -20,6 +20,7 @@
 
     <!--We will use it to enter OTP after we receive OTP-->
     <EditText
+        android:inputType="number"
         android:id="@+id/et_otp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

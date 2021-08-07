@@ -6,17 +6,20 @@
     android:padding="8dp">
 
     <androidx.cardview.widget.CardView
-        app:cardElevation="1dp"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="100dp"
         android:layout_height="100dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
+                android:textColor="@color/black"
                 android:id="@+id/tv_paperplane_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,6 +33,7 @@
 
 
             <TextView
+                android:textColor="@color/black"
                 android:id="@+id/tv_paperplane_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

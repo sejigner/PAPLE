@@ -27,7 +27,7 @@ class FragmentChat : Fragment() {
 
     companion object {
         const val TAG = "FragmentChat"
-        const val USER_KEY = "USER_KEY"
+        val USER_KEY = "USER_KEY"
     }
 
     private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
@@ -131,19 +131,22 @@ class FragmentChat : Fragment() {
             adapterVertical.clear()
             messagesMap.values.forEach {
                 adapterVertical.add(LatestMessages(it))
-                adapterVertical.setOnItemClickListener { item, view ->
-                    // ChatLogActivity 연결
-                    val intent = Intent(requireActivity(), ChatLogActivity::class.java)
-                    val chatPartnerId : String = if (it.fromId == FirebaseAuth.getInstance().uid) {
-                        it.toId
-                    } else {
-                        it.fromId
-                    }
-                    intent.putExtra(USER_KEY, chatPartnerId)
-                    startActivity(intent)
-                }
-
             }
+            adapterVertical.setOnItemClickListener { item, view ->
+                // ChatLogActivity 연결
+
+                val messageItem = item as LatestMessages
+
+                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
+                val chatPartnerId : String = if (messageItem.latestChatMessage.fromId == FirebaseAuth.getInstance().uid) {
+                    messageItem.latestChatMessage.toId
+                } else {
+                    messageItem.latestChatMessage.fromId
+                }
+                intent.putExtra(USER_KEY, chatPartnerId)
+                startActivity(intent)
+            }
+            rv_chat.adapter = adapterVertical
         }
 
 
