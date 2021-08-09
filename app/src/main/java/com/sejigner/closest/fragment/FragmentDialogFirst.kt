@@ -147,7 +147,7 @@ class FragmentDialogFirst : DialogFragment() {
 
     private fun setDateToTextView(timestamp: Long) {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
-        val date = sdf.format(timestamp)
+        val date = sdf.format(timestamp*1000L)
         tv_dialog_time_first.text = date.toString()
     }
 
