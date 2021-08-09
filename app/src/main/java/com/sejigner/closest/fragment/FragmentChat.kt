@@ -21,9 +21,12 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
-class FragmentChat : Fragment() {
+ class FragmentChat : Fragment() {
 
     companion object {
         const val TAG = "FragmentChat"
@@ -76,7 +79,7 @@ class FragmentChat : Fragment() {
                 val paperPlanes = item as PaperPlanesFirst
                 val message = paperPlanes.paperplaneMessage.text
                 val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                val time = paperPlanes.paperplaneMessage.timestamp.toString()
+                val time = paperPlanes.paperplaneMessage.timestamp
                 val toId = paperPlanes.paperplaneMessage.toId
                 val fromId = paperPlanes.paperplaneMessage.fromId
                 var isReplied = paperPlanes.paperplaneMessage.isReplied
@@ -106,7 +109,7 @@ class FragmentChat : Fragment() {
                 val paperPlanes = item as PaperPlanesReplied
                 val message = paperPlanes.paperplaneMessage.text
                 val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                val time = paperPlanes.paperplaneMessage.timestamp.toString()
+                val time = paperPlanes.paperplaneMessage.timestamp
                 val toId = paperPlanes.paperplaneMessage.toId
                 val fromId = paperPlanes.paperplaneMessage.fromId
                 var isReplied = paperPlanes.paperplaneMessage.isReplied
@@ -268,8 +271,13 @@ class FragmentChat : Fragment() {
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.tv_paperplane_distance.text =
                 paperplaneMessage.flightDistance.toString() + "m"
-            viewHolder.itemView.tv_paperplane_time.text = paperplaneMessage.timestamp.toString()
+            viewHolder.itemView.tv_paperplane_time.text = setDateToTextView(paperplaneMessage.timestamp)
         }
+
+        private fun setDateToTextView(timestamp: Long) : String {
+            
+        }
+
     }
 
     class PaperPlanesReplied(val paperplaneMessage: PaperplaneMessage) :
@@ -283,7 +291,13 @@ class FragmentChat : Fragment() {
             viewHolder.itemView.tv_paperplane_distance_replied.text =
                 paperplaneMessage.flightDistance.toString() + "m"
             viewHolder.itemView.tv_paperplane_time_replied.text =
-                paperplaneMessage.timestamp.toString()
+                setDateToTextView(paperplaneMessage.timestamp)
+        }
+
+        private fun setDateToTextView(timestamp: Long) : String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            val date = sdf.format(paperplaneMessage.timestamp)
+            return date.toString()
         }
     }
 
@@ -292,7 +306,7 @@ class FragmentChat : Fragment() {
         var chatPartnerUser: Users? = null
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             viewHolder.itemView.tv_chat_message.text = latestChatMessage.text
-            viewHolder.itemView.tv_chat_time.text = latestChatMessage.timestamp.toString()
+            viewHolder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.timestamp)
 
             val chatPartnerId: String
             if (latestChatMessage.fromId == FirebaseAuth.getInstance().uid) {
@@ -315,5 +329,11 @@ class FragmentChat : Fragment() {
 
         override fun getLayout(): Int {
             return R.layout.latest_chat_row
+        }
+
+        private fun setDateToTextView(timestamp: Long) : String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            val date = sdf.format(latestChatMessage.timestamp)
+            return date.toString()
         }
     }

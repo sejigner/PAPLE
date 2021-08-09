@@ -26,10 +26,14 @@ class ChatLogActivity : AppCompatActivity() {
         const val TAG = "ChatLog"
     }
 
+    private var fbDatabase: FirebaseDatabase? = null
+
     val adapter = GroupAdapter<GroupieViewHolder>()
     var partnerUid: String? = null
+    private var lastMessageDate : String? = null
+    private var lastMessageTimeMe : String? = null
+    private var lastMessageTimePartner : String? = null
 
-    private var fbDatabase: FirebaseDatabase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)

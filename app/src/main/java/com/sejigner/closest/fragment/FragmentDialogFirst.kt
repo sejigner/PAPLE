@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
+import java.text.SimpleDateFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,7 +32,7 @@ class FragmentDialogFirst : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: String? = null
-    private var time: String? = null
+    private var time: Long? = null
     private var toId: String? = null
     private var fromId: String?= null
     private var isReplied: Boolean ?= null
@@ -43,7 +44,7 @@ class FragmentDialogFirst : DialogFragment() {
         arguments?.let {
             message = it.getString("message")
             distance = it.getString("distance")
-            time = it.getString("time")
+            time = it.getLong("time")
             toId = it.getString("toId")
             fromId = it.getString("fromId")
             isReplied = it.getBoolean("isReplied")
@@ -74,6 +75,8 @@ class FragmentDialogFirst : DialogFragment() {
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
 
+        setDateToTextView(time!!)
+
 
 
         btnCancel?.setOnClickListener {
@@ -88,7 +91,6 @@ class FragmentDialogFirst : DialogFragment() {
 
         tv_dialog_message_first.text = message
         tv_dialog_distance_first.text = distance.toString()
-        tv_dialog_time_first.text = time
 
 
 
@@ -143,6 +145,12 @@ class FragmentDialogFirst : DialogFragment() {
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
+    private fun setDateToTextView(timestamp: Long) {
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+        val date = sdf.format(timestamp)
+        tv_dialog_time_first.text = date.toString()
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -157,12 +165,12 @@ class FragmentDialogFirst : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: String, toId: String, fromId: String, isReplied: Boolean ) =
+        fun newInstance(message: String, distance : String, time: Long, toId: String, fromId: String, isReplied: Boolean ) =
             FragmentDialogFirst().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putString("distance", distance)
-                    putString("time", time)
+                    putLong("time", time)
                     putString("toId", toId)
                     putString("fromId", fromId)
                     putBoolean("isReplied", isReplied)

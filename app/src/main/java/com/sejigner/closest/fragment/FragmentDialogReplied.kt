@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
+import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
+import java.text.SimpleDateFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +29,7 @@ class FragmentDialogReplied : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: String? = null
-    private var time: String? = null
+    private var time: Long? = null
     private var toId: String? = null
     private var fromId: String?= null
     private var isReplied: Boolean ?= null
@@ -38,7 +40,7 @@ class FragmentDialogReplied : DialogFragment() {
         arguments?.let {
             message = it.getString("message")
             distance = it.getString("distance")
-            time = it.getString("time")
+            time = it.getLong("time")
             toId = it.getString("toId")
             fromId = it.getString("fromId")
             isReplied = it.getBoolean("isReplied")
@@ -66,7 +68,8 @@ class FragmentDialogReplied : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         tv_dialog_message_second.text = message
         tv_dialog_distance_second.text = distance
-        tv_dialog_time_second.text = time
+
+        setDateToTextView(time!!)
 
         // 버리기 -> 파이어베이스 데이터 삭제
         tv_dialog_discard_second.setOnClickListener {
@@ -92,6 +95,12 @@ class FragmentDialogReplied : DialogFragment() {
         dismiss()
     }
 
+    private fun setDateToTextView(timestamp: Long) {
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+        val date = sdf.format(timestamp)
+        tv_dialog_time_first.text = date.toString()
+    }
+
     companion object {
 
         /**
@@ -104,12 +113,12 @@ class FragmentDialogReplied : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: String, toId : String, fromId : String, isReplied : Boolean) =
+        fun newInstance(message: String, distance : String, time: Long, toId : String, fromId : String, isReplied : Boolean) =
             FragmentDialogReplied().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putString("distance", distance)
-                    putString("time", time)
+                    putLong("time", time)
                     putString("toId", toId)
                     putString("fromId", fromId)
                     putBoolean("isReplied", isReplied)
