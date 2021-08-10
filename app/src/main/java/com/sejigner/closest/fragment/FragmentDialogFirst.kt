@@ -18,6 +18,7 @@ import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,7 +37,6 @@ class FragmentDialogFirst : DialogFragment() {
     private var toId: String? = null
     private var fromId: String?= null
     private var isReplied: Boolean ?= null
-    private var replyTime: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,6 +147,7 @@ class FragmentDialogFirst : DialogFragment() {
 
     private fun setDateToTextView(timestamp: Long) {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         val date = sdf.format(timestamp*1000L)
         tv_dialog_time_first.text = date.toString()
     }

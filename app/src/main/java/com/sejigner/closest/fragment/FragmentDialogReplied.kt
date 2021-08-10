@@ -15,6 +15,7 @@ import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,6 +98,7 @@ class FragmentDialogReplied : DialogFragment() {
 
     private fun setDateToTextView(timestamp: Long) {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         val date = sdf.format(timestamp*1000L)
         tv_dialog_time_first.text = date.toString()
     }

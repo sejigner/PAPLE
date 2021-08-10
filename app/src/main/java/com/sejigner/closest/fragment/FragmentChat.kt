@@ -24,6 +24,9 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
  class FragmentChat : Fragment() {
 
@@ -275,7 +278,9 @@ import java.text.SimpleDateFormat
 
         private fun setDateToTextView(timestamp: Long) : String {
             val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
             val date = sdf.format(paperplaneMessage.timestamp*1000L)
+
             return date.toString()
         }
 
@@ -334,6 +339,7 @@ import java.text.SimpleDateFormat
 
         private fun setDateToTextView(timestamp: Long) : String {
             val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
             val date = sdf.format(latestChatMessage.timestamp*1000L)
             return date.toString()
         }

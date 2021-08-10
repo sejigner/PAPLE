@@ -9,16 +9,20 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.type.Date
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.models.ChatMessage
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.chat_date.view.*
 import kotlinx.android.synthetic.main.chat_from_row.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatLogActivity : AppCompatActivity() {
 
@@ -30,9 +34,9 @@ class ChatLogActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<GroupieViewHolder>()
     var partnerUid: String? = null
+
+
     private var lastMessageDate : String? = null
-    private var lastMessageTimeMe : String? = null
-    private var lastMessageTimePartner : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +80,21 @@ class ChatLogActivity : AppCompatActivity() {
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                val currentMessageDate = getDateTime(chatMessage!!.timestamp)
 
                 if (chatMessage != null) {
                     Log.d(TAG, chatMessage.text)
 
+
+                        if(lastMessageDate != currentMessageDate) {
+                            lastMessageDate = currentMessageDate
+                            adapter.add(ChatDate(lastMessageDate!!))
+                        }
+
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
-                        adapter.add(ChatFromItem(chatMessage.text))
+                        adapter.add(ChatFromItem(chatMessage.text, chatMessage.timestamp))
                     } else {
-                        adapter.add(ChatToItem(chatMessage.text))
+                        adapter.add(ChatToItem(chatMessage.text, chatMessage.timestamp))
                     }
                 }
 
@@ -108,6 +119,18 @@ class ChatLogActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun getDateTime(time: Long): String? {
+        try {
+            val sdf = SimpleDateFormat("yyyy년 MM월 dd일")
+            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+            val netDate = Date(time * 1000)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            Log.d(TAG, e.toString())
+            return e.toString()
+        }
     }
 
 
@@ -143,24 +166,59 @@ class ChatLogActivity : AppCompatActivity() {
     }
 }
 
-class ChatFromItem(val text: String) : Item<GroupieViewHolder>() {
+class ChatFromItem(val text: String, val time: Long) : Item<GroupieViewHolder>() {
+
+    private var lastMessageTimeMe : String? = null
+
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.tv_message_me.text = text
+        viewHolder.itemView.tv_time_me.text = setTime(time)
     }
 
     override fun getLayout(): Int {
         return R.layout.chat_from_row
     }
 
+    private fun setTime(timestamp: Long) : String {
+        val sdf = SimpleDateFormat("hh:mm")
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+        val date = sdf.format(timestamp*1000L)
+        return date.toString()
+    }
+
+
 }
 
-class ChatToItem(val text: String) : Item<GroupieViewHolder>() {
+class ChatToItem(val text: String, val time: Long) : Item<GroupieViewHolder>() {
+
+    private var lastMessageTimePartner : String? = null
+
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.tv_message_partner.text = text
+        viewHolder.itemView.tv_time_partner.text = setTime(time)
     }
 
     override fun getLayout(): Int {
         return R.layout.chat_to_row
     }
 
+    private fun setTime(timestamp: Long) : String {
+        val sdf = SimpleDateFormat("hh:mm")
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+        val date = sdf.format(timestamp*1000L)
+        return date.toString()
+    }
+
 }
+
+class ChatDate(private val lastDate: String) : Item<GroupieViewHolder>()  {
+    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.tv_chat_date.text= lastDate
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.chat_date
+    }
+
+}
+

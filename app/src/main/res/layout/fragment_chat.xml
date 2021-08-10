@@ -33,7 +33,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="8dp"
                 android:id="@+id/rv_paperplane_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +62,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="8dp"
                 android:id="@+id/rv_paperplane_replied"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
