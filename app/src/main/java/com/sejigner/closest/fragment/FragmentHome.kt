@@ -41,6 +41,7 @@ class FragmentHome : Fragment() {
 
     companion object {
         const val TAG = "FlightLog"
+        val CURRENTADDRESS = "CURRENT_ADDRESS"
     }
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
@@ -88,67 +89,16 @@ class FragmentHome : Fragment() {
         }
 
         iv_paper_plane_home.setOnClickListener {
-            performSendAnonymousMessage()
-        }
+            if(userFound) {
+                val dialog = FragmentDialogWritePaper.newInstance(
+                    FirebaseAuth.getInstance().uid!!, userFoundId, currentAddress, flightDistance)
+                val fm = childFragmentManager
+                fm.beginTransaction()
+                dialog.show(fm, "write paper")
 
-    }
-
-
-    private fun performSendAnonymousMessage() {
-
-        if (userFoundId != "") {
-            var toId = userFoundId
-            val text = et_message_paper.text.toString()
-            val fromId = FirebaseAuth.getInstance().uid!!
-            val distance = flightDistance
-
-            val paperPlaneReceiverReference =
-                FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
-
-            val acquaintanceRecordFromReference =
-                FirebaseDatabase.getInstance().getReference("/Acquaintances/$fromId")
-            val acquaintanceRecordToReference =
-                FirebaseDatabase.getInstance().getReference("/Acquaintances/$toId")
-            val paperplaneMessage = PaperplaneMessage(
-                paperPlaneReceiverReference.key!!,
-                text,
-                fromId,
-                toId,
-                distance,
-                System.currentTimeMillis() / 1000L,
-                false
-            )
-
-            /* 같은 내용의 Message 데이터들을 각각 보낸 유저와 받은 유저의 ID로 저장
-            paperPlaneReference.setValue(paperplaneMessage).addOnSuccessListener {
-                Log.d(TAG, "The message has been flown $flightDistance away")
+            } else {
+                Toast.makeText(requireActivity(),"대상을 찾지 못했어요:(",Toast.LENGTH_SHORT).show()
             }
-            paperPlaneToReference.setValue(paperplaneMessage)
-
-             */
-            paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
-                Log.d(TAG, "Receiver 실패")
-            }.addOnSuccessListener {
-                Toast.makeText(
-                    requireActivity(),
-                    "종이비행기가 ${flightDistance}m 거리의 유저에게 도달했어요!",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)
-                    .addOnSuccessListener {
-                        Log.d(TAG, "소통 기록 저장 - 발신자: $fromId")
-                    }
-                acquaintanceRecordToReference.child(fromId).child("haveMet").setValue(true)
-                    .addOnSuccessListener {
-                        Log.d(TAG, "소통 기록 저장 - 수신자: $toId")
-                    }
-                getClosestUser()
-            }
-        }
-        else {
-            Toast.makeText(requireActivity(), "10km 이내에 유저가 없어요.", Toast.LENGTH_SHORT)
-                .show()
         }
     }
 
@@ -158,7 +108,8 @@ class FragmentHome : Fragment() {
     private lateinit var userFoundLocation: Location
     private var flightDistance: Double = 0.0
 
-    private fun getClosestUser() {
+
+    fun getClosestUser() {
         getCurrentLocation()
         fbFirestore = FirebaseFirestore.getInstance()
 
@@ -306,7 +257,6 @@ class FragmentHome : Fragment() {
         }
         tv_update_location.text = currentAddress
         setLocationToDatabase(latitude, longitude)
-
 
         return currentAddress
     }

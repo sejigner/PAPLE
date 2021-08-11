@@ -128,7 +128,6 @@ import kotlin.collections.HashMap
                 val fm = childFragmentManager
                 dialog.show(fm, "second paper")
             }
-
         }
     }
 
@@ -277,7 +276,7 @@ import kotlin.collections.HashMap
         }
 
         private fun setDateToTextView(timestamp: Long) : String {
-            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
             sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
             val date = sdf.format(paperplaneMessage.timestamp*1000L)
 
@@ -301,7 +300,7 @@ import kotlin.collections.HashMap
         }
 
         private fun setDateToTextView(timestamp: Long) : String {
-            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
             val date = sdf.format(paperplaneMessage.timestamp*1000L)
             return date.toString()
         }
@@ -338,7 +337,7 @@ import kotlin.collections.HashMap
         }
 
         private fun setDateToTextView(timestamp: Long) : String {
-            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+            val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
             sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
             val date = sdf.format(latestChatMessage.timestamp*1000L)
             return date.toString()

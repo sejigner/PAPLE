@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Closest
-    </string>
-    <string name="save">저장하기
-    </string>
+    <string name="title">Paper Plane</string>
+    <string name="app_name">Closest</string>
+    <string name="save">저장하기</string>
     <string name="location_update">위치정보 업데이트</string>
     <string name="user_birth_year">생년</string>
     <string name="user_gender">성별</string>
+    <string name="send_paper">비행기를 날릴래요!</string>
     <string name="gender_male">남성</string>
     <string name="gender_female">여성</string>
     <string name="log_out">로그아웃</string>
@@ -13,6 +13,7 @@
     <string name="chat">CHAT</string>
     <string name="my_page">My PAGE</string>
     <string name="flight_distance">%1$sm 거리의 유저에게 도달했어요 :)</string>
+    <string name="advice_home">지금 옆에 친구가 있다면 하고 싶은 이야기를\n종이비행기에 적어 날려보세요</string>
     <string name="first_plane">처음 날아온 비행기</string>
     <string name="returned_plane">되돌아온 비행기</string>
     <string name="chatting">채팅</string>
@@ -20,4 +21,10 @@
     <string name="distance">%1$sm</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
+    <string name="advice_write_paper">오늘 있었던 일, 지금 나의 기분,\n
+        그냥 문득 든 생각 등 옆에 누군가 있다면\n
+        하고 싶은 말을 적어서 날려보세요.\n\n
+        때로는 대답이 없어도\n
+        내 이야기를 하는 것만으로도\n기분이 좋아지지 않나요?</string>
+    <string name="limit_write">0/250</string>
 </resources>

@@ -180,7 +180,7 @@ class ChatFromItem(val text: String, val time: Long) : Item<GroupieViewHolder>()
     }
 
     private fun setTime(timestamp: Long) : String {
-        val sdf = SimpleDateFormat("hh:mm")
+        val sdf = SimpleDateFormat("a hh:mm")
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         val date = sdf.format(timestamp*1000L)
         return date.toString()
@@ -203,7 +203,7 @@ class ChatToItem(val text: String, val time: Long) : Item<GroupieViewHolder>() {
     }
 
     private fun setTime(timestamp: Long) : String {
-        val sdf = SimpleDateFormat("hh:mm")
+        val sdf = SimpleDateFormat("a hh:mm")
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         val date = sdf.format(timestamp*1000L)
         return date.toString()
