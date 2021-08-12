@@ -162,7 +162,7 @@ class FragmentDialogFirst : DialogFragment() {
          * @return A new instance of fragment FragmentDialog.
          */
 
-        const val TAG = "PaperDialog"
+        const val TAG = "DialogFlightSuccess"
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic

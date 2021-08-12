@@ -27,4 +27,5 @@
         때로는 대답이 없어도\n
         내 이야기를 하는 것만으로도\n기분이 좋아지지 않나요?</string>
     <string name="limit_write">0/250</string>
+    <string name="flight_result">%1$sm 거리의 누군가에게\n비행기가 날아갔어요</string>
 </resources>

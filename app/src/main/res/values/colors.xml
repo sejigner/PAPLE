@@ -6,4 +6,5 @@
     <color name="backgroundColor">#EDF1F5</color>
     <color name="txt_initialSetting">#8e8e8e</color>
     <color name="txt_gray">#A6A8AA</color>
+    <color name="backgroundTransparent">#70000000</color>
 </resources>

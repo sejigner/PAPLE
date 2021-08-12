@@ -1,6 +1,8 @@
 package com.sejigner.closest.fragment
 
-import android.content.Intent
+import android.app.Activity
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,20 +15,17 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.NewSignInActivity
 import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.text.SimpleDateFormat
 import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,6 +42,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var userFoundId: String? = null
     private var currentAddress: String? = null
     private var flightDistance: Double = 0.0
+    private var mCallback : WritePaperListener ?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +59,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dialog_write, container, false)
     }
@@ -77,9 +78,13 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         location?.text = currentAddress
         btnFly?.setOnClickListener{
-            performSendAnonymousMessage()
-            (parentFragment as FragmentHome).getClosestUser()
-            dismiss()
+            val isSuccess = performSendAnonymousMessage()
+            if(isSuccess) {
+                mCallback?.setUserFound()
+                mCallback?.showSuccessFragment()
+                dismiss()
+                mCallback?.getClosestUser()
+            }
         }
 
         btnClose?.setOnClickListener {
@@ -104,7 +109,8 @@ class FragmentDialogWritePaper : DialogFragment() {
 
     }
 
-    private fun performSendAnonymousMessage() {
+
+    private fun performSendAnonymousMessage() : Boolean {
 
         if (userFoundId != "") {
             val toId = userFoundId!!
@@ -144,9 +150,9 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
         }
         else {
-            Toast.makeText(requireActivity(), "10km 이내에 유저가 없어요.", Toast.LENGTH_SHORT)
-                .show()
+            return false
         }
+        return true
     }
 
 
@@ -158,7 +164,23 @@ class FragmentDialogWritePaper : DialogFragment() {
     }
 
 
-    companion object {
+    interface WritePaperListener {
+        fun showSuccessFragment()
+        fun getClosestUser()
+        fun setUserFound()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is WritePaperListener) {
+            mCallback = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement WritePaperListener")
+        }
+    }
+
+
+    companion object{
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
