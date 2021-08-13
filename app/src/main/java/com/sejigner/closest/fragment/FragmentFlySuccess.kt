@@ -75,8 +75,7 @@ class FragmentFlySuccess : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels)
-        val height = (resources.displayMetrics.heightPixels)
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog!!.window?.setBackgroundDrawableResource(R.color.backgroundTransparent)
     }
