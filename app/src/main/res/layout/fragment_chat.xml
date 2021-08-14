@@ -11,30 +11,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <com.google.android.material.card.MaterialCardView
-            card_view:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view_outer"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            card_view:layout_constraintHeight_percent="0.13"
-            android:layout_gravity="center"
-            card_view:cardBackgroundColor="@android:color/transparent"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="3dp" >
-
+            android:layout_height="100dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_percent="0.13">
             <com.google.android.material.card.MaterialCardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_inner"
+                android:id="@+id/card_view_top"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginBottom="3dp"
+                android:layout_height="100dp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="5dp"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="9dp"
-                card_view:cardElevation="10dp" >
+                card_view:cardElevation="5dp" >
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -53,10 +45,13 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
-        </com.google.android.material.card.MaterialCardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintTop_toBottomOf="@id/card_view_outer"
+            app:layout_constraintTop_toBottomOf="@id/cl_top"
             android:id="@+id/constraintview_paper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +62,7 @@
                 android:id="@+id/constraintview_first"
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:paddingStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

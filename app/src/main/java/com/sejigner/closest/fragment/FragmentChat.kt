@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sejigner.closest.ChatLogActivity
-import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.R
 import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
+import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.FirstPaperPlaneDatabase
+import com.sejigner.closest.room.FirstPaperPlaneRD
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -42,6 +44,7 @@ import kotlin.collections.HashMap
     private val firstPlaneKeyList = ArrayList<String>()
     private val repliedPlaneKeyList = ArrayList<String>()
     private val messageKeyList = ArrayList<String>()
+    private var db: FirstPaperPlaneDatabase? = null
 
 
     override fun onCreateView(
@@ -59,6 +62,11 @@ import kotlin.collections.HashMap
         rv_paperplane_first.adapter = adapterHorizontalFirst
         rv_paperplane_replied.adapter = adapterHorizontalReplied
         rv_chat.adapter = adapterVertical
+
+        db = FirstPaperPlaneDatabase.getDatabase(requireActivity())
+        rv_paperplane_first.setHasFixedSize(true)
+        rv_paperplane_first
+
 
 
         // fetchPapers()
@@ -163,6 +171,9 @@ import kotlin.collections.HashMap
 
                     val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
                     if (!paperplane.isReplied) {
+                        Thread(Runnable {
+                            db!!.paperplaneDao().insert( FirstPaperPlaneRD(null, paperplane.text))
+                        }).start()
                         firstPlaneMap[snapshot.key!!] = paperplane
                         firstPlaneKeyList.add(snapshot.key!!)
                         refreshRecyclerViewPlanesFirst()

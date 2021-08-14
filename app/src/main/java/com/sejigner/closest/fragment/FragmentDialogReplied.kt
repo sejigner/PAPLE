@@ -100,7 +100,7 @@ class FragmentDialogReplied : DialogFragment() {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
         val date = sdf.format(timestamp*1000L)
-        tv_dialog_time_first.text = date.toString()
+        tv_dialog_time_second.text = date.toString()
     }
 
     companion object {
