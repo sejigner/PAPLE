@@ -14,7 +14,7 @@ class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): FirstPaperPlaneAdapter {
+    ): FirstPaperPlaneViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.column_paperplane_first, parent, false)
         return FirstPaperPlaneViewHolder(view)
     }
