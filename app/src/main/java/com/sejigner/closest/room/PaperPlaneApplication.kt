@@ -9,6 +9,6 @@ class PaperPlaneApplication : Application() {
     val applicationScope = CoroutineScope(SupervisorJob())
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
-    val firstPaperPlaneDatabase by lazy { FirstPaperPlaneDatabase.getDatabase(this, applicationScope) }
-    val firstPaperPlaneRepository by lazy { FirstPaperPlaneRepository(firstPaperPlaneDatabase.paperplaneDao()) }
+    val firstPaperPlaneDatabase by lazy { PaperPlaneDatabase.getDatabase(this, applicationScope) }
+    val firstPaperPlaneRepository by lazy { PaperPlaneRepository(firstPaperPlaneDatabase.paperPlaneDao()) }
 }

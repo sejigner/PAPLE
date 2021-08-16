@@ -15,18 +15,18 @@ import com.sejigner.closest.R
 import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.room.FirstPaperPlaneDatabase
-import com.sejigner.closest.room.FirstPaperPlaneRD
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlanes
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
 import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -44,7 +44,7 @@ import kotlin.collections.HashMap
     private val firstPlaneKeyList = ArrayList<String>()
     private val repliedPlaneKeyList = ArrayList<String>()
     private val messageKeyList = ArrayList<String>()
-    private var db: FirstPaperPlaneDatabase? = null
+    private var db: PaperPlaneDatabase? = null
 
 
     override fun onCreateView(
@@ -63,7 +63,7 @@ import kotlin.collections.HashMap
         rv_paperplane_replied.adapter = adapterHorizontalReplied
         rv_chat.adapter = adapterVertical
 
-        db = FirstPaperPlaneDatabase.getDatabase(requireActivity())
+        db = PaperPlaneDatabase.getDatabase(requireActivity())
         rv_paperplane_first.setHasFixedSize(true)
         rv_paperplane_first
 
@@ -172,7 +172,7 @@ import kotlin.collections.HashMap
                     val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
                     if (!paperplane.isReplied) {
                         Thread(Runnable {
-                            db!!.paperplaneDao().insert( FirstPaperPlaneRD(null, paperplane.text))
+                            db!!.paperPlaneDao().insert( PaperPlanes(null, paperplane.text))
                         }).start()
                         firstPlaneMap[snapshot.key!!] = paperplane
                         firstPlaneKeyList.add(snapshot.key!!)
@@ -284,6 +284,12 @@ import kotlin.collections.HashMap
             viewHolder.itemView.tv_paperplane_distance.text =
                 paperplaneMessage.flightDistance.toString() + "m"
             viewHolder.itemView.tv_paperplane_time.text = setDateToTextView(paperplaneMessage.timestamp)
+        }
+
+        private fun calDaysBetween(time : Long) : Long {
+            val currentTimestamp = System.currentTimeMillis()
+            val timeDiff = currentTimestamp
+            return TimeUnit.MILLISECONDS.toDays(timeDiff)
         }
 
         private fun setDateToTextView(timestamp: Long) : String {

@@ -4,12 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "firstPaperPlaneTable")
-data class FirstPaperPlaneRD(
-    @PrimaryKey
-    val userId: String?,
+@Entity(tableName = "first_paper_planes")
+data class FirstPaperPlanes(
 
-    @ColumnInfo(name = "fromId")
+    @PrimaryKey
     val fromId : String?,
 
     @ColumnInfo(name = "message")
