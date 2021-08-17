@@ -9,4 +9,6 @@
     <color name="title_gray">#5f5f5f</color>
     <color name="dialog_stroke">#E5E5E5</color>
     <color name="backgroundTransparent">#70000000</color>
+    <color name="paperplane_text">#6174FF</color>
+    <color name="paperplane_rest">#BCBCBC</color>
 </resources>

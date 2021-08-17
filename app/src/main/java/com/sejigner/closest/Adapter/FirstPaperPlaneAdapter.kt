@@ -1,6 +1,5 @@
 package com.sejigner.closest.Adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.sejigner.closest.UI.FirstPlaneListener
 import com.sejigner.closest.UI.FragmentChatViewModel
 import com.sejigner.closest.room.FirstPaperPlanes
 import kotlinx.android.synthetic.main.column_paperplane_first.view.*
-import kotlinx.android.synthetic.main.fragment_dialog_first.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -32,8 +30,9 @@ class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : 
         position: Int
     ) {
         var currentPosition = list[position]
-        holder.itemView.tv_paperplane_distance.text = currentPosition.flightDistance.toString()+"m"
-        holder.itemView.tv_paperplane_time.text = setDateToTextView(currentPosition.timestamp)
+        holder.itemView.tv_paperplane_message_first.text = currentPosition.message
+        holder.itemView.tv_paperplane_distance_first.text = currentPosition.flightDistance.toString()+"m"
+        holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.timestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
@@ -42,16 +41,25 @@ class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : 
     }
 
     private fun setDateToTextView(timestamp: Long) : String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
-        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-        val date = sdf.format(timestamp*1000L)
-        return date.toString()
-    }
+        var sdf: SimpleDateFormat
+        val date = Date(timestamp*1000)
+        val messageTime = Calendar.getInstance()
+        messageTime.time = date
 
-    private fun calDaysBetween(time : Long) : Long {
-        val currentTimestamp = System.currentTimeMillis()
-        val timeDiff = currentTimestamp
-        return TimeUnit.MILLISECONDS.toDays(timeDiff)
+        val now = Calendar.getInstance()
+        sdf = if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE) ) {
+            SimpleDateFormat("a hh:mm")
+        } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1  ){
+            return "어제"
+        } else if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)) {
+            SimpleDateFormat("MM월 dd일")
+        } else {
+            SimpleDateFormat("yyyy.MM.dd")
+        }
+
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+
+        return sdf.format(timestamp * 1000L)
     }
 
     inner class FirstPaperPlaneViewHolder(itemView : View, itemClick: (FirstPaperPlanes) -> Unit) : RecyclerView.ViewHolder(itemView) {

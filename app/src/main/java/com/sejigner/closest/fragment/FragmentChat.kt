@@ -7,16 +7,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FirstPlaneDialogListener
 import com.sejigner.closest.UI.FirstPlaneListener
 import com.sejigner.closest.UI.FragmentChatViewModel
 import com.sejigner.closest.UI.FragmentChatViewModelFactory
@@ -39,7 +38,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
- class FragmentChat: Fragment(), FirstPlaneListener, FirstPlaneDialogListener {
+
+ class FragmentChat: Fragment(), FirstPlaneListener {
 
     companion object {
         const val TAG = "FragmentChat"
@@ -87,7 +87,13 @@ import kotlin.collections.HashMap
 
 
         }
+
         rv_paperplane_first.adapter = firstPlaneAdapter
+        // 역순 정렬
+        val mLayoutManager = LinearLayoutManager(requireActivity())
+        mLayoutManager.reverseLayout = true
+        mLayoutManager.stackFromEnd = true
+        rv_paperplane_first.setLayoutManager(mLayoutManager)
 
         ViewModel.allFirstPaperPlanes().observe(requireActivity(), Observer{
             firstPlaneAdapter.list = it
@@ -267,8 +273,26 @@ import kotlin.collections.HashMap
          dialog.show(fm, "first paper")
      }
 
-     override fun onDiscardButtonClicked(item: FirstPaperPlanes) {
-         ViewModel.delete(item)
+     private fun setDateToTextView(timestamp: Long) : String {
+         var sdf: SimpleDateFormat
+
+         val messageTime = Calendar.getInstance()
+         messageTime.timeInMillis = timestamp
+
+         val now = Calendar.getInstance()
+         if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE) ) {
+             sdf = SimpleDateFormat("a hh:mm")
+         } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1  ){
+             return "어제"
+         } else if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)) {
+             sdf = SimpleDateFormat("MM월 dd일")
+         } else {
+             sdf = SimpleDateFormat("yyyy.MM.dd")
+         }
+
+         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+
+         return sdf.format(timestamp * 1000L)
      }
 
 
@@ -282,23 +306,38 @@ import kotlin.collections.HashMap
 
         @SuppressLint("SetTextI18n")
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-            viewHolder.itemView.tv_paperplane_distance.text =
+            viewHolder.itemView.tv_paperplane_distance_first.text =
                 paperplaneMessage.flightDistance.toString() + "m"
-            viewHolder.itemView.tv_paperplane_time.text = setDateToTextView(paperplaneMessage.timestamp)
+            viewHolder.itemView.tv_paperplane_time_first.text = setDateToTextView(paperplaneMessage.timestamp)
         }
 
         private fun calDaysBetween(time : Long) : Long {
             val currentTimestamp = System.currentTimeMillis()
-            val timeDiff = currentTimestamp
+            val timeDiff = currentTimestamp - time
             return TimeUnit.MILLISECONDS.toDays(timeDiff)
         }
 
-        private fun setDateToTextView(timestamp: Long) : String {
-            val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
-            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-            val date = sdf.format(paperplaneMessage.timestamp*1000L)
+        private fun setDateToTextView(timestamp: Long): String {
 
-            return date.toString()
+            var sdf: SimpleDateFormat
+
+            val messageTime = Calendar.getInstance()
+            messageTime.timeInMillis = timestamp
+
+            val now = Calendar.getInstance()
+            if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE) ) {
+                sdf = SimpleDateFormat("a hh:mm")
+            } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1  ){
+                return "어제"
+            } else if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)) {
+                sdf = SimpleDateFormat("MM월 dd일")
+            } else {
+                sdf = SimpleDateFormat("yyyy.MM.dd")
+            }
+
+            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+
+            return sdf.format(paperplaneMessage.timestamp * 1000L)
         }
 
     }
@@ -355,9 +394,24 @@ import kotlin.collections.HashMap
         }
 
         private fun setDateToTextView(timestamp: Long) : String {
-            val sdf = SimpleDateFormat("yyyy-MM-dd a hh:mm")
+            var sdf: SimpleDateFormat
+
+            val messageTime = Calendar.getInstance()
+            messageTime.timeInMillis = timestamp
+
+            val now = Calendar.getInstance()
+            if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE) ) {
+                sdf = SimpleDateFormat("a hh:mm")
+            } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1  ){
+                return "어제"
+            } else if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)) {
+                sdf = SimpleDateFormat("MM월 dd일")
+            } else {
+                sdf = SimpleDateFormat("yyyy.MM.dd")
+            }
+
             sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-            val date = sdf.format(latestChatMessage.timestamp*1000L)
-            return date.toString()
+
+            return sdf.format(timestamp * 1000L)
         }
     }

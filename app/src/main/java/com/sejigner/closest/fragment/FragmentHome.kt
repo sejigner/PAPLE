@@ -161,7 +161,6 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
                                         val distance: Float =
                                             locationFound.distanceTo(userCurrentLocation)
                                         flightDistance = round((distance.toDouble()) * 100) / 100
-
                                     }
 //
 //                        Log.d(TAG, userFoundLocation.toString() + "현재 위치:"+ userCurrentLocation)
@@ -211,7 +210,6 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
     override fun setUserFound() {
         userFound = false
         userFoundId = ""
-
     }
 
 

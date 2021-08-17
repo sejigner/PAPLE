@@ -1,6 +1,5 @@
 package com.sejigner.closest.fragment
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -18,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FirstPlaneDialogListener
 import com.sejigner.closest.UI.FragmentChatViewModel
 import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
@@ -45,7 +43,6 @@ class FragmentDialogFirst : DialogFragment() {
     private var time: Long? = null
     private var fromId: String?= null
     private var uid : String? = null
-    private var mListener: FirstPlaneDialogListener ?= null
     private var paper : FirstPaperPlanes ?= null
 
 
@@ -115,12 +112,12 @@ class FragmentDialogFirst : DialogFragment() {
                     uid!!,
                     fromId!!,
                     distance!!.toDouble(),
-                    System.currentTimeMillis() / 1000L,
+                    System.currentTimeMillis(),
                     true)
                 paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                     Log.d(TAG, "Reply 실패")
                 }.addOnSuccessListener {
-                    mListener?.onDiscardButtonClicked(paper!!)
+                    viewModel.delete(paper!!)
                     dismiss()
                 }
 
