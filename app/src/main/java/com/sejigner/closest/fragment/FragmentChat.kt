@@ -7,16 +7,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
+import com.sejigner.closest.UI.FirstPlaneDialogListener
+import com.sejigner.closest.UI.FirstPlaneListener
+import com.sejigner.closest.UI.FragmentChatViewModel
+import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlanes
+import com.sejigner.closest.room.PaperPlaneRepository
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -30,7 +39,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
- class FragmentChat : Fragment() {
+ class FragmentChat: Fragment(), FirstPlaneListener, FirstPlaneDialogListener {
 
     companion object {
         const val TAG = "FragmentChat"
@@ -45,9 +54,12 @@ import kotlin.collections.HashMap
     private val repliedPlaneKeyList = ArrayList<String>()
     private val messageKeyList = ArrayList<String>()
     private var db: PaperPlaneDatabase? = null
+    lateinit var ViewModel : FragmentChatViewModel
+    lateinit var list: List<FirstPaperPlanes>
 
 
-    override fun onCreateView(
+
+     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,13 +71,33 @@ import kotlin.collections.HashMap
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv_paperplane_first.adapter = adapterHorizontalFirst
+
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+        val factory = FragmentChatViewModelFactory(repository)
+
+        // initialised View Model
+        ViewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+        val firstPlaneAdapter = FirstPaperPlaneAdapter(listOf(), ViewModel) { FirstPaperPlanes ->
+
+            val dialog = FragmentDialogFirst.newInstance(
+                FirstPaperPlanes
+            )
+            val fm = childFragmentManager
+            dialog.show(fm, "first paper")
+
+
+        }
+        rv_paperplane_first.adapter = firstPlaneAdapter
+
+        ViewModel.allFirstPaperPlanes().observe(requireActivity(), Observer{
+            firstPlaneAdapter.list = it
+            firstPlaneAdapter.notifyDataSetChanged()
+        })
+
+        // need to be replaced with VM
         rv_paperplane_replied.adapter = adapterHorizontalReplied
         rv_chat.adapter = adapterVertical
 
-        db = PaperPlaneDatabase.getDatabase(requireActivity())
-        rv_paperplane_first.setHasFixedSize(true)
-        rv_paperplane_first
 
 
 
@@ -79,35 +111,7 @@ import kotlin.collections.HashMap
     val repliedPlaneMap = HashMap<String, PaperplaneMessage>()
     val messagesMap = HashMap<String, ChatMessage>()
 
-    private fun refreshRecyclerViewPlanesFirst() {
-        adapterHorizontalFirst.clear()
-        firstPlaneMap.values.forEach {
-            adapterHorizontalFirst.add(PaperPlanesFirst(it))
 
-            adapterHorizontalFirst.setOnItemClickListener { item, view ->
-
-                val paperPlanes = item as PaperPlanesFirst
-                val message = paperPlanes.paperplaneMessage.text
-                val distance = paperPlanes.paperplaneMessage.flightDistance.toString()
-                val time = paperPlanes.paperplaneMessage.timestamp
-                val toId = paperPlanes.paperplaneMessage.toId
-                val fromId = paperPlanes.paperplaneMessage.fromId
-                var isReplied = paperPlanes.paperplaneMessage.isReplied
-
-
-                val dialog = FragmentDialogFirst.newInstance(
-                    message,
-                    distance,
-                    time,
-                    toId,
-                    fromId,
-                    isReplied
-                )
-                val fm = childFragmentManager
-                dialog.show(fm, "first paper")
-            }
-        }
-    }
 
     private fun refreshRecyclerViewPlanesReplied() {
         adapterHorizontalReplied.clear()
@@ -171,12 +175,10 @@ import kotlin.collections.HashMap
 
                     val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
                     if (!paperplane.isReplied) {
-                        Thread(Runnable {
-                            db!!.paperPlaneDao().insert( PaperPlanes(null, paperplane.text))
-                        }).start()
-                        firstPlaneMap[snapshot.key!!] = paperplane
-                        firstPlaneKeyList.add(snapshot.key!!)
-                        refreshRecyclerViewPlanesFirst()
+                        val item = FirstPaperPlanes(paperplane.fromId,paperplane.text,paperplane.flightDistance,paperplane.timestamp)
+                        ViewModel.insert(item)
+                        // immediate delete on setting data to local databasae
+                        ref.child(paperplane.fromId).removeValue()
                     } else {
                         repliedPlaneMap[snapshot.key!!] = paperplane
                         repliedPlaneKeyList.add(snapshot.key!!)
@@ -186,34 +188,21 @@ import kotlin.collections.HashMap
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
 
-                    if (!paperplane.isReplied) {
-                        firstPlaneMap[snapshot.key!!] = paperplane
-                        refreshRecyclerViewPlanesFirst()
-                    } else {
-                        repliedPlaneMap[snapshot.key!!] = paperplane
-                        refreshRecyclerViewPlanesReplied()
-                    }
-
-
-
-                    Log.d(TAG, "Child changed detected")
                 }
-                // int diaryIndex = mDiaryID.indexOf(dataSnapshot.getKey());
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
-                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
-                    if (!paperplane.isReplied) {
-                        val index: Int = firstPlaneKeyList.indexOf(snapshot.key)
-                        adapterHorizontalFirst.removeGroupAtAdapterPosition(index)
-                        firstPlaneKeyList.removeAt(index)
-                    } else {
-                        val index: Int = repliedPlaneKeyList.indexOf(snapshot.key)
-                        adapterHorizontalReplied.removeGroupAtAdapterPosition(index)
-                        repliedPlaneKeyList.removeAt(index)
-                    }
+//                    // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
+//                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
+//                    if (!paperplane.isReplied) {
+//                        val index: Int = firstPlaneKeyList.indexOf(snapshot.key)
+//                        adapterHorizontalFirst.removeGroupAtAdapterPosition(index)
+//                        firstPlaneKeyList.removeAt(index)
+//                    } else {
+//                        val index: Int = repliedPlaneKeyList.indexOf(snapshot.key)
+//                        adapterHorizontalReplied.removeGroupAtAdapterPosition(index)
+//                        repliedPlaneKeyList.removeAt(index)
+//                    }
 
                 }
 
@@ -270,8 +259,20 @@ import kotlin.collections.HashMap
             })
         }
 
+     override fun onPaperClicked(item: FirstPaperPlanes) {
+         Log.d("FirstPlane","clicked")
+         val dialog = FragmentDialogFirst.newInstance(item
+         )
+         val fm = childFragmentManager
+         dialog.show(fm, "first paper")
+     }
 
-    }
+     override fun onDiscardButtonClicked(item: FirstPaperPlanes) {
+         ViewModel.delete(item)
+     }
+
+
+ }
 
     class PaperPlanesFirst(val paperplaneMessage: PaperplaneMessage) :
         Item<GroupieViewHolder>() {

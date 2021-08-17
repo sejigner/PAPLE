@@ -1,4 +1,4 @@
-package com.sejigner.closest.fragment
+package com.sejigner.closest.Adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

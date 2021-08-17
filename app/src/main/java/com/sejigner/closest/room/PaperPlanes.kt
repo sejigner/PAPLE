@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
 
-    @PrimaryKey
+    @ColumnInfo(name = "fromId")
     val fromId : String?,
 
     @ColumnInfo(name = "message")
@@ -18,4 +18,7 @@ data class FirstPaperPlanes(
 
     @ColumnInfo(name = "timestamp")
     val timestamp : Long
-)
+) {
+    @PrimaryKey (autoGenerate = true)
+    var id: Int? = null
+}

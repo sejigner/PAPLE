@@ -1,8 +1,6 @@
 package com.sejigner.closest.fragment
 
-import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -42,7 +40,8 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var userFoundId: String? = null
     private var currentAddress: String? = null
     private var flightDistance: Double = 0.0
-    private var mCallback : WritePaperListener ?= null
+    private var mCallbackMain : WritePaperListenerMain ?= null
+    private var mCallbackHome : WritePaperListenerHome ?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,10 +79,10 @@ class FragmentDialogWritePaper : DialogFragment() {
         btnFly?.setOnClickListener{
             val isSuccess = performSendAnonymousMessage()
             if(isSuccess) {
-                mCallback?.setUserFound()
-                mCallback?.showSuccessFragment()
+                mCallbackHome?.setUserFound()
+                mCallbackMain?.showSuccessFragment(flightDistance)
                 dismiss()
-                mCallback?.getClosestUser()
+                mCallbackHome?.getClosestUser()
             }
         }
 
@@ -164,16 +163,19 @@ class FragmentDialogWritePaper : DialogFragment() {
     }
 
 
-    interface WritePaperListener {
-        fun showSuccessFragment()
+    interface WritePaperListenerMain {
+        fun showSuccessFragment(flightDistance: Double)
+    }
+
+    interface WritePaperListenerHome {
         fun getClosestUser()
         fun setUserFound()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is WritePaperListener) {
-            mCallback = context
+        if(context is WritePaperListenerMain) {
+            mCallbackMain = context
         } else {
             throw RuntimeException(context.toString() + "must implement WritePaperListener")
         }

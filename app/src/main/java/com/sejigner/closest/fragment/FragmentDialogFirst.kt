@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,9 +14,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
+import com.sejigner.closest.UI.FirstPlaneDialogListener
+import com.sejigner.closest.UI.FragmentChatViewModel
+import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.FirstPaperPlanes
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,9 +43,11 @@ class FragmentDialogFirst : DialogFragment() {
     private var message: String? = null
     private var distance: String? = null
     private var time: Long? = null
-    private var toId: String? = null
     private var fromId: String?= null
-    private var isReplied: Boolean ?= null
+    private var uid : String? = null
+    private var mListener: FirstPlaneDialogListener ?= null
+    private var paper : FirstPaperPlanes ?= null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +56,7 @@ class FragmentDialogFirst : DialogFragment() {
             message = it.getString("message")
             distance = it.getString("distance")
             time = it.getLong("time")
-            toId = it.getString("toId")
             fromId = it.getString("fromId")
-            isReplied = it.getBoolean("isReplied")
-
-
-
         }
     }
 
@@ -67,13 +73,17 @@ class FragmentDialogFirst : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+        val factory = FragmentChatViewModelFactory(repository)
+        val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
-        var textEntered = ""
+        var textEntered : String
 
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
+        uid = FirebaseAuth.getInstance().uid
+
 
         setDateToTextView(time!!)
 
@@ -85,7 +95,7 @@ class FragmentDialogFirst : DialogFragment() {
 
         btnDiscard?.setOnClickListener {
             // Firebase 내 해당 데이터 삭제
-            removePaper()
+            viewModel.delete(paper!!)
             dismiss()
         }
 
@@ -96,13 +106,13 @@ class FragmentDialogFirst : DialogFragment() {
 
         btnReply?.setOnClickListener {
             textEntered = etReply?.text.toString()
-            if(textEntered != "") {
+            if(textEntered.isNotEmpty()) {
                 val paperPlaneReceiverReference =
-                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$toId")
+                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$uid")
                 val paperplaneMessage = PaperplaneMessage(
                     paperPlaneReceiverReference.key!!,
                     textEntered,
-                    toId!!,
+                    uid!!,
                     fromId!!,
                     distance!!.toDouble(),
                     System.currentTimeMillis() / 1000L,
@@ -110,14 +120,8 @@ class FragmentDialogFirst : DialogFragment() {
                 paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                     Log.d(TAG, "Reply 실패")
                 }.addOnSuccessListener {
-                    Toast.makeText(
-                        requireActivity(),
-                        "당신의 답장 종이비행기가 ${distance}m 거리의 누군가에게 도달했어요!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    removePaper()
+                    mListener?.onDiscardButtonClicked(paper!!)
                     dismiss()
-                    removePaper()
                 }
 
 
@@ -127,14 +131,15 @@ class FragmentDialogFirst : DialogFragment() {
         }
 
         tv_dialog_discard_first.setOnClickListener {
-            removePaper()
+//            removePaper()
+            viewModel.delete(paper!!)
             dismiss()
         }
     }
 
     private fun removePaper() {
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid/$fromId")
         paperPlaneReceiverReference.removeValue()
     }
 
@@ -166,16 +171,15 @@ class FragmentDialogFirst : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: Long, toId: String, fromId: String, isReplied: Boolean ) =
+        fun newInstance(paperPlane: FirstPaperPlanes) =
             FragmentDialogFirst().apply {
                 arguments = Bundle().apply {
-                    putString("message", message)
-                    putString("distance", distance)
-                    putLong("time", time)
-                    putString("toId", toId)
-                    putString("fromId", fromId)
-                    putBoolean("isReplied", isReplied)
+                    putString("message", paperPlane.message)
+                    putString("distance", paperPlane.flightDistance.toString())
+                    putLong("time", paperPlane.timestamp)
+                    putString("fromId", paperPlane.fromId)
                 }
+                paper = paperPlane
             }
     }
 }
