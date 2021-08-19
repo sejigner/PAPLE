@@ -3,6 +3,7 @@ package com.sejigner.closest.UI
 import androidx.lifecycle.ViewModel
 import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -12,11 +13,20 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(item)
     }
 
+    fun insert(item: RepliedPaperPlanes) = GlobalScope.launch {
+        repository.insert(item)
+    }
+
     // In coroutines thread delete item in delete function.
     fun delete(item: FirstPaperPlanes) = GlobalScope.launch {
         repository.delete(item)
     }
 
+    fun delete(item: RepliedPaperPlanes) = GlobalScope.launch {
+        repository.delete(item)
+    }
+
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
+    fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
 }
