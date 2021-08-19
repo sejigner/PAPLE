@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     companion object {
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
+        var UID = "UID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +75,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
-        val uid = fireBaseAuth?.uid
-        val reference = fbDatabase?.reference?.child("Users")?.child(uid!!)?.child("strNickname")
+        UID = fireBaseAuth?.uid!!
+        val reference = fbDatabase?.reference?.child("Users")?.child(UID)?.child("strNickname")
         reference?.get()
             ?.addOnSuccessListener { it ->
                 if (it.value != null) {
@@ -173,7 +174,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     override fun runFragmentDialogWritePaper(userFoundId: String, currentAddress: String, flightDistance : Double) {
 
         val dialog = FragmentDialogWritePaper.newInstance(
-            FirebaseAuth.getInstance().uid!!, userFoundId, currentAddress, flightDistance
+            UID, userFoundId, currentAddress, flightDistance
         )
         val fm = supportFragmentManager
         dialog.show(fm, "write paper")

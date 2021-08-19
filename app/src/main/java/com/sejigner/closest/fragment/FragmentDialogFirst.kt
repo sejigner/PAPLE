@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.UI.FragmentChatViewModel
 import com.sejigner.closest.UI.FragmentChatViewModelFactory
@@ -42,7 +43,6 @@ class FragmentDialogFirst : DialogFragment() {
     private var distance: String? = null
     private var time: Long? = null
     private var fromId: String?= null
-    private var uid : String? = null
     private var paper : FirstPaperPlanes ?= null
 
 
@@ -56,6 +56,8 @@ class FragmentDialogFirst : DialogFragment() {
             fromId = it.getString("fromId")
         }
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,7 +81,6 @@ class FragmentDialogFirst : DialogFragment() {
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
-        uid = FirebaseAuth.getInstance().uid
 
 
         setDateToTextView(time!!)
@@ -105,11 +106,11 @@ class FragmentDialogFirst : DialogFragment() {
             textEntered = etReply?.text.toString()
             if(textEntered.isNotEmpty()) {
                 val paperPlaneReceiverReference =
-                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$uid")
+                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$UID")
                 val paperplaneMessage = PaperplaneMessage(
                     paperPlaneReceiverReference.key!!,
                     textEntered,
-                    uid!!,
+                    UID,
                     fromId!!,
                     distance!!.toDouble(),
                     System.currentTimeMillis(),
@@ -136,7 +137,7 @@ class FragmentDialogFirst : DialogFragment() {
 
     private fun removePaper() {
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$uid/$fromId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID/$fromId")
         paperPlaneReceiverReference.removeValue()
     }
 

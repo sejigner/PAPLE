@@ -15,10 +15,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.R
+import com.sejigner.closest.UI.FragmentChatViewModel
+import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -42,6 +49,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var flightDistance: Double = 0.0
     private var mCallbackMain : WritePaperListenerMain ?= null
     private var mCallbackHome : WritePaperListenerHome ?= null
+    lateinit var ViewModel: FragmentChatViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +76,11 @@ class FragmentDialogWritePaper : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+        val factory = FragmentChatViewModelFactory(repository)
+
+        ViewModel =
+            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
         val etPaper = view.findViewById<View>(R.id.et_write_paper) as? EditText
         val textCount = view.findViewById<View>(R.id.tv_count_letter_paper) as? TextView
@@ -137,6 +150,8 @@ class FragmentDialogWritePaper : DialogFragment() {
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(FragmentHome.TAG, "Receiver 실패")
             }.addOnSuccessListener {
+                val sentPaper = RepliedPaperPlanes(null, text, toId, null, distance, 0L)
+                ViewModel.insert(sentPaper)
 
                 acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)
                     .addOnSuccessListener {

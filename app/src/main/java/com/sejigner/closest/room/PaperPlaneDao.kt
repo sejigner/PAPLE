@@ -20,6 +20,17 @@ interface FirstPaperPlaneDao {
     suspend fun deleteAll()
 }
 
+@Dao
+interface MyPaperPlaneRecordDao {
+
+    @Query("SELECT * FROM my_message_record where fromId = :fromId")
+    fun getWithId(fromId: String) : MyPaperPlaneRecord
+    @Delete
+    suspend fun delete(record: MyPaperPlaneRecord)
+}
+
+
+@Dao
 interface RepliedPaperPlaneDao {
     @Query("SELECT * FROM replied_paper_planes")
     fun getAllRepliedPlanes(): LiveData<List<RepliedPaperPlanes>>

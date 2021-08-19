@@ -9,9 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
+import com.sejigner.closest.UI.FragmentChatViewModel
+import com.sejigner.closest.UI.FragmentChatViewModelFactory
+import com.sejigner.closest.room.FirstPaperPlanes
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
 import java.text.SimpleDateFormat
@@ -28,25 +35,24 @@ private const val ITEMS = "data"
  */
 class FragmentDialogReplied : DialogFragment() {
     // TODO: Rename and change types of parameters
-    private var message: String? = null
+    private var partnerMessage: String? = null
     private var distance: String? = null
-    private var time: Long? = null
-    private var toId: String? = null
+    private var replyTime: Long? = null
     private var fromId: String?= null
-    private var isReplied: Boolean ?= null
+    private var paper : RepliedPaperPlanes?= null
+    private var userMessage : String? = null
+    private var firstTime : Long?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            message = it.getString("message")
+            partnerMessage = it.getString("partnerMessage")
             distance = it.getString("distance")
-            time = it.getLong("time")
-            toId = it.getString("toId")
+            replyTime = it.getLong("replyTime")
             fromId = it.getString("fromId")
-            isReplied = it.getBoolean("isReplied")
-
-
+            userMessage = it.getString("userMessage")
+            firstTime = it.getLong("firstTime")
         }
     }
 
@@ -67,14 +73,20 @@ class FragmentDialogReplied : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tv_dialog_message_second.text = message
+
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+        val factory = FragmentChatViewModelFactory(repository)
+        val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+
+
+        tv_dialog_message_second.text = partnerMessage
         tv_dialog_distance_second.text = distance
 
-        setDateToTextView(time!!)
+        setDateToTextView(replyTime!!)
 
         // 버리기 -> 파이어베이스 데이터 삭제
         tv_dialog_discard_second.setOnClickListener {
-            removePaper()
+            viewModel.delete(paper!!)
             dismiss()
         }
 
@@ -84,17 +96,11 @@ class FragmentDialogReplied : DialogFragment() {
             val intent = Intent(view.context,ChatLogActivity::class.java)
             intent.putExtra(FragmentChat.USER_KEY, fromId)
             startActivity(intent)
-            removePaper()
+            viewModel.delete(paper!!)
             dismiss()
         }
     }
 
-    private fun removePaper() {
-        val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId")
-        paperPlaneReceiverReference.removeValue()
-        dismiss()
-    }
 
     private fun setDateToTextView(timestamp: Long) {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
@@ -115,16 +121,17 @@ class FragmentDialogReplied : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(message: String, distance : String, time: Long, toId : String, fromId : String, isReplied : Boolean) =
+        fun newInstance(paperPlane : RepliedPaperPlanes) =
             FragmentDialogReplied().apply {
                 arguments = Bundle().apply {
-                    putString("message", message)
-                    putString("distance", distance)
-                    putLong("time", time)
-                    putString("toId", toId)
-                    putString("fromId", fromId)
-                    putBoolean("isReplied", isReplied)
+                    putString("partnerMessage", paperPlane.partnerMessage)
+                    putString("distance", paperPlane.flightDistance.toString())
+                    putLong("replyTime", paperPlane.replyTimestamp)
+                    putLong("firstTime",paperPlane.firstTimestamp)
+                    putString("fromId", paperPlane.fromId)
+                    putString("userMessage", paperPlane.userMessage)
                 }
+                paper = paperPlane
             }
     }
 }
