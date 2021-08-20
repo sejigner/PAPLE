@@ -11,10 +11,13 @@
     <string name="log_out">로그아웃</string>
     <string name="home">HOME</string>
     <string name="chat">Chat</string>
+    <string name="start_dialog_replied">채팅방을 개설하시겠습니까?</string>
     <string name="my_page">My PAGE</string>
     <string name="flight_distance">%1$sm 거리의 유저에게 도달했어요 :)</string>
     <string name="advice_home">지금 옆에 친구가 있다면 하고 싶은 이야기를\n종이비행기에 적어 날려보세요</string>
     <string name="first_plane">새로운 비행기가 날아왔어요!</string>
+    <string name="first_plane_dialog">%1$sm 거리에서\n비행기가 날아왔어요!</string>
+    <string name="replied_plane_dialog">%1$sm 거리에서\n답장이 날아왔어요!</string>
     <string name="returned_plane">답장이 날아왔어요!</string>
     <string name="chatting">채팅</string>
     <string name="meter">m</string>

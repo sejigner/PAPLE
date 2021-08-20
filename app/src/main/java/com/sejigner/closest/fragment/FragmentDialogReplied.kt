@@ -19,6 +19,8 @@ import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.room.RepliedPaperPlanes
+import kotlinx.android.synthetic.main.chat_from_row.*
+import kotlinx.android.synthetic.main.chat_to_row.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
 import java.text.SimpleDateFormat
@@ -58,8 +60,9 @@ class FragmentDialogReplied : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        val height = ViewGroup.LayoutParams.MATCH_PARENT
+        dialog!!.window!!.setLayout(width, height)
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
@@ -79,19 +82,20 @@ class FragmentDialogReplied : DialogFragment() {
         val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
-        tv_dialog_message_second.text = partnerMessage
-        tv_dialog_distance_second.text = distance
-
-        setDateToTextView(replyTime!!)
+        tv_dialog_my_message.text = userMessage
+        tv_dialog_message_replied.text = partnerMessage
+        tv_dialog_distance_replied.text = getString(R.string.replied_plane_dialog,distance)
+        tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
+        tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
 
         // 버리기 -> 파이어베이스 데이터 삭제
-        tv_dialog_discard_second.setOnClickListener {
+        tv_dialog_discard_replied.setOnClickListener {
             viewModel.delete(paper!!)
             dismiss()
         }
 
 
-        tv_dialog_start_chat.setOnClickListener {
+        tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
             val intent = Intent(view.context,ChatLogActivity::class.java)
             intent.putExtra(FragmentChat.USER_KEY, fromId)
@@ -102,11 +106,10 @@ class FragmentDialogReplied : DialogFragment() {
     }
 
 
-    private fun setDateToTextView(timestamp: Long) {
-        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+    private fun setDateToTextView(timestamp: Long): String {
+        val sdf = SimpleDateFormat("yyyy.MM.dd a hh:mm")
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-        val date = sdf.format(timestamp*1000L)
-        tv_dialog_time_second.text = date.toString()
+        return sdf.format(timestamp * 1000L)
     }
 
     companion object {

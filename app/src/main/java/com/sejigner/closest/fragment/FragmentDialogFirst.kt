@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
@@ -42,9 +41,8 @@ class FragmentDialogFirst : DialogFragment() {
     private var message: String? = null
     private var distance: String? = null
     private var time: Long? = null
-    private var fromId: String?= null
-    private var paper : FirstPaperPlanes ?= null
-
+    private var fromId: String? = null
+    private var paper: FirstPaperPlanes? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +56,6 @@ class FragmentDialogFirst : DialogFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,22 +65,25 @@ class FragmentDialogFirst : DialogFragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
-        val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+        val viewModel =
+            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
-        var textEntered : String
+        var textEntered: String
+
 
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
 
 
-        setDateToTextView(time!!)
+        tv_dialog_time_first.text = setDateToTextView(time!!)
+        tv_dialog_message_first.text = message
+        tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, distance)
 
 
 
@@ -97,16 +97,13 @@ class FragmentDialogFirst : DialogFragment() {
             dismiss()
         }
 
-        tv_dialog_message_first.text = message
-        tv_dialog_distance_first.text = distance.toString()
-
-
 
         btnReply?.setOnClickListener {
             textEntered = etReply?.text.toString()
-            if(textEntered.isNotEmpty()) {
+            if (textEntered.isNotEmpty()) {
                 val paperPlaneReceiverReference =
-                    FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$fromId/$UID")
+                    FirebaseDatabase.getInstance()
+                        .getReference("/PaperPlanes/Receiver/$fromId/$UID")
                 val paperplaneMessage = PaperplaneMessage(
                     paperPlaneReceiverReference.key!!,
                     textEntered,
@@ -114,7 +111,8 @@ class FragmentDialogFirst : DialogFragment() {
                     fromId!!,
                     distance!!.toDouble(),
                     System.currentTimeMillis(),
-                    true)
+                    true
+                )
                 paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                     Log.d(TAG, "Reply 실패")
                 }.addOnSuccessListener {
@@ -124,7 +122,7 @@ class FragmentDialogFirst : DialogFragment() {
 
 
             } else {
-                Toast.makeText(requireActivity(), "메세지를 입력해주세요.",Toast.LENGTH_SHORT ).show()
+                Toast.makeText(requireActivity(), "메세지를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -143,16 +141,16 @@ class FragmentDialogFirst : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        val height = ViewGroup.LayoutParams.MATCH_PARENT
+        dialog!!.window!!.setLayout(width, height)
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    private fun setDateToTextView(timestamp: Long) {
-        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm")
+    private fun setDateToTextView(timestamp: Long): String {
+        val sdf = SimpleDateFormat("yyyy.MM.dd a hh:mm")
         sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-        val date = sdf.format(timestamp*1000L)
-        tv_dialog_time_first.text = date.toString()
+        return sdf.format(timestamp * 1000L)
     }
 
     companion object {

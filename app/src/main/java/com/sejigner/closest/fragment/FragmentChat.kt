@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.google.firebase.database.*
 import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
 import com.sejigner.closest.Adapter.RepliedPaperPlaneAdapter
@@ -95,11 +96,16 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_first.adapter = firstPlaneAdapter
         rv_paperplane_replied.adapter = repliedPlaneAdapter
         // 역순 정렬
-        val mLayoutManager = LinearLayoutManager(requireActivity())
-        mLayoutManager.reverseLayout = true
-        mLayoutManager.stackFromEnd = true
-        rv_paperplane_first.layoutManager = mLayoutManager
-        rv_paperplane_replied.layoutManager = mLayoutManager
+        val mLayoutManagerFirst = LinearLayoutManager(requireActivity())
+        val mLayoutManagerReplied = LinearLayoutManager(requireActivity())
+        mLayoutManagerFirst.reverseLayout = true
+        mLayoutManagerFirst.stackFromEnd = true
+        mLayoutManagerFirst.orientation = HORIZONTAL
+        rv_paperplane_first.layoutManager = mLayoutManagerFirst
+        rv_paperplane_replied.layoutManager = mLayoutManagerReplied
+        mLayoutManagerReplied.reverseLayout = true
+        mLayoutManagerReplied.stackFromEnd = true
+        mLayoutManagerReplied.orientation = HORIZONTAL
 
         ViewModel.allFirstPaperPlanes().observe(requireActivity(), Observer {
             firstPlaneAdapter.list = it

@@ -150,7 +150,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(FragmentHome.TAG, "Receiver 실패")
             }.addOnSuccessListener {
-                val sentPaper = RepliedPaperPlanes(null, text, toId, null, distance, 0L)
+                val sentPaper = RepliedPaperPlanes(null, text, toId, null, distance, 0L, System.currentTimeMillis() / 1000L)
                 ViewModel.insert(sentPaper)
 
                 acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)

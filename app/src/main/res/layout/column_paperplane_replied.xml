@@ -3,53 +3,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingEnd="16dp"
-    android:paddingVertical="8dp">
+    android:padding="4dp"
+    android:clipToPadding="false"
+    >
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
+        android:layout_width="145dp"
+        android:layout_height="80dp"
         app:cardBackgroundColor="@color/white"
-        app:cardElevation="2dp"
         app:cardCornerRadius="3dp"
-        app:strokeColor="@color/dialog_stroke"
-        app:strokeWidth="0.5dp"
+        android:layout_margin="4dp"
+        android:elevation="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="120dp"
-        android:layout_height="80dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:textColor="@color/black"
-                android:id="@+id/tv_paperplane_distance_replied"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_paperplane_message_replied"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="distance"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_paperplane_time_replied"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/noto_sans_cjj_kr_regular"
+                android:letterSpacing="-0.03"
+                android:lineSpacingExtra="3dp"
+                android:maxLines="2"
+                android:text="Message Preview"
+                android:textColor="@color/paperplane_text"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_paperplane_distance_replied"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:textColor="@color/black"
+                android:id="@+id/tv_paperplane_distance_replied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
+                android:text="distance"
+                android:textColor="@color/paperplane_rest"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
                 android:id="@+id/tv_paperplane_time_replied"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
                 android:text="time"
+                android:textColor="@color/paperplane_rest"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_paperplane_distance_replied" />
-
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
-
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

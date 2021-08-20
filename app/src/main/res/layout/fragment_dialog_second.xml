@@ -1,95 +1,210 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_frame"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundTransparent"
     tools:context=".fragment.FragmentDialogReplied">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
         <ImageView
-            android:layout_marginStart="8dp"
-            android:id="@+id/iv_back_reply_second"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/cl_content_message_second"/>
+            android:id="@+id/iv_back_reply_replied"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="95dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toTopOf="@id/cl_message"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:padding="10dp"
-            android:layout_marginTop="4dp"
-            android:id="@+id/cl_content_message_second"
-            android:background="@drawable/dialog_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_back_reply_second"
+            android:layout_marginHorizontal="16dp"
+            android:id="@+id/cl_message"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_frame"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
 
             <TextView
-                android:textColor="@color/black"
-                android:id="@+id/tv_dialog_message_second"
-                android:textAlignment="center"
-                android:text="paperplane message"
+                android:id="@+id/tv_dialog_distance_replied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거리에서\n비행기가 날아왔어요!"
+                android:textColor="@color/paperplane_text"
                 android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/dialog_divider"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/dialog_divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ECECEC"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_distance_replied" />
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:id="@+id/tv_dialog_my_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:text="my message"
+                android:textAlignment="center"
+                android:textColor="@color/txt_gray"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/dialog_divider" />
+
             <TextView
-                android:layout_marginStart="16dp"
-                android:textColor="@color/black"
-                android:id="@+id/tv_dialog_distance_second"
+                android:id="@+id/tv_dialog_time_my_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_second"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp"
-                android:text="distance"
-                android:textSize="12sp"/>
-            <TextView
                 android:layout_marginEnd="16dp"
+                android:text="time"
+                android:textColor="#c4c4c4"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_my_message" />
+
+            <View
+                android:id="@+id/dialog_divider_second"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginVertical="12dp"
+                android:background="#ECECEC"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_my_message" />
+
+            <ImageView
+                android:layout_marginTop="6dp"
+                android:id="@+id/iv_reply"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_reply"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_dialog_message_replied"
+                app:layout_constraintTop_toBottomOf="@id/dialog_divider_second" />
+
+            <TextView
+                android:layout_marginTop="6dp"
+                android:id="@+id/tv_dialog_message_replied"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="reply"
+                android:textAlignment="center"
                 android:textColor="@color/black"
-                android:id="@+id/tv_dialog_time_second"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_reply" />
+
+            <TextView
+                android:id="@+id/tv_dialog_time_reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_second"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="time"
-                android:textSize="12sp"/>
+                android:textColor="#c4c4c4"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_replied" />
+
+
+            <TextView
+                android:id="@+id/tv_dialog_discard_replied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="버리기"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:textColor="@color/black"
-            android:id="@+id/tv_dialog_discard_second"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="버리기"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/iv_back_reply_second"
-            app:layout_constraintTop_toTopOf="@id/iv_back_reply_second"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back_reply_second"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="164dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <com.google.android.material.card.MaterialCardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view_top"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                card_view:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="5dp"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="9dp"
+                card_view:cardElevation="8dp" >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:paddingHorizontal="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_start_chat"
+                        android:textStyle="bold"
+                        card_view:layout_constraintTop_toTopOf="parent"
+                        card_view:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="18dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/montserrat_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/start_dialog_replied"
+                        android:textSize="18sp"/>
 
-        <TextView
-            android:textColor="@color/black"
-            android:id="@+id/tv_dialog_start_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대화 시작하기"
-            android:layout_marginTop="4dp"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_content_message_second"
-            android:layout_marginEnd="16dp"/>
+                    <TextView
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        android:layout_marginTop="22dp"
+                        android:id="@+id/tv_chat_no"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:text="아니오"
+                        android:background="@drawable/btn_dialog_no"
+                        card_view:layout_constraintTop_toBottomOf="@id/tv_start_chat"
+                        card_view:layout_constraintStart_toStartOf="parent"
+                        card_view:layout_constraintWidth_percent="0.3"
+                        />
+                    <TextView
+                        android:id="@+id/tv_chat_yes"
+                        android:textColor="@color/white"
+                        android:background="@drawable/btn_dialog_yes"
+                        android:textSize="18dp"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:text="네, 대화 나눠볼래요"
+                        android:layout_marginStart="6dp"
+                        card_view:layout_constraintEnd_toEndOf="parent"
+                        card_view:layout_constraintStart_toEndOf="@id/tv_chat_no"
+                        card_view:layout_constraintTop_toTopOf="@id/tv_chat_no"
+                        card_view:layout_constraintBottom_toBottomOf="@id/tv_chat_no"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

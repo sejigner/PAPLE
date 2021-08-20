@@ -33,7 +33,7 @@ class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewMode
         var currentPosition = list[position]
         holder.itemView.tv_paperplane_message_first.text = currentPosition.partnerMessage
         holder.itemView.tv_paperplane_distance_first.text = currentPosition.flightDistance.toString()+"m"
-        holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.timestamp)
+        holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.replyTimestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
