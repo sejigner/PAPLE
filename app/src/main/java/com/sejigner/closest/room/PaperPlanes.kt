@@ -1,8 +1,7 @@
 package com.sejigner.closest.room
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.google.gson.Gson
 
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
@@ -60,4 +59,41 @@ data class RepliedPaperPlanes(
 
     @ColumnInfo(name = "replyTimestamp")
     val replyTimestamp: Long
+)
+
+@Entity(tableName = "chat_rooms")
+data class ChatRooms(
+    @PrimaryKey @ColumnInfo val partnerId : String,
+    val partnerNickname : String
+)
+
+@Entity(
+    tableName = "chat_messages",
+    foreignKeys = [
+        ForeignKey(
+        entity = ChatRooms::class,
+        parentColumns = arrayOf("partnerId"),
+        childColumns = arrayOf("chatRoomId"),
+        onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class ChatMessages(
+    @PrimaryKey (autoGenerate = true)
+    var id: Int ?= null,
+    @ColumnInfo(name = "chatRoomId")
+    val chatRoomId : String,
+    val partnerOrMe : Boolean,
+    val message: String?,
+    @ColumnInfo(name = "timestamp")
+    val timestamp : Long
+)
+
+data class ChatRoomsWithMessages(
+    @Embedded val room: ChatRooms,
+    @Relation(
+        parentColumn = "partnerId",
+        entityColumn = "chatRoomId"
+    )
+    val chatMessages: List<ChatMessages>
 )

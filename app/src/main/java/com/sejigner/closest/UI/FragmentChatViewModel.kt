@@ -1,13 +1,12 @@
 package com.sejigner.closest.UI
 
+import android.provider.Settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.room.MyPaperPlaneRecord
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.RepliedPaperPlanes
+import com.sejigner.closest.room.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 
 
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {
@@ -18,6 +17,18 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
 
     fun insert(item: RepliedPaperPlanes) = GlobalScope.launch {
         repository.insert(item)
+    }
+
+    fun insert(item: List<ChatMessages>) = GlobalScope.launch {
+        repository.insert(item)
+    }
+
+    fun insert(item: ChatMessages) = GlobalScope.launch {
+        repository.insert(item)
+    }
+
+    fun insert(rooms: ChatRooms) = GlobalScope.launch {
+        repository.insert(rooms)
     }
 
     // In coroutines thread delete item in delete function.
@@ -33,11 +44,37 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
+    fun delete(item:ChatRooms) = GlobalScope.launch {
+        repository.delete(item)
+    }
+
     fun getWithId(fromId: String): MyPaperPlaneRecord {
         return repository.getWithId(fromId)
+    }
+
+    fun getLatestMessage(chatRoomId : String) : ChatMessages {
+        return repository.getLatestMessage(chatRoomId)
+    }
+
+    fun exists(partnerId: String): Boolean {
+        return repository.exists(partnerId)
+    }
+
+    fun update(messageList: List<ChatMessages>) = GlobalScope.launch {
+        repository.update(messageList)
+    }
+
+    fun insertOrUpdate(rooms : List<ChatMessages>) = GlobalScope.launch {
+        repository.insertOrUpdate(rooms)
+    }
+
+    fun insertOrUpdate(message: ChatMessages) = GlobalScope.launch {
+        repository.insertOrUpdate(message)
     }
 
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
     fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
+    fun allChatMessages() = repository.allChatMessages()
+    fun allChatRooms() = repository.allChatRoomsWithMessages()
 }

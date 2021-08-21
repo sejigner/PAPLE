@@ -6,13 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.google.firebase.database.*
 import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
+import com.sejigner.closest.Adapter.LatestMessageAdapter
 import com.sejigner.closest.Adapter.RepliedPaperPlaneAdapter
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity.Companion.UID
@@ -23,13 +26,11 @@ import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.RepliedPaperPlanes
+import com.sejigner.closest.room.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
@@ -93,19 +94,38 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 dialog.show(fm, "replied paper")
             }
 
+        val latestMessageAdapter =
+            LatestMessageAdapter(listOf(), ViewModel) { LatestMessages ->
+                val messageItem = LatestMessages
+
+                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
+                val chatPartnerId = messageItem.room.partnerId
+                intent.putExtra(USER_KEY, chatPartnerId)
+                startActivity(intent)
+            }
+
+
+        rv_chat.adapter = latestMessageAdapter
         rv_paperplane_first.adapter = firstPlaneAdapter
         rv_paperplane_replied.adapter = repliedPlaneAdapter
+
         // 역순 정렬
         val mLayoutManagerFirst = LinearLayoutManager(requireActivity())
         val mLayoutManagerReplied = LinearLayoutManager(requireActivity())
+        val mLayoutManagerMessages = LinearLayoutManager(requireActivity())
         mLayoutManagerFirst.reverseLayout = true
         mLayoutManagerFirst.stackFromEnd = true
         mLayoutManagerFirst.orientation = HORIZONTAL
-        rv_paperplane_first.layoutManager = mLayoutManagerFirst
-        rv_paperplane_replied.layoutManager = mLayoutManagerReplied
         mLayoutManagerReplied.reverseLayout = true
         mLayoutManagerReplied.stackFromEnd = true
         mLayoutManagerReplied.orientation = HORIZONTAL
+        mLayoutManagerMessages.reverseLayout = true
+        mLayoutManagerMessages.stackFromEnd = true
+        mLayoutManagerMessages.orientation = VERTICAL
+
+        rv_chat.layoutManager = mLayoutManagerMessages
+        rv_paperplane_first.layoutManager = mLayoutManagerFirst
+        rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
         ViewModel.allFirstPaperPlanes().observe(requireActivity(), Observer {
             firstPlaneAdapter.list = it
@@ -116,39 +136,41 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             repliedPlaneAdapter.notifyDataSetChanged()
         })
 
-        // need to be replaced with VM
-        rv_chat.adapter = adapterVertical
+        ViewModel.allChatRooms().observe(requireActivity(), Observer {
+            latestMessageAdapter.list = it
+            latestMessageAdapter.notifyDataSetChanged()
+        })
 
 
         // fetchPapers()
         listenForPlanes()
-        listenForLatestMessages()
+        listenForMessages()
 
     }
-    val messagesMap = HashMap<String, ChatMessage>()
+    // val messagesMap = HashMap<String, ChatMessage>()
 
 
-    private fun refreshRecyclerViewMessages() {
-        adapterVertical.clear()
-        messagesMap.values.forEach {
-            adapterVertical.add(LatestMessages(it))
-        }
-        adapterVertical.setOnItemClickListener { item, view ->
-            // ChatLogActivity 연결
-
-            val messageItem = item as LatestMessages
-
-            val intent = Intent(requireActivity(), ChatLogActivity::class.java)
-            val chatPartnerId: String = if (messageItem.latestChatMessage.fromId == UID) {
-                messageItem.latestChatMessage.toId
-            } else {
-                messageItem.latestChatMessage.fromId
-            }
-            intent.putExtra(USER_KEY, chatPartnerId)
-            startActivity(intent)
-        }
-        rv_chat.adapter = adapterVertical
-    }
+//    private fun refreshRecyclerViewMessages() {
+//        adapterVertical.clear()
+//        messagesMap.values.forEach {
+//            adapterVertical.add(LatestMessages(it))
+//        }
+//        adapterVertical.setOnItemClickListener { item, view ->
+//            // ChatLogActivity 연결
+//
+//            val messageItem = item as LatestMessages
+//
+//            val intent = Intent(requireActivity(), ChatLogActivity::class.java)
+//            val chatPartnerId: String = if (messageItem.latestChatMessage.fromId == UID) {
+//                messageItem.latestChatMessage.toId
+//            } else {
+//                messageItem.latestChatMessage.fromId
+//            }
+//            intent.putExtra(USER_KEY, chatPartnerId)
+//            startActivity(intent)
+//        }
+//        rv_chat.adapter = adapterVertical
+//    }
 
     private fun listenForPlanes() {
         val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
@@ -220,30 +242,56 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         })
     }
 
-    private fun listenForLatestMessages() {
-        val fromId = UID
-        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId")
+    private fun listenForMessages() {
+        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
-
                 val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+                val partnerId = latestChatMessage.fromId
+                if(latestChatMessage.fromId == UID) {
+                    val partnerId = latestChatMessage.toId
+                    if(ViewModel.exists(partnerId)) {
+                        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                        ref.get().addOnSuccessListener {
+                            val partnerNickname = it.value.toString()
+                            val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                            val chatRoom = ChatRooms(partnerId, partnerNickname)
 
-                messagesMap[snapshot.key!!] = latestChatMessage
-                messageKeyList.add(snapshot.key!!)
-                refreshRecyclerViewMessages()
+                            ViewModel.insert(chatRoom)
+                            ViewModel.insert(chatMessage)
+                        }.addOnFailureListener {
+                            Toast.makeText(requireActivity(),"없는 유저입니다.", Toast.LENGTH_SHORT).show()
+                        }
+
+
+                    } else {
+                        val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                        ViewModel.insert(chatMessage)
+                    }
+
+
+                } else {
+                    val partnerId = latestChatMessage.fromId
+                    val chatMessage = ChatMessages(null,latestChatMessage.fromId, true,latestChatMessage.text, latestChatMessage.timestamp)
+                    if(ViewModel.exists(partnerId)) {
+                        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                        ref.get().addOnSuccessListener {
+                            val partnerNickname = it.value.toString()
+                        }
+                        val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                        ViewModel.insert(chatMessage)
+                    } else {
+
+                    }
+                }
+
 
                 Log.d(TAG, "Child added successfully")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
 
-                messagesMap[snapshot.key!!] = latestChatMessage
-                refreshRecyclerViewMessages()
-
-                Log.d(TAG, "Child changed detected")
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {

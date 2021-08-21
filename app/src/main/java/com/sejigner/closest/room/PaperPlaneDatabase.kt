@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [FirstPaperPlanes::class, RepliedPaperPlanes::class, MyPaperPlaneRecord::class], version = 2)
+@Database(entities = [FirstPaperPlanes::class, RepliedPaperPlanes::class, MyPaperPlaneRecord::class, ChatMessages::class, ChatRooms::class], version = 3, exportSchema = false)
 abstract class PaperPlaneDatabase: RoomDatabase() {
 
     abstract fun getFirstPaperPlaneDao() : FirstPaperPlaneDao
     abstract fun getRepliedPaperPlaneDao() : RepliedPaperPlaneDao
     abstract fun getMyPaperPlaneRecordDao() : MyPaperPlaneRecordDao
+    abstract fun getChatRoomsDao() : ChatRoomsDao
+    abstract fun getChatMessagesDao() : ChatMessagesDao
 
 
     companion object{
