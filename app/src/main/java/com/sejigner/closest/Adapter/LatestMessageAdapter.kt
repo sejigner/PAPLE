@@ -1,5 +1,6 @@
 package com.sejigner.closest.Adapter
 
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -34,6 +37,7 @@ class LatestMessageAdapter(var list : List<ChatRoomsWithMessages>, val viewModel
         position: Int
     ) {
         var currentPosition = list[position]
+
         val latestChatMessage = viewModel.getLatestMessage(currentPosition.room.partnerId)
         holder.itemView.tv_chat_nickname.text = currentPosition.room.partnerNickname
         holder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.timestamp)

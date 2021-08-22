@@ -33,6 +33,8 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -251,39 +253,54 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 val partnerId = latestChatMessage.fromId
                 if(latestChatMessage.fromId == UID) {
                     val partnerId = latestChatMessage.toId
-                    if(ViewModel.exists(partnerId)) {
-                        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
-                        ref.get().addOnSuccessListener {
-                            val partnerNickname = it.value.toString()
+
+                    GlobalScope.launch {
+                        val isPartnerId = ViewModel.exists(partnerId)
+                        if(!isPartnerId) {
+
+                            val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                            ref.get().addOnSuccessListener {
+                                val partnerNickname = it.value.toString()
+                                val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                                val chatRoom = ChatRooms(partnerId, partnerNickname)
+
+                                ViewModel.insert(chatRoom)
+                                ViewModel.insert(chatMessage)
+                            }.addOnFailureListener {
+                                Toast.makeText(requireActivity(),"없는 유저입니다.", Toast.LENGTH_SHORT).show()
+                            }
+
+                        } else {
                             val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
-                            val chatRoom = ChatRooms(partnerId, partnerNickname)
-
-                            ViewModel.insert(chatRoom)
                             ViewModel.insert(chatMessage)
-                        }.addOnFailureListener {
-                            Toast.makeText(requireActivity(),"없는 유저입니다.", Toast.LENGTH_SHORT).show()
                         }
-
-
-                    } else {
-                        val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
-                        ViewModel.insert(chatMessage)
                     }
+
 
 
                 } else {
                     val partnerId = latestChatMessage.fromId
                     val chatMessage = ChatMessages(null,latestChatMessage.fromId, true,latestChatMessage.text, latestChatMessage.timestamp)
-                    if(ViewModel.exists(partnerId)) {
-                        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
-                        ref.get().addOnSuccessListener {
-                            val partnerNickname = it.value.toString()
+                    GlobalScope.launch {
+                        val isPartnerId = ViewModel.exists(partnerId)
+
+                        if(!ViewModel.exists(partnerId)) {
+                            val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                            ref.get().addOnSuccessListener {
+                                val partnerNickname = it.value.toString()
+                                val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                                val chatRoom = ChatRooms(partnerId, partnerNickname)
+                                ViewModel.insert(chatRoom)
+                                ViewModel.insert(chatMessage)
+                            }
+
+                        } else {
+                            val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                            ViewModel.insert(chatMessage)
                         }
-                        val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
-                        ViewModel.insert(chatMessage)
-                    } else {
 
                     }
+
                 }
 
 

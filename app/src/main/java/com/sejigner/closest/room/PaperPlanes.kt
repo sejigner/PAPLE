@@ -1,30 +1,29 @@
 package com.sejigner.closest.room
 
 import androidx.room.*
-import com.google.gson.Gson
 
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
 
     @ColumnInfo(name = "fromId")
-    val fromId : String?,
+    val fromId: String?,
 
     @ColumnInfo(name = "message")
-    val message : String?,
+    val message: String?,
 
     @ColumnInfo(name = "flightDistance")
-    val flightDistance : Double,
+    val flightDistance: Double,
 
     @ColumnInfo(name = "timestamp")
-    val timestamp : Long
+    val timestamp: Long
 )
 
 @Entity(tableName = "my_message_record")
 data class MyPaperPlaneRecord(
-    @PrimaryKey (autoGenerate = true)
-    var id: Int ?= null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
 
     @ColumnInfo(name = "userMessage")
     val userMessage: String?,
@@ -39,8 +38,8 @@ data class MyPaperPlaneRecord(
 
 @Entity(tableName = "replied_paper_planes")
 data class RepliedPaperPlanes(
-    @PrimaryKey (autoGenerate = true)
-    var id: Int ?= null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
 
     @ColumnInfo(name = "userMessage")
     val userMessage: String?,
@@ -63,30 +62,30 @@ data class RepliedPaperPlanes(
 
 @Entity(tableName = "chat_rooms")
 data class ChatRooms(
-    @PrimaryKey @ColumnInfo val partnerId : String,
-    val partnerNickname : String
+    @PrimaryKey @ColumnInfo val partnerId: String,
+    val partnerNickname: String
 )
 
 @Entity(
     tableName = "chat_messages",
     foreignKeys = [
         ForeignKey(
-        entity = ChatRooms::class,
-        parentColumns = arrayOf("partnerId"),
-        childColumns = arrayOf("chatRoomId"),
-        onDelete = ForeignKey.CASCADE
+            entity = ChatRooms::class,
+            parentColumns = arrayOf("partnerId"),
+            childColumns = arrayOf("chatRoomId"),
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class ChatMessages(
-    @PrimaryKey (autoGenerate = true)
-    var id: Int ?= null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null,
     @ColumnInfo(name = "chatRoomId")
-    val chatRoomId : String,
-    val partnerOrMe : Boolean,
+    val chatRoomId: String,
+    val partnerOrMe: Boolean,
     val message: String?,
     @ColumnInfo(name = "timestamp")
-    val timestamp : Long
+    val timestamp: Long
 )
 
 data class ChatRoomsWithMessages(
