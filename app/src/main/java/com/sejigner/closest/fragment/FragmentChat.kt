@@ -27,18 +27,17 @@ import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
+import com.squareup.okhttp.Dispatcher
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class FragmentChat : Fragment(), FirstPlaneListener {
@@ -195,7 +194,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                     ref.child(paperplane.fromId).removeValue()
                 } else {
                     val myPaperPlaneRecord = ViewModel.getWithId(paperplane.fromId)
-                    val item =RepliedPaperPlanes(
+                    val item = RepliedPaperPlanes(
                         null, myPaperPlaneRecord.userMessage,
                         paperplane.fromId,
                         paperplane.text,
@@ -251,51 +250,77 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
                 val partnerId = latestChatMessage.fromId
-                if(latestChatMessage.fromId == UID) {
+                if (partnerId == UID) {
                     val partnerId = latestChatMessage.toId
-
-                    GlobalScope.launch {
+                     GlobalScope.launch(Dispatchers.IO){
                         val isPartnerId = ViewModel.exists(partnerId)
-                        if(!isPartnerId) {
+                        if (!isPartnerId) {
 
-                            val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                            val ref =
+                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                    .child("strNickname")
                             ref.get().addOnSuccessListener {
                                 val partnerNickname = it.value.toString()
-                                val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                                val chatMessage = ChatMessages(
+                                    null,
+                                    latestChatMessage.toId,
+                                    false,
+                                    latestChatMessage.text,
+                                    latestChatMessage.timestamp
+                                )
                                 val chatRoom = ChatRooms(partnerId, partnerNickname)
 
                                 ViewModel.insert(chatRoom)
                                 ViewModel.insert(chatMessage)
                             }.addOnFailureListener {
-                                Toast.makeText(requireActivity(),"없는 유저입니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
+                                    .show()
                             }
 
                         } else {
-                            val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                            val chatMessage = ChatMessages(
+                                null,
+                                latestChatMessage.toId,
+                                false,
+                                latestChatMessage.text,
+                                latestChatMessage.timestamp
+                            )
                             ViewModel.insert(chatMessage)
                         }
                     }
 
 
-
                 } else {
                     val partnerId = latestChatMessage.fromId
-                    val chatMessage = ChatMessages(null,latestChatMessage.fromId, true,latestChatMessage.text, latestChatMessage.timestamp)
                     GlobalScope.launch {
                         val isPartnerId = ViewModel.exists(partnerId)
 
-                        if(!ViewModel.exists(partnerId)) {
-                            val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerId").child("strNickname")
+                        if (!isPartnerId) {
+                            val ref =
+                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                    .child("strNickname")
                             ref.get().addOnSuccessListener {
                                 val partnerNickname = it.value.toString()
-                                val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                                val chatMessage = ChatMessages(
+                                    null,
+                                    latestChatMessage.toId,
+                                    false,
+                                    latestChatMessage.text,
+                                    latestChatMessage.timestamp
+                                )
                                 val chatRoom = ChatRooms(partnerId, partnerNickname)
                                 ViewModel.insert(chatRoom)
                                 ViewModel.insert(chatMessage)
                             }
 
                         } else {
-                            val chatMessage = ChatMessages(null,latestChatMessage.toId, false,latestChatMessage.text, latestChatMessage.timestamp)
+                            val chatMessage = ChatMessages(
+                                null,
+                                latestChatMessage.toId,
+                                false,
+                                latestChatMessage.text,
+                                latestChatMessage.timestamp
+                            )
                             ViewModel.insert(chatMessage)
                         }
 

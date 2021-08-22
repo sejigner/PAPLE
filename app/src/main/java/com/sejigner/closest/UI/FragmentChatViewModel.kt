@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sejigner.closest.room.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
 
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {
+
     // In coroutines thread insert item in insert function.
     fun insert(item: FirstPaperPlanes) = GlobalScope.launch {
         repository.insert(item)
@@ -48,16 +50,16 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
-    fun getWithId(fromId: String): MyPaperPlaneRecord {
-        return repository.getWithId(fromId)
+    fun getWithId(fromId: String) = GlobalScope.launch{
+        repository.getWithId(fromId)
     }
 
-    fun getLatestMessage(chatRoomId : String) : ChatMessages {
+    fun getLatestMessage(chatRoomId : String) : LiveData<ChatMessages> {
         return repository.getLatestMessage(chatRoomId)
     }
 
-    fun exists(partnerId: String): Boolean {
-        return repository.exists(partnerId)
+    fun exists(partnerId: String) = GlobalScope.launch {
+        repository.exists(partnerId)
     }
 
     fun update(messageList: List<ChatMessages>) = GlobalScope.launch {

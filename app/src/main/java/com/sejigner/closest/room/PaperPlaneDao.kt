@@ -23,8 +23,8 @@ interface FirstPaperPlaneDao {
 @Dao
 interface MyPaperPlaneRecordDao {
 
-    @Query("SELECT * FROM my_message_record where fromId = :fromId")
-    fun getWithId(fromId: String) : MyPaperPlaneRecord
+    @Query("SELECT * FROM my_message_record WHERE fromId = :fromId LIMIT 1" )
+    suspend fun getWithId(fromId: String) : MyPaperPlaneRecord?
     @Delete
     suspend fun delete(record: MyPaperPlaneRecord)
 }
@@ -56,12 +56,15 @@ interface ChatRoomsDao {
     fun getAllChatRoomsWithMessages(): LiveData<List<ChatRoomsWithMessages>>
 
     @Transaction
-    @Query("SELECT * FROM chat_rooms WHERE partnerId = :partnerId")
-    fun getWithId(partnerId: String) : ChatRoomsWithMessages
+    @Query("")
+
+    @Transaction
+    @Query("SELECT * FROM chat_rooms WHERE partnerId = :partnerId LIMIT 1")
+    suspend fun getChatRoomWithId(partnerId: String) : ChatRooms
 
     @Transaction
     @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE partnerId = :partnerId)")
-    fun exists(partnerId: String): Boolean
+    suspend fun exists(partnerId: String): Boolean
 
     @Transaction
     suspend fun insertOrUpdate(messageList : List<ChatMessages>) {
@@ -80,7 +83,7 @@ interface ChatRoomsDao {
 
     @Transaction
     @Query("SELECT * FROM chat_messages WHERE chatRoomId = :chatRoomId  ORDER BY timestamp DESC LIMIT 1 ")
-    fun getLatestMessage(chatRoomId : String) : ChatMessages
+    fun getLatestMessage(chatRoomId : String) : LiveData<ChatMessages>
 
     // Chatroom
     @Insert(onConflict = OnConflictStrategy.REPLACE)

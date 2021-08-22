@@ -4,6 +4,8 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
 import com.sejigner.closest.UI.FirstPlaneListener
@@ -40,7 +42,7 @@ class LatestMessageAdapter(var list : List<ChatRoomsWithMessages>, val viewModel
 
         val latestChatMessage = viewModel.getLatestMessage(currentPosition.room.partnerId)
         holder.itemView.tv_chat_nickname.text = currentPosition.room.partnerNickname
-        holder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.timestamp)
+        holder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.value!!.timestamp)
         holder.itemView.tv_chat_message.text = latestChatMessage.message
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }

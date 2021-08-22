@@ -60,10 +60,13 @@ data class RepliedPaperPlanes(
     val replyTimestamp: Long
 )
 
+
 @Entity(tableName = "chat_rooms")
 data class ChatRooms(
     @PrimaryKey @ColumnInfo val partnerId: String,
-    val partnerNickname: String
+    val partnerNickname: String?,
+    val lastMessage : String?,
+    val lastMessageTimestamp : Long?
 )
 
 @Entity(
@@ -81,11 +84,11 @@ data class ChatMessages(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
     @ColumnInfo(name = "chatRoomId")
-    val chatRoomId: String,
+    val chatRoomId: String?,
     val partnerOrMe: Boolean,
     val message: String?,
     @ColumnInfo(name = "timestamp")
-    val timestamp: Long
+    val timestamp: Long?
 )
 
 data class ChatRoomsWithMessages(
@@ -96,3 +99,5 @@ data class ChatRoomsWithMessages(
     )
     val chatMessages: List<ChatMessages>
 )
+
+
