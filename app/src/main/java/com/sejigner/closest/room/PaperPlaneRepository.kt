@@ -27,7 +27,6 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 
     // 메세지
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)
-    fun getLatestMessage(chatRoomId : String) : LiveData<ChatMessages> = db.getChatRoomsDao().getLatestMessage(chatRoomId)
     suspend fun insertOrUpdate(message: ChatMessages) = db.getChatRoomsDao().insertOrUpdate(message)
 
 

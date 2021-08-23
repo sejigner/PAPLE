@@ -56,13 +56,6 @@ interface ChatRoomsDao {
     fun getAllChatRoomsWithMessages(): LiveData<List<ChatRoomsWithMessages>>
 
     @Transaction
-    @Query("")
-
-    @Transaction
-    @Query("SELECT * FROM chat_rooms WHERE partnerId = :partnerId LIMIT 1")
-    suspend fun getChatRoomWithId(partnerId: String) : ChatRooms
-
-    @Transaction
     @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE partnerId = :partnerId)")
     suspend fun exists(partnerId: String): Boolean
 
@@ -80,10 +73,6 @@ interface ChatRoomsDao {
 
     @Delete
     suspend fun delete(chatRoom: ChatRooms)
-
-    @Transaction
-    @Query("SELECT * FROM chat_messages WHERE chatRoomId = :chatRoomId  ORDER BY timestamp DESC LIMIT 1 ")
-    fun getLatestMessage(chatRoomId : String) : LiveData<ChatMessages>
 
     // Chatroom
     @Insert(onConflict = OnConflictStrategy.REPLACE)

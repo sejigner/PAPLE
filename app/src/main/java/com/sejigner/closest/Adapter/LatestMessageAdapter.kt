@@ -40,10 +40,9 @@ class LatestMessageAdapter(var list : List<ChatRoomsWithMessages>, val viewModel
     ) {
         var currentPosition = list[position]
 
-        val latestChatMessage = viewModel.getLatestMessage(currentPosition.room.partnerId)
         holder.itemView.tv_chat_nickname.text = currentPosition.room.partnerNickname
-        holder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.value!!.timestamp)
-        holder.itemView.tv_chat_message.text = latestChatMessage.message
+        holder.itemView.tv_chat_time.text = setDateToTextView(currentPosition.room.lastMessageTimestamp!!)
+        holder.itemView.tv_chat_message.text = currentPosition.room.lastMessage
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 

@@ -193,17 +193,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                     // immediate delete on setting data to local databasae
                     ref.child(paperplane.fromId).removeValue()
                 } else {
-                    val myPaperPlaneRecord = ViewModel.getWithId(paperplane.fromId)
-                    val item = RepliedPaperPlanes(
-                        null, myPaperPlaneRecord.userMessage,
-                        paperplane.fromId,
-                        paperplane.text,
-                        paperplane.flightDistance,
-                        myPaperPlaneRecord.firstTimestamp,
-                        paperplane.timestamp
-                    )
-                    ViewModel.insert(item)
-                    ViewModel.delete(myPaperPlaneRecord)
+                    updateFirstPaperPlaneRecord(paperplane)
                     // immediate delete on setting data to local databasae
                     ref.child(paperplane.fromId).removeValue()
 
@@ -241,6 +231,29 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
             }
         })
+    }
+
+    suspend fun updateFirstPaperPlaneRecord(paperPlane : PaperplaneMessage ) {
+        val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId!!).await()
+        CoroutineScope(Dispatchers.IO).launch {
+            var item = RepliedPaperPlanes(null,null,null,null,0.0,0L,0L)
+            val setItem = launch {
+                item = RepliedPaperPlanes(
+                    null,
+                    myPaperPlaneRecord?.userMessage,
+                    myPaperPlaneRecord?.fromId,
+                    paperPlane.partnerMessage,
+                    paperPlane.flightDistance,
+                    myPaperPlaneRecord!!.firstTimestamp,
+                    paperPlane.replyTimestamp)
+            }
+            setItem.join()
+            ViewModel.insert(item)
+            ViewModel.delete(myPaperPlaneRecord!!)
+        }
+
+
+
     }
 
     private fun listenForMessages() {
