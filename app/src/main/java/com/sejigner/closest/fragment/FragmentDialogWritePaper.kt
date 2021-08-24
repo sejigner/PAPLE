@@ -15,17 +15,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.UI.FragmentChatViewModel
 import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.MyPaperPlaneRecord
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -126,8 +125,8 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         if (userFoundId != "") {
             val toId = userFoundId!!
-            val text = et_write_paper.text.toString()
-            val fromId = FirebaseAuth.getInstance().uid!!
+            val message = et_write_paper.text.toString()
+            val fromId = UID
             val distance = flightDistance
 
             val paperPlaneReceiverReference =
@@ -139,7 +138,7 @@ class FragmentDialogWritePaper : DialogFragment() {
                 FirebaseDatabase.getInstance().getReference("/Acquaintances/$toId")
             val paperplaneMessage = PaperplaneMessage(
                 paperPlaneReceiverReference.key!!,
-                text,
+                message,
                 fromId,
                 toId,
                 distance,
@@ -150,7 +149,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
                 Log.d(FragmentHome.TAG, "Receiver 실패")
             }.addOnSuccessListener {
-                val sentPaper = RepliedPaperPlanes(null, text, toId, null, distance, 0L, System.currentTimeMillis() / 1000L)
+                val sentPaper = MyPaperPlaneRecord(paperplaneMessage.toId,paperplaneMessage.text, paperplaneMessage.timestamp)
                 ViewModel.insert(sentPaper)
 
                 acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)

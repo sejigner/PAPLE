@@ -24,8 +24,11 @@ interface FirstPaperPlaneDao {
 @Dao
 interface MyPaperPlaneRecordDao {
 
-    @Query("SELECT * FROM my_message_record WHERE fromId = :fromId LIMIT 1" )
-    suspend fun getWithId(fromId: String) : MyPaperPlaneRecord?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(record: MyPaperPlaneRecord)
+
+    @Query("SELECT * FROM my_message_record WHERE partnerId = :partnerId LIMIT 1" )
+    suspend fun getWithId(partnerId: String) : MyPaperPlaneRecord?
     @Delete
     suspend fun delete(record: MyPaperPlaneRecord)
 }

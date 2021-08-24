@@ -178,33 +178,36 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
 
                 val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
+                if (paperplane.id.isNotEmpty()) {
+                    CoroutineScope(IO).launch {
+                        if (!paperplane.isReplied) { // 상대가 날린 첫 비행기
 
-                CoroutineScope(IO).launch {
-                    if (!paperplane.isReplied) { // 상대가 날린 첫 비행기
+                            val item = FirstPaperPlanes(
+                                null,
+                                paperplane.fromId,
+                                paperplane.text,
+                                paperplane.flightDistance,
+                                paperplane.timestamp
+                            )
+                            ViewModel.insert(item)
+                            // immediate delete on setting data to local databasae
+                            ref.child(paperplane.fromId).removeValue()
+                        } else { // 상대가 날린 답장 비행기
+                            setRepliedPaperPlane(paperplane)
+                            ref.child(paperplane.fromId).removeValue()
+                        }
 
-                        val item = FirstPaperPlanes(
-                            null,
-                            paperplane.fromId,
-                            paperplane.text,
-                            paperplane.flightDistance,
-                            paperplane.timestamp
-                        )
-                        ViewModel.insert(item)
+
                         // immediate delete on setting data to local databasae
-                        ref.child(paperplane.fromId).removeValue()
-                    } else { // 상대가 날린 답장 비행기
-                        setRepliedPaperPlane(paperplane)
-                        ref.child(paperplane.fromId).removeValue()
-                    }
-
-
-                    // immediate delete on setting data to local databasae
 
 
 //                        repliedPlaneMap[snapshot.key!!] = paperplane
 //                        repliedPlaneKeyList.add(snapshot.key!!)
 //                        refreshRecyclerViewPlanesReplied()
+                    }
                 }
+
+
                 Log.d(TAG, "Child added successfully")
             }
 
@@ -238,35 +241,31 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     }
 
     suspend fun setRepliedPaperPlane(paperPlane: PaperplaneMessage) {
-        val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
-        CoroutineScope(Dispatchers.IO).launch {
-            var item = RepliedPaperPlanes(null, null, null, null, 0.0, 0L, 0L)
-            val setItem = launch {
-                item = RepliedPaperPlanes(
-                    null,
-                    myPaperPlaneRecord?.userMessage,
-                    myPaperPlaneRecord?.fromId,
-                    paperPlane.text,
-                    paperPlane.flightDistance,
-                    myPaperPlaneRecord!!.firstTimestamp,
-                    paperPlane.timestamp
-                )
-            }
-            setItem.join()
+
+        CoroutineScope(IO).launch {
+            val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
+            val item = RepliedPaperPlanes(
+                null,
+                myPaperPlaneRecord?.userMessage,
+                myPaperPlaneRecord?.partnerId,
+                paperPlane.text,
+                paperPlane.flightDistance,
+                myPaperPlaneRecord!!.firstTimestamp,
+                paperPlane.timestamp
+            )
             ViewModel.insert(item)
             ViewModel.delete(myPaperPlaneRecord!!)
-        }
-
-
+        }.join()
     }
+
 
     private fun listenForMessages() {
         val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(ChatMessage::class.java)?: return
-                if(latestChatMessage.fromId.isEmpty()) return
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+                if (latestChatMessage.fromId.isEmpty()) return
                 val partnerId = getPartnerId(latestChatMessage)
                 val isPartner = setSender(partnerId)
 
@@ -309,7 +308,11 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             latestChatMessage.timestamp
                         )
                         ViewModel.insert(chatMessage)
-                        ViewModel.updateLastMessages(partnerId, latestChatMessage.message, latestChatMessage.timestamp).join()
+                        ViewModel.updateLastMessages(
+                            partnerId,
+                            latestChatMessage.message,
+                            latestChatMessage.timestamp
+                        ).join()
                     }
                 }
                 Log.d(TAG, "Child added successfully")
@@ -317,7 +320,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
-                if(latestChatMessage.fromId.isEmpty()) return
+                if (latestChatMessage.fromId.isEmpty()) return
                 val partnerId = getPartnerId(latestChatMessage)
                 val isPartner = setSender(partnerId)
 
@@ -360,7 +363,11 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             latestChatMessage.timestamp
                         )
                         ViewModel.insert(chatMessage)
-                        ViewModel.updateLastMessages(partnerId, latestChatMessage.message, latestChatMessage.timestamp).join()
+                        ViewModel.updateLastMessages(
+                            partnerId,
+                            latestChatMessage.message,
+                            latestChatMessage.timestamp
+                        ).join()
                     }
                 }
                 Log.d(TAG, "Child added successfully")

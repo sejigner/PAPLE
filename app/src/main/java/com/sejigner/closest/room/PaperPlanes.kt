@@ -22,14 +22,11 @@ data class FirstPaperPlanes(
 
 @Entity(tableName = "my_message_record")
 data class MyPaperPlaneRecord(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int? = null,
+    @PrimaryKey @ColumnInfo(name = "partnerId")
+    val partnerId: String,
 
     @ColumnInfo(name = "userMessage")
     val userMessage: String?,
-
-    @ColumnInfo(name = "fromId")
-    val fromId: String?,
 
     @ColumnInfo(name = "firstTimestamp")
     val firstTimestamp: Long

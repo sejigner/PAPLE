@@ -16,6 +16,7 @@
         android:layout_height="50dp">
 
         <Button
+            android:layout_marginEnd="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
@@ -62,7 +63,7 @@
     <Button
         android:background="#82B7F6"
         android:id="@+id/btn_send_chat_log"
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="보내기"
         android:textStyle="bold"

@@ -17,6 +17,7 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     // 내가 보낸 비행기
     suspend fun getWithId(id: String): MyPaperPlaneRecord? = db.getMyPaperPlaneRecordDao().getWithId(id)
     suspend fun delete(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().delete(record)
+    suspend fun insert(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().insert(record)
 
     // 채팅방
     suspend fun insert(messageList: List<ChatMessages>) = db.getChatRoomsDao().insert(messageList)

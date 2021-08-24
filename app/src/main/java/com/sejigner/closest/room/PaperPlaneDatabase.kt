@@ -26,7 +26,7 @@ abstract class PaperPlaneDatabase: RoomDatabase() {
             }
         }
 
-        private fun createDatabase(context: Context) = Room.databaseBuilder(context.applicationContext, PaperPlaneDatabase::class.java, "PaperPlaneDatabase.db").build()
+        private fun createDatabase(context: Context) = Room.databaseBuilder(context.applicationContext, PaperPlaneDatabase::class.java, "PaperPlaneDatabase.db").fallbackToDestructiveMigration().build()
 
     }
 }

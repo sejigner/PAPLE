@@ -54,6 +54,9 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     fun getWithId(fromId: String) = CoroutineScope(IO).async{
         repository.getWithId(fromId)
     }
+    fun insert(record: MyPaperPlaneRecord) = CoroutineScope(IO).launch {
+        repository.insert(record)
+    }
 
     fun exists(partnerId: String) = CoroutineScope(IO).async {
         repository.exists(partnerId)
