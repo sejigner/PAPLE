@@ -2,6 +2,7 @@ package com.sejigner.closest.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+
 @Dao
 interface FirstPaperPlaneDao {
     @Query("SELECT * FROM first_paper_planes")
@@ -51,13 +52,15 @@ interface RepliedPaperPlaneDao {
 @Dao
 interface ChatRoomsDao {
     // Room and Messages
-    @Transaction
     @Query("SELECT * FROM chat_rooms")
-    fun getAllChatRoomsWithMessages(): LiveData<List<ChatRoomsWithMessages>>
+    fun getAllChatRooms(): LiveData<List<ChatRooms>>
 
     @Transaction
     @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE partnerId = :partnerId)")
     suspend fun exists(partnerId: String): Boolean
+
+    @Update
+    suspend fun update(messageList: List<ChatMessages>)
 
     @Transaction
     suspend fun insertOrUpdate(messageList : List<ChatMessages>) {
@@ -74,6 +77,9 @@ interface ChatRoomsDao {
     @Delete
     suspend fun delete(chatRoom: ChatRooms)
 
+    @Query("SELECT * FROM chat_rooms  WHERE partnerId = :partnerId")
+    suspend fun getChatRoom(partnerId: String) : ChatRooms
+
     // Chatroom
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: ChatRooms)
@@ -81,8 +87,8 @@ interface ChatRoomsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(messageList: List<ChatMessages>) : List<Long>
 
-    @Update
-    suspend fun update(messageList: List<ChatMessages>)
+    @Query("UPDATE chat_rooms SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE partnerId = :partnerId")
+    suspend fun updateLastMessages(partnerId: String, lastMessage: String, lastMessageTimestamp: Long)
 
 
     // Message

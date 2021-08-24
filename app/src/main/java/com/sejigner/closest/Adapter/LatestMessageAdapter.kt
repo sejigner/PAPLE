@@ -1,48 +1,37 @@
 package com.sejigner.closest.Adapter
 
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FirstPlaneListener
 import com.sejigner.closest.UI.FragmentChatViewModel
-import com.sejigner.closest.models.LatestChatMessage
+import com.sejigner.closest.room.ChatRooms
 import com.sejigner.closest.room.ChatRoomsWithMessages
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.room.RepliedPaperPlanes
-import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
-class LatestMessageAdapter(var list : List<ChatRoomsWithMessages>, val viewModel : FragmentChatViewModel, val itemClick: (ChatRoomsWithMessages) -> Unit) : RecyclerView.Adapter<LatestMessageAdapter.ChatRoomsWithMessagesViewHolder>() {
+class LatestMessageAdapter(var list : List<ChatRooms>, val viewModel : FragmentChatViewModel, val itemClick: (ChatRooms) -> Unit) : RecyclerView.Adapter<LatestMessageAdapter.ChatRoomsViewHolder>() {
 
 
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ChatRoomsWithMessagesViewHolder {
+    ): ChatRoomsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.latest_chat_row, parent, false)
-        return ChatRoomsWithMessagesViewHolder(view, itemClick)
+        return ChatRoomsViewHolder(view, itemClick)
     }
 
     override fun onBindViewHolder(
-        holder: ChatRoomsWithMessagesViewHolder,
+        holder: ChatRoomsViewHolder,
         position: Int
     ) {
-        var currentPosition = list[position]
-
-        holder.itemView.tv_chat_nickname.text = currentPosition.room.partnerNickname
-        holder.itemView.tv_chat_time.text = setDateToTextView(currentPosition.room.lastMessageTimestamp!!)
-        holder.itemView.tv_chat_message.text = currentPosition.room.lastMessage
+        val currentPosition = list[position]
+        holder.itemView.tv_chat_nickname.text = currentPosition.partnerNickname
+        holder.itemView.tv_chat_time.text = setDateToTextView(currentPosition.lastMessageTimestamp!!)
+        holder.itemView.tv_chat_message.text = currentPosition.lastMessage
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
@@ -72,7 +61,7 @@ class LatestMessageAdapter(var list : List<ChatRoomsWithMessages>, val viewModel
         return sdf.format(timestamp * 1000L)
     }
 
-    inner class ChatRoomsWithMessagesViewHolder(itemView : View, itemClick: (ChatRoomsWithMessages) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    inner class ChatRoomsViewHolder(itemView : View, itemClick: (ChatRooms) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
     }
 }

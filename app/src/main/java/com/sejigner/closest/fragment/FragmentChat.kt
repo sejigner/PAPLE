@@ -27,14 +27,13 @@ import com.sejigner.closest.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
-import com.squareup.okhttp.Dispatcher
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -73,10 +72,9 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
-
-        // initialised View Model
+        // initialized View Model
         ViewModel =
-            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+            ViewModelProvider(this, factory).get(FragmentChatViewModel::class.java)
         val firstPlaneAdapter = FirstPaperPlaneAdapter(listOf(), ViewModel) { FirstPaperPlanes ->
 
             val dialog = FragmentDialogFirst.newInstance(
@@ -100,7 +98,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 val messageItem = LatestMessages
 
                 val intent = Intent(requireActivity(), ChatLogActivity::class.java)
-                val chatPartnerId = messageItem.room.partnerId
+                val chatPartnerId = messageItem.partnerId
                 intent.putExtra(USER_KEY, chatPartnerId)
                 startActivity(intent)
             }
@@ -128,20 +126,19 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_first.layoutManager = mLayoutManagerFirst
         rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
-        ViewModel.allFirstPaperPlanes().observe(requireActivity(), Observer {
+        ViewModel.allFirstPaperPlanes().observe(viewLifecycleOwner, Observer {
             firstPlaneAdapter.list = it
             firstPlaneAdapter.notifyDataSetChanged()
         })
-        ViewModel.allRepliedPaperPlanes().observe(requireActivity(), Observer {
+        ViewModel.allRepliedPaperPlanes().observe(viewLifecycleOwner, Observer {
             repliedPlaneAdapter.list = it
             repliedPlaneAdapter.notifyDataSetChanged()
         })
 
-        ViewModel.allChatRooms().observe(requireActivity(), Observer {
+        ViewModel.allChatRooms().observe(viewLifecycleOwner, {
             latestMessageAdapter.list = it
             latestMessageAdapter.notifyDataSetChanged()
         })
-
 
         // fetchPapers()
         listenForPlanes()
@@ -181,21 +178,28 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
 
                 val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
-                if (!paperplane.isReplied) {
-                    val item = FirstPaperPlanes(
-                        null,
-                        paperplane.fromId,
-                        paperplane.text,
-                        paperplane.flightDistance,
-                        paperplane.timestamp
-                    )
-                    ViewModel.insert(item)
+
+                CoroutineScope(IO).launch {
+                    if (!paperplane.isReplied) { // 상대가 날린 첫 비행기
+
+                        val item = FirstPaperPlanes(
+                            null,
+                            paperplane.fromId,
+                            paperplane.text,
+                            paperplane.flightDistance,
+                            paperplane.timestamp
+                        )
+                        ViewModel.insert(item)
+                        // immediate delete on setting data to local databasae
+                        ref.child(paperplane.fromId).removeValue()
+                    } else { // 상대가 날린 답장 비행기
+                        setRepliedPaperPlane(paperplane)
+                        ref.child(paperplane.fromId).removeValue()
+                    }
+
+
                     // immediate delete on setting data to local databasae
-                    ref.child(paperplane.fromId).removeValue()
-                } else {
-                    updateFirstPaperPlaneRecord(paperplane)
-                    // immediate delete on setting data to local databasae
-                    ref.child(paperplane.fromId).removeValue()
+
 
 //                        repliedPlaneMap[snapshot.key!!] = paperplane
 //                        repliedPlaneKeyList.add(snapshot.key!!)
@@ -233,19 +237,20 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         })
     }
 
-    suspend fun updateFirstPaperPlaneRecord(paperPlane : PaperplaneMessage ) {
-        val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId!!).await()
+    suspend fun setRepliedPaperPlane(paperPlane: PaperplaneMessage) {
+        val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
         CoroutineScope(Dispatchers.IO).launch {
-            var item = RepliedPaperPlanes(null,null,null,null,0.0,0L,0L)
+            var item = RepliedPaperPlanes(null, null, null, null, 0.0, 0L, 0L)
             val setItem = launch {
                 item = RepliedPaperPlanes(
                     null,
                     myPaperPlaneRecord?.userMessage,
                     myPaperPlaneRecord?.fromId,
-                    paperPlane.partnerMessage,
+                    paperPlane.text,
                     paperPlane.flightDistance,
                     myPaperPlaneRecord!!.firstTimestamp,
-                    paperPlane.replyTimestamp)
+                    paperPlane.timestamp
+                )
             }
             setItem.join()
             ViewModel.insert(item)
@@ -253,107 +258,116 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         }
 
 
-
     }
 
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID")
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
-                val partnerId = latestChatMessage.fromId
-                if (partnerId == UID) {
-                    val partnerId = latestChatMessage.toId
-                     GlobalScope.launch(Dispatchers.IO){
-                        val isPartnerId = ViewModel.exists(partnerId)
-                        if (!isPartnerId) {
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java)?: return
+                if(latestChatMessage.fromId.isEmpty()) return
+                val partnerId = getPartnerId(latestChatMessage)
+                val isPartner = setSender(partnerId)
 
-                            val ref =
-                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                    .child("strNickname")
-                            ref.get().addOnSuccessListener {
-                                val partnerNickname = it.value.toString()
-                                val chatMessage = ChatMessages(
-                                    null,
-                                    latestChatMessage.toId,
-                                    false,
-                                    latestChatMessage.text,
-                                    latestChatMessage.timestamp
-                                )
-                                val chatRoom = ChatRooms(partnerId, partnerNickname)
-
-                                ViewModel.insert(chatRoom)
-                                ViewModel.insert(chatMessage)
-                            }.addOnFailureListener {
-                                Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-
-                        } else {
+                CoroutineScope(IO).launch {
+                    val isPartnerId = ViewModel.exists(partnerId)
+                    // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
+                    if (!isPartnerId.await()) {
+                        val ref =
+                            FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                .child("strNickname")
+                        ref.get().addOnSuccessListener {
+                            val partnerNickname = it.value.toString()
                             val chatMessage = ChatMessages(
                                 null,
-                                latestChatMessage.toId,
-                                false,
-                                latestChatMessage.text,
+                                partnerId,
+                                isPartner,
+                                latestChatMessage.message,
                                 latestChatMessage.timestamp
                             )
-                            ViewModel.insert(chatMessage)
-                        }
-                    }
-
-
-                } else {
-                    val partnerId = latestChatMessage.fromId
-                    GlobalScope.launch {
-                        val isPartnerId = ViewModel.exists(partnerId)
-
-                        if (!isPartnerId) {
-                            val ref =
-                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                    .child("strNickname")
-                            ref.get().addOnSuccessListener {
-                                val partnerNickname = it.value.toString()
-                                val chatMessage = ChatMessages(
-                                    null,
-                                    latestChatMessage.toId,
-                                    false,
-                                    latestChatMessage.text,
-                                    latestChatMessage.timestamp
-                                )
-                                val chatRoom = ChatRooms(partnerId, partnerNickname)
-                                ViewModel.insert(chatRoom)
-                                ViewModel.insert(chatMessage)
-                            }
-
-                        } else {
-                            val chatMessage = ChatMessages(
-                                null,
-                                latestChatMessage.toId,
-                                false,
-                                latestChatMessage.text,
+                            val chatRoom = ChatRooms(
+                                partnerId,
+                                partnerNickname,
+                                latestChatMessage.message,
                                 latestChatMessage.timestamp
                             )
+
+                            ViewModel.insert(chatRoom)
                             ViewModel.insert(chatMessage)
+                        }.addOnFailureListener {
+                            Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
+                    } else { // 이미 시작된 채팅
+                        val chatMessage = ChatMessages(
+                            null,
+                            partnerId,
+                            isPartner,
+                            latestChatMessage.message,
+                            latestChatMessage.timestamp
+                        )
+                        ViewModel.insert(chatMessage)
+                        ViewModel.updateLastMessages(partnerId, latestChatMessage.message, latestChatMessage.timestamp).join()
                     }
-
                 }
-
-
                 Log.d(TAG, "Child added successfully")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+                if(latestChatMessage.fromId.isEmpty()) return
+                val partnerId = getPartnerId(latestChatMessage)
+                val isPartner = setSender(partnerId)
 
+                CoroutineScope(IO).launch {
+                    val isPartnerId = ViewModel.exists(partnerId)
+                    // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
+                    if (!isPartnerId.await()) {
+                        val ref =
+                            FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                .child("strNickname")
+                        ref.get().addOnSuccessListener {
+                            val partnerNickname = it.value.toString()
+                            val chatMessage = ChatMessages(
+                                null,
+                                partnerId,
+                                isPartner,
+                                latestChatMessage.message,
+                                latestChatMessage.timestamp
+                            )
+                            val chatRoom = ChatRooms(
+                                partnerId,
+                                partnerNickname,
+                                latestChatMessage.message,
+                                latestChatMessage.timestamp
+                            )
+
+                            ViewModel.insert(chatRoom)
+                            ViewModel.insert(chatMessage)
+                        }.addOnFailureListener {
+                            Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                    } else { // 이미 시작된 채팅
+                        val chatMessage = ChatMessages(
+                            null,
+                            partnerId,
+                            isPartner,
+                            latestChatMessage.message,
+                            latestChatMessage.timestamp
+                        )
+                        ViewModel.insert(chatMessage)
+                        ViewModel.updateLastMessages(partnerId, latestChatMessage.message, latestChatMessage.timestamp).join()
+                    }
+                }
+                Log.d(TAG, "Child added successfully")
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
-                val index: Int = messageKeyList.indexOf(snapshot.key)
-                adapterVertical.removeGroupAtAdapterPosition(index)
-                messageKeyList.removeAt(index)
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -364,6 +378,21 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
             }
         })
+    }
+
+    private fun getPartnerId(latestChatMessage: ChatMessage): String {
+        val partnerId: String
+        if (latestChatMessage.fromId == UID) {
+            partnerId = latestChatMessage.toId
+            return partnerId
+        } else {
+            partnerId = latestChatMessage.fromId
+            return partnerId
+        }
+    }
+
+    private fun setSender(partnerId: String): Boolean {
+        return partnerId != UID
     }
 
     override fun onPaperClicked(item: FirstPaperPlanes) {
@@ -469,7 +498,7 @@ class LatestMessages(val latestChatMessage: ChatMessage) :
     Item<GroupieViewHolder>() {
     var chatPartnerUser: Users? = null
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.tv_chat_message.text = latestChatMessage.text
+        viewHolder.itemView.tv_chat_message.text = latestChatMessage.message
         viewHolder.itemView.tv_chat_time.text = setDateToTextView(latestChatMessage.timestamp)
 
         val chatPartnerId: String

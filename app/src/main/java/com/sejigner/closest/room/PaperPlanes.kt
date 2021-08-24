@@ -65,7 +65,9 @@ data class RepliedPaperPlanes(
 data class ChatRooms(
     @PrimaryKey @ColumnInfo val partnerId: String,
     val partnerNickname: String?,
+    @ColumnInfo(name = "lastMessage")
     val lastMessage : String?,
+    @ColumnInfo(name = "lastMessageTimestamp")
     val lastMessageTimestamp : Long?
 )
 

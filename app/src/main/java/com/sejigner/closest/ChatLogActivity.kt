@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.type.Date
+import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.UI.FragmentChatViewModel
+import com.sejigner.closest.UI.FragmentChatViewModelFactory
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.models.ChatMessage
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -21,6 +27,9 @@ import kotlinx.android.synthetic.main.chat_from_row.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +43,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<GroupieViewHolder>()
     var partnerUid: String? = null
+    lateinit var ViewModel: FragmentChatViewModel
 
 
     private var lastMessageDate : String? = null
@@ -45,6 +55,12 @@ class ChatLogActivity : AppCompatActivity() {
         rv_chat_log.adapter = adapter
         fbDatabase = FirebaseDatabase.getInstance()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
+
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
+        val factory = FragmentChatViewModelFactory(repository)
+
+
+        ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         val ref = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("strNickname")
         ref?.get()?.addOnSuccessListener {
@@ -67,15 +83,20 @@ class ChatLogActivity : AppCompatActivity() {
             super.onBackPressed()
         }
 
+        btn_exit.setOnClickListener {
+            CoroutineScope(IO).launch {
+                val chatroom = ViewModel.getChatRoom(partnerUid!!).await()
+                ViewModel.delete(chatroom)
+            }
+            super.onBackPressed()
+        }
+
 
     }
 
     private fun listenForMessages() {
 
-
-        val fromId = FirebaseAuth.getInstance().uid
-        val toId = partnerUid
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$toId")
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -83,7 +104,7 @@ class ChatLogActivity : AppCompatActivity() {
                 val currentMessageDate = getDateTime(chatMessage!!.timestamp)
 
                 if (chatMessage != null) {
-                    Log.d(TAG, chatMessage.text)
+                    Log.d(TAG, chatMessage.message)
 
 
                         if(lastMessageDate != currentMessageDate) {
@@ -91,10 +112,10 @@ class ChatLogActivity : AppCompatActivity() {
                             adapter.add(ChatDate(lastMessageDate!!))
                         }
 
-                    if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
-                        adapter.add(ChatFromItem(chatMessage.text, chatMessage.timestamp))
+                    if (chatMessage.fromId == UID) {
+                        adapter.add(ChatFromItem(chatMessage.message, chatMessage.timestamp))
                     } else {
-                        adapter.add(ChatToItem(chatMessage.text, chatMessage.timestamp))
+                        adapter.add(ChatToItem(chatMessage.message, chatMessage.timestamp))
                     }
                 }
 
@@ -136,13 +157,9 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun performSendMessage() {
         val text = et_message_chat_log.text.toString()
-        val fromId = FirebaseAuth.getInstance().uid
+        val fromId = UID
         val toId = partnerUid
 
-
-
-
-        if (fromId == null) return
         val fromRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$toId").push()
         val toRef =
@@ -154,15 +171,9 @@ class ChatLogActivity : AppCompatActivity() {
             et_message_chat_log.text.clear()
             rv_chat_log.scrollToPosition(adapter.itemCount - 1)
         }
-        toRef.setValue(chatMessage)
-
-        val latestMessageRef =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$toId")
-        latestMessageRef.setValue(chatMessage)
-
-        val latestMessageToRef =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$fromId")
-        latestMessageToRef.setValue(chatMessage)
+        toRef.setValue(chatMessage).addOnSuccessListener {
+            Log.d(TAG, "sent your message: ${fromRef.key}")
+        }
     }
 }
 

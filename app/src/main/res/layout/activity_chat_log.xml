@@ -15,6 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
+        <Button
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나가기"
+            android:id="@+id/btn_exit"/>
+
         <ImageView
             android:id="@+id/iv_back_chat_log"
             android:layout_marginStart="8dp"

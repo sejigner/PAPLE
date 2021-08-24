@@ -3,9 +3,10 @@ package com.sejigner.closest.room
 import androidx.lifecycle.LiveData
 
 
-
-
 class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
+
+    private val rooms: LiveData<List<ChatRooms>> = db.getChatRoomsDao().getAllChatRooms()
+
     // 첫 비행기
     suspend fun insert(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().insert(paperPlane)
     suspend fun delete(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().delete(paperPlane)
@@ -22,8 +23,9 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun insert(rooms: ChatRooms) = db.getChatRoomsDao().insert(rooms)
     suspend fun delete(rooms: ChatRooms) = db.getChatRoomsDao().delete(rooms)
     suspend fun insertOrUpdate(messageList : List<ChatMessages>) = db.getChatRoomsDao().insertOrUpdate(messageList)
-    suspend fun update(messageList: List<ChatMessages>) = db.getChatRoomsDao().update(messageList)
+    suspend fun updateLastMessages(partnerId: String, lastMessage: String, lastMessageTimestamp: Long) = db.getChatRoomsDao().updateLastMessages(partnerId,lastMessage,lastMessageTimestamp)
     suspend fun exists(partnerId: String): Boolean = db.getChatRoomsDao().exists(partnerId)
+    suspend fun getChatRoom(partnerId: String) : ChatRooms = db.getChatRoomsDao().getChatRoom(partnerId)
 
     // 메세지
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)
@@ -33,6 +35,8 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
     fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()
     fun allChatMessages() = db.getChatMessagesDao().getAllChatMessages()
-    fun allChatRoomsWithMessages() = db.getChatRoomsDao().getAllChatRoomsWithMessages()
+    fun allChatRooms() : LiveData<List<ChatRooms>> {
+        return rooms
+    }
 
 }

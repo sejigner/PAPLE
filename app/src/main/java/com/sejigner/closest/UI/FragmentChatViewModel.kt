@@ -1,11 +1,10 @@
 package com.sejigner.closest.UI
 
-import android.provider.Settings
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sejigner.closest.room.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {
@@ -48,17 +47,22 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
-    fun getWithId(fromId: String) = CoroutineScope(Dispatchers.IO).async{
+    fun getChatRoom(partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoom(partnerId)
+    }
+
+    fun getWithId(fromId: String) = CoroutineScope(IO).async{
         repository.getWithId(fromId)
     }
 
-    fun exists(partnerId: String) = viewModelScope.launch {
+    fun exists(partnerId: String) = CoroutineScope(IO).async {
         repository.exists(partnerId)
     }
 
-    fun update(messageList: List<ChatMessages>) = viewModelScope.launch {
-        repository.update(messageList)
+    fun updateLastMessages(partnerId: String, message : String, messageTimestamp : Long) = CoroutineScope(IO).launch {
+        repository.updateLastMessages(partnerId, message, messageTimestamp)
     }
+
 
     fun insertOrUpdate(rooms : List<ChatMessages>) = viewModelScope.launch {
         repository.insertOrUpdate(rooms)
@@ -72,5 +76,5 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
     fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
     fun allChatMessages() = repository.allChatMessages()
-    fun allChatRooms() = repository.allChatRoomsWithMessages()
+    fun allChatRooms() = repository.allChatRooms    ()
 }
