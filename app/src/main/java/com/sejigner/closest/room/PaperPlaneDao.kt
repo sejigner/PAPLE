@@ -83,6 +83,9 @@ interface ChatRoomsDao {
     @Query("SELECT * FROM chat_rooms  WHERE partnerId = :partnerId")
     suspend fun getChatRoom(partnerId: String) : ChatRooms
 
+    @Query("SELECT lastMessageTimestamp FROM chat_rooms  WHERE partnerId = :partnerId")
+    suspend fun getChatRoomsTimestamp(partnerId: String) : Long?
+
     // Chatroom
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: ChatRooms)

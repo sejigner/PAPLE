@@ -84,7 +84,7 @@ data class ChatMessages(
     var id: Int? = null,
     @ColumnInfo(name = "chatRoomId")
     val chatRoomId: String?,
-    val partnerOrMe: Boolean,
+    val meOrPartner: Int,
     val message: String?,
     @ColumnInfo(name = "timestamp")
     val timestamp: Long?

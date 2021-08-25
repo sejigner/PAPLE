@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
         var UID = "UID"
+        var MYNICKNAME = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +77,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         UID = fireBaseAuth?.uid!!
+
+
         val reference = fbDatabase?.reference?.child("Users")?.child(UID)?.child("strNickname")
         reference?.get()
             ?.addOnSuccessListener { it ->
@@ -86,6 +89,16 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     startActivity(setupIntent)
                 }
             }
+
+        MYNICKNAME = App.prefs.myNickname!!
+        if(MYNICKNAME.isBlank()) {
+            val ref =
+                FirebaseDatabase.getInstance().getReference("/Users/$UID")
+                    .child("strNickname")
+            ref.get().addOnSuccessListener{
+                App.prefs.myNickname = it.value.toString()
+            }
+        }
 
         pageHistory.push(0)
 

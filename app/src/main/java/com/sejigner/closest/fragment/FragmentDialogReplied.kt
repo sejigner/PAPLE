@@ -4,25 +4,29 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.SyncStateContract.Helpers.insert
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FragmentChatViewModel
-import com.sejigner.closest.UI.FragmentChatViewModelFactory
-import com.sejigner.closest.room.FirstPaperPlanes
+import com.sejigner.closest.room.ChatRooms
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.room.RepliedPaperPlanes
-import kotlinx.android.synthetic.main.chat_from_row.*
-import kotlinx.android.synthetic.main.chat_to_row.*
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -97,11 +101,27 @@ class FragmentDialogReplied : DialogFragment() {
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
-            val intent = Intent(view.context,ChatLogActivity::class.java)
-            intent.putExtra(FragmentChat.USER_KEY, fromId)
-            startActivity(intent)
-            viewModel.delete(paper!!)
-            dismiss()
+            var partnerNickname : String
+            val ref2 =
+                FirebaseDatabase.getInstance().getReference("/Users/$fromId")
+                    .child("strNickname")
+            ref2.get().addOnSuccessListener {
+                partnerNickname = it.value.toString()
+                val chatRoom = ChatRooms(fromId!!, partnerNickname, "", -1)
+                CoroutineScope(IO).launch {
+                    viewModel.insert(chatRoom).join()
+                    val intent = Intent(view.context,ChatLogActivity::class.java)
+                    intent.putExtra(FragmentChat.USER_KEY, fromId)
+                    startActivity(intent)
+                    viewModel.delete(paper!!)
+                    dismiss()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(requireActivity(),"상대방의 계정을 찾을 수 없습니다.",Toast.LENGTH_LONG).show()
+            }
+
+
+
         }
     }
 

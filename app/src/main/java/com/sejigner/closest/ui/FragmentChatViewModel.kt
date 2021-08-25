@@ -1,4 +1,4 @@
-package com.sejigner.closest.UI
+package com.sejigner.closest.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -64,6 +64,10 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
 
     fun updateLastMessages(partnerId: String, message : String, messageTimestamp : Long) = CoroutineScope(IO).launch {
         repository.updateLastMessages(partnerId, message, messageTimestamp)
+    }
+
+    fun getChatRoomsTimestamp(partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoomsTimestamp(partnerId)
     }
 
 

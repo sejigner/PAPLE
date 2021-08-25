@@ -1,4 +1,4 @@
-package com.sejigner.closest.UI
+package com.sejigner.closest.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

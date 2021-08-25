@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FragmentChatViewModel
-import com.sejigner.closest.UI.FragmentChatViewModelFactory
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.room.PaperPlaneDatabase
@@ -110,7 +110,7 @@ class FragmentDialogFirst : DialogFragment() {
                     UID,
                     fromId!!,
                     distance!!.toDouble(),
-                    System.currentTimeMillis(),
+                    System.currentTimeMillis() / 1000L,
                     true
                 )
                 paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {

@@ -5,14 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
-import com.sejigner.closest.UI.FirstPlaneListener
-import com.sejigner.closest.UI.FragmentChatViewModel
-import com.sejigner.closest.room.FirstPaperPlanes
+import com.sejigner.closest.ui.FirstPlaneListener
+import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.room.RepliedPaperPlanes
-import kotlinx.android.synthetic.main.column_paperplane_first.view.*
+import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.Adapter<RepliedPaperPlaneAdapter.RepliedPaperPlaneViewHolder>() {
 
@@ -31,9 +29,9 @@ class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewMode
         position: Int
     ) {
         var currentPosition = list[position]
-        holder.itemView.tv_paperplane_message_first.text = currentPosition.partnerMessage
-        holder.itemView.tv_paperplane_distance_first.text = currentPosition.flightDistance.toString()+"m"
-        holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.replyTimestamp)
+        holder.itemView.tv_paperplane_message_replied.text = currentPosition.partnerMessage
+        holder.itemView.tv_paperplane_distance_replied.text = currentPosition.flightDistance.toString()+"m"
+        holder.itemView.tv_paperplane_time_replied.text = setDateToTextView(currentPosition.replyTimestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
