@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,7 +43,7 @@ private const val ITEMS = "data"
 class FragmentDialogReplied : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
-    private var distance: String? = null
+    private var distance: Double? = null
     private var replyTime: Long? = null
     private var fromId: String?= null
     private var paper : RepliedPaperPlanes?= null
@@ -54,7 +55,7 @@ class FragmentDialogReplied : DialogFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             partnerMessage = it.getString("partnerMessage")
-            distance = it.getString("distance")
+            distance = it.getDouble("distance")
             replyTime = it.getLong("replyTime")
             fromId = it.getString("fromId")
             userMessage = it.getString("userMessage")
@@ -88,7 +89,7 @@ class FragmentDialogReplied : DialogFragment() {
 
         tv_dialog_my_message.text = userMessage
         tv_dialog_message_replied.text = partnerMessage
-        tv_dialog_distance_replied.text = getString(R.string.replied_plane_dialog,distance)
+        tv_dialog_distance_replied.text = getString(R.string.replied_plane_dialog,convertDistanceToString(distance!!))
         tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
         tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
 
@@ -125,6 +126,12 @@ class FragmentDialogReplied : DialogFragment() {
         }
     }
 
+    private fun convertDistanceToString(distance : Double) : String {
+        return if(distance >= 1000) {
+            (round((distance/1000)*100) /100).toString() + "km"
+        } else distance.toString() + "m"
+    }
+
 
     private fun setDateToTextView(timestamp: Long): String {
         val sdf = SimpleDateFormat("yyyy.MM.dd a hh:mm")
@@ -148,7 +155,7 @@ class FragmentDialogReplied : DialogFragment() {
             FragmentDialogReplied().apply {
                 arguments = Bundle().apply {
                     putString("partnerMessage", paperPlane.partnerMessage)
-                    putString("distance", paperPlane.flightDistance.toString())
+                    putDouble("distance", paperPlane.flightDistance)
                     putLong("replyTime", paperPlane.replyTimestamp)
                     putLong("firstTime",paperPlane.firstTimestamp)
                     putString("fromId", paperPlane.fromId)

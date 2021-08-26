@@ -11,6 +11,7 @@ import com.sejigner.closest.room.FirstPaperPlanes
 import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (FirstPaperPlanes) -> Unit) : RecyclerView.Adapter<FirstPaperPlaneAdapter.FirstPaperPlaneViewHolder>() {
 
@@ -30,13 +31,19 @@ class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : 
     ) {
         var currentPosition = list[position]
         holder.itemView.tv_paperplane_message_first.text = currentPosition.message
-        holder.itemView.tv_paperplane_distance_first.text = currentPosition.flightDistance.toString()+"m"
+        holder.itemView.tv_paperplane_distance_first.text = convertDistanceToString(currentPosition.flightDistance)
         holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.timestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    private fun convertDistanceToString(distance : Double) : String {
+        return if(distance >= 1000) {
+            (round((distance/1000)*100)/100).toString() + "km"
+        } else distance.toString() + "m"
     }
 
     private fun setDateToTextView(timestamp: Long) : String {

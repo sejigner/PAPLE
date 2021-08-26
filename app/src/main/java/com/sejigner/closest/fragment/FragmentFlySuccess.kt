@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,7 +71,13 @@ class FragmentFlySuccess : DialogFragment() {
         btnClose?.setOnClickListener {
             dismiss()
         }
-        flightResult?.text = getString(R.string.flight_result, flightDistance.toString())
+        flightResult?.text = getString(R.string.flight_result, convertDistanceToString(flightDistance))
+    }
+
+    private fun convertDistanceToString(distance : Double) : String {
+        return if(distance >= 1000) {
+            (round((distance/1000)*100) /100).toString() + "km"
+        } else distance.toString() + "m"
     }
 
     override fun onStart() {

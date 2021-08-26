@@ -82,6 +82,6 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
     fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
-    fun allChatMessages() = repository.allChatMessages()
+    fun allChatMessages(partnerId: String) = repository.allChatMessages(partnerId)
     fun allChatRooms() = repository.allChatRooms    ()
 }

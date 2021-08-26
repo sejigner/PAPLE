@@ -36,7 +36,7 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 
     fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
     fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()
-    fun allChatMessages() = db.getChatMessagesDao().getAllChatMessages()
+    fun allChatMessages(partnerId: String) = db.getChatMessagesDao().getAllChatMessages(partnerId)
     fun allChatRooms() : LiveData<List<ChatRooms>> {
         return rooms
     }

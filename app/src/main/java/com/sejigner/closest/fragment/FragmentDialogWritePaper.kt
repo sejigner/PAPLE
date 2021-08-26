@@ -92,9 +92,10 @@ class FragmentDialogWritePaper : DialogFragment() {
             val isSuccess = performSendAnonymousMessage()
             if(isSuccess) {
                 mCallbackHome?.setUserFound()
+                mCallbackHome?.getClosestUser()
                 mCallbackMain?.showSuccessFragment(flightDistance)
                 dismiss()
-                mCallbackHome?.getClosestUser()
+
             }
         }
 
@@ -122,7 +123,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
 
     private fun performSendAnonymousMessage() : Boolean {
-
+        var success : Boolean = false
         if (userFoundId != "") {
             val toId = userFoundId!!
             val message = et_write_paper.text.toString()
@@ -152,20 +153,19 @@ class FragmentDialogWritePaper : DialogFragment() {
                 val sentPaper = MyPaperPlaneRecord(paperplaneMessage.toId,paperplaneMessage.text, paperplaneMessage.timestamp)
                 ViewModel.insert(sentPaper)
 
-                acquaintanceRecordFromReference.child(toId).child("haveMet").setValue(true)
+                acquaintanceRecordFromReference.child(toId).setValue("")
                     .addOnSuccessListener {
                         Log.d(FragmentHome.TAG, "소통 기록 저장 - 발신자: $fromId")
                     }
-                acquaintanceRecordToReference.child(fromId).child("haveMet").setValue(true)
+                acquaintanceRecordToReference.child(fromId).setValue("haveMet")
                     .addOnSuccessListener {
                         Log.d(FragmentHome.TAG, "소통 기록 저장 - 수신자: $toId")
+                        success = true
                     }
             }
-        }
-        else {
-            return false
-        }
-        return true
+            return success
+
+        } else return success
     }
 
 

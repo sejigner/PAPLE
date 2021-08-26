@@ -11,4 +11,5 @@
     <color name="backgroundTransparent">#70000000</color>
     <color name="paperplane_text">#6174FF</color>
     <color name="paperplane_rest">#BCBCBC</color>
+    <color name="paperplane_theme">#6174FF</color>
 </resources>

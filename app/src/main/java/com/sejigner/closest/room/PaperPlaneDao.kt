@@ -55,7 +55,7 @@ interface RepliedPaperPlaneDao {
 @Dao
 interface ChatRoomsDao {
     // Room and Messages
-    @Query("SELECT * FROM chat_rooms")
+    @Query("SELECT * FROM chat_rooms ORDER BY lastMessageTimestamp DESC")
     fun getAllChatRooms(): LiveData<List<ChatRooms>>
 
     @Transaction
@@ -93,7 +93,7 @@ interface ChatRoomsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(messageList: List<ChatMessages>) : List<Long>
 
-    @Query("UPDATE chat_rooms SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE partnerId = :partnerId")
+    @Query("UPDATE chat_rooms  SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE partnerId = :partnerId " )
     suspend fun updateLastMessages(partnerId: String, lastMessage: String, lastMessageTimestamp: Long)
 
 
@@ -115,8 +115,8 @@ interface ChatRoomsDao {
 
 @Dao
 interface ChatMessagesDao {
-    @Query("SELECT * FROM chat_messages")
-    fun getAllChatMessages(): LiveData<List<ChatMessages>>
+    @Query("SELECT * FROM chat_messages WHERE chatRoomId = :chatRoomId ")
+    fun getAllChatMessages(chatRoomId : String): LiveData<List<ChatMessages>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(message: ChatMessages)

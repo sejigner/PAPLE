@@ -26,6 +26,7 @@ import com.sejigner.closest.room.PaperPlaneRepository
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,7 +40,7 @@ private const val ITEMS = "data"
 class FragmentDialogFirst : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var message: String? = null
-    private var distance: String? = null
+    private var distance: Double? = null
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
@@ -49,7 +50,7 @@ class FragmentDialogFirst : DialogFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             message = it.getString("message")
-            distance = it.getString("distance")
+            distance = it.getDouble("distance")
             time = it.getLong("time")
             fromId = it.getString("fromId")
         }
@@ -83,7 +84,7 @@ class FragmentDialogFirst : DialogFragment() {
 
         tv_dialog_time_first.text = setDateToTextView(time!!)
         tv_dialog_message_first.text = message
-        tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, distance)
+        tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
 
 
 
@@ -109,7 +110,7 @@ class FragmentDialogFirst : DialogFragment() {
                     textEntered,
                     UID,
                     fromId!!,
-                    distance!!.toDouble(),
+                    distance!!,
                     System.currentTimeMillis() / 1000L,
                     true
                 )
@@ -131,6 +132,12 @@ class FragmentDialogFirst : DialogFragment() {
             viewModel.delete(paper!!)
             dismiss()
         }
+    }
+
+    private fun convertDistanceToString(distance : Double) : String {
+        return if(distance >= 1000) {
+            (round((distance/1000)*100) /100).toString() + "km"
+        } else distance.toString() + "m"
     }
 
     private fun removePaper() {
@@ -171,7 +178,7 @@ class FragmentDialogFirst : DialogFragment() {
             FragmentDialogFirst().apply {
                 arguments = Bundle().apply {
                     putString("message", paperPlane.message)
-                    putString("distance", paperPlane.flightDistance.toString())
+                    putDouble("distance", paperPlane.flightDistance)
                     putLong("time", paperPlane.timestamp)
                     putString("fromId", paperPlane.fromId)
                 }

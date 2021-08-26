@@ -114,11 +114,15 @@
                 android:id="@+id/et_dialog_message_first"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
                 android:hint="답장을 입력해주세요 :)"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textColorHint="#c4c4c4"
                 android:textSize="18sp"
+                android:background="@null"
+                android:padding="8dp"
+                android:textCursorDrawable="@color/paperplane_theme"
                 app:layout_constraintEnd_toStartOf="@id/tv_dialog_send"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -56,12 +56,15 @@
         android:hint="메세지를 입력하세요."
         android:layout_margin="8dp"
         android:inputType="textPersonName"
+        android:background="@null"
+        android:padding="8dp"
+        android:textCursorDrawable="@color/paperplane_theme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_send_chat_log"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:background="#82B7F6"
+        android:backgroundTint="@color/paperplane_theme"
         android:id="@+id/btn_send_chat_log"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

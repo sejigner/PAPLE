@@ -30,9 +30,15 @@ class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewMode
     ) {
         var currentPosition = list[position]
         holder.itemView.tv_paperplane_message_replied.text = currentPosition.partnerMessage
-        holder.itemView.tv_paperplane_distance_replied.text = currentPosition.flightDistance.toString()+"m"
+        holder.itemView.tv_paperplane_distance_replied.text = convertDistanceToString(currentPosition.flightDistance)
         holder.itemView.tv_paperplane_time_replied.text = setDateToTextView(currentPosition.replyTimestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
+    }
+
+    private fun convertDistanceToString(distance : Double) : String {
+        return if(distance >= 1000) {
+            (((distance/1000)*100)/100).toString() + "km"
+        } else distance.toString() + "m"
     }
 
     override fun getItemCount(): Int {

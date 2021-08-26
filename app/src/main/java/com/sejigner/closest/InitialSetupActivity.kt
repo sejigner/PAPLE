@@ -104,6 +104,7 @@ class InitialSetupActivity : AppCompatActivity() {
             database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
                 Log.d(FragmentHome.TAG,"Saved Users info to Firebase Realtime database: ${database.key}")
             }
+            database?.child("Acquaintances/$uid")?.setValue(uid)
         }
 
 

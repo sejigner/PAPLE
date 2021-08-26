@@ -11,6 +11,8 @@ import com.sejigner.closest.R
 import com.sejigner.closest.room.ChatMessages
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.messageFromMe
+import com.sejigner.closest.ui.messageFromPartner
+import com.sejigner.closest.ui.messageNewDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,25 +20,8 @@ import java.util.*
 class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
-    //    override fun onCreateViewHolder(
-//        parent: ViewGroup,
-//        viewType: Int
-//    ): ChatMessagesViewHolder {
-//        val view = LayoutInflater.from(parent.context).inflate(R.layout.latest_chat_row, parent, false)
-//        return ChatMessagesViewHolder(view, itemClick)
-//    }
     override fun getItemViewType(position: Int): Int {
-        val chatMessage: ChatMessages = list[position]
-        return when (chatMessage.meOrPartner) {
-            0 -> { // 내 아이디인 경우 오른쪽뷰로 분기 (0)
-                0
-            }
-            1 -> { // 왼쪽뷰 (1)
-                1
-            }
-            else -> 2 // 가운데 뷰
-        }
+        return list[position].meOrPartner
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -50,7 +35,7 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                 )
                 MessageFromMeViewHolder(view)
             }
-            else -> {
+            messageFromPartner -> {
                 view = LayoutInflater.from(parent.context).inflate(
                     R.layout.chat_partner_row,
                     parent,
@@ -58,6 +43,15 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                 )
                 MessageFromPartnerViewHolder(view)
             }
+            messageNewDate -> {
+                view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.chat_date,
+                    parent,
+                    false
+                )
+                MessageFromPartnerViewHolder(view)
+            }
+            else ->  throw RuntimeException("알 수 없는 뷰 타입 에러")
         }
     }
 
@@ -65,7 +59,8 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
         holder: RecyclerView.ViewHolder,
         position: Int
     ) {
-        when (getItemViewType(position)) {
+
+        when (list[position].meOrPartner) {
             0 -> {
                 (holder as MessageFromMeViewHolder).bind(list[position])
                 holder.setIsRecyclable(false)
@@ -87,9 +82,7 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
 //        holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    override fun getItemCount(): Int = list.size
 
     inner class MessageFromMeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val time: TextView = itemView.findViewById(R.id.tv_time_me)
@@ -115,7 +108,7 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
         private val date: TextView = itemView.findViewById(R.id.tv_chat_date)
 
         fun bind(item: ChatMessages) {
-            date.text = getDateTime(item.timestamp!!)
+            date.text = item.message
         }
     }
 

@@ -68,7 +68,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
 
-        ViewModel.allChatMessages().observe(this, {
+        ViewModel.allChatMessages(partnerUid!!).observe(this, {
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
         })
@@ -198,6 +198,7 @@ class ChatLogActivity : AppCompatActivity() {
         val fromId = UID
         val toId = partnerUid
         val timestamp = System.currentTimeMillis() / 1000
+        val currentMessageDate = getDateTime(timestamp)
 
         et_message_chat_log.text.clear()
         rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
@@ -221,7 +222,21 @@ class ChatLogActivity : AppCompatActivity() {
 
 
         val chatMessages = ChatMessages(null, toId, 0, text, timestamp)
-        ViewModel.insert(chatMessages)
+
+        CoroutineScope(IO).launch {
+            var lastMessageTimeStamp: Long? = 0L
+            var lastMessageDate: String?
+
+            lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(partnerUid!!).await()
+            lastMessageDate = getDateTime(lastMessageTimeStamp!!)
+
+            if (!lastMessageDate.equals(currentMessageDate)) {
+                lastMessageDate = currentMessageDate
+                val dateMessage = ChatMessages(null, partnerUid, 2, lastMessageDate, 0L)
+                ViewModel.insert(dateMessage).join()
+            }
+            ViewModel.insert(chatMessages)
+        }
 
     }
 }

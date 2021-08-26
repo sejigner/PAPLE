@@ -118,8 +118,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         mLayoutManagerReplied.reverseLayout = true
         mLayoutManagerReplied.stackFromEnd = true
         mLayoutManagerReplied.orientation = HORIZONTAL
-        mLayoutManagerMessages.reverseLayout = true
-        mLayoutManagerMessages.stackFromEnd = true
         mLayoutManagerMessages.orientation = VERTICAL
 
         rv_chat.layoutManager = mLayoutManagerMessages
@@ -319,11 +317,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
             }
         })
-    }
-
-    private fun setSender(partnerId: String): Int {
-        return if(partnerId != UID) 1
-        else 0
     }
 
     override fun onPaperClicked(item: FirstPaperPlanes) {
