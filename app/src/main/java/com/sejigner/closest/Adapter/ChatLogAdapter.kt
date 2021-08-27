@@ -49,7 +49,7 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                     parent,
                     false
                 )
-                MessageFromPartnerViewHolder(view)
+                DateViewHolder(view)
             }
             else ->  throw RuntimeException("알 수 없는 뷰 타입 에러")
         }
