@@ -3,6 +3,7 @@ package com.sejigner.closest.fragment
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +17,15 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.firebase.geofire.GeoFire
+import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQuery
+import com.firebase.geofire.GeoQueryEventListener
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sejigner.closest.LoadingDialog
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -28,7 +37,11 @@ import com.sejigner.closest.room.PaperPlaneRepository
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
+import kotlin.math.round
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,21 +56,27 @@ private const val ITEMS = "data"
 class FragmentDialogWritePaper : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var uid: String? = null
-    private var userFoundId: String? = null
     private var currentAddress: String? = null
-    private var flightDistance: Double = 0.0
     private var mCallbackMain : WritePaperListenerMain ?= null
     private var mCallbackHome : WritePaperListenerHome ?= null
     lateinit var ViewModel: FragmentChatViewModel
-
+    private var radius: Double = 350.0
+    private var userFound: Boolean = false
+    private var partnerSet : Boolean = false
+    private var userFoundId: String = ""
+    private lateinit var userFoundLocation: Location
+    private var flightDistance: Double = 0.0
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private var userCurrentLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             uid = it.getString("uid")
-            userFoundId = it.getString("userFoundId")
             currentAddress = it.getString("currentAddress")
-            flightDistance = it.getDouble("flightDistance")
+            latitude = it.getDouble("latitude", latitude)
+            longitude = it.getDouble("longitude", longitude)
         }
     }
 
@@ -87,16 +106,28 @@ class FragmentDialogWritePaper : DialogFragment() {
         val btnFly = view.findViewById<View>(R.id.tv_paper_send) as? TextView
         val location = view.findViewById<View>(R.id.tv_update_location_paper) as? TextView
 
+
+
         location?.text = currentAddress
         btnFly?.setOnClickListener{
-            val isSuccess = performSendAnonymousMessage()
-            if(isSuccess) {
-                mCallbackHome?.setUserFound()
-                mCallbackHome?.getClosestUser()
-                mCallbackMain?.showSuccessFragment(flightDistance)
-                dismiss()
+            val dialog = LoadingDialog(requireActivity())
 
+            CoroutineScope(Main).launch {
+                dialog.show()
+                getClosestUser()
+                delay(3000)
+                dialog.dismiss()
+
+                val isSuccess = performSendAnonymousMessage()
+                if(isSuccess) {
+
+                    mCallbackMain?.showSuccessFragment(flightDistance)
+                    dismiss()
+
+                }
             }
+
+
         }
 
         btnClose?.setOnClickListener {
@@ -119,6 +150,87 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
         })
 
+    }
+
+    suspend fun getClosestUser() = CoroutineScope(IO).launch {
+
+        val userLocation: DatabaseReference =
+            FirebaseDatabase.getInstance().reference.child("User-Location")
+        val geoFire = GeoFire(userLocation)
+        val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
+        geoQuery.removeAllListeners()
+
+
+        // recursive method 이용
+        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+            override fun onKeyEntered(key: String?, location: GeoLocation?) {
+                Log.d("geoQuery", key.toString())
+                if ((!userFound) && key != UID) {
+                    val ref = FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID")
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // Room DB로 대체
+                        if (ref.child(key!!).awaitsSingle()!!.exists()) {
+                            // user exists in the database
+                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
+                        } else {
+                            // user does not exist in the database
+                            userFound = true
+
+                            userFoundId = key
+
+                            userFoundLocation = Location(location.toString())
+                            val ref: DatabaseReference =
+                                userLocation.child(userFoundId).child("l")
+                            ref.get().addOnSuccessListener {
+
+                                val map: List<Object> = it.value as List<Object>
+
+                                calDistance(map)
+                                partnerSet = true
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onKeyExited(key: String?) {
+            }
+
+            override fun onKeyMoved(key: String?, location: GeoLocation?) {
+
+            }
+
+            override fun onGeoQueryReady() {
+                if (!userFound) {
+                        getClosestUser()
+                }
+            }
+
+            override fun onGeoQueryError(error: DatabaseError?) {
+
+            }
+        })
+    }
+
+    private fun calDistance(location: List<Object>) {
+        var locationFoundLat = 0.0
+        var locationFoundLng = 0.0
+        locationFoundLat = location[0].toString().toDouble()
+        locationFoundLng = location[1].toString().toDouble()
+
+        val locationFound = Location("")
+        locationFound.latitude = locationFoundLat
+        locationFound.longitude = locationFoundLng
+
+        val distance: Float =
+            locationFound.distanceTo(userCurrentLocation)
+        flightDistance = round((distance.toDouble()) * 100) / 100
+    }
+
+    fun setUserFound() {
+        userFound = false
+        userFoundId = ""
     }
 
 
@@ -210,13 +322,13 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(uid: String, userFoundId : String, currentAddress: String, flightDistance: Double) =
+        fun newInstance(uid: String,currentAddress: String, latitude:Double, longitude : Double) =
             FragmentDialogWritePaper().apply {
                 arguments = Bundle().apply {
                     putString("uid", uid)
-                    putString("userFoundId", userFoundId)
                     putString("currentAddress", currentAddress)
-                    putDouble("flightDistance",flightDistance)
+                    putDouble("latitude", latitude)
+                    putDouble("longitude", longitude)
                 }
             }
     }

@@ -89,7 +89,6 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
         tv_update_location.setOnClickListener {
             getCurrentLocation()
         }
-        getClosestUser()
 
         FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID").child(UID).setValue("")
 
@@ -100,13 +99,7 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
         }
 
         iv_paper_plane_home.setOnClickListener {
-            getClosestUser()
-            if (userFound) {
-                mListener?.runFragmentDialogWritePaper(userFoundId, currentAddress, flightDistance)
-            } else {
-                Toast.makeText(requireActivity(), "10km 내에 유저가 없어요.", Toast.LENGTH_SHORT).show()
-            }
-
+            mListener?.runFragmentDialogWritePaper(userFoundId, latitude, longitude)
         }
     }
 
@@ -122,11 +115,7 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
 
 
     interface FlightListener {
-        fun runFragmentDialogWritePaper(
-            userFoundId: String,
-            currentAddress: String,
-            flightDistance: Double
-        )
+        fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude: Double)
     }
 
     private var radius: Double = 350.0
@@ -136,7 +125,6 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
     private var flightDistance: Double = 0.0
 
     override fun getClosestUser() {
-        getCurrentLocation()
         fbFirestore = FirebaseFirestore.getInstance()
 
         val userLocation: DatabaseReference =
@@ -176,92 +164,8 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
                             }
                         }
                     }
-
-//                        ref.child(key!!).addListenerForSingleValueEvent(object : ValueEventListener {
-//                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                                if (dataSnapshot.exists()) {
-//                                    // user exists in the database
-//                                    Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
-//                                    return
-//                                } else {
-//                                    // user does not exist in the database
-//                                    userFound = true
-//
-//                                    userFoundId = key
-//
-//                                    userFoundLocation = Location(location.toString())
-//                                    val ref: DatabaseReference =
-//                                        userLocation.child(userFoundId).child("l")
-//                                    ref.get().addOnSuccessListener {
-//                                        val map: List<Object> = it.value as List<Object>
-//                                        var locationFoundLat = 0.0
-//                                        var locationFoundLng = 0.0
-//
-//                                        locationFoundLat = map[0].toString().toDouble()
-//                                        locationFoundLng = map[1].toString().toDouble()
-//
-//                                        val locationFound = Location("")
-//                                        locationFound.latitude = locationFoundLat
-//                                        locationFound.longitude = locationFoundLng
-//
-//                                        val distance: Float =
-//                                            locationFound.distanceTo(userCurrentLocation)
-//                                        flightDistance = round((distance.toDouble()) * 100) / 100
-//                                    }
-//                                }
-//
-//
-//                            }
-//
-//                            override fun onCancelled(error: DatabaseError) {
-//
-//                            }
-//
-//                        })
-
                 }
             }
-
-
-//                        .addValueEventListener(object : ValueEventListener {
-//                            override fun onDataChange(snapshot: DataSnapshot) {
-//                                if (!snapshot.hasChild(key!!)) {
-//
-//                                    userFound = true
-//
-//                                    userFoundId = key
-//
-//                                    userFoundLocation = Location(location.toString())
-//                                    var ref: DatabaseReference =
-//                                        userLocation.child(userFoundId).child("l")
-//                                    ref.get().addOnSuccessListener {
-//                                        val map: List<Object> = it.value as List<Object>
-//                                        var locationFoundLat = 0.0
-//                                        var locationFoundLng = 0.0
-//
-//                                        locationFoundLat = map[0].toString().toDouble()
-//                                        locationFoundLng = map[1].toString().toDouble()
-//
-//                                        val locationFound = Location("")
-//                                        locationFound.latitude = locationFoundLat
-//                                        locationFound.longitude = locationFoundLng
-//
-//                                        val distance: Float =
-//                                            locationFound.distanceTo(userCurrentLocation)
-//                                        flightDistance = round((distance.toDouble()) * 100) / 100
-//                                    }
-//                                    return
-////
-////                        Log.d(TAG, userFoundLocation.toString() + "현재 위치:"+ userCurrentLocation)
-////
-////                        val distance = userFoundLocation.distanceTo(userCurrentLocation).toDouble()
-////                        Log.d(TAG, distance.toString())
-////                        // 거리 소숫점 두번째 자리 반올림
-////                        flightDistance = String.format("%.2f", distance).toDouble()
-////                        // flightDistance = String.format("%.3f", distance).toFloat()/1000
-//                                }
-//                            }
-
 
             override fun onKeyExited(key: String?) {
             }

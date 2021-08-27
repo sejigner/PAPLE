@@ -184,10 +184,10 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     }
 
-    override fun runFragmentDialogWritePaper(userFoundId: String, currentAddress: String, flightDistance : Double) {
+    override fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude : Double) {
 
         val dialog = FragmentDialogWritePaper.newInstance(
-            UID, userFoundId, currentAddress, flightDistance
+            UID, currentAddress, latitude, longitude
         )
         val fm = supportFragmentManager
         dialog.show(fm, "write paper")
