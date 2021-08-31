@@ -2,6 +2,7 @@ package com.sejigner.closest
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,7 @@ import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
-import com.sejigner.closest.fragment.FragmentHome
+import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
@@ -21,20 +22,14 @@ import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
-import kotlinx.android.synthetic.main.chat_date.view.*
-import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatLogActivity : AppCompatActivity() {
+class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener {
 
     companion object {
         const val TAG = "ChatLog"
@@ -67,6 +62,8 @@ class ChatLogActivity : AppCompatActivity() {
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         ViewModel.allChatMessages(partnerUid!!).observe(this, {
             chatLogAdapter.list = it
@@ -237,6 +234,24 @@ class ChatLogActivity : AppCompatActivity() {
             }
             ViewModel.insert(chatMessages)
         }
+
+    }
+
+    override fun initChatLog() {
+        val timestamp = System.currentTimeMillis() / 1000
+
+        val noticeMessage = ChatMessages(null, partnerUid, 2, getString(R.string.init_chat_log),0L)
+        ViewModel.insert(noticeMessage)
+
+        val lastMessagesUserReference =
+            FirebaseDatabase.getInstance().getReference("/Last-messages/$UID/$partnerUid")
+        val lastMessageToMe = LatestChatMessage(partnerNickname,getString(R.string.init_chat_log),timestamp)
+        lastMessagesUserReference.setValue(lastMessageToMe)
+
+        val lastMessagesPartnerReference =
+            FirebaseDatabase.getInstance().getReference("/Last-messages/$partnerUid/$UID")
+        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,getString(R.string.init_chat_log),timestamp)
+        lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
     }
 }

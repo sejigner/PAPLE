@@ -3,6 +3,16 @@ package com.sejigner.closest.room
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+
+
+@Dao
+interface AcquaintancesDao {
+    @Query("SELECT EXISTS (SELECT 1 FROM acquaintances WHERE uid = :uid)")
+    suspend fun haveMet(uid: String): Boolean
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(acquaintance: Acquaintances)
+}
+
 @Dao
 interface FirstPaperPlaneDao {
     @Query("SELECT * FROM first_paper_planes")
@@ -122,3 +132,4 @@ interface ChatMessagesDao {
     suspend fun insert(message: ChatMessages)
 
 }
+

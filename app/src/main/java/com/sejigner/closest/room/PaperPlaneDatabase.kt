@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [FirstPaperPlanes::class, RepliedPaperPlanes::class, MyPaperPlaneRecord::class, ChatMessages::class, ChatRooms::class], version = 3, exportSchema = false)
+@Database(entities = [FirstPaperPlanes::class, RepliedPaperPlanes::class, MyPaperPlaneRecord::class, ChatMessages::class, ChatRooms::class, Acquaintances::class], version = 1, exportSchema = false)
 abstract class PaperPlaneDatabase: RoomDatabase() {
 
     abstract fun getFirstPaperPlaneDao() : FirstPaperPlaneDao
@@ -14,6 +14,7 @@ abstract class PaperPlaneDatabase: RoomDatabase() {
     abstract fun getMyPaperPlaneRecordDao() : MyPaperPlaneRecordDao
     abstract fun getChatRoomsDao() : ChatRoomsDao
     abstract fun getChatMessagesDao() : ChatMessagesDao
+    abstract fun getAcquaintancesDao() : AcquaintancesDao
 
 
     companion object{

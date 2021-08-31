@@ -24,13 +24,13 @@ import com.firebase.geofire.GeoQueryEventListener
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.LoadingDialog
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.Acquaintances
 import com.sejigner.closest.room.MyPaperPlaneRecord
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
@@ -38,8 +38,6 @@ import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import kotlin.math.round
 
@@ -57,18 +55,17 @@ class FragmentDialogWritePaper : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var uid: String? = null
     private var currentAddress: String? = null
-    private var mCallbackMain : WritePaperListenerMain ?= null
-    private var mCallbackHome : WritePaperListenerHome ?= null
+    private var mCallbackMain: WritePaperListenerMain? = null
     lateinit var ViewModel: FragmentChatViewModel
-    private var radius: Double = 350.0
+    private var radius: Double = 0.0
     private var userFound: Boolean = false
-    private var partnerSet : Boolean = false
+    private var partnerSet: Boolean = false
     private var userFoundId: String = ""
-    private lateinit var userFoundLocation: Location
     private var flightDistance: Double = 0.0
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-    private var userCurrentLocation: Location? = null
+    private var userCurrentLocation: Location? = Location("")
+    private lateinit var job: CompletableJob
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +87,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -105,36 +101,23 @@ class FragmentDialogWritePaper : DialogFragment() {
         val btnClose = view.findViewById<View>(R.id.iv_close_paper) as? ImageView
         val btnFly = view.findViewById<View>(R.id.tv_paper_send) as? TextView
         val location = view.findViewById<View>(R.id.tv_update_location_paper) as? TextView
+        val job = Job()
+        userCurrentLocation?.longitude = longitude
+        userCurrentLocation?.latitude = latitude
 
 
 
         location?.text = currentAddress
-        btnFly?.setOnClickListener{
-            val dialog = LoadingDialog(requireActivity())
-
-            CoroutineScope(Main).launch {
-                dialog.show()
-                getClosestUser()
-                delay(3000)
-                dialog.dismiss()
-
-                val isSuccess = performSendAnonymousMessage()
-                if(isSuccess) {
-
-                    mCallbackMain?.showSuccessFragment(flightDistance)
-                    dismiss()
-
-                }
-            }
-
-
+        btnFly?.setOnClickListener {
+            getClosestUser()
         }
 
         btnClose?.setOnClickListener {
             dismiss()
         }
 
-        etPaper?.addTextChangedListener(object : TextWatcher{
+
+        etPaper?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 textCount?.text = getString(R.string.limit_write)
             }
@@ -152,25 +135,32 @@ class FragmentDialogWritePaper : DialogFragment() {
 
     }
 
-    suspend fun getClosestUser() = CoroutineScope(IO).launch {
+    interface WritePaperListenerMain {
+        fun showSuccessFragment(flightDistance: Double)
+        fun showLoadingDialog()
+        fun dismissLoadingDialog()
+    }
 
+
+    fun getClosestUser() {
+        mCallbackMain?.showLoadingDialog()
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("User-Location")
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
 
-
-        // recursive method 이용
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
+
                 Log.d("geoQuery", key.toString())
                 if ((!userFound) && key != UID) {
-                    val ref = FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID")
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // Room DB로 대체
-                        if (ref.child(key!!).awaitsSingle()!!.exists()) {
+                    var haveMet: Boolean
+                    // Room DB로 대체
+                    runBlocking {
+                        haveMet = ViewModel.haveMet(key!!).await()
+                        if (haveMet) {
                             // user exists in the database
                             Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
                         } else {
@@ -178,19 +168,22 @@ class FragmentDialogWritePaper : DialogFragment() {
                             userFound = true
 
                             userFoundId = key
+                            val userFoundLocation = GeoLocation(location!!.latitude,location!!.longitude)
 
-                            userFoundLocation = Location(location.toString())
-                            val ref: DatabaseReference =
-                                userLocation.child(userFoundId).child("l")
-                            ref.get().addOnSuccessListener {
 
-                                val map: List<Object> = it.value as List<Object>
 
-                                calDistance(map)
-                                partnerSet = true
-                            }
+                            calDistance(userFoundLocation)
+                            partnerSet = true
+
+                            performSendAnonymousMessage()
+                            dismiss()
+                            mCallbackMain?.dismissLoadingDialog()
+                            mCallbackMain?.showSuccessFragment(flightDistance)
+
                         }
                     }
+
+
                 }
             }
 
@@ -203,7 +196,8 @@ class FragmentDialogWritePaper : DialogFragment() {
 
             override fun onGeoQueryReady() {
                 if (!userFound) {
-                        getClosestUser()
+                    radius++
+                    getClosestUser()
                 }
             }
 
@@ -213,12 +207,13 @@ class FragmentDialogWritePaper : DialogFragment() {
         })
     }
 
-    private fun calDistance(location: List<Object>) {
+    private fun calDistance(location: GeoLocation?) {
         var locationFoundLat = 0.0
         var locationFoundLng = 0.0
-        locationFoundLat = location[0].toString().toDouble()
-        locationFoundLng = location[1].toString().toDouble()
-
+        if(location!=null){
+            locationFoundLat = location.latitude
+            locationFoundLng = location.longitude
+        }
         val locationFound = Location("")
         locationFound.latitude = locationFoundLat
         locationFound.longitude = locationFoundLng
@@ -228,56 +223,41 @@ class FragmentDialogWritePaper : DialogFragment() {
         flightDistance = round((distance.toDouble()) * 100) / 100
     }
 
-    fun setUserFound() {
-        userFound = false
-        userFoundId = ""
-    }
+    private fun performSendAnonymousMessage() {
 
 
-    private fun performSendAnonymousMessage() : Boolean {
-        var success : Boolean = false
-        if (userFoundId != "") {
-            val toId = userFoundId!!
-            val message = et_write_paper.text.toString()
-            val fromId = UID
-            val distance = flightDistance
+        val toId = userFoundId
+        val message = et_write_paper.text.toString()
+        val fromId = UID
+        val distance = flightDistance
 
-            val paperPlaneReceiverReference =
-                FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+        val paperPlaneReceiverReference =
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
-            val acquaintanceRecordFromReference =
-                FirebaseDatabase.getInstance().getReference("/Acquaintances/$fromId")
-            val acquaintanceRecordToReference =
-                FirebaseDatabase.getInstance().getReference("/Acquaintances/$toId")
-            val paperplaneMessage = PaperplaneMessage(
-                paperPlaneReceiverReference.key!!,
-                message,
-                fromId,
-                toId,
-                distance,
-                System.currentTimeMillis() / 1000L,
-                false
+        val paperplaneMessage = PaperplaneMessage(
+            paperPlaneReceiverReference.key!!,
+            message,
+            fromId,
+            toId,
+            distance,
+            System.currentTimeMillis() / 1000L,
+            false
+        )
+
+        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+            Log.d(FragmentHome.TAG, "Receiver 실패")
+        }.addOnSuccessListener {
+            val sentPaper = MyPaperPlaneRecord(
+                paperplaneMessage.toId,
+                paperplaneMessage.text,
+                paperplaneMessage.timestamp
             )
+            ViewModel.insert(sentPaper)
+        }
 
-            paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
-                Log.d(FragmentHome.TAG, "Receiver 실패")
-            }.addOnSuccessListener {
-                val sentPaper = MyPaperPlaneRecord(paperplaneMessage.toId,paperplaneMessage.text, paperplaneMessage.timestamp)
-                ViewModel.insert(sentPaper)
+        val acquaintance = Acquaintances(toId)
+        ViewModel.insert(acquaintance)
 
-                acquaintanceRecordFromReference.child(toId).setValue("")
-                    .addOnSuccessListener {
-                        Log.d(FragmentHome.TAG, "소통 기록 저장 - 발신자: $fromId")
-                    }
-                acquaintanceRecordToReference.child(fromId).setValue("haveMet")
-                    .addOnSuccessListener {
-                        Log.d(FragmentHome.TAG, "소통 기록 저장 - 수신자: $toId")
-                        success = true
-                    }
-            }
-            return success
-
-        } else return success
     }
 
 
@@ -289,26 +269,25 @@ class FragmentDialogWritePaper : DialogFragment() {
     }
 
 
-    interface WritePaperListenerMain {
-        fun showSuccessFragment(flightDistance: Double)
-    }
 
-    interface WritePaperListenerHome {
-        fun getClosestUser()
-        fun setUserFound()
-    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is WritePaperListenerMain) {
+        if (context is WritePaperListenerMain) {
             mCallbackMain = context
         } else {
             throw RuntimeException(context.toString() + "must implement WritePaperListener")
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
 
-    companion object{
+
+    companion object {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -322,7 +301,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(uid: String,currentAddress: String, latitude:Double, longitude : Double) =
+        fun newInstance(uid: String, currentAddress: String, latitude: Double, longitude: Double) =
             FragmentDialogWritePaper().apply {
                 arguments = Bundle().apply {
                     putString("uid", uid)
@@ -333,3 +312,4 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
     }
 }
+

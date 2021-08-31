@@ -45,7 +45,7 @@ private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 
-class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome {
+class FragmentHome : Fragment(){
 
     companion object {
         const val TAG = "FlightLog"
@@ -101,6 +101,7 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
         iv_paper_plane_home.setOnClickListener {
             mListener?.runFragmentDialogWritePaper(userFoundId, latitude, longitude)
         }
+
     }
 
 
@@ -118,119 +119,100 @@ class FragmentHome : Fragment(), FragmentDialogWritePaper.WritePaperListenerHome
         fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude: Double)
     }
 
-    private var radius: Double = 350.0
-    private var userFound: Boolean = false
+
     private var userFoundId: String = ""
-    private lateinit var userFoundLocation: Location
     private var flightDistance: Double = 0.0
 
-    override fun getClosestUser() {
-        fbFirestore = FirebaseFirestore.getInstance()
+//    override fun getClosestUser() {
+//        fbFirestore = FirebaseFirestore.getInstance()
+//
+//        val userLocation: DatabaseReference =
+//            FirebaseDatabase.getInstance().reference.child("User-Location")
+//        val geoFire = GeoFire(userLocation)
+//        val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
+//        geoQuery.removeAllListeners()
+//
+//
+//        // recursive method 이용
+//        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+//            override fun onKeyEntered(key: String?, location: GeoLocation?) {
+//                Log.d("geoQuery", key.toString())
+//                if ((!userFound) && key != UID) {
+//                    val ref = FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID")
+//
+//                    CoroutineScope(IO).launch {
+//
+//                        if (ref.child(key!!).awaitsSingle()!!.exists()) {
+//                            // user exists in the database
+//                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
+//                        } else {
+//                            // user does not exist in the database
+//                            userFound = true
+//
+//                            userFoundId = key
+//
+//                            userFoundLocation = Location(location.toString())
+//                            val ref: DatabaseReference =
+//                                userLocation.child(userFoundId).child("l")
+//                            ref.get().addOnSuccessListener {
+//
+//                                val map: List<Object> = it.value as List<Object>
+//
+//                                calDistance(map)
+//
+//
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            override fun onKeyExited(key: String?) {
+//            }
+//
+//            override fun onKeyMoved(key: String?, location: GeoLocation?) {
+//
+//            }
+//
+//            override fun onGeoQueryReady() {
+//                if (!userFound) {
+//                    if (radius < 400) {
+////                        radius++
+//                        getClosestUser()
+//                    }
+//                }
+//            }
+//
+//            override fun onGeoQueryError(error: DatabaseError?) {
+//
+//            }
+//        })
+//    }
 
-        val userLocation: DatabaseReference =
-            FirebaseDatabase.getInstance().reference.child("User-Location")
-        val geoFire = GeoFire(userLocation)
-        val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
-        geoQuery.removeAllListeners()
 
 
-        // recursive method 이용
-        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
-            override fun onKeyEntered(key: String?, location: GeoLocation?) {
-                Log.d("geoQuery", key.toString())
-                if ((!userFound) && key != UID) {
-                    val ref = FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID")
-
-                    CoroutineScope(IO).launch {
-
-                        if (ref.child(key!!).awaitsSingle()!!.exists()) {
-                            // user exists in the database
-                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
-                        } else {
-                            // user does not exist in the database
-                            userFound = true
-
-                            userFoundId = key
-
-                            userFoundLocation = Location(location.toString())
-                            val ref: DatabaseReference =
-                                userLocation.child(userFoundId).child("l")
-                            ref.get().addOnSuccessListener {
-
-                                val map: List<Object> = it.value as List<Object>
-
-                                calDistance(map)
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onKeyExited(key: String?) {
-            }
-
-            override fun onKeyMoved(key: String?, location: GeoLocation?) {
-
-            }
-
-            override fun onGeoQueryReady() {
-                if (!userFound) {
-                    if (radius < 400) {
-//                        radius++
-                        getClosestUser()
-                    }
-                }
-            }
-
-            override fun onGeoQueryError(error: DatabaseError?) {
-
-            }
-        })
-    }
-
-    private fun calDistance(location: List<Object>) {
-        var locationFoundLat = 0.0
-        var locationFoundLng = 0.0
-        locationFoundLat = location[0].toString().toDouble()
-        locationFoundLng = location[1].toString().toDouble()
-
-        val locationFound = Location("")
-        locationFound.latitude = locationFoundLat
-        locationFound.longitude = locationFoundLng
-
-        val distance: Float =
-            locationFound.distanceTo(userCurrentLocation)
-        flightDistance = round((distance.toDouble()) * 100) / 100
-    }
-
-    override fun setUserFound() {
-        userFound = false
-        userFoundId = ""
-    }
-
-    suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
-        suspendCancellableCoroutine { continuation ->
-            val listener = object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) {
-                    val exception = when (error.toException()) {
-                        is FirebaseException -> error.toException()
-                        else -> Exception("The Firebase call for reference $this was cancelled")
-                    }
-                    continuation.resumeWithException(exception)
-                }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    try {
-                        continuation.resume(snapshot) {}
-                    } catch (exception: Exception) {
-                        continuation.resumeWithException(exception)
-                    }
-                }
-            }
-            continuation.invokeOnCancellation { this.removeEventListener(listener) }
-            this.addListenerForSingleValueEvent(listener)
-        }
+//    suspend fun DatabaseReference.awaitsSingle(): DataSnapshot? =
+//        suspendCancellableCoroutine { continuation ->
+//            val listener = object : ValueEventListener {
+//                override fun onCancelled(error: DatabaseError) {
+//                    val exception = when (error.toException()) {
+//                        is FirebaseException -> error.toException()
+//                        else -> Exception("The Firebase call for reference $this was cancelled")
+//                    }
+//                    continuation.resumeWithException(exception)
+//                }
+//
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    try {
+//                        continuation.resume(snapshot) {}
+//                    } catch (exception: Exception) {
+//                        continuation.resumeWithException(exception)
+//                    }
+//                }
+//            }
+//            continuation.invokeOnCancellation { this.removeEventListener(listener) }
+//            this.addListenerForSingleValueEvent(listener)
+//        }
 
 
     fun getCurrentLocation() {

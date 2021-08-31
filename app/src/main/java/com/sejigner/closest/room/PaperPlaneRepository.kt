@@ -33,6 +33,10 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)
     suspend fun insertOrUpdate(message: ChatMessages) = db.getChatRoomsDao().insertOrUpdate(message)
 
+    // 만난 유저 체크
+    suspend fun haveMet(uid: String) : Boolean = db.getAcquaintancesDao().haveMet(uid)
+    suspend fun insert(acquaintance: Acquaintances) = db.getAcquaintancesDao().insert(acquaintance)
+
 
     fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
     fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()

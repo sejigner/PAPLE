@@ -4,14 +4,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.provider.SyncStateContract.Helpers.insert
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
@@ -49,6 +47,7 @@ class FragmentDialogReplied : DialogFragment() {
     private var paper : RepliedPaperPlanes?= null
     private var userMessage : String? = null
     private var firstTime : Long?= null
+    private var mCallback: RepliedPaperListener? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +60,10 @@ class FragmentDialogReplied : DialogFragment() {
             userMessage = it.getString("userMessage")
             firstTime = it.getLong("firstTime")
         }
+    }
+
+    interface RepliedPaperListener {
+        fun initChatLog()
     }
 
     override fun onStart() {
@@ -114,7 +117,18 @@ class FragmentDialogReplied : DialogFragment() {
                     val intent = Intent(view.context,ChatLogActivity::class.java)
                     intent.putExtra(FragmentChat.USER_KEY, fromId)
                     startActivity(intent)
+
+                    mCallback?.initChatLog()
+
+                    // 첫번째 비행기 기록 삭제
+                    val firstPaperPlaneRecord = viewModel.getWithId(fromId!!).await()
+                    if(firstPaperPlaneRecord != null) {
+                        viewModel.delete(firstPaperPlaneRecord)
+
+                    // 두번째 비행기 기록 삭제
                     viewModel.delete(paper!!)
+
+                    }
                     dismiss()
                 }
             }.addOnFailureListener {

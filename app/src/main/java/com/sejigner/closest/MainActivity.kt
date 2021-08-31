@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private var lastUser: String? = null
 
     private lateinit var userFoundLocation: Location
+    val dialog = LoadingDialog(this)
 
 
     companion object {
@@ -198,6 +199,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         closeYourDialogFragment()
         val fragmentFlySuccess = FragmentFlySuccess.newInstance(flightDistance)
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
+    }
+
+    override fun showLoadingDialog() {
+        dialog.show()
+    }
+
+    override fun dismissLoadingDialog() {
+        dialog.dismiss()
     }
 
     private fun closeYourDialogFragment() {

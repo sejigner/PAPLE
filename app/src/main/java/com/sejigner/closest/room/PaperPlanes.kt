@@ -2,6 +2,13 @@ package com.sejigner.closest.room
 
 import androidx.room.*
 
+
+@Entity(tableName = "acquaintances")
+data class Acquaintances(
+    @PrimaryKey @ColumnInfo(name = "uid")
+    val uid : String
+)
+
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
     @PrimaryKey(autoGenerate = true)
@@ -98,5 +105,6 @@ data class ChatRoomsWithMessages(
     )
     val chatMessages: List<ChatMessages>
 )
+
 
 
