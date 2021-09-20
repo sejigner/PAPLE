@@ -283,7 +283,6 @@ class FragmentDialogWritePaper : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
     }
 
 
