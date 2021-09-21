@@ -65,7 +65,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var userCurrentLocation: Location? = Location("")
-    private lateinit var job: CompletableJob
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,7 +176,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
                             performSendAnonymousMessage()
                             dismiss()
-                            mCallbackMain?.dismissLoadingDialog()
+                            // mCallbackMain?.dismissLoadingDialog()
                             mCallbackMain?.showSuccessFragment(flightDistance)
 
                         }

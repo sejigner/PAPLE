@@ -16,6 +16,10 @@ import com.sejigner.closest.Adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -202,6 +206,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     override fun showLoadingDialog() {
+        val dialog = LoadingDialog(this@MainActivity)
+        CoroutineScope(Main).launch {
+            dialog.show()
+            delay(5000)
+            dialog.dismiss()
+        }
 
     }
 
