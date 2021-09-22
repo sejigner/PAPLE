@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import java.util.*
 import kotlin.math.round
 
@@ -65,7 +66,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private var userCurrentLocation: Location? = Location("")
-    private lateinit var job: CompletableJob
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +109,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         location?.text = currentAddress
         btnFly?.setOnClickListener {
+            mCallbackMain?.showLoadingDialog()
             getClosestUser()
         }
 
@@ -143,7 +144,6 @@ class FragmentDialogWritePaper : DialogFragment() {
 
 
     fun getClosestUser() {
-        mCallbackMain?.showLoadingDialog()
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("User-Location")
         val geoFire = GeoFire(userLocation)
@@ -158,7 +158,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
                     var haveMet: Boolean
                     // Room DB로 대체
-                    runBlocking {
+                    CoroutineScope(IO).launch {
                         haveMet = ViewModel.haveMet(key!!).await()
                         if (haveMet) {
                             // user exists in the database
@@ -177,13 +177,11 @@ class FragmentDialogWritePaper : DialogFragment() {
 
                             performSendAnonymousMessage()
                             dismiss()
-                            mCallbackMain?.dismissLoadingDialog()
+                            // mCallbackMain?.dismissLoadingDialog()
                             mCallbackMain?.showSuccessFragment(flightDistance)
 
                         }
                     }
-
-
                 }
             }
 
@@ -283,7 +281,6 @@ class FragmentDialogWritePaper : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
     }
 
 
