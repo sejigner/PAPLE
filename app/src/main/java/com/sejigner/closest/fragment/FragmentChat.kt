@@ -44,7 +44,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
     companion object {
         const val TAG = "FragmentChat"
-        val USER_KEY = "USER_KEY"
+        const val USER_KEY = "USER_KEY"
     }
 
     private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
