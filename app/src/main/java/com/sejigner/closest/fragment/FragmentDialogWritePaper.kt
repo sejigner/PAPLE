@@ -194,7 +194,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
 
             override fun onGeoQueryReady() {
-                if (!userFound) {
+                if (!userFound&&radius < 15) {
                     radius++
                     getClosestUser()
                 }
