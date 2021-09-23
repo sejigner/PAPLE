@@ -198,10 +198,16 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         dialog.show(fm, "write paper")
     }
 
-
+    // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
     override fun showSuccessFragment(flightDistance : Double) {
         closeYourDialogFragment()
         val fragmentFlySuccess = FragmentFlySuccess.newInstance(flightDistance)
+        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
+    }
+
+    override fun showSuccessFragment() {
+        closeYourDialogFragment()
+        val fragmentFlySuccess = FragmentFlySuccess()
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 

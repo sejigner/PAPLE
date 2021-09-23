@@ -41,7 +41,7 @@ private const val ITEMS = "data"
 class FragmentFlySuccess : DialogFragment() {
     // TODO: Rename and change types of parameters
 
-    private var flightDistance: Double = 0.0
+    private var flightDistance: Double ?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +71,12 @@ class FragmentFlySuccess : DialogFragment() {
         btnClose?.setOnClickListener {
             dismiss()
         }
-        flightResult?.text = getString(R.string.flight_result, convertDistanceToString(flightDistance))
+        if(flightDistance!=null) {
+            flightResult?.text = getString(R.string.flight_result, convertDistanceToString(flightDistance!!))
+        } else {
+            flightResult?.text = getString(R.string.flight_result_untargeted)
+        }
+
     }
 
     private fun convertDistanceToString(distance : Double) : String {

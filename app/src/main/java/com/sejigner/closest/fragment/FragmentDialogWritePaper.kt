@@ -138,6 +138,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
     interface WritePaperListenerMain {
         fun showSuccessFragment(flightDistance: Double)
+        fun showSuccessFragment()
         fun showLoadingDialog()
         fun dismissLoadingDialog()
     }

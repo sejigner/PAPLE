@@ -33,5 +33,6 @@
         내 이야기를 하는 것만으로도\n기분이 좋아지지 않나요?</string>
     <string name="limit_write">0/250</string>
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
+    <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
     <string name="init_chat_log">대화가 시작되었습니다.</string>
 </resources>
