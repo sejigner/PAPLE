@@ -54,13 +54,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private lateinit var userFoundLocation: Location
 
 
-
     companion object {
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
         var UID = "UID"
         var MYNICKNAME = ""
     }
+
+    val dialog = LoadingDialog(this@MainActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,11 +97,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             }
 
         MYNICKNAME = App.prefs.myNickname!!
-        if(MYNICKNAME.isBlank()) {
+        if (MYNICKNAME.isBlank()) {
             val ref =
                 FirebaseDatabase.getInstance().getReference("/Users/$UID")
                     .child("strNickname")
-            ref.get().addOnSuccessListener{
+            ref.get().addOnSuccessListener {
                 App.prefs.myNickname = it.value.toString()
             }
         }
@@ -189,7 +190,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     }
 
-    override fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude : Double) {
+    override fun runFragmentDialogWritePaper(
+        currentAddress: String,
+        latitude: Double,
+        longitude: Double
+    ) {
 
         val dialog = FragmentDialogWritePaper.newInstance(
             UID, currentAddress, latitude, longitude
@@ -199,7 +204,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
-    override fun showSuccessFragment(flightDistance : Double) {
+    override fun showSuccessFragment(flightDistance: Double) {
         closeYourDialogFragment()
         val fragmentFlySuccess = FragmentFlySuccess.newInstance(flightDistance)
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
@@ -212,18 +217,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     override fun showLoadingDialog() {
-        val dialog = LoadingDialog(this@MainActivity)
-        CoroutineScope(Main).launch {
-            dialog.show()
-            delay(3000)
-            dialog.dismiss()
-            showSuccessFragment(0.0)
-        }
-
+        dialog.show()
     }
 
     override fun dismissLoadingDialog() {
-
+        dialog.dismiss()
     }
 
     private fun closeYourDialogFragment() {

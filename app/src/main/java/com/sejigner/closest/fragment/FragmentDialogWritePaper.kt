@@ -179,7 +179,7 @@ class FragmentDialogWritePaper : DialogFragment() {
                             performSendAnonymousMessage()
                             dismiss()
                             // mCallbackMain?.dismissLoadingDialog()
-                            mCallbackMain?.showSuccessFragment(flightDistance)
+
 
                         }
                     }
@@ -197,6 +197,9 @@ class FragmentDialogWritePaper : DialogFragment() {
                 if (!userFound&&radius < 15) {
                     radius++
                     getClosestUser()
+                } else {
+                    mCallbackMain?.dismissLoadingDialog()
+                    mCallbackMain?.showSuccessFragment()
                 }
             }
 
