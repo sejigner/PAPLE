@@ -160,6 +160,38 @@ class FragmentDialogFirst : DialogFragment() {
         return sdf.format(timestamp * 1000L)
     }
 
+    override fun reportFirebase() {
+
+        val fromId = fromId!!
+        val message = message!!
+        val uid = UID
+
+        val ref =
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$toId/$fromId")
+
+        val reportMessage = ReportMessage(
+            uid,
+            fromId,
+            message,
+            System.currentTimeMillis() / 1000L
+        )
+
+        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+            Log.d(FragmentHome.TAG, "Receiver 실패")
+        }.addOnSuccessListener {
+            val sentPaper = MyPaperPlaneRecord(
+                paperplaneMessage.toId,
+                paperplaneMessage.text,
+                paperplaneMessage.timestamp
+            )
+            ViewModel.insert(sentPaper)
+        }
+
+        val acquaintance = Acquaintances(toId)
+        ViewModel.insert(acquaintance)
+
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

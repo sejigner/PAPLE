@@ -256,9 +256,8 @@ class FragmentDialogWritePaper : DialogFragment() {
             )
             ViewModel.insert(sentPaper)
         }
-
-        val acquaintance = Acquaintances(toId)
-        ViewModel.insert(acquaintance)
+        
+        ViewModel.insert(toId)
 
     }
 

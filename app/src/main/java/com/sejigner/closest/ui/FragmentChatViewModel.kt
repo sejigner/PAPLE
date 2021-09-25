@@ -74,7 +74,7 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.haveMet(uid)
     }
 
-    fun insert(acquaintance : Acquaintances) = CoroutineScope(IO).launch {
+    fun insert(acquaintance : String) = CoroutineScope(IO).launch {
         repository.insert(acquaintance)
     }
 
