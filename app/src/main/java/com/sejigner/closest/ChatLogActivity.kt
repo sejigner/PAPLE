@@ -1,5 +1,6 @@
 package com.sejigner.closest
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -99,7 +100,9 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
                 val chatroom = ViewModel.getChatRoom(partnerUid!!).await()
                 ViewModel.delete(chatroom)
             }
-            super.onBackPressed()
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
 
