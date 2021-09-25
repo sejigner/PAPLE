@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
+import com.sejigner.closest.MainActivity
 import com.sejigner.closest.R
+import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.ChatRooms
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
@@ -38,7 +40,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment() {
+class FragmentDialogReplied : DialogFragment(), FragmentDialogReport.RepliedPlaneCallback {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -48,6 +50,10 @@ class FragmentDialogReplied : DialogFragment() {
     private var userMessage : String? = null
     private var firstTime : Long?= null
     private var mCallback: RepliedPaperListener? = null
+
+    val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+    val factory = FragmentChatViewModelFactory(repository)
+    val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,9 +91,7 @@ class FragmentDialogReplied : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
-        val factory = FragmentChatViewModelFactory(repository)
-        val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+
 
 
         tv_dialog_my_message.text = userMessage
@@ -100,6 +104,15 @@ class FragmentDialogReplied : DialogFragment() {
         tv_dialog_discard_replied.setOnClickListener {
             viewModel.delete(paper!!)
             dismiss()
+        }
+
+        tv_report_replied.setOnClickListener {
+            val dialog = FragmentDialogReport.newInstanceReplied(
+                partnerMessage!!,
+                replyTime!!
+            )
+            val fm = childFragmentManager
+            dialog.show(fm, "report")
         }
 
 
@@ -153,6 +166,31 @@ class FragmentDialogReplied : DialogFragment() {
         return sdf.format(timestamp * 1000L)
     }
 
+    override fun reportFirebase() {
+        val fromId = fromId!!
+        val message = partnerMessage!!
+        val uid = MainActivity.UID
+
+        val ref =
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
+
+        val reportMessage = ReportMessage(
+            uid,
+            fromId,
+            message,
+            System.currentTimeMillis() / 1000L
+        )
+
+        ref.setValue(reportMessage).addOnFailureListener {
+            // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
+        }.addOnSuccessListener {
+            Toast.makeText(requireActivity(),"정상적으로 신고되었습니다.",Toast.LENGTH_LONG).show()
+            // 해당 플레인 DB에서 제거
+            viewModel.delete(paper!!)
+            dismiss()
+        }
+    }
+
     companion object {
 
         /**
@@ -178,4 +216,6 @@ class FragmentDialogReplied : DialogFragment() {
                 paper = paperPlane
             }
     }
+
+
 }
