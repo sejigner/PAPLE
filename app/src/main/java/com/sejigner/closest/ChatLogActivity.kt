@@ -70,6 +70,13 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
         })
+/*
+        TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
+        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+            it
+        })
+
+ */
 
         CoroutineScope(IO).launch {
             if (!partnerUid.isNullOrBlank()) {
