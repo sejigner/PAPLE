@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="@id/iv_back_reply_replied">
 
             <ImageView
-                android:id="@+id/iv_report_first"
+                android:id="@+id/iv_report_replied"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_report"
@@ -29,16 +29,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_report_first"
+                android:id="@+id/tv_report_replied"
                 android:layout_width="45dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="4dp"
                 android:text="신고하기"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_report_first"
-                app:layout_constraintStart_toEndOf="@id/iv_report_first"
-                app:layout_constraintTop_toTopOf="@id/iv_report_first" />
+                app:layout_constraintBottom_toBottomOf="@+id/iv_report_replied"
+                app:layout_constraintStart_toEndOf="@id/iv_report_replied"
+                app:layout_constraintTop_toTopOf="@id/iv_report_replied" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

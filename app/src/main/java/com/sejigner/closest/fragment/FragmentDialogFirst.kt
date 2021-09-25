@@ -15,15 +15,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.core.Repo
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.models.ReportMessage
+import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.messageFromMe
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
+import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -37,13 +39,18 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment() {
+class FragmentDialogFirst : DialogFragment(),FragmentDialogReport.PlaneCallback {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
+
+    val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+    val factory = FragmentChatViewModelFactory(repository)
+    val viewModel =
+        ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,10 +76,8 @@ class FragmentDialogFirst : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
-        val factory = FragmentChatViewModelFactory(repository)
-        val viewModel =
-            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+
+
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
         var textEntered: String
 
@@ -86,6 +91,14 @@ class FragmentDialogFirst : DialogFragment() {
         tv_dialog_message_first.text = message
         tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
 
+        tv_report_first.setOnClickListener {
+            val dialog = FragmentDialogReport.newInstance(
+                message!!,
+                time!!
+            )
+            val fm = childFragmentManager
+            dialog.show(fm, "report")
+        }
 
 
         btnCancel?.setOnClickListener {
@@ -167,7 +180,7 @@ class FragmentDialogFirst : DialogFragment() {
         val uid = UID
 
         val ref =
-            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
 
         val reportMessage = ReportMessage(
             uid,
@@ -176,20 +189,14 @@ class FragmentDialogFirst : DialogFragment() {
             System.currentTimeMillis() / 1000L
         )
 
-        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
-            Log.d(FragmentHome.TAG, "Receiver 실패")
+        ref.setValue(reportMessage).addOnFailureListener {
+            // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
         }.addOnSuccessListener {
-            val sentPaper = MyPaperPlaneRecord(
-                paperplaneMessage.toId,
-                paperplaneMessage.text,
-                paperplaneMessage.timestamp
-            )
-            ViewModel.insert(sentPaper)
+            Toast.makeText(requireActivity(),"정상적으로 신고되었습니다.",Toast.LENGTH_LONG).show()
+            // 해당 플레인 DB에서 제거
+            viewModel.delete(paper!!)
+            dismiss()
         }
-
-        val acquaintance = Acquaintances(toId)
-        ViewModel.insert(acquaintance)
-
     }
 
     companion object {
@@ -217,4 +224,6 @@ class FragmentDialogFirst : DialogFragment() {
                 paper = paperPlane
             }
     }
+
+
 }

@@ -256,7 +256,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             )
             ViewModel.insert(sentPaper)
         }
-        
+
         ViewModel.insert(toId)
 
     }
