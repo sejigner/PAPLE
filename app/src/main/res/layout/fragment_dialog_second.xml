@@ -11,6 +11,68 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/iv_back_reply_replied"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_back_reply_replied">
+
+            <ImageView
+                android:id="@+id/iv_report_first"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_report"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_report_first"
+                android:layout_width="45dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:text="신고하기"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_report_first"
+                app:layout_constraintStart_toEndOf="@id/iv_report_first"
+                app:layout_constraintTop_toTopOf="@id/iv_report_first" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/cl_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_delete_replied"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toTopOf="@id/tv_dialog_discard_replied"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_dialog_discard_replied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="버리기"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ImageView
             android:id="@+id/iv_back_reply_replied"
             android:layout_width="40dp"
@@ -122,17 +184,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_replied" />
 
-
-            <TextView
-                android:id="@+id/tv_dialog_discard_replied"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="버리기"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
