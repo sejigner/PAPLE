@@ -190,6 +190,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             ViewModel.insert(item)
                             // immediate delete on setting data to local databasae
                             ref.child(paperplane.fromId).removeValue()
+                            val acquaintances = Acquaintances(paperplane.fromId)
+                            ViewModel.insert(acquaintances)
                         } else { // 상대가 날린 답장 비행기
                             setRepliedPaperPlane(paperplane)
                             ref.child(paperplane.fromId).removeValue()

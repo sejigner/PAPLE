@@ -10,7 +10,7 @@ interface AcquaintancesDao {
     @Query("SELECT EXISTS (SELECT 1 FROM acquaintances WHERE uid = :uid)")
     suspend fun haveMet(uid: String): Boolean
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(acquaintance: String)
+    suspend fun insert(acquaintance: Acquaintances)
 }
 
 @Dao
