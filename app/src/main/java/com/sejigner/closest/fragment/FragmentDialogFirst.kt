@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -44,11 +46,11 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReport.FirstPlaneCall
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
+    private var mContext: Context? = null
 
-    val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
-    val factory = FragmentChatViewModelFactory(repository)
-    val viewModel =
-        ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+    lateinit var repository : PaperPlaneRepository
+    lateinit var factory : FragmentChatViewModelFactory
+    lateinit var viewModel : FragmentChatViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +75,10 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReport.FirstPlaneCall
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        repository = PaperPlaneRepository(PaperPlaneDatabase.invoke(requireActivity()))
+        factory = FragmentChatViewModelFactory(repository)
+        viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
 

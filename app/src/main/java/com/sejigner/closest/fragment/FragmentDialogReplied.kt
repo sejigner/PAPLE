@@ -51,9 +51,9 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReport.RepliedPlan
     private var firstTime : Long?= null
     private var mCallback: RepliedPaperListener? = null
 
-    val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
-    val factory = FragmentChatViewModelFactory(repository)
-    val viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+    lateinit var repository : PaperPlaneRepository
+    lateinit var factory : FragmentChatViewModelFactory
+    lateinit var viewModel : FragmentChatViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +91,9 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReport.RepliedPlan
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        repository = PaperPlaneRepository(PaperPlaneDatabase.invoke(requireActivity()))
+        factory = FragmentChatViewModelFactory(repository)
+        viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
         tv_dialog_my_message.text = userMessage
