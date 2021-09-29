@@ -16,10 +16,6 @@ import com.sejigner.closest.Adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -52,6 +48,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private var lastUser: String? = null
 
     private lateinit var userFoundLocation: Location
+    private lateinit var dialog : LoadingDialog
 
 
     companion object {
@@ -61,7 +58,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         var MYNICKNAME = ""
     }
 
-    val dialog = LoadingDialog(this@MainActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +65,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         initViewPager()
         initNavigationBar()
+
+        dialog = LoadingDialog(this@MainActivity)
 
         userName = ANONYMOUS
 
