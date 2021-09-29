@@ -39,7 +39,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+// TODO : ChatLogActivity 내 chatRoomAndAllMessages 참고하여 일대다관계 데이터 활용
+//  chatRoomAndAllMessages ( UID - ChatRoomId - Message 구조)
+//  planes (UID - Planes)
+//  ※ 수정하기 전, 각 리사이클러뷰 Adapter의 자료형 참고할 것
+//  Ex) FirstPaperPlane -> Uid -> Uid를 필드 값으로 갖는 LiveData 형태의 FirstPlanesWithUid 리스트 반환 -> observe
 class FragmentChat : Fragment(), FirstPlaneListener {
 
     companion object {

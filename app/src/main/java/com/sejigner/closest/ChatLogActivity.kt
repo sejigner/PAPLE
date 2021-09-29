@@ -337,6 +337,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     fun reportMessagesFirebase() {
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
+            // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)
             val messageList = ViewModel.chatRoomAndAllMessages(partnerUid!!).await()
             val reportRef =
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")

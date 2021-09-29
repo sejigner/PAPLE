@@ -88,7 +88,7 @@ data class Uid(
     @PrimaryKey @ColumnInfo val uid: String
 )
 
-data class UidWithFirstPlanes(
+data class FirstPlanesWithUid(
     @Embedded val uid: Uid,
     @Relation(
         parentColumn = "uid",
@@ -98,7 +98,7 @@ data class UidWithFirstPlanes(
     var firstPlanes: List<FirstPaperPlanes> = ArrayList()
 )
 
-data class UidWithRepliedPlanes(
+data class RepliedPlanesWithUid(
     @Embedded val uid: Uid,
     @Relation(
         parentColumn = "uid",
@@ -108,7 +108,7 @@ data class UidWithRepliedPlanes(
     var repliedPlanes: List<RepliedPaperPlanes> = ArrayList()
 )
 
-data class UidWithChatRooms(
+data class ChatRoomsWithUid(
     @Embedded val uid: Uid,
     @Relation(
         parentColumn = "uid",
