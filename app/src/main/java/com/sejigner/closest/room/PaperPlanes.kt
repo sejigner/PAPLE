@@ -89,7 +89,7 @@ data class ChatRooms(
 data class ChatMessages(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
-    @ColumnInfo(name = "chatRoomId")
+    @ColumnInfo(name = "chatRoomId", index = true)
     val chatRoomId: String?,
     val meOrPartner: Int,
     val message: String?,
@@ -103,7 +103,7 @@ data class ChatRoomsWithMessages(
         parentColumn = "partnerId",
         entityColumn = "chatRoomId"
     )
-    val chatMessages: List<ChatMessages>
+    var chatMessages: List<ChatMessages> = ArrayList()
 )
 
 
