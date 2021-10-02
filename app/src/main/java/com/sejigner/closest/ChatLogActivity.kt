@@ -3,6 +3,7 @@ package com.sejigner.closest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -110,6 +111,20 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        iv_menu_chat_log.setOnClickListener {
+            if (expandable_menu_chat_log.visibility == View.VISIBLE) {
+                expandable_menu_chat_log.visibility  = View.GONE
+                iv_menu_chat_log.animate().setDuration(200).rotation(180f)
+            } else {
+                expandable_menu_chat_log.visibility = View.VISIBLE
+                iv_menu_chat_log.animate().setDuration(200).rotation(0f)
+            }
+        }
+
+        iv_report_chat_log.setOnClickListener {
+
         }
 
 
