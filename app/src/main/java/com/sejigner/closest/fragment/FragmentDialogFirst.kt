@@ -16,7 +16,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -39,7 +38,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(),FragmentDialogReport.FirstPlaneCallback {
+class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlaneCallback {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -96,7 +95,7 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReport.FirstPlaneCall
         tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
 
         tv_report_first.setOnClickListener {
-            val dialog = FragmentDialogReport.newInstanceFirst(
+            val dialog = FragmentDialogReportPlane.newInstanceFirst(
                 message!!,
                 time!!
             )

@@ -40,7 +40,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment(), FragmentDialogReport.RepliedPlaneCallback {
+class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.RepliedPlaneCallback {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -109,7 +109,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReport.RepliedPlan
         }
 
         tv_report_replied.setOnClickListener {
-            val dialog = FragmentDialogReport.newInstanceReplied(
+            val dialog = FragmentDialogReportPlane.newInstanceReplied(
                 partnerMessage!!,
                 replyTime!!
             )

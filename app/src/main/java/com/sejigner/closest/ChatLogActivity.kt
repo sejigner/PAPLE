@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
@@ -17,6 +18,8 @@ import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.FragmentDialogReplied
+import com.sejigner.closest.fragment.FragmentDialogReportChat
+import com.sejigner.closest.fragment.FragmentDialogReportPlane
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
@@ -31,7 +34,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener {
+class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener,FragmentDialogReportChat.ChatRoomCallback {
 
     companion object {
         const val TAG = "ChatLog"
@@ -124,7 +127,9 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         }
 
         iv_report_chat_log.setOnClickListener {
-
+            val dialog = FragmentDialogReportChat()
+            val fm = supportFragmentManager
+            dialog.show(fm, "reportChatMessage")
         }
 
 
@@ -278,6 +283,10 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         val lastMessageToPartner = LatestChatMessage(MYNICKNAME,getString(R.string.init_chat_log),timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
+    }
+
+    override fun reportMessagesFirebase() {
+        // TODO : 파이어베이스에 전체 메세지 쓰기
     }
 }
 

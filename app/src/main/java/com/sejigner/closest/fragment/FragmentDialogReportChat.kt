@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
-import kotlinx.android.synthetic.main.fragment_dialog_report.*
+import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -24,22 +24,12 @@ import java.util.*
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReport : DialogFragment() {
+class FragmentDialogReportChat : DialogFragment() {
 
-
-    var message : String ?= ""
-    var time : Long ?= null
-    var isFirst : Boolean ?= null
-    private var firstPlaneCallback: FirstPlaneCallback? = null
-    private var repliedPlaneCallback: RepliedPlaneCallback? = null
+    private var chatRoomCallback: ChatRoomCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            message = it.getString("message")
-            time = it.getLong("time")
-            isFirst = it.getBoolean("isFirst")
-        }
     }
 
     override fun onCreateView(
@@ -47,29 +37,16 @@ class FragmentDialogReport : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dialog_report_plane, container, false)
+        return inflater.inflate(R.layout.fragment_dialog_report_chat, container, false)
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val tvMessage  = view.findViewById<View>(R.id.tv_dialog_message_report) as? TextView
-        val tvTime = view.findViewById<View>(R.id.tv_dialog_time_report) as? TextView
-
-        tvMessage?.text = message
-        if(time!=null) {
-            tvTime?.text =setDateToTextView(time!!)
-        }
-
-        tv_send_report.setOnClickListener {
-            if(isFirst!!) {
-                firstPlaneCallback?.reportFirebase()
-            } else {
-                repliedPlaneCallback?.reportFirebase()
-            }
+        tv_send_report_chat.setOnClickListener {
+            chatRoomCallback?.reportMessagesFirebase()
             dismiss()
         }
 
@@ -87,12 +64,8 @@ class FragmentDialogReport : DialogFragment() {
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    interface FirstPlaneCallback {
-        fun reportFirebase()
-    }
-
-    interface RepliedPlaneCallback {
-        fun reportFirebase()
+    interface ChatRoomCallback {
+        fun reportMessagesFirebase()
     }
 
 
@@ -106,28 +79,7 @@ class FragmentDialogReport : DialogFragment() {
          * @return A new instance of fragment FragmentDialog.
          */
 
-        const val TAG = "FragmentFlySuccess"
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstanceFirst(message : String, time: Long) =
-            FragmentFlySuccess().apply {
-                arguments = Bundle().apply {
-                    putString("message",message)
-                    putLong("time",time)
-                    putBoolean("isFirst",true)
-
-                }
-            }
-
-        fun newInstanceReplied(message : String, time: Long) =
-            FragmentFlySuccess().apply {
-                arguments = Bundle().apply {
-                    putString("message",message)
-                    putLong("time",time)
-                    putBoolean("isFirst",false)
-                }
-            }
+        const val TAG = "FragmentDialogReportChat"
 
     }
 }
