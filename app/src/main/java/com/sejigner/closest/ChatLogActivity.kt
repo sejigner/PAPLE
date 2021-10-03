@@ -74,13 +74,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
         })
-/*
-        TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
-        ViewModel.allChatMessages(partnerUid!!).observe(this, {
-            it
-        })
-
- */
 
         CoroutineScope(IO).launch {
             if (!partnerUid.isNullOrBlank()) {
@@ -286,7 +279,12 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     override fun reportMessagesFirebase() {
-        // TODO : 파이어베이스에 전체 메세지 쓰기
+        // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
+        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+            val reportRef =
+                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
+            reportRef.setValue(it)
+        })
     }
 }
 
