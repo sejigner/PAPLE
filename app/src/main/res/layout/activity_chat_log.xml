@@ -27,15 +27,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <Button
-            android:id="@+id/btn_exit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="나가기"
-            app:layout_constraintEnd_toStartOf="@id/iv_menu_chat_log"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/iv_back_chat_log"
             android:layout_width="45dp"
@@ -74,6 +65,8 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:background="@color/black"
+                android:layout_gravity="center"
                 android:id="@+id/iv_report_chat_log"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -81,6 +74,9 @@
                 android:src="@drawable/ic_report" />
 
             <ImageView
+                android:background="@color/black"
+                android:id="@+id/iv_exit_chat"
+                android:layout_gravity="center"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_weight="1" />

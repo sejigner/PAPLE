@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
-import kotlinx.android.synthetic.main.fragment_dialog_report.*
+import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -27,9 +27,9 @@ import java.util.*
 class FragmentDialogReportPlane : DialogFragment() {
 
 
-    var message : String ?= ""
-    var time : Long ?= null
-    var isFirst : Boolean ?= null
+    var message: String? = ""
+    var time: Long? = null
+    var isFirst: Boolean? = null
     private var firstPlaneCallback: FirstPlaneCallback? = null
     private var repliedPlaneCallback: RepliedPlaneCallback? = null
 
@@ -51,21 +51,20 @@ class FragmentDialogReportPlane : DialogFragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val tvMessage  = view.findViewById<View>(R.id.tv_dialog_message_report) as? TextView
+        val tvMessage = view.findViewById<View>(R.id.tv_dialog_message_report) as? TextView
         val tvTime = view.findViewById<View>(R.id.tv_dialog_time_report) as? TextView
 
         tvMessage?.text = message
-        if(time!=null) {
-            tvTime?.text =setDateToTextView(time!!)
+        if (time != null) {
+            tvTime?.text = setDateToTextView(time!!)
         }
 
         tv_send_report.setOnClickListener {
-            if(isFirst!!) {
+            if (isFirst!!) {
                 firstPlaneCallback?.reportFirebase()
             } else {
                 repliedPlaneCallback?.reportFirebase()
@@ -110,22 +109,22 @@ class FragmentDialogReportPlane : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstanceFirst(message : String, time: Long) =
+        fun newInstanceFirst(message: String, time: Long) =
             FragmentFlySuccess().apply {
                 arguments = Bundle().apply {
-                    putString("message",message)
-                    putLong("time",time)
-                    putBoolean("isFirst",true)
+                    putString("message", message)
+                    putLong("time", time)
+                    putBoolean("isFirst", true)
 
                 }
             }
 
-        fun newInstanceReplied(message : String, time: Long) =
+        fun newInstanceReplied(message: String, time: Long) =
             FragmentFlySuccess().apply {
                 arguments = Bundle().apply {
-                    putString("message",message)
-                    putLong("time",time)
-                    putBoolean("isFirst",false)
+                    putString("message", message)
+                    putLong("time", time)
+                    putBoolean("isFirst", false)
                 }
             }
 

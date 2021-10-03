@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
@@ -19,7 +18,6 @@ import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.fragment.FragmentDialogReportChat
-import com.sejigner.closest.fragment.FragmentDialogReportPlane
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
@@ -99,7 +97,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             super.onBackPressed()
         }
 
-        btn_exit.setOnClickListener {
+        iv_exit_chat.setOnClickListener {
             CoroutineScope(IO).launch {
                 val chatroom = ViewModel.getChatRoom(partnerUid!!).await()
                 ViewModel.delete(chatroom)
