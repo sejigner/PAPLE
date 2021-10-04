@@ -1,5 +1,7 @@
 package com.sejigner.closest.fragment
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
+import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*
+import kotlinx.android.synthetic.main.fragment_dialog_report_plane.iv_back_report
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -72,6 +76,10 @@ class FragmentDialogReportPlane : DialogFragment() {
             dismiss()
         }
 
+        iv_back_report.setOnClickListener {
+            dismiss()
+        }
+
     }
 
     private fun setDateToTextView(timestamp: Long): String {
@@ -82,8 +90,8 @@ class FragmentDialogReportPlane : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     interface FirstPlaneCallback {
@@ -105,12 +113,12 @@ class FragmentDialogReportPlane : DialogFragment() {
          * @return A new instance of fragment FragmentDialog.
          */
 
-        const val TAG = "FragmentFlySuccess"
+        const val TAG = "ReportPaperPlane"
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstanceFirst(message: String, time: Long) =
-            FragmentFlySuccess().apply {
+            FragmentDialogReportPlane().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putLong("time", time)
@@ -120,7 +128,7 @@ class FragmentDialogReportPlane : DialogFragment() {
             }
 
         fun newInstanceReplied(message: String, time: Long) =
-            FragmentFlySuccess().apply {
+            FragmentDialogReportPlane().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putLong("time", time)

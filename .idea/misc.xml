@@ -18,8 +18,8 @@
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_chat_log.xml" value="0.264" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.25364583333333335" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.25364583333333335" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
       </map>
     </option>
   </component>

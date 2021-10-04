@@ -181,7 +181,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                         if (!paperplane.isReplied) { // 상대가 날린 첫 비행기
 
                             val item = FirstPaperPlanes(
-                                null,
                                 paperplane.fromId,
                                 paperplane.text,
                                 paperplane.flightDistance,
@@ -245,12 +244,11 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         CoroutineScope(IO).launch {
             val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
             val item = RepliedPaperPlanes(
-                null,
-                myPaperPlaneRecord?.userMessage,
-                myPaperPlaneRecord?.partnerId,
+                myPaperPlaneRecord?.partnerId!!,
+                myPaperPlaneRecord.userMessage,
                 paperPlane.text,
                 paperPlane.flightDistance,
-                myPaperPlaneRecord!!.firstTimestamp,
+                myPaperPlaneRecord.firstTimestamp,
                 paperPlane.timestamp
             )
                 ViewModel.insert(item)

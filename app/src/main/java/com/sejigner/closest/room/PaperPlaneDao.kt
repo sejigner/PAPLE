@@ -49,6 +49,7 @@ interface RepliedPaperPlaneDao {
     @Query("SELECT * FROM replied_paper_planes")
     fun getAllRepliedPlanes(): LiveData<List<RepliedPaperPlanes>>
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(paperPlane: RepliedPaperPlanes)
 
@@ -105,7 +106,6 @@ interface ChatRoomsDao {
 
     @Query("UPDATE chat_rooms  SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE partnerId = :partnerId " )
     suspend fun updateLastMessages(partnerId: String, lastMessage: String, lastMessageTimestamp: Long)
-
 
     // Message
 

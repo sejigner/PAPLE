@@ -30,10 +30,7 @@ import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.room.Acquaintances
-import com.sejigner.closest.room.MyPaperPlaneRecord
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -194,7 +191,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
 
             override fun onGeoQueryReady() {
-                if (!userFound&&radius < 15) {
+                if (!userFound && (radius < 15)) {
                     radius++
                     getClosestUser()
                 } else {
@@ -259,7 +256,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         val acquaintances = Acquaintances(toId)
         ViewModel.insert(acquaintances)
     }
-
 
     override fun onStart() {
         super.onStart()

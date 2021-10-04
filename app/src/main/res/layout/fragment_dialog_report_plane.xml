@@ -9,25 +9,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="16dp">
-
-        <ImageView
-            android:id="@+id/iv_back_report"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="60dp"
-            android:src="@drawable/ic_close"
-            app:layout_constraintBottom_toTopOf="@id/cl_message"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
             android:background="@drawable/dialog_frame"
             android:paddingHorizontal="16dp"
             android:paddingTop="22dp"
@@ -36,17 +25,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/iv_back_report"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="@id/tv_title_report"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_title_report" />
+
 
             <TextView
                 android:id="@+id/tv_title_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/report_title"
                 android:textColor="@color/report"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/dialog_divider_first"
+                app:layout_constraintBottom_toTopOf="@id/tv_guidance_report"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,10 +54,10 @@
                 android:id="@+id/tv_guidance_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="12dp"
                 android:text="@string/report_guidance"
                 android:textColor="@color/txt_gray"
-                android:layout_marginTop="4dp"
                 android:textSize="12dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/dialog_divider_first"
@@ -94,24 +94,26 @@
                 android:text="time"
                 android:textColor="#c4c4c4"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_report" />
 
 
             <TextView
-                android:layout_marginTop="12dp"
                 android:id="@+id/tv_send_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/btn_report_send"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
                 android:text="신고하기"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_report"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_report" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

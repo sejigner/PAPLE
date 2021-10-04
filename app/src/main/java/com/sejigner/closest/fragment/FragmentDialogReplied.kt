@@ -108,6 +108,10 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
             dismiss()
         }
 
+        iv_back_reply_replied.setOnClickListener {
+            dismiss()
+        }
+
         tv_report_replied.setOnClickListener {
             val dialog = FragmentDialogReportPlane.newInstanceReplied(
                 partnerMessage!!,
