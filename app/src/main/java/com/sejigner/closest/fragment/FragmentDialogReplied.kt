@@ -16,10 +16,7 @@ import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.R
 import com.sejigner.closest.models.ReportMessage
-import com.sejigner.closest.room.ChatRooms
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.RepliedPaperPlanes
+import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
@@ -45,15 +42,15 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
     private var partnerMessage: String? = null
     private var distance: Double? = null
     private var replyTime: Long? = null
-    private var fromId: String?= null
-    private var paper : RepliedPaperPlanes?= null
-    private var userMessage : String? = null
-    private var firstTime : Long?= null
+    private var fromId: String? = null
+    private var paper: RepliedPaperPlanes? = null
+    private var userMessage: String? = null
+    private var firstTime: Long? = null
     private var mCallback: RepliedPaperListener? = null
 
-    lateinit var repository : PaperPlaneRepository
-    lateinit var factory : FragmentChatViewModelFactory
-    lateinit var viewModel : FragmentChatViewModel
+    lateinit var repository: PaperPlaneRepository
+    lateinit var factory: FragmentChatViewModelFactory
+    lateinit var viewModel: FragmentChatViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,12 +90,14 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 
         repository = PaperPlaneRepository(PaperPlaneDatabase.invoke(requireActivity()))
         factory = FragmentChatViewModelFactory(repository)
-        viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+        viewModel =
+            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
         tv_dialog_my_message.text = userMessage
         tv_dialog_message_replied.text = partnerMessage
-        tv_dialog_distance_replied.text = getString(R.string.replied_plane_dialog,convertDistanceToString(distance!!))
+        tv_dialog_distance_replied.text =
+            getString(R.string.replied_plane_dialog, convertDistanceToString(distance!!))
         tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
         tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
 
@@ -124,7 +123,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
-            var partnerNickname : String
+            var partnerNickname: String
             val ref2 =
                 FirebaseDatabase.getInstance().getReference("/Users/$fromId")
                     .child("strNickname")
@@ -133,35 +132,28 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 val chatRoom = ChatRooms(fromId!!, partnerNickname, "", -1)
                 CoroutineScope(IO).launch {
                     viewModel.insert(chatRoom).join()
-                    val intent = Intent(view.context,ChatLogActivity::class.java)
+                    val intent = Intent(view.context, ChatLogActivity::class.java)
                     intent.putExtra(FragmentChat.USER_KEY, fromId)
                     startActivity(intent)
 
                     mCallback?.initChatLog()
 
-                    // 첫번째 비행기 기록 삭제
-                    val firstPaperPlaneRecord = viewModel.getWithId(fromId!!).await()
-                    if(firstPaperPlaneRecord != null) {
-                        viewModel.delete(firstPaperPlaneRecord)
-
                     // 두번째 비행기 기록 삭제
                     viewModel.delete(paper!!)
 
-                    }
                     dismiss()
                 }
             }.addOnFailureListener {
-                Toast.makeText(requireActivity(),"상대방의 계정을 찾을 수 없습니다.",Toast.LENGTH_LONG).show()
+                Toast.makeText(requireActivity(), "상대방의 계정을 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
             }
-
 
 
         }
     }
 
-    private fun convertDistanceToString(distance : Double) : String {
-        return if(distance >= 1000) {
-            (round((distance/1000)*100) /100).toString() + "km"
+    private fun convertDistanceToString(distance: Double): String {
+        return if (distance >= 1000) {
+            (round((distance / 1000) * 100) / 100).toString() + "km"
         } else distance.toString() + "m"
     }
 
@@ -190,7 +182,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         ref.setValue(reportMessage).addOnFailureListener {
             // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
         }.addOnSuccessListener {
-            Toast.makeText(requireActivity(),"정상적으로 신고되었습니다.",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), "정상적으로 신고되었습니다.", Toast.LENGTH_LONG).show()
             // 해당 플레인 DB에서 제거
             viewModel.delete(paper!!)
             dismiss()
@@ -209,13 +201,13 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(paperPlane : RepliedPaperPlanes) =
+        fun newInstance(paperPlane: RepliedPaperPlanes) =
             FragmentDialogReplied().apply {
                 arguments = Bundle().apply {
                     putString("partnerMessage", paperPlane.partnerMessage)
                     putDouble("distance", paperPlane.flightDistance)
                     putLong("replyTime", paperPlane.replyTimestamp)
-                    putLong("firstTime",paperPlane.firstTimestamp)
+                    putLong("firstTime", paperPlane.firstTimestamp)
                     putString("fromId", paperPlane.fromId)
                     putString("userMessage", paperPlane.userMessage)
                 }

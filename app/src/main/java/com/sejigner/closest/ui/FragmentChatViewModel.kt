@@ -35,15 +35,15 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
-    fun delete(item: RepliedPaperPlanes) = viewModelScope.launch {
+    fun delete(item: RepliedPaperPlanes) = CoroutineScope(IO).launch {
         repository.delete(item)
     }
 
-    fun delete(item: MyPaperPlaneRecord) = viewModelScope.launch {
+    fun delete(item : MyPaperPlaneRecord) = CoroutineScope(IO).launch {
         repository.delete(item)
     }
 
-    fun delete(item:ChatRooms) = viewModelScope.launch {
+    fun delete(item:ChatRooms) = CoroutineScope(IO).launch {
         repository.delete(item)
     }
 
