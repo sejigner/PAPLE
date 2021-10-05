@@ -69,9 +69,9 @@ class FragmentDialogReportPlane : DialogFragment() {
 
         tv_send_report.setOnClickListener {
             if (isFirst!!) {
-                firstPlaneCallback?.reportFirebase()
+                (parentFragment as FragmentDialogFirst).reportFirebase()
             } else {
-                repliedPlaneCallback?.reportFirebase()
+                (parentFragment as FragmentDialogReplied).reportFirebase()
             }
             dismiss()
         }

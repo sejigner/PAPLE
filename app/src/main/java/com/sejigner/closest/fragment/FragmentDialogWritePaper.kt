@@ -160,7 +160,7 @@ class FragmentDialogWritePaper : DialogFragment() {
                         haveMet = ViewModel.haveMet(key!!).await()
                         if (haveMet) {
                             // user exists in the database
-                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다.")
+                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
                         } else {
                             // user does not exist in the database
                             userFound = true

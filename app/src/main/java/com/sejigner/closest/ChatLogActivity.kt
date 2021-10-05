@@ -108,13 +108,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         }
 
         iv_menu_chat_log.setOnClickListener {
-            if (expandable_menu_chat_log.visibility == View.VISIBLE) {
-                expandable_menu_chat_log.visibility  = View.GONE
-                iv_menu_chat_log.animate().setDuration(200).rotation(180f)
-            } else {
-                expandable_menu_chat_log.visibility = View.VISIBLE
-                iv_menu_chat_log.animate().setDuration(200).rotation(0f)
-            }
+            menuToggle()
         }
 
         iv_report_chat_log.setOnClickListener {
@@ -124,6 +118,14 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         }
 
 
+    }
+
+    private fun menuToggle() {
+        if (expandable_menu_chat_log.visibility == View.VISIBLE) {
+            expandable_menu_chat_log.visibility  = View.GONE
+        } else {
+            expandable_menu_chat_log.visibility = View.VISIBLE
+        }
     }
 
     private fun listenForMessages() {

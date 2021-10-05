@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -180,6 +181,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         )
 
         ref.setValue(reportMessage).addOnFailureListener {
+            Log.e("Report","${it.message}")
             // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
         }.addOnSuccessListener {
             Toast.makeText(requireActivity(), "정상적으로 신고되었습니다.", Toast.LENGTH_LONG).show()
