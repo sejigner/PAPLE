@@ -78,6 +78,14 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(acquaintance)
     }
 
+    fun deleteChatRoom(partnerId: String) = CoroutineScope(IO).launch {
+        repository.deleteChatRoom(partnerId)
+    }
+
+    fun deleteAllMessages(partnerId: String) = CoroutineScope(IO).launch {
+        repository.deleteAllMessages(partnerId)
+    }
+
 
     fun insertOrUpdate(rooms : List<ChatMessages>) = viewModelScope.launch {
         repository.insertOrUpdate(rooms)
@@ -87,9 +95,13 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insertOrUpdate(message)
     }
 
+    fun chatRoomAndAllMessages(partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoomsAndAllMessages(partnerId)
+    }
+
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
     fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
     fun allChatMessages(partnerId: String) = repository.allChatMessages(partnerId)
-    fun allChatRooms() = repository.allChatRooms    ()
+    fun allChatRooms() = repository.allChatRooms()
 }

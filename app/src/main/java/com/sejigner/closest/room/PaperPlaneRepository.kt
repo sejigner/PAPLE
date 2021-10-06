@@ -28,15 +28,18 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun exists(partnerId: String): Boolean = db.getChatRoomsDao().exists(partnerId)
     suspend fun getChatRoom(partnerId: String) : ChatRooms = db.getChatRoomsDao().getChatRoom(partnerId)
     suspend fun getChatRoomsTimestamp(partnerId: String) : Long? = db.getChatRoomsDao().getChatRoomsTimestamp(partnerId)
+    suspend fun deleteChatRoom(partnerId: String) = db.getChatRoomsDao().deleteChatRoom(partnerId)
 
     // 메세지
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)
     suspend fun insertOrUpdate(message: ChatMessages) = db.getChatRoomsDao().insertOrUpdate(message)
+    suspend fun deleteAllMessages(partnerId: String) = db.getChatMessagesDao().deleteAllMessages(partnerId)
 
     // 만난 유저 체크
     suspend fun haveMet(uid: String) : Boolean = db.getAcquaintancesDao().haveMet(uid)
     suspend fun insert(acquaintance: Acquaintances) = db.getAcquaintancesDao().insert(acquaintance)
 
+    suspend fun getChatRoomsAndAllMessages(partnerId: String) : List<ChatRoomsAndMessages> = db.getChatRoomAndMessageDao().getChatRoomAndMessages(partnerId)
 
     fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
     fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()

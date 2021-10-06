@@ -12,4 +12,5 @@ class MySharedPreferences(context : Context) {
     var myNickname: String?
     get() = prefs.getString(prefsKeyNickname, "")
     set(value) = prefs.edit().putString(prefsKeyNickname, value).apply()
+
 }

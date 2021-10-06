@@ -13,15 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="16dp">
 
-        <ImageView
-            android:id="@+id/iv_back_report"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="60dp"
-            android:src="@drawable/ic_close"
-            app:layout_constraintBottom_toTopOf="@id/cl_message"
-            app:layout_constraintEnd_toEndOf="parent" />
+
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,9 +28,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/iv_back_report"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintTop_toTopOf="@id/tv_title_report_chat"
+                app:layout_constraintBottom_toBottomOf="@id/tv_title_report_chat"
+                app:layout_constraintEnd_toEndOf="parent" />
+
 
             <TextView
-                android:id="@+id/tv_title_report"
+                android:id="@+id/tv_title_report_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -46,7 +47,7 @@
                 android:textColor="@color/report"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/dialog_divider_report_chat"
+                app:layout_constraintBottom_toTopOf="@id/tv_guidance_report"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,7 +63,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/dialog_divider_report_chat"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_title_report" />
+                app:layout_constraintTop_toBottomOf="@id/tv_title_report_chat" />
 
             <View
                 android:layout_marginTop="16dp"

@@ -36,5 +36,6 @@
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
     <string name="init_chat_log">대화가 시작되었습니다.</string>
     <string name="report_title">신고하시겠어요?</string>
+    <string name="reported_chatroom">신고처리된 채팅방입니다.</string>
     <string name="report_guidance">처리 결과는 신고 내용을 검토한 후 채팅방을 통해 안내해드립니다.\n신고한 유저는 자동 차단됩니다.</string>
 </resources>

@@ -91,7 +91,7 @@ data class ChatMessages(
     val timestamp: Long?
 )
 
-data class ChatRoomsWithMessages(
+data class ChatRoomsAndMessages(
     @Embedded val room: ChatRooms,
     @Relation(
         parentColumn = "partnerId",

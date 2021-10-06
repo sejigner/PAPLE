@@ -1,10 +1,12 @@
 package com.sejigner.closest
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
+import com.sejigner.closest.fragment.FragmentDialogFirst
 import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.fragment.FragmentDialogReportChat
 import com.sejigner.closest.models.ChatMessage
@@ -28,18 +31,18 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener,FragmentDialogReportChat.ChatRoomCallback {
+class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener {
 
     companion object {
         const val TAG = "ChatLog"
     }
 
     private var fbDatabase: FirebaseDatabase? = null
-
     var partnerUid: String? = null
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var chatLogAdapter: ChatLogAdapter
@@ -52,8 +55,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
-
-
 
         fbDatabase = FirebaseDatabase.getInstance()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
@@ -97,7 +98,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             super.onBackPressed()
         }
 
-        iv_exit_chat.setOnClickListener {
+        btn_leave_menu_chat_log.setOnClickListener {
             CoroutineScope(IO).launch {
                 val chatroom = ViewModel.getChatRoom(partnerUid!!).await()
                 ViewModel.delete(chatroom)
@@ -111,7 +112,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             menuToggle()
         }
 
-        iv_report_chat_log.setOnClickListener {
+        btn_report_menu_chat_log.setOnClickListener {
             val dialog = FragmentDialogReportChat()
             val fm = supportFragmentManager
             dialog.show(fm, "reportChatMessage")
@@ -130,63 +131,63 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
     private fun listenForMessages() {
 
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+            val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
 
-        ref.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                val currentMessageDate = getDateTime(chatMessage!!.timestamp)
-                val partnerUid: String = setPartnerId(chatMessage.fromId, chatMessage)
-                val isPartner = setSender(chatMessage.fromId)
-
-
-                val chatMessages = ChatMessages(
-                    null,
-                    partnerUid,
-                    isPartner,
-                    chatMessage.message,
-                    chatMessage.timestamp
-                )
+            ref.addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                    val currentMessageDate = getDateTime(chatMessage!!.timestamp)
+                    val partnerUid: String = setPartnerId(chatMessage.fromId, chatMessage)
+                    val isPartner = setSender(chatMessage.fromId)
 
 
-                CoroutineScope(IO).launch {
-                    var lastMessageTimeStamp : Long? = 0L
-                    var lastMessageDate : String?
+                    val chatMessages = ChatMessages(
+                        null,
+                        partnerUid,
+                        isPartner,
+                        chatMessage.message,
+                        chatMessage.timestamp
+                    )
+
+
+                    CoroutineScope(IO).launch {
+                        var lastMessageTimeStamp : Long? = 0L
+                        var lastMessageDate : String?
 
                         lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(partnerUid).await()
                         lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
-                    if (!lastMessageDate.equals(currentMessageDate)) {
-                        lastMessageDate = currentMessageDate
-                        val dateMessage = ChatMessages(null,partnerUid,2,lastMessageDate,0L)
-                        ViewModel.insert(dateMessage).join()
-                    }
+                        if (!lastMessageDate.equals(currentMessageDate)) {
+                            lastMessageDate = currentMessageDate
+                            val dateMessage = ChatMessages(null,partnerUid,2,lastMessageDate,0L)
+                            ViewModel.insert(dateMessage).join()
+                        }
 
-                    ViewModel.insert(chatMessages)
-                    ref.child(snapshot.key!!).removeValue()
+                        ViewModel.insert(chatMessages)
+                        ref.child(snapshot.key!!).removeValue()
+
+                    }
+                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
 
                 }
-                rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
 
-            }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
+                }
 
-            }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            }
+                override fun onCancelled(error: DatabaseError) {
 
-            override fun onCancelled(error: DatabaseError) {
+                }
 
-            }
-
-        })
+            })
     }
 
     private fun setPartnerId(fromId: String, chatMessage: ChatMessage): String {
@@ -278,13 +279,27 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
     }
 
-    override fun reportMessagesFirebase() {
+    fun reportMessagesFirebase() {
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
-        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+        CoroutineScope(IO).launch {
+            val messageList = ViewModel.chatRoomAndAllMessages(partnerUid!!).await()
             val reportRef =
-                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
-            reportRef.setValue(it)
-        })
+                FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
+            reportRef.setValue(messageList).addOnFailureListener {
+                Log.d("ReportChatLog", "Report 실패")
+            }.addOnSuccessListener {
+                Log.d("Report","신고가 접수되었어요")
+                ViewModel.deleteAllMessages(partnerUid!!)
+                ViewModel.deleteChatRoom(partnerUid!!)
+                startActivity(Intent(this@ChatLogActivity,MainActivity::class.java))
+            }
+        }
+
+//        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+//            val reportRef =
+//                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
+//            reportRef.setValue(it)
+//        })
     }
 }
 

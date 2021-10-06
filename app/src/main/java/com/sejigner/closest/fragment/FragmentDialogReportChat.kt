@@ -1,5 +1,7 @@
 package com.sejigner.closest.fragment
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
@@ -26,8 +29,6 @@ import java.util.*
  */
 class FragmentDialogReportChat : DialogFragment() {
 
-    private var chatRoomCallback: ChatRoomCallback? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -46,7 +47,7 @@ class FragmentDialogReportChat : DialogFragment() {
 
 
         tv_send_report_chat.setOnClickListener {
-            chatRoomCallback?.reportMessagesFirebase()
+            (activity as ChatLogActivity).reportMessagesFirebase()
             dismiss()
         }
 
@@ -60,12 +61,8 @@ class FragmentDialogReportChat : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
-
-    interface ChatRoomCallback {
-        fun reportMessagesFirebase()
+        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
 
