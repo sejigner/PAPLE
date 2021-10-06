@@ -91,7 +91,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 //        }
 
         listenForMessages()
-        
+
         // 보내기 버튼 초기상태 false / 입력시 활성화
         btn_send_chat_log.isEnabled = false
         et_message_chat_log.addTextChangedListener(object : TextWatcher {
