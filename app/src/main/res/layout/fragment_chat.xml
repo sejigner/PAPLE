@@ -131,6 +131,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginHorizontal="16dp"
                     android:id="@+id/rv_chat"
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"

@@ -3,6 +3,8 @@ package com.sejigner.closest
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -89,6 +91,23 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 //        }
 
         listenForMessages()
+        
+        // 보내기 버튼 초기상태 false / 입력시 활성화
+        btn_send_chat_log.isEnabled = false
+        et_message_chat_log.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
+                    btn_send_chat_log.isEnabled = true
+                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.paperplane_theme))
+                }
+            }
+        })
 
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
