@@ -4,14 +4,19 @@ import android.content.Intent
 import android.location.*
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sejigner.closest.Adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -106,6 +111,22 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         pageHistory.push(0)
 
+        if(checkGooglePlayServices()) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if(!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                val token = task.result
+
+                val msg = getString(R.string.msg_token_fmt, token)
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
+        } else {
+            Log.w(TAG, "Device doesn't have google play services")
+        }
 
     }
 
@@ -188,6 +209,16 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     }
 
+    private fun checkGooglePlayServices() : Boolean {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        return if (status != ConnectionResult.SUCCESS) {
+            Log.e(TAG, "Error")
+            false
+        } else {
+            Log.i(TAG, "Google play services updated")
+            true
+        }
+    }
     override fun runFragmentDialogWritePaper(
         currentAddress: String,
         latitude: Double,
