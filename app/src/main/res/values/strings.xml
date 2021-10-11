@@ -1,6 +1,6 @@
 <resources>
     <string name="title">Paper Plane</string>
-    <string name="app_name">Closest</string>
+    <string name="app_name">PaperPlane</string>
     <string name="save">저장하기</string>
     <string name="location_update">위치정보 업데이트</string>
     <string name="user_birth_year">생년</string>

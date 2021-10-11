@@ -1,14 +1,12 @@
 package com.sejigner.closest
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,6 @@ import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
-import com.sejigner.closest.fragment.FragmentDialogFirst
 import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.fragment.FragmentDialogReportChat
 import com.sejigner.closest.models.ChatMessage
@@ -33,10 +30,11 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener {
 
@@ -45,10 +43,12 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private var fbDatabase: FirebaseDatabase? = null
-    var partnerUid: String? = null
+    private var partnerUid: String? = null
+    private var partnerFcmToken : String? = null
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname : String
+    private val FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +59,8 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
+        setPartnersFcmToken()
+        updatePartnersToken()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
         rv_chat_log.adapter = chatLogAdapter
@@ -138,6 +140,40 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         }
 
 
+    }
+
+    private fun setPartnersFcmToken() {
+        val reference = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("fcmToken")
+        reference?.get()
+            ?.addOnSuccessListener { it ->
+                partnerFcmToken = it.value.toString()
+            }
+    }
+
+    private fun updatePartnersToken() {
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid/fcmToken")
+
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                partnerFcmToken = snapshot.value.toString()
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                partnerFcmToken = snapshot.value.toString()
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     private fun menuToggle() {
