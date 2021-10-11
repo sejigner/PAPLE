@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             ?.addOnSuccessListener { it ->
                 if (it.value != null) {
                     Log.d(TAG, "Checked, User Info already set - user nickname : ${it.value}")
+                    updateFcmToken()
                 } else {
                     val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
                     startActivity(setupIntent)
@@ -128,6 +129,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             Log.w(TAG, "Device doesn't have google play services")
         }
 
+    }
+
+    private fun updateFcmToken() {
+        val token = FirebaseMessaging.getInstance().token.toString()
+        val database = fbDatabase?.reference
+        database?.child("Users")?.child(UID)?.child("fcmToken")?.setValue(token)?.addOnSuccessListener {
+            Log.d(FragmentHome.TAG,"updated fcmToken: $token")
+        }
     }
 
     private fun initNavigationBar() {

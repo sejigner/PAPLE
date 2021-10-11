@@ -23,7 +23,7 @@ import com.sejigner.closest.R
 import com.sejigner.closest.ui.FirstPlaneListener
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.Users
+import com.sejigner.closest.models.Users
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.PaperplaneMessage

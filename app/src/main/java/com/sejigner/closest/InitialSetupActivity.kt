@@ -8,16 +8,16 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.NumberPicker
 import android.widget.Toast
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sejigner.closest.fragment.FragmentHome
+import com.sejigner.closest.models.Users
 import kotlinx.android.synthetic.main.activity_initial_setup.*
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_female
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_male
-import kotlinx.android.synthetic.main.activity_my_page.*
 import java.util.*
 
 class InitialSetupActivity : AppCompatActivity() {
@@ -40,6 +40,8 @@ class InitialSetupActivity : AppCompatActivity() {
         fbFireStore = FirebaseFirestore.getInstance()
         fbDatabase = FirebaseDatabase.getInstance()
         uid = fireBaseAuth!!.currentUser?.uid
+        initFcmToken()
+
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)
 
@@ -97,6 +99,10 @@ class InitialSetupActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 userInfo.strNickname = s.toString()
             }
+        }
+
+        private fun initFcmToken() {
+            userInfo.fcmToken = FirebaseMessaging.getInstance().token.toString()
         }
 
         private fun setInitialSetupToFireStore() {
