@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.sejigner.closest.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,8 +11,13 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.sejigner.closest.MainActivity
+import com.sejigner.closest.R
+import com.sejigner.closest.fragment.FragmentHome
 import kotlin.random.Random
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -45,8 +50,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationBuilder = NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_paper_plane)
             .setLargeIcon(largeIcon)
-            .setContentTitle(remoteMessage.data.get("title"))
-            .setContentText(remoteMessage.data.get("message"))
+            .setContentTitle(remoteMessage.data["title"])
+            .setContentText(remoteMessage.data["message"])
             .setAutoCancel(true)
             .setSound(notificationSoundUri)
             .setContentIntent(pendingIntent)
@@ -56,6 +61,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         notificationManager.notify(notificationID, notificationBuilder.build())
 
+    }
+
+    override fun onNewToken(token: String) {
+        val fbDatabase = FirebaseDatabase.getInstance().reference
+        fbDatabase.child("Users").child(MainActivity.UID).child("fcmToken").setValue(token).addOnSuccessListener {
+            Log.d(FragmentHome.TAG,"updated fcmToken: $token")
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

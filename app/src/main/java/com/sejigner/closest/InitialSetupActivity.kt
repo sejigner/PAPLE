@@ -8,6 +8,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.NumberPicker
 import android.widget.Toast
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
@@ -24,7 +27,7 @@ class InitialSetupActivity : AppCompatActivity() {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var fbFireStore: FirebaseFirestore? = null
-    private var fbDatabase : FirebaseDatabase? = null
+    private var fbDatabase: FirebaseDatabase? = null
     private var uid: String? = null
     private var lastTimePressed = 0L
     private val date: Calendar = Calendar.getInstance()

@@ -122,20 +122,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(TAG, msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             })
         } else {
             Log.w(TAG, "Device doesn't have google play services")
         }
 
-    }
-
-    private fun updateFcmToken() {
-        val token = FirebaseMessaging.getInstance().token.toString()
-        val database = fbDatabase?.reference
-        database?.child("Users")?.child(UID)?.child("fcmToken")?.setValue(token)?.addOnSuccessListener {
-            Log.d(FragmentHome.TAG,"updated fcmToken: $token")
-        }
     }
 
     private fun initNavigationBar() {
