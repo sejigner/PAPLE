@@ -88,12 +88,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         UID = fireBaseAuth?.uid!!
 
 
-        val reference = fbDatabase?.reference?.child("Users")?.child(UID)?.child("strNickname")
+        val reference = fbDatabase?.reference?.child("Users")?.child(UID)?.child("nickname")
         reference?.get()
             ?.addOnSuccessListener { it ->
                 if (it.value != null) {
                     Log.d(TAG, "Checked, User Info already set - user nickname : ${it.value}")
-                    updateFcmToken()
                 } else {
                     val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
                     startActivity(setupIntent)

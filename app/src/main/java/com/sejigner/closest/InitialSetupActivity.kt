@@ -55,7 +55,7 @@ class InitialSetupActivity : AppCompatActivity() {
         }
 
         tv_done.setOnClickListener {
-            if ((userInfo.strNickname == null || userInfo.birthYear == null || userInfo.gender == null))
+            if ((userInfo.nickname == null || userInfo.birthYear == null || userInfo.gender == null))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
                 // 개인정보 확인 다이얼로그 구현
@@ -87,38 +87,73 @@ class InitialSetupActivity : AppCompatActivity() {
         }
     }
 
-        private val textWatcherNickname = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    private val textWatcherNickname = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                userInfo.strNickname = s.toString()
-            }
         }
 
-        private fun initFcmToken() {
-            userInfo.fcmToken = FirebaseMessaging.getInstance().token.toString()
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
         }
 
-        private fun setInitialSetupToFireStore() {
-           val database = fbDatabase?.reference
-            database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
-                Log.d(FragmentHome.TAG,"Saved Users info to Firebase Realtime database: ${database.key}")
-            }
-            database?.child("Acquaintances/$uid")?.setValue(uid)
-        }
-
-
-        override fun onBackPressed() {
-            if (System.currentTimeMillis() - lastTimePressed > 2000) //short Toast duration, now should be faded out
-                finish();
-            else
-                Toast.makeText(this, "앱을 종료하시려면 뒤로가기 버튼을 두번 터치해주세요.", Toast.LENGTH_SHORT).show()
-            lastTimePressed = System.currentTimeMillis()
+        override fun afterTextChanged(s: Editable?) {
+            userInfo.nickname = s.toString()
         }
     }
+
+    private fun initFcmToken() {
+        if (checkGooglePlayServices()) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(
+                        MainActivity.TAG,
+                        "Fetching FCM registration token failed",
+                        task.exception
+                    )
+                    return@OnCompleteListener
+                }
+
+                val token = task.result
+
+                userInfo.registrationToken = token
+
+                val msg = getString(R.string.msg_token_fmt, token)
+                Log.d(MainActivity.TAG, msg)
+            })
+        } else {
+            Log.w(MainActivity.TAG, "Device doesn't have google play services")
+        }
+
+    }
+
+    private fun setInitialSetupToFireStore() {
+        val database = fbDatabase?.reference
+        database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
+            Log.d(
+                FragmentHome.TAG,
+                "Saved Users info to Firebase Realtime database: ${database.key}"
+            )
+        }
+        database?.child("Acquaintances/$uid")?.setValue(uid)
+    }
+
+    private fun checkGooglePlayServices(): Boolean {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        return if (status != ConnectionResult.SUCCESS) {
+            Log.e(MainActivity.TAG, "Error")
+            false
+        } else {
+            Log.i(MainActivity.TAG, "Google play services updated")
+            true
+        }
+    }
+
+
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - lastTimePressed > 2000) //short Toast duration, now should be faded out
+            finish();
+        else
+            Toast.makeText(this, "앱을 종료하시려면 뒤로가기 버튼을 두번 터치해주세요.", Toast.LENGTH_SHORT).show()
+        lastTimePressed = System.currentTimeMillis()
+    }
+}

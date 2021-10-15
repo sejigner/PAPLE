@@ -436,7 +436,7 @@ class LatestMessages(val latestChatMessage: ChatMessage) :
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 chatPartnerUser = p0.getValue(Users::class.java)
-                viewHolder.itemView.tv_chat_nickname.text = chatPartnerUser?.strNickname
+                viewHolder.itemView.tv_chat_nickname.text = chatPartnerUser?.nickname
             }
 
             override fun onCancelled(error: DatabaseError) {
