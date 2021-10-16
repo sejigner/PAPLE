@@ -105,7 +105,7 @@ data class UidWithRepliedPlanes(
         entity = RepliedPaperPlanes::class,
         entityColumn = "uid"
     )
-    var repliedPlanes: List<RepliedPaperPlanes> = ArrayList(),
+    var repliedPlanes: List<RepliedPaperPlanes> = ArrayList()
 )
 
 data class UidWithChatRooms(
