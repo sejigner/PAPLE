@@ -143,7 +143,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private fun setPartnersFcmToken() {
-        val reference = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("fcmToken")
+        val reference = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("registrationToken")
         reference?.get()
             ?.addOnSuccessListener { it ->
                 partnerFcmToken = it.value.toString()
@@ -151,7 +151,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private fun updatePartnersToken() {
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid/fcmToken")
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid/registrationToken")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {

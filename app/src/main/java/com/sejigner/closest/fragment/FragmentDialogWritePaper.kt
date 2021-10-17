@@ -157,7 +157,7 @@ class FragmentDialogWritePaper : DialogFragment() {
                     var haveMet: Boolean
                     // Room DB로 대체
                     CoroutineScope(IO).launch {
-                        haveMet = ViewModel.haveMet(key!!).await()
+                        haveMet = ViewModel.haveMet(UID, key!!).await()
                         if (haveMet) {
                             // user exists in the database
                             Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
@@ -248,12 +248,13 @@ class FragmentDialogWritePaper : DialogFragment() {
         }.addOnSuccessListener {
             val sentPaper = MyPaperPlaneRecord(
                 paperplaneMessage.toId,
+                UID,
                 paperplaneMessage.text,
                 paperplaneMessage.timestamp
             )
             ViewModel.insert(sentPaper)
         }
-        val acquaintances = Acquaintances(toId)
+        val acquaintances = Acquaintances(toId, UID)
         ViewModel.insert(acquaintances)
     }
 

@@ -70,8 +70,8 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.getChatRoomsTimestamp(partnerId)
     }
 
-    fun haveMet(uid : String) = CoroutineScope(IO).async {
-        repository.haveMet(uid)
+    fun haveMet(uid : String, partnerId: String) = CoroutineScope(IO).async {
+        repository.haveMet(uid, partnerId)
     }
 
     fun insert(acquaintance : Acquaintances) = CoroutineScope(IO).launch {

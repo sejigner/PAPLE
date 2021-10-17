@@ -154,7 +154,7 @@ class InitialSetupActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - lastTimePressed > 2000) //short Toast duration, now should be faded out
-            finish();
+            finish()
         else
             Toast.makeText(this, "앱을 종료하시려면 뒤로가기 버튼을 두번 터치해주세요.", Toast.LENGTH_SHORT).show()
         lastTimePressed = System.currentTimeMillis()

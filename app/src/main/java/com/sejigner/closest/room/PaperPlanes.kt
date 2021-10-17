@@ -5,14 +5,20 @@ import androidx.room.*
 
 @Entity(tableName = "acquaintances")
 data class Acquaintances(
-    @PrimaryKey @ColumnInfo(name = "uid")
-    val uid : String
+    @PrimaryKey @ColumnInfo(name = "partnerId")
+    val partnerId: String,
+
+    @ColumnInfo(name = "uid")
+    val uid: String
 )
 
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId")
     val fromId: String,
+
+    @ColumnInfo(name = "uid")
+    val uid: String,
 
     @ColumnInfo(name = "message")
     val message: String?,
@@ -29,6 +35,9 @@ data class MyPaperPlaneRecord(
     @PrimaryKey @ColumnInfo(name = "partnerId")
     val partnerId: String,
 
+    @ColumnInfo(name = "uid")
+    val uid: String,
+
     @ColumnInfo(name = "userMessage")
     val userMessage: String?,
 
@@ -41,6 +50,9 @@ data class MyPaperPlaneRecord(
 data class RepliedPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId")
     val fromId: String,
+
+    @ColumnInfo(name = "uid")
+    val uid: String,
 
     @ColumnInfo(name = "userMessage")
     val userMessage: String?,
@@ -63,10 +75,46 @@ data class RepliedPaperPlanes(
 data class ChatRooms(
     @PrimaryKey @ColumnInfo val partnerId: String,
     val partnerNickname: String?,
+    @ColumnInfo(name = "uid")
+    val uid: String,
     @ColumnInfo(name = "lastMessage")
-    val lastMessage : String?,
+    val lastMessage: String?,
     @ColumnInfo(name = "lastMessageTimestamp")
-    val lastMessageTimestamp : Long?
+    val lastMessageTimestamp: Long?
+)
+
+@Entity(tableName = "uid")
+data class Uid(
+    @PrimaryKey @ColumnInfo val uid: String
+)
+
+data class UidWithFirstPlanes(
+    @Embedded val uid: Uid,
+    @Relation(
+        parentColumn = "uid",
+        entity = FirstPaperPlanes::class,
+        entityColumn = "uid"
+    )
+    var firstPlanes: List<FirstPaperPlanes> = ArrayList(),
+)
+
+data class UidWithRepliedPlanes(
+    @Embedded val uid: Uid,
+    @Relation(
+        parentColumn = "uid",
+        entity = RepliedPaperPlanes::class,
+        entityColumn = "uid"
+    )
+    var repliedPlanes: List<RepliedPaperPlanes> = ArrayList(),
+)
+
+data class UidWithChatRooms(
+    @Embedded val uid: Uid,
+    @Relation(
+        parentColumn = "uid",
+        entityColumn = "uid"
+    )
+    var chatRooms: List<ChatRooms> = ArrayList()
 )
 
 @Entity(

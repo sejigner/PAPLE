@@ -6,8 +6,8 @@ import androidx.room.*
 
 @Dao
 interface AcquaintancesDao {
-    @Query("SELECT EXISTS (SELECT 1 FROM acquaintances WHERE uid = :uid)")
-    suspend fun haveMet(uid: String): Boolean
+    @Query("SELECT EXISTS (SELECT 1 FROM acquaintances WHERE uid = :uid and partnerId = :partnerId)")
+    suspend fun haveMet(uid:String, partnerId: String): Boolean
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(acquaintance: Acquaintances)

@@ -182,6 +182,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
                             val item = FirstPaperPlanes(
                                 paperplane.fromId,
+                                UID,
                                 paperplane.text,
                                 paperplane.flightDistance,
                                 paperplane.timestamp
@@ -189,7 +190,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             ViewModel.insert(item)
                             // immediate delete on setting data to local databasae
                             ref.child(paperplane.fromId).removeValue()
-                            val acquaintances = Acquaintances(paperplane.fromId)
+                            val acquaintances = Acquaintances(UID, paperplane.fromId)
                             ViewModel.insert(acquaintances)
                         } else { // 상대가 날린 답장 비행기
                             setRepliedPaperPlane(paperplane)
@@ -245,6 +246,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
             val item = RepliedPaperPlanes(
                 myPaperPlaneRecord?.partnerId!!,
+                UID,
                 myPaperPlaneRecord.userMessage,
                 paperPlane.text,
                 paperPlane.flightDistance,
