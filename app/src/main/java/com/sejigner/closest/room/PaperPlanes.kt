@@ -95,7 +95,7 @@ data class UidWithFirstPlanes(
         entity = FirstPaperPlanes::class,
         entityColumn = "uid"
     )
-    var firstPlanes: List<FirstPaperPlanes> = ArrayList(),
+    var firstPlanes: List<FirstPaperPlanes> = ArrayList()
 )
 
 data class UidWithRepliedPlanes(
@@ -112,6 +112,7 @@ data class UidWithChatRooms(
     @Embedded val uid: Uid,
     @Relation(
         parentColumn = "uid",
+        entity = ChatRooms::class,
         entityColumn = "uid"
     )
     var chatRooms: List<ChatRooms> = ArrayList()
@@ -143,6 +144,7 @@ data class ChatRoomsAndMessages(
     @Embedded val room: ChatRooms,
     @Relation(
         parentColumn = "partnerId",
+        entity = ChatMessages::class,
         entityColumn = "chatRoomId"
     )
     var chatMessages: List<ChatMessages> = ArrayList()
