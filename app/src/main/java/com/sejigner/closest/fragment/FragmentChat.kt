@@ -281,6 +281,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             val chatRoom = ChatRooms(
                                 partnerId,
                                 partnerNickname,
+                                UID,
                                 latestChatMessage.message,
                                 latestChatMessage.time
                             )
