@@ -85,7 +85,7 @@ data class ChatRooms(
 
 @Entity(tableName = "uid")
 data class Uid(
-    @PrimaryKey @ColumnInfo val uid: String
+    @PrimaryKey val uid: String
 )
 
 data class FirstPlanesWithUid(
@@ -131,7 +131,7 @@ data class ChatRoomsWithUid(
 )
 data class ChatMessages(
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null,
+    var messageId: Int? = null,
     @ColumnInfo(name = "chatRoomId", index = true)
     val chatRoomId: String?,
     val meOrPartner: Int,
@@ -144,10 +144,26 @@ data class ChatRoomsAndMessages(
     @Embedded val room: ChatRooms,
     @Relation(
         parentColumn = "partnerId",
-        entity = ChatMessages::class,
-        entityColumn = "chatRoomId"
+        entityColumn = "messageId",
+        associateBy = Junction(ChatRoomMessageCrossRef::class)
     )
     var chatMessages: List<ChatMessages> = ArrayList()
+)
+
+@Entity(primaryKeys = ["partnerId", "messageId"])
+data class ChatRoomMessageCrossRef(
+    val partnerId: String,
+    val messageId: String
+)
+
+data class UidWithChatRoomsAndMessages (
+    @Embedded val uid : Uid,
+    @Relation(
+        entity = ChatRooms::class,
+        parentColumn = "uid",
+        entityColumn = "uid"
+    )
+    val chatRooms: List<ChatRoomsAndMessages>
 )
 
 

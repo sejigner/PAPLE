@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
+import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
@@ -130,7 +131,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                     .child("strNickname")
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
-                val chatRoom = ChatRooms(fromId!!, partnerNickname, "", -1)
+                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "", -1)
                 CoroutineScope(IO).launch {
                     viewModel.insert(chatRoom).join()
                     val intent = Intent(view.context, ChatLogActivity::class.java)

@@ -73,10 +73,15 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+        ViewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
         })
+
+//        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+//            chatLogAdapter.list = it
+//            chatLogAdapter.notifyDataSetChanged()
+//        })
 
         CoroutineScope(IO).launch {
             if (!partnerUid.isNullOrBlank()) {
@@ -281,7 +286,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
-        val chatMessage = ChatMessage(toRef.key!!, text, fromId, toId!!, timestamp)
+        val chatMessage = ChatMessage(toRef.key!!, UID, text, fromId, toId!!, timestamp)
         toRef.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "sent your message: ${toRef.key}")
         }

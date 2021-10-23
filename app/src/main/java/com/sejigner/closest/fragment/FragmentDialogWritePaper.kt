@@ -140,7 +140,9 @@ class FragmentDialogWritePaper : DialogFragment() {
         fun dismissLoadingDialog()
     }
 
-
+    // TODO : 파이어베이스 데이터베이스 내 세 개의 Path 설정; User-Location, Female-User-Location, Male-User-Location
+    //  초기 설정 시 User-Location + 남/여 2가지 Path에 데이터 입력
+    //  기본 탐색 -> User-Location 탐색, 필터 탐색 -> 성별-Location 탐색 (생년 탐색은 추후 고민)
     fun getClosestUser() {
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("User-Location")
