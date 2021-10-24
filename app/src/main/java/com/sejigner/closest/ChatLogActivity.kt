@@ -204,6 +204,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
                     val chatMessages = ChatMessages(
                         null,
                         partnerUid,
+                        UID,
                         isPartner,
                         chatMessage.message,
                         chatMessage.timestamp
@@ -219,7 +220,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
                         if (!lastMessageDate.equals(currentMessageDate)) {
                             lastMessageDate = currentMessageDate
-                            val dateMessage = ChatMessages(null,partnerUid,2,lastMessageDate,0L)
+                            val dateMessage = ChatMessages(null,partnerUid, UID,2,lastMessageDate,0L)
                             ViewModel.insert(dateMessage).join()
                         }
 
@@ -302,7 +303,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 
-        val chatMessages = ChatMessages(null, toId, 0, text, timestamp)
+        val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
 
         CoroutineScope(IO).launch {
             var lastMessageTimeStamp: Long? = 0L
@@ -313,7 +314,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
             if (!lastMessageDate.equals(currentMessageDate)) {
                 lastMessageDate = currentMessageDate
-                val dateMessage = ChatMessages(null, partnerUid, 2, lastMessageDate, 0L)
+                val dateMessage = ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
                 ViewModel.insert(dateMessage).join()
             }
             ViewModel.insert(chatMessages)
@@ -324,7 +325,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     override fun initChatLog() {
         val timestamp = System.currentTimeMillis() / 1000
 
-        val noticeMessage = ChatMessages(null, partnerUid, 2, getString(R.string.init_chat_log),0L)
+        val noticeMessage = ChatMessages(null, partnerUid, UID, 2, getString(R.string.init_chat_log),0L)
         ViewModel.insert(noticeMessage)
 
         val lastMessagesUserReference =

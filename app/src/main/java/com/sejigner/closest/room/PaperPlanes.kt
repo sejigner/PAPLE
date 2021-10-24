@@ -134,6 +134,7 @@ data class ChatMessages(
     var messageId: Int? = null,
     @ColumnInfo(name = "chatRoomId", index = true)
     val chatRoomId: String?,
+    val uid: String,
     val meOrPartner: Int,
     val message: String?,
     @ColumnInfo(name = "timestamp")
