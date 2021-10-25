@@ -137,7 +137,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             repliedPlaneAdapter.notifyDataSetChanged()
         })
 
-        ViewModel.allChatRooms().observe(viewLifecycleOwner, {
+        ViewModel.allChatRooms(UID).observe(viewLifecycleOwner, {
             latestMessageAdapter.list = it
             latestMessageAdapter.notifyDataSetChanged()
         })

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 
 class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 
-    private val rooms: LiveData<List<ChatRooms>> = db.getChatRoomsDao().getAllChatRooms()
+//    private val rooms: LiveData<List<ChatRooms>> = db.getChatRoomsDao().getAllChatRooms()
 
     // 첫 비행기
     suspend fun insert(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().insert(paperPlane)
@@ -44,8 +44,9 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
     fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()
     fun allChatMessages(uid: String, partnerId: String) = db.getChatMessagesDao().getAllChatMessages(uid, partnerId)
-    fun allChatRooms() : LiveData<List<ChatRooms>> {
-        return rooms
-    }
+//    fun allChatRooms(uid: String) : LiveData<List<ChatRooms>> {
+//        return rooms
+//    }
+    fun allChatRooms(uid: String) = db.getChatRoomsDao().getAllChatRooms(uid)
 
 }

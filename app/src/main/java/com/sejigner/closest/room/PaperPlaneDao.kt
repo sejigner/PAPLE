@@ -67,8 +67,8 @@ interface RepliedPaperPlaneDao {
 @Dao
 interface ChatRoomsDao {
     // Room and Messages
-    @Query("SELECT * FROM chat_rooms ORDER BY lastMessageTimestamp DESC")
-    fun getAllChatRooms(): LiveData<List<ChatRooms>>
+    @Query("SELECT * FROM chat_rooms WHERE uid = :uid ORDER BY lastMessageTimestamp DESC")
+    fun getAllChatRooms(uid: String): LiveData<List<ChatRooms>>
 
     @Transaction
     @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE partnerId = :partnerId)")

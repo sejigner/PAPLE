@@ -103,5 +103,5 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     fun allFirstPaperPlanes() = repository.allFirstPaperPlanes()
     fun allRepliedPaperPlanes() = repository.allRepliedPaperPlanes()
     fun allChatMessages(uid: String, partnerId: String) = repository.allChatMessages(uid, partnerId)
-    fun allChatRooms() = repository.allChatRooms()
+    fun allChatRooms(uid: String) = repository.allChatRooms(uid)
 }
