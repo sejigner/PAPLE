@@ -75,7 +75,7 @@ data class RepliedPaperPlanes(
 data class ChatRooms(
     @PrimaryKey @ColumnInfo val partnerId: String,
     val partnerNickname: String?,
-    @ColumnInfo(name = "uid")
+    @ColumnInfo(name = "uid", index = true)
     val uid: String,
     @ColumnInfo(name = "lastMessage")
     val lastMessage: String?,
