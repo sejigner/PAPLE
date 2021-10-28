@@ -41,8 +41,8 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 
     suspend fun getChatRoomsAndAllMessages(partnerId: String) : List<ChatRoomsAndMessages> = db.getChatRoomAndMessageDao().getChatRoomAndMessages(partnerId)
 
-    fun allFirstPaperPlanes() = db.getFirstPaperPlaneDao().getAllFirstPlanes()
-    fun allRepliedPaperPlanes() = db.getRepliedPaperPlaneDao().getAllRepliedPlanes()
+    fun allFirstPaperPlanes(uid: String) = db.getFirstPaperPlaneDao().getAllFirstPlanes(uid)
+    fun allRepliedPaperPlanes(uid: String) = db.getRepliedPaperPlaneDao().getAllRepliedPlanes(uid)
     fun allChatMessages(uid: String, partnerId: String) = db.getChatMessagesDao().getAllChatMessages(uid, partnerId)
 //    fun allChatRooms(uid: String) : LiveData<List<ChatRooms>> {
 //        return rooms

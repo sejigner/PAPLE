@@ -15,8 +15,8 @@ interface AcquaintancesDao {
 
 @Dao
 interface FirstPaperPlaneDao {
-    @Query("SELECT * FROM first_paper_planes")
-    fun getAllFirstPlanes(): LiveData<List<FirstPaperPlanes>>
+    @Query("SELECT * FROM first_paper_planes WHERE uid = :uid")
+    fun getAllFirstPlanes(uid: String): LiveData<List<FirstPaperPlanes>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(paperPlane: FirstPaperPlanes)
@@ -47,8 +47,8 @@ interface MyPaperPlaneRecordDao {
 
 @Dao
 interface RepliedPaperPlaneDao {
-    @Query("SELECT * FROM replied_paper_planes")
-    fun getAllRepliedPlanes(): LiveData<List<RepliedPaperPlanes>>
+    @Query("SELECT * FROM replied_paper_planes WHERE uid = :uid")
+    fun getAllRepliedPlanes(uid: String): LiveData<List<RepliedPaperPlanes>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

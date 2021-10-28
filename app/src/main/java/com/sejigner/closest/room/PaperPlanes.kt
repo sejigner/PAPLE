@@ -17,7 +17,7 @@ data class FirstPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId")
     val fromId: String,
 
-    @ColumnInfo(name = "uid")
+    @ColumnInfo(name = "uid", index = true)
     val uid: String,
 
     @ColumnInfo(name = "message")
@@ -35,7 +35,7 @@ data class MyPaperPlaneRecord(
     @PrimaryKey @ColumnInfo(name = "partnerId")
     val partnerId: String,
 
-    @ColumnInfo(name = "uid")
+    @ColumnInfo(name = "uid", index = true)
     val uid: String,
 
     @ColumnInfo(name = "userMessage")
@@ -51,7 +51,7 @@ data class RepliedPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId")
     val fromId: String,
 
-    @ColumnInfo(name = "uid")
+    @ColumnInfo(name = "uid", index = true)
     val uid: String,
 
     @ColumnInfo(name = "userMessage")

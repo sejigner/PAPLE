@@ -128,11 +128,11 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_first.layoutManager = mLayoutManagerFirst
         rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
-        ViewModel.allFirstPaperPlanes().observe(viewLifecycleOwner, Observer {
+        ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
             firstPlaneAdapter.list = it
             firstPlaneAdapter.notifyDataSetChanged()
         })
-        ViewModel.allRepliedPaperPlanes().observe(viewLifecycleOwner, Observer {
+        ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
             repliedPlaneAdapter.list = it
             repliedPlaneAdapter.notifyDataSetChanged()
         })
