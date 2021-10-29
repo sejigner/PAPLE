@@ -247,7 +247,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     suspend fun setRepliedPaperPlane(paperPlane: PaperplaneMessage) {
 
         CoroutineScope(IO).launch {
-            val myPaperPlaneRecord = ViewModel.getWithId(paperPlane.fromId).await()
+            val myPaperPlaneRecord = ViewModel.getWithId(UID, paperPlane.fromId).await()
             val item = RepliedPaperPlanes(
                 myPaperPlaneRecord?.partnerId!!,
                 UID,
@@ -273,7 +273,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 val partnerId = snapshot.key ?: return
 
                 CoroutineScope(IO).launch {
-                    val isPartnerId = ViewModel.exists(partnerId)
+                    val isPartnerId = ViewModel.exists(UID, partnerId)
                     // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
                     if (!isPartnerId.await()) {
                         val ref2 =
@@ -297,7 +297,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                         }
 
                     } else { // 이미 시작된 채팅
-                        ViewModel.updateLastMessages(
+                        ViewModel.updateLastMessages(UID,
                             partnerId,
                             latestChatMessage.message,
                             latestChatMessage.time

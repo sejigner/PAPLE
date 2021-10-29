@@ -51,23 +51,23 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.getChatRoom(partnerId)
     }
 
-    fun getWithId(fromId: String) = CoroutineScope(IO).async{
-        repository.getWithId(fromId)
+    fun getWithId(uid: String, fromId: String) = CoroutineScope(IO).async{
+        repository.getWithId(uid, fromId)
     }
     fun insert(record: MyPaperPlaneRecord) = CoroutineScope(IO).launch {
         repository.insert(record)
     }
 
-    fun exists(partnerId: String) = CoroutineScope(IO).async {
-        repository.exists(partnerId)
+    fun exists(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.exists(uid, partnerId)
     }
 
-    fun updateLastMessages(partnerId: String, message : String, messageTimestamp : Long) = CoroutineScope(IO).launch {
-        repository.updateLastMessages(partnerId, message, messageTimestamp)
+    fun updateLastMessages(uid: String, partnerId: String, message : String, messageTimestamp : Long) = CoroutineScope(IO).launch {
+        repository.updateLastMessages(uid, partnerId, message, messageTimestamp)
     }
 
-    fun getChatRoomsTimestamp(partnerId: String) = CoroutineScope(IO).async {
-        repository.getChatRoomsTimestamp(partnerId)
+    fun getChatRoomsTimestamp(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoomsTimestamp(uid, partnerId)
     }
 
     fun haveMet(uid : String, partnerId: String) = CoroutineScope(IO).async {
@@ -78,12 +78,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(acquaintance)
     }
 
-    fun deleteChatRoom(partnerId: String) = CoroutineScope(IO).launch {
-        repository.deleteChatRoom(partnerId)
+    fun deleteChatRoom(uid: String, partnerId: String) = CoroutineScope(IO).launch {
+        repository.deleteChatRoom(uid, partnerId)
     }
 
-    fun deleteAllMessages(partnerId: String) = CoroutineScope(IO).launch {
-        repository.deleteAllMessages(partnerId)
+    fun deleteAllMessages(uid: String, partnerId: String) = CoroutineScope(IO).launch {
+        repository.deleteAllMessages(uid, partnerId)
     }
 
 
@@ -95,8 +95,8 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insertOrUpdate(message)
     }
 
-    fun chatRoomAndAllMessages(partnerId: String) = CoroutineScope(IO).async {
-        repository.getChatRoomsAndAllMessages(partnerId)
+    fun chatRoomAndAllMessages(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoomsAndAllMessages(uid, partnerId)
     }
 
     // Here we initialized allPaperPlanes function with repository

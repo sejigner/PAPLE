@@ -37,8 +37,8 @@ interface MyPaperPlaneRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(record: MyPaperPlaneRecord)
 
-    @Query("SELECT * FROM my_message_record WHERE partnerId = :partnerId LIMIT 1")
-    suspend fun getWithId(partnerId: String): MyPaperPlaneRecord?
+    @Query("SELECT * FROM my_message_record WHERE uid = :uid and partnerId = :partnerId LIMIT 1")
+    suspend fun getWithId(uid: String, partnerId: String): MyPaperPlaneRecord?
 
     @Delete
     suspend fun delete(record: MyPaperPlaneRecord)
@@ -71,8 +71,8 @@ interface ChatRoomsDao {
     fun getAllChatRooms(uid: String): LiveData<List<ChatRooms>>
 
     @Transaction
-    @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE partnerId = :partnerId)")
-    suspend fun exists(partnerId: String): Boolean
+    @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE uid = :uid and partnerId = :partnerId)")
+    suspend fun exists(uid: String, partnerId: String): Boolean
 
     @Update
     suspend fun update(messageList: List<ChatMessages>)
@@ -95,13 +95,13 @@ interface ChatRoomsDao {
     @Query("SELECT * FROM chat_rooms  WHERE partnerId = :partnerId")
     suspend fun getChatRoom(partnerId: String): ChatRooms
 
-    @Query("SELECT lastMessageTimestamp FROM chat_rooms  WHERE partnerId = :partnerId")
-    suspend fun getChatRoomsTimestamp(partnerId: String): Long?
+    @Query("SELECT lastMessageTimestamp FROM chat_rooms  WHERE uid = :uid and partnerId = :partnerId")
+    suspend fun getChatRoomsTimestamp(uid: String, partnerId: String): Long?
 
     // Chatroom
 
-    @Query("DELETE FROM chat_rooms WHERE partnerId = :partnerId")
-    fun deleteChatRoom(partnerId: String)
+    @Query("DELETE FROM chat_rooms WHERE uid = :uid and partnerId = :partnerId")
+    fun deleteChatRoom(uid : String, partnerId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(room: ChatRooms)
@@ -109,8 +109,9 @@ interface ChatRoomsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(messageList: List<ChatMessages>): List<Long>
 
-    @Query("UPDATE chat_rooms  SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE partnerId = :partnerId ")
+    @Query("UPDATE chat_rooms  SET lastMessage = :lastMessage, lastMessageTimestamp = :lastMessageTimestamp WHERE uid = :uid and partnerId = :partnerId ")
     suspend fun updateLastMessages(
+        uid: String,
         partnerId: String,
         lastMessage: String,
         lastMessageTimestamp: Long
@@ -135,8 +136,8 @@ interface ChatRoomsDao {
 @Dao
 interface ChatRoomsAndMessagesDao {
     @Transaction
-    @Query("SELECT * FROM chat_rooms WHERE partnerId = :partnerId")
-    suspend fun getChatRoomAndMessages(partnerId: String) : List<ChatRoomsAndMessages>
+    @Query("SELECT * FROM chat_rooms WHERE uid = :uid and partnerId = :partnerId")
+    suspend fun getChatRoomAndMessages(uid: String, partnerId: String) : List<ChatRoomsAndMessages>
 
 }
 
@@ -145,8 +146,8 @@ interface ChatMessagesDao {
     @Query("SELECT * FROM chat_messages WHERE uid = :uid and chatRoomId = :chatRoomId ")
     fun getAllChatMessages(uid: String, chatRoomId: String): LiveData<List<ChatMessages>>
 
-    @Query("DELETE FROM chat_messages WHERE chatRoomId = :partnerId")
-    fun deleteAllMessages(partnerId: String)
+    @Query("DELETE FROM chat_messages WHERE uid = :uid and chatRoomId = :partnerId")
+    fun deleteAllMessages(uid: String, partnerId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(message: ChatMessages)

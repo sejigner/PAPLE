@@ -15,7 +15,7 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun delete(paperPlane: RepliedPaperPlanes) = db.getRepliedPaperPlaneDao().delete(paperPlane)
 
     // 내가 보낸 비행기
-    suspend fun getWithId(id: String): MyPaperPlaneRecord? = db.getMyPaperPlaneRecordDao().getWithId(id)
+    suspend fun getWithId(uid: String, fromId: String): MyPaperPlaneRecord? = db.getMyPaperPlaneRecordDao().getWithId(uid, fromId)
     suspend fun delete(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().delete(record)
     suspend fun insert(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().insert(record)
 
@@ -24,22 +24,22 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun insert(rooms: ChatRooms) = db.getChatRoomsDao().insert(rooms)
     suspend fun delete(rooms: ChatRooms) = db.getChatRoomsDao().delete(rooms)
     suspend fun insertOrUpdate(messageList : List<ChatMessages>) = db.getChatRoomsDao().insertOrUpdate(messageList)
-    suspend fun updateLastMessages(partnerId: String, lastMessage: String, lastMessageTimestamp: Long) = db.getChatRoomsDao().updateLastMessages(partnerId,lastMessage,lastMessageTimestamp)
-    suspend fun exists(partnerId: String): Boolean = db.getChatRoomsDao().exists(partnerId)
+    suspend fun updateLastMessages(uid: String, partnerId: String, lastMessage: String, lastMessageTimestamp: Long) = db.getChatRoomsDao().updateLastMessages(uid, partnerId,lastMessage,lastMessageTimestamp)
+    suspend fun exists(uid :String, partnerId: String): Boolean = db.getChatRoomsDao().exists(uid, partnerId)
     suspend fun getChatRoom(partnerId: String) : ChatRooms = db.getChatRoomsDao().getChatRoom(partnerId)
-    suspend fun getChatRoomsTimestamp(partnerId: String) : Long? = db.getChatRoomsDao().getChatRoomsTimestamp(partnerId)
-    suspend fun deleteChatRoom(partnerId: String) = db.getChatRoomsDao().deleteChatRoom(partnerId)
+    suspend fun getChatRoomsTimestamp(uid: String, partnerId: String) : Long? = db.getChatRoomsDao().getChatRoomsTimestamp(uid, partnerId)
+    suspend fun deleteChatRoom(uid: String, partnerId: String) = db.getChatRoomsDao().deleteChatRoom(uid, partnerId)
 
     // 메세지
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)
     suspend fun insertOrUpdate(message: ChatMessages) = db.getChatRoomsDao().insertOrUpdate(message)
-    suspend fun deleteAllMessages(partnerId: String) = db.getChatMessagesDao().deleteAllMessages(partnerId)
+    suspend fun deleteAllMessages(uid: String, partnerId: String) = db.getChatMessagesDao().deleteAllMessages(uid, partnerId)
 
     // 만난 유저 체크
     suspend fun haveMet(uid: String, partnerId: String) : Boolean = db.getAcquaintancesDao().haveMet(uid, partnerId)
     suspend fun insert(acquaintance: Acquaintances) = db.getAcquaintancesDao().insert(acquaintance)
 
-    suspend fun getChatRoomsAndAllMessages(partnerId: String) : List<ChatRoomsAndMessages> = db.getChatRoomAndMessageDao().getChatRoomAndMessages(partnerId)
+    suspend fun getChatRoomsAndAllMessages(uid: String, partnerId: String) : List<ChatRoomsAndMessages> = db.getChatRoomAndMessageDao().getChatRoomAndMessages(uid, partnerId)
 
     fun allFirstPaperPlanes(uid: String) = db.getFirstPaperPlaneDao().getAllFirstPlanes(uid)
     fun allRepliedPaperPlanes(uid: String) = db.getRepliedPaperPlaneDao().getAllRepliedPlanes(uid)

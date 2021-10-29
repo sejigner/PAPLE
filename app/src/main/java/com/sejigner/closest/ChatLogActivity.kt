@@ -215,7 +215,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
                         var lastMessageTimeStamp : Long? = 0L
                         var lastMessageDate : String?
 
-                        lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(partnerUid).await()
+                        lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid).await()
                         lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
                         if (!lastMessageDate.equals(currentMessageDate)) {
@@ -309,7 +309,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             var lastMessageTimeStamp: Long? = 0L
             var lastMessageDate: String?
 
-            lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(partnerUid!!).await()
+            lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid!!).await()
             lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
             if (!lastMessageDate.equals(currentMessageDate)) {
@@ -344,15 +344,15 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
             // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)
-            val messageList = ViewModel.chatRoomAndAllMessages(partnerUid!!).await()
+            val messageList = ViewModel.chatRoomAndAllMessages(UID, partnerUid!!).await()
             val reportRef =
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
             reportRef.setValue(messageList).addOnFailureListener {
                 Log.d("ReportChatLog", "Report 실패")
             }.addOnSuccessListener {
                 Log.d("Report","신고가 접수되었어요")
-                ViewModel.deleteAllMessages(partnerUid!!)
-                ViewModel.deleteChatRoom(partnerUid!!)
+                ViewModel.deleteAllMessages(UID, partnerUid!!)
+                ViewModel.deleteChatRoom(UID, partnerUid!!)
                 startActivity(Intent(this@ChatLogActivity,MainActivity::class.java))
             }
         }
