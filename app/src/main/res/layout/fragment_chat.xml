@@ -58,9 +58,10 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:paddingVertical="4dp"
                 android:id="@+id/constraintview_first"
                 android:layout_width="wrap_content"
-                android:layout_height="112dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:paddingStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,10 +91,11 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:paddingVertical="4dp"
                 android:layout_marginTop="8dp"
                 android:id="@+id/constraintview_second"
                 android:layout_width="match_parent"
-                android:layout_height="112dp"
+                android:layout_height="wrap_content"
                 android:paddingStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/constraintview_first">

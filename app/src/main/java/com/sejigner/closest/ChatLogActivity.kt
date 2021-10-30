@@ -59,7 +59,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
-        setPartnersFcmToken()
+
         updatePartnersToken()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
@@ -118,6 +118,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
+
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -148,15 +149,17 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private fun setPartnersFcmToken() {
-        val reference = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("registrationToken")
-        reference?.get()
-            ?.addOnSuccessListener { it ->
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/$partnerUid/registrationToken")
+        ref.get()
+            .addOnSuccessListener { it ->
                 partnerFcmToken = it.value.toString()
+            }.addOnFailureListener {
+              Log.d("ChatLogActivity", it.message!!)
             }
     }
 
     private fun updatePartnersToken() {
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid/registrationToken")
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/$partnerUid/registrationToken")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
