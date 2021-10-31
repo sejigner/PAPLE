@@ -103,6 +103,10 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         btn_send_chat_log.isEnabled = false
         et_message_chat_log.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+                if(!et_message_chat_log.text.isNullOrBlank()) {
+                    btn_send_chat_log.isEnabled = false
+                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.txt_gray))
+                }
 
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
