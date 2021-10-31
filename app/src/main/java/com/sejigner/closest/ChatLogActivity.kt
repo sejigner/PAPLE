@@ -149,7 +149,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private fun setPartnersFcmToken() {
-        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/$partnerUid/registrationToken")
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
         ref.get()
             .addOnSuccessListener { it ->
                 partnerFcmToken = it.value.toString()
@@ -159,7 +159,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     }
 
     private fun updatePartnersToken() {
-        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/$partnerUid/registrationToken")
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {

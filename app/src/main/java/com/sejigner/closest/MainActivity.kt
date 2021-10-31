@@ -122,6 +122,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(TAG, msg)
+
+                val ref =
+                    FirebaseDatabase.getInstance().getReference("/Users/$UID")
+                        .child("registrationToken")
+                // fcm토큰 업로드
+                ref.setValue(token)
             })
         } else {
             Log.w(TAG, "Device doesn't have google play services")
