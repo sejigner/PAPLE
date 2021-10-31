@@ -103,7 +103,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         btn_send_chat_log.isEnabled = false
         et_message_chat_log.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                if(!et_message_chat_log.text.isNullOrBlank()) {
+                if (p0.toString().trim { it <= ' ' }.isEmpty()) {
                     btn_send_chat_log.isEnabled = false
                     btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.txt_gray))
                 }
@@ -122,7 +122,8 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
-
+            et_message_chat_log.text.clear()
+            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -289,8 +290,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         val timestamp = System.currentTimeMillis() / 1000
         val currentMessageDate = getDateTime(timestamp)
 
-        et_message_chat_log.text.clear()
-        rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
@@ -326,7 +326,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             }
             ViewModel.insert(chatMessages)
         }
-
     }
 
     override fun initChatLog() {
