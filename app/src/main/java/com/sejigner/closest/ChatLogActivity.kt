@@ -1,5 +1,7 @@
 package com.sejigner.closest
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -7,7 +9,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
@@ -107,6 +111,10 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         btn_send_chat_log.isEnabled = false
         et_message_chat_log.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString().trim { it <= ' ' }.isEmpty()) {
+                    btn_send_chat_log.isEnabled = false
+                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.txt_gray))
+                }
 
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -122,7 +130,9 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
-
+            et_message_chat_log.text.clear()
+            hideKeyboard()
+            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -157,6 +167,20 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             }.addOnFailureListener {
               Log.d("ChatLogActivity", it.message!!)
             }
+    }
+
+
+    private fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun updatePartnersToken() {
@@ -284,8 +308,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         val timestamp = System.currentTimeMillis() / 1000
         val currentMessageDate = getDateTime(timestamp)
 
-        et_message_chat_log.text.clear()
-        rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
@@ -327,7 +350,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
                 timestamp
             ).join()
         }
-
     }
 
     override fun initChatLog() {
