@@ -47,8 +47,8 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
-    fun getChatRoom(partnerId: String) = CoroutineScope(IO).async {
-        repository.getChatRoom(partnerId)
+    fun getChatRoom(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.getChatRoom(uid, partnerId)
     }
 
     fun getWithId(uid: String, fromId: String) = CoroutineScope(IO).async{

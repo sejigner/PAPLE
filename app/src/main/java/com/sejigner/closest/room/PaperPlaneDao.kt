@@ -92,8 +92,8 @@ interface ChatRoomsDao {
     @Delete
     suspend fun delete(chatRoom: ChatRooms)
 
-    @Query("SELECT * FROM chat_rooms  WHERE partnerId = :partnerId")
-    suspend fun getChatRoom(partnerId: String): ChatRooms
+    @Query("SELECT * FROM chat_rooms  WHERE uid = :uid and partnerId = :partnerId")
+    suspend fun getChatRoom(uid: String, partnerId: String): ChatRooms
 
     @Query("SELECT lastMessageTimestamp FROM chat_rooms  WHERE uid = :uid and partnerId = :partnerId")
     suspend fun getChatRoomsTimestamp(uid: String, partnerId: String): Long?

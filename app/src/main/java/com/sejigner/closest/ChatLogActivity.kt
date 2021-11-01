@@ -85,7 +85,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         CoroutineScope(IO).launch {
             if (!partnerUid.isNullOrBlank()) {
-                val chatRoom = ViewModel.getChatRoom(partnerUid!!).await()
+                val chatRoom = ViewModel.getChatRoom(UID, partnerUid!!).await()
                 tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
                 partnerNickname = chatRoom.partnerNickname!!
             }
@@ -127,7 +127,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         btn_leave_menu_chat_log.setOnClickListener {
             CoroutineScope(IO).launch {
-                val chatroom = ViewModel.getChatRoom(partnerUid!!).await()
+                val chatroom = ViewModel.getChatRoom(UID, partnerUid!!).await()
                 ViewModel.delete(chatroom)
             }
             val intent = Intent(this,MainActivity::class.java)
@@ -171,15 +171,15 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
         })
     }

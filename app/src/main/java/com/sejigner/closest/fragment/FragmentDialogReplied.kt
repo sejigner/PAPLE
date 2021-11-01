@@ -125,10 +125,10 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
-            var partnerNickname: String
+            var partnerNickname: String? = null
             val ref2 =
                 FirebaseDatabase.getInstance().getReference("/Users/$fromId")
-                    .child("strNickname")
+                    .child("nickname")
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
                 val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "", -1)
@@ -138,8 +138,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                     intent.putExtra(FragmentChat.USER_KEY, fromId)
                     startActivity(intent)
 
-                    mCallback?.initChatLog()
-
+                    (activity as ChatLogActivity).initChatLog()
                     // 두번째 비행기 기록 삭제
                     viewModel.delete(paper!!)
 
