@@ -131,7 +131,8 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                     .child("nickname")
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
-                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "", -1)
+                val timestamp = System.currentTimeMillis() / 1000
+                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp)
                 CoroutineScope(IO).launch {
                     viewModel.insert(chatRoom).join()
                     val intent = Intent(view.context, ChatLogActivity::class.java)

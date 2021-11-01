@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:paddingVertical="4dp"
-        android:id="@+id/tv_chat_date"
+        android:paddingVertical="8dp"
+        android:id="@+id/tv_chat_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/txt_gray"

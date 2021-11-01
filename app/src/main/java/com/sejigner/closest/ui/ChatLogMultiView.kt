@@ -6,5 +6,7 @@ const val messageFromMe = 0
 const val messageFromPartner = 1
 // 날짜 알림 가운데 정렬
 const val messageNewDate = 2
+// 공지 알림 가운데 정렬
+const val messageNotice = 3
 
 

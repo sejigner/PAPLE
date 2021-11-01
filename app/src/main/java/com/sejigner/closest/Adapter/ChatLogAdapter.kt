@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
 import com.sejigner.closest.room.ChatMessages
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.messageFromMe
-import com.sejigner.closest.ui.messageFromPartner
-import com.sejigner.closest.ui.messageNewDate
+import com.sejigner.closest.ui.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,12 +42,21 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
             }
             messageNewDate -> {
                 view = LayoutInflater.from(parent.context).inflate(
-                    R.layout.chat_date,
+                    R.layout.chat_date_row,
                     parent,
                     false
                 )
                 DateViewHolder(view)
             }
+            messageNotice -> {
+                view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.chat_notice_row,
+                    parent,
+                    false
+                )
+                NoticeViewHolder(view)
+            }
+
             else ->  throw RuntimeException("알 수 없는 뷰 타입 에러")
         }
     }
@@ -69,8 +75,12 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                 (holder as MessageFromPartnerViewHolder).bind(list[position])
                 holder.setIsRecyclable(false)
             }
-            else -> {
+            2 -> {
                 (holder as DateViewHolder).bind(list[position])
+                holder.setIsRecyclable(false)
+            }
+            3 -> {
+                (holder as NoticeViewHolder).bind(list[position])
                 holder.setIsRecyclable(false)
             }
         }
@@ -106,6 +116,14 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
 
     inner class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val date: TextView = itemView.findViewById(R.id.tv_chat_date)
+
+        fun bind(item: ChatMessages) {
+            date.text = item.message
+        }
+    }
+
+    inner class NoticeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val date: TextView = itemView.findViewById(R.id.tv_chat_notice)
 
         fun bind(item: ChatMessages) {
             date.text = item.message

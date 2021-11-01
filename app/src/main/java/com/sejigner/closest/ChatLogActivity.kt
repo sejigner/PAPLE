@@ -68,10 +68,14 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
+        mLayoutManagerMessages.stackFromEnd = true
+
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
+        rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
 
         ViewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.list = it
@@ -135,9 +139,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             finish()
         }
 
-        iv_menu_chat_log.setOnClickListener {
-            menuToggle()
-        }
 
         btn_report_menu_chat_log.setOnClickListener {
             val dialog = FragmentDialogReportChat()
@@ -184,14 +185,6 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         })
     }
 
-    private fun menuToggle() {
-        if (expandable_menu_chat_log.visibility == View.VISIBLE) {
-            expandable_menu_chat_log.visibility  = View.GONE
-        } else {
-            expandable_menu_chat_log.visibility = View.VISIBLE
-        }
-    }
-
     private fun listenForMessages() {
 
             val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
@@ -229,6 +222,12 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
 
                         ViewModel.insert(chatMessages)
                         ref.child(snapshot.key!!).removeValue()
+
+                        ViewModel.updateLastMessages(UID,
+                            partnerUid,
+                            chatMessage.message,
+                            chatMessage.timestamp
+                        ).join()
 
                     }
                     rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
@@ -295,15 +294,16 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
             Log.d(TAG, "sent your message: ${toRef.key}")
         }
 
-        val lastMessagesUserReference =
-            FirebaseDatabase.getInstance().getReference("/Last-messages/$UID/$toId")
-        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
-        lastMessagesUserReference.setValue(lastMessageToMe)
-
-        val lastMessagesPartnerReference =
-            FirebaseDatabase.getInstance().getReference("/Last-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
-        lastMessagesPartnerReference.setValue(lastMessageToPartner)
+        // TODO : Last-messages 노드를 사용하지 않고, User-messages와 로컬 데이터베이스를 이용한 방식 이용
+//        val lastMessagesUserReference =
+//            FirebaseDatabase.getInstance().getReference("/Last-messages/$UID/$toId")
+//        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
+//        lastMessagesUserReference.setValue(lastMessageToMe)
+//
+//        val lastMessagesPartnerReference =
+//            FirebaseDatabase.getInstance().getReference("/Last-messages/$toId/$UID")
+//        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
+//        lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 
         val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
@@ -321,6 +321,11 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
                 ViewModel.insert(dateMessage).join()
             }
             ViewModel.insert(chatMessages)
+            ViewModel.updateLastMessages(UID,
+                partnerUid!!,
+                text,
+                timestamp
+            ).join()
         }
 
     }
@@ -328,7 +333,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
     override fun initChatLog() {
         val timestamp = System.currentTimeMillis() / 1000
 
-        val noticeMessage = ChatMessages(null, partnerUid, UID, 2, getString(R.string.init_chat_log),0L)
+        val noticeMessage = ChatMessages(null, partnerUid, UID, 3, getString(R.string.init_chat_log),timestamp)
         ViewModel.insert(noticeMessage)
 
         val lastMessagesUserReference =

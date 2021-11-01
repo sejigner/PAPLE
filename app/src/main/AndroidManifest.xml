@@ -24,7 +24,7 @@
             </intent-filter>
         </service>
         <activity android:name=".ChatLogActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"

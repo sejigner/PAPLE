@@ -10,7 +10,10 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_report.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date.xml" value="0.18237704918032788" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date_row.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_me_row.xml" value="0.17827868852459017" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice.xml" value="0.23453947368421052" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice_row.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_replied.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_chat.xml" value="0.25" />

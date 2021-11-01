@@ -257,20 +257,21 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 myPaperPlaneRecord.firstTimestamp,
                 paperPlane.timestamp
             )
-                ViewModel.insert(item)
-                ViewModel.delete(myPaperPlaneRecord)
+            ViewModel.insert(item)
+            ViewModel.delete(myPaperPlaneRecord)
 
         }.join()
     }
 
 
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/Last-messages/$UID")
+        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
                 val partnerId = snapshot.key ?: return
+                val isPartner = setSender(latestChatMessage.fromId)
 
                 CoroutineScope(IO).launch {
                     val isPartnerId = ViewModel.exists(UID, partnerId)
@@ -278,7 +279,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                     if (!isPartnerId.await()) {
                         val ref2 =
                             FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                .child("strNickname")
+                                .child("nickname")
                         ref2.get().addOnSuccessListener {
                             val partnerNickname = it.value.toString()
 
@@ -287,9 +288,18 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 partnerNickname,
                                 UID,
                                 latestChatMessage.message,
-                                latestChatMessage.time
+                                latestChatMessage.timestamp
+                            )
+                            val chatMessages = ChatMessages(
+                                null,
+                                partnerId,
+                                UID,
+                                isPartner,
+                                latestChatMessage.message,
+                                latestChatMessage.timestamp
                             )
                             ViewModel.insert(chatRoom)
+                            ViewModel.insert(chatMessages)
 
                         }.addOnFailureListener {
                             Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
@@ -297,11 +307,21 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                         }
 
                     } else { // 이미 시작된 채팅
-                        ViewModel.updateLastMessages(UID,
+                        ViewModel.updateLastMessages(
+                            UID,
                             partnerId,
                             latestChatMessage.message,
-                            latestChatMessage.time
+                            latestChatMessage.timestamp
                         ).join()
+                        val chatMessages = ChatMessages(
+                            null,
+                            partnerId,
+                            UID,
+                            isPartner,
+                            latestChatMessage.message,
+                            latestChatMessage.timestamp
+                        )
+                        ViewModel.insert(chatMessages)
                     }
                     ref.child(partnerId).removeValue()
                 }
@@ -324,6 +344,11 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
             }
         })
+    }
+
+    private fun setSender(partnerId: String): Int {
+        return if (partnerId != UID) 1
+        else 0
     }
 
     override fun onPaperClicked(item: FirstPaperPlanes) {
