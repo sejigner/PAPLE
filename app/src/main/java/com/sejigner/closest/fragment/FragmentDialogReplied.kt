@@ -133,16 +133,14 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 partnerNickname = it.value.toString()
                 val timestamp = System.currentTimeMillis() / 1000
                 val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp)
+                // 두번째 비행기 기록 삭제
+                viewModel.delete(paper!!)
                 CoroutineScope(IO).launch {
                     viewModel.insert(chatRoom).join()
                     val intent = Intent(view.context, ChatLogActivity::class.java)
                     intent.putExtra(FragmentChat.USER_KEY, fromId)
                     startActivity(intent)
-
                     (activity as ChatLogActivity).initChatLog()
-                    // 두번째 비행기 기록 삭제
-                    viewModel.delete(paper!!)
-
                     dismiss()
                 }
             }.addOnFailureListener {
