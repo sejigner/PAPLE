@@ -134,15 +134,14 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 val timestamp = System.currentTimeMillis() / 1000
                 val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp)
                 // 두번째 비행기 기록 삭제
+                viewModel.insert(chatRoom)
                 viewModel.delete(paper!!)
-                CoroutineScope(IO).launch {
-                    viewModel.insert(chatRoom).join()
-                    val intent = Intent(view.context, ChatLogActivity::class.java)
-                    intent.putExtra(FragmentChat.USER_KEY, fromId)
-                    startActivity(intent)
-                    (activity as ChatLogActivity).initChatLog()
-                    dismiss()
-                }
+                // TODO : 다른 구조 필요
+                (activity as ChatLogActivity).initChatLog()
+                val intent = Intent(activity, ChatLogActivity::class.java)
+                intent.putExtra(FragmentChat.USER_KEY, fromId)
+                startActivity(intent)
+                dismiss()
             }.addOnFailureListener {
                 Toast.makeText(requireActivity(), "상대방의 계정을 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
             }
@@ -180,7 +179,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         )
 
         ref.setValue(reportMessage).addOnFailureListener {
-            Log.e("Report","${it.message}")
+            Log.e("Report", "${it.message}")
             // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
         }.addOnSuccessListener {
             Toast.makeText(requireActivity(), "정상적으로 신고되었습니다.", Toast.LENGTH_LONG).show()

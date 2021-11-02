@@ -294,7 +294,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 null,
                                 partnerId,
                                 UID,
-                                isPartner,
+                                3,
                                 latestChatMessage.message,
                                 latestChatMessage.timestamp
                             )
