@@ -136,11 +136,11 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 // 두번째 비행기 기록 삭제
                 viewModel.insert(chatRoom)
                 viewModel.delete(paper!!)
-                // TODO : 다른 구조 필요
-                (activity as ChatLogActivity).initChatLog()
-                val intent = Intent(activity, ChatLogActivity::class.java)
+
+                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
                 intent.putExtra(FragmentChat.USER_KEY, fromId)
                 startActivity(intent)
+                (activity as ChatLogActivity).initChatLog()
                 dismiss()
             }.addOnFailureListener {
                 Toast.makeText(requireActivity(), "상대방의 계정을 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
