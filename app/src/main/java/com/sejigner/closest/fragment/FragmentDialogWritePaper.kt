@@ -106,9 +106,9 @@ class FragmentDialogWritePaper : DialogFragment() {
         location?.text = currentAddress
         btnFly?.setOnClickListener {
             mCallbackMain?.showLoadingDialog()
-            CoroutineScope(IO).launch {
-                getClosestUser()
-            }
+
+            getClosestUser()
+
 
         }
 
@@ -155,7 +155,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
-                CoroutineScope(IO).launch {
+                runBlocking {
                     Log.d("geoQuery", key.toString())
                     if ((!userFound) && key != UID) {
 
@@ -192,13 +192,13 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
 
             override fun onGeoQueryReady() {
-                    if (!userFound && (radius < 15)) {
-                        radius++
-                        getClosestUser()
-                    } else {
-                        mCallbackMain?.dismissLoadingDialog()
-                        mCallbackMain?.showSuccessFragment()
-                    }
+                if (!userFound && (radius < 15)) {
+                    radius++
+                    getClosestUser()
+                } else {
+                    mCallbackMain?.dismissLoadingDialog()
+                    mCallbackMain?.showSuccessFragment()
+                }
             }
 
             override fun onGeoQueryError(error: DatabaseError?) {
