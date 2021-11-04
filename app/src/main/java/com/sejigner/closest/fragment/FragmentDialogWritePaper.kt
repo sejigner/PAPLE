@@ -210,6 +210,8 @@ class FragmentDialogWritePaper : DialogFragment() {
                     getClosestUser()
                 } else {
                     mCallbackMain?.dismissLoadingDialog()
+                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X'
+                    //   추후 사용자수가 확보되면 거리 제공
                     mCallbackMain?.showSuccessFragment()
                 }
             }

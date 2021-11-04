@@ -25,7 +25,7 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
-    FragmentDialogWritePaper.WritePaperListenerMain {
+    FragmentDialogWritePaper.WritePaperListenerMain, FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -219,5 +219,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         }
         ft.addToBackStack(null)
         ft.commit() // or ft.commitAllowingStateLoss()
+    }
+
+    override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
+        closeYourDialogFragment()
+        val fragmentFlySuccess = FragmentFlySuccess.newInstance(true, flightDistance)
+        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 }
