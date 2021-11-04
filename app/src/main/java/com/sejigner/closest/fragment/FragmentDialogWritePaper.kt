@@ -24,7 +24,6 @@ import com.firebase.geofire.GeoQueryEventListener
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.LoadingDialog
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -54,7 +53,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var uid: String? = null
     private var currentAddress: String? = null
     private var mCallbackMain: WritePaperListenerMain? = null
-    lateinit var ViewModel: FragmentChatViewModel
+    lateinit var viewModel: FragmentChatViewModel
     private var radius: Double = 0.0
     private var userFound: Boolean = false
     private var partnerSet: Boolean = false
@@ -90,7 +89,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
 
-        ViewModel =
+        viewModel =
             ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
         val etPaper = view.findViewById<View>(R.id.et_write_paper) as? EditText
@@ -107,7 +106,10 @@ class FragmentDialogWritePaper : DialogFragment() {
         location?.text = currentAddress
         btnFly?.setOnClickListener {
             mCallbackMain?.showLoadingDialog()
-            getClosestUser()
+            CoroutineScope(IO).launch {
+                getClosestUser()
+            }
+
         }
 
         btnClose?.setOnClickListener {
@@ -143,6 +145,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     // TODO : 파이어베이스 데이터베이스 내 세 개의 Path 설정; User-Location, Female-User-Location, Male-User-Location
     //  초기 설정 시 User-Location + 남/여 2가지 Path에 데이터 입력
     //  기본 탐색 -> User-Location 탐색, 필터 탐색 -> 성별-Location 탐색 (생년 탐색은 추후 고민)
+    //  getClosestUser -> onGeoQueryReady -> radius++ -> onKeyEntered ->
     fun getClosestUser() {
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("User-Location")
@@ -152,14 +155,13 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
+                CoroutineScope(IO).launch {
+                    Log.d("geoQuery", key.toString())
+                    if ((!userFound) && key != UID) {
 
-                Log.d("geoQuery", key.toString())
-                if ((!userFound) && key != UID) {
-
-                    var haveMet: Boolean
-                    // Room DB로 대체
-                    CoroutineScope(IO).launch {
-                        haveMet = ViewModel.haveMet(UID, key!!).await()
+                        var haveMet: Boolean
+                        // Room DB로 대체
+                        haveMet = viewModel.haveMet(UID, key!!).await()
                         if (haveMet) {
                             // user exists in the database
                             Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
@@ -167,10 +169,9 @@ class FragmentDialogWritePaper : DialogFragment() {
                             // user does not exist in the database
                             userFound = true
 
-                            userFoundId = key
-                            val userFoundLocation = GeoLocation(location!!.latitude,location!!.longitude)
-
-
+                            userFoundId = key!!
+                            val userFoundLocation =
+                                GeoLocation(location!!.latitude, location!!.longitude)
 
                             calDistance(userFoundLocation)
                             partnerSet = true
@@ -178,8 +179,6 @@ class FragmentDialogWritePaper : DialogFragment() {
                             performSendAnonymousMessage()
                             dismiss()
                             // mCallbackMain?.dismissLoadingDialog()
-
-
                         }
                     }
                 }
@@ -193,13 +192,13 @@ class FragmentDialogWritePaper : DialogFragment() {
             }
 
             override fun onGeoQueryReady() {
-                if (!userFound && (radius < 15)) {
-                    radius++
-                    getClosestUser()
-                } else {
-                    mCallbackMain?.dismissLoadingDialog()
-                    mCallbackMain?.showSuccessFragment()
-                }
+                    if (!userFound && (radius < 15)) {
+                        radius++
+                        getClosestUser()
+                    } else {
+                        mCallbackMain?.dismissLoadingDialog()
+                        mCallbackMain?.showSuccessFragment()
+                    }
             }
 
             override fun onGeoQueryError(error: DatabaseError?) {
@@ -211,7 +210,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private fun calDistance(location: GeoLocation?) {
         var locationFoundLat = 0.0
         var locationFoundLng = 0.0
-        if(location!=null){
+        if (location != null) {
             locationFoundLat = location.latitude
             locationFoundLng = location.longitude
         }
@@ -254,10 +253,10 @@ class FragmentDialogWritePaper : DialogFragment() {
                 paperplaneMessage.text,
                 paperplaneMessage.timestamp
             )
-            ViewModel.insert(sentPaper)
+            viewModel.insert(sentPaper)
         }
         val acquaintances = Acquaintances(toId, UID)
-        ViewModel.insert(acquaintances)
+        viewModel.insert(acquaintances)
     }
 
     override fun onStart() {
@@ -266,9 +265,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-
-
-
 
 
     override fun onAttach(context: Context) {
