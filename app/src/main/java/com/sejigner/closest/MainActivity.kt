@@ -171,47 +171,17 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                         bnv_main.selectedItemId = navigation
                     }
 
-                    if (saveToHistory) {
-                        if (pageHistory.contains(position)) {
-                            pageHistory.remove(position)
-                            pageHistory.push(position)
-                        } else {
-                            pageHistory.push(position)
-                        }
-                    }
                 }
             })
-            saveToHistory = true
         }
     }
 
     override fun onBackPressed() {
-//        if (vp_main.currentItem == 0) {
-//            super.onBackPressed()
-//        } else {
-//            vp_main.currentItem = vp_main.currentItem - 1
-//        }
-
-        if (pageHistory.size > 1) {
-
-            saveToHistory = false;
-            pageHistory.pop()
-            vp_main?.currentItem = pageHistory.peek()
-            saveToHistory = true;
-
+        if(vp_main.currentItem == 0) {
+            finish()
         } else {
-            Log.i(TAG, "pageHistory inside 0 size ${pageHistory.size}")
-
-            if (pageHistory.size == 1) {
-                pageHistory.pop()
-            }
-            if (vp_main?.currentItem == 0) {
-                super.onBackPressed()
-            } else {
-                vp_main?.currentItem = 0
-            }
+            vp_main.currentItem = 0
         }
-
     }
 
     private fun checkGooglePlayServices() : Boolean {
