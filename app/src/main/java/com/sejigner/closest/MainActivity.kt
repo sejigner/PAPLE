@@ -35,24 +35,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
     private val fragmentMyPage by lazy { FragmentMyPage() }
-
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
-    val pageHistory = Stack<Int>()
-    var saveToHistory = false
-
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
-
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-
-
-    private var flightDistance: Double = 0.0
-    private var currentAddress: String = ""
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
-    private var userCurrentLocation: Location? = null
-    private var lastUser: String? = null
-
-    private lateinit var userFoundLocation: Location
     private lateinit var dialog : LoadingDialog
 
 
@@ -108,8 +93,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 App.prefs.myNickname = it.value.toString()
             }
         }
-
-        pageHistory.push(0)
 
         if(checkGooglePlayServices()) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->

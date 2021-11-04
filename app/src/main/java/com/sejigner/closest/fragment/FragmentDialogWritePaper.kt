@@ -4,13 +4,12 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -71,7 +70,18 @@ class FragmentDialogWritePaper : DialogFragment() {
             latitude = it.getDouble("latitude", latitude)
             longitude = it.getDouble("longitude", longitude)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            dialog?.window?.setDecorFitsSystemWindows(true)
+        } else {
+            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,7 +110,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         val job = Job()
         userCurrentLocation?.longitude = longitude
         userCurrentLocation?.latitude = latitude
-
 
 
         location?.text = currentAddress
@@ -140,6 +149,10 @@ class FragmentDialogWritePaper : DialogFragment() {
         fun showSuccessFragment()
         fun showLoadingDialog()
         fun dismissLoadingDialog()
+    }
+
+    fun Window.getSoftInputMode(): Int {
+        return attributes.softInputMode
     }
 
     // TODO : 파이어베이스 데이터베이스 내 세 개의 Path 설정; User-Location, Female-User-Location, Male-User-Location
@@ -276,9 +289,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
 
 
     companion object {

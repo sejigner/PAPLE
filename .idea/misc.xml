@@ -27,6 +27,7 @@
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_edit_text.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_frame.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.26979166666666665" />
+        <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_write_paper.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/ic_paper_plane.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_8dp.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.26296296296296295" />
@@ -36,6 +37,8 @@
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2341485507246377" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_home.xml" value="0.2341485507246377" />
       </map>
     </option>
   </component>

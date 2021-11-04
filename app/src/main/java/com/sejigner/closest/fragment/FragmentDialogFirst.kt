@@ -3,11 +3,13 @@ package com.sejigner.closest.fragment
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -51,7 +53,6 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
     lateinit var factory : FragmentChatViewModelFactory
     lateinit var viewModel : FragmentChatViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -59,6 +60,12 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
             distance = it.getDouble("distance")
             time = it.getLong("time")
             fromId = it.getString("fromId")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            dialog?.window?.setDecorFitsSystemWindows(true)
+        } else {
+            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
     }
 

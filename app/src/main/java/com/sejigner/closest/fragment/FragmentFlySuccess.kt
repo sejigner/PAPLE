@@ -51,6 +51,13 @@ class FragmentFlySuccess : DialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -83,12 +90,6 @@ class FragmentFlySuccess : DialogFragment() {
         return if(distance >= 1000) {
             (round((distance/1000)*100) /100).toString() + "km"
         } else distance.toString() + "m"
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
 

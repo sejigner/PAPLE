@@ -99,7 +99,7 @@ class FragmentHome : Fragment(){
         }
 
         iv_paper_plane_home.setOnClickListener {
-            mListener?.runFragmentDialogWritePaper(userFoundId, latitude, longitude)
+            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
 
     }
@@ -236,7 +236,7 @@ class FragmentHome : Fragment(){
             latitude = location.latitude
             longitude = location.longitude
             userCurrentLocation = location
-            getAddress(location.latitude, location.longitude)
+            currentAddress = getAddress(location.latitude, location.longitude)
 
         }
             .addOnFailureListener {
