@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import kotlin.math.round
 
@@ -55,7 +56,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     lateinit var viewModel: FragmentChatViewModel
     private var radius: Double = 0.0
     private var userFound: Boolean = false
-    private var partnerSet: Boolean = false
     private var userFoundId: String = ""
     private var flightDistance: Double = 0.0
     private var latitude: Double = 0.0
@@ -171,7 +171,6 @@ class FragmentDialogWritePaper : DialogFragment() {
                 runBlocking {
                     Log.d("geoQuery", key.toString())
                     if ((!userFound) && key != UID) {
-
                         var haveMet: Boolean
                         // Room DB로 대체
                         haveMet = viewModel.haveMet(UID, key!!).await()

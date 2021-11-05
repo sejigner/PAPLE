@@ -154,7 +154,7 @@ data class ChatRoomsAndMessages(
 @Entity(primaryKeys = ["partnerId", "messageId"])
 data class ChatRoomMessageCrossRef(
     val partnerId: String,
-    val messageId: String
+    val messageId: Int
 )
 
 data class UidWithChatRoomsAndMessages (
