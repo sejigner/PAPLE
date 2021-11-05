@@ -29,26 +29,26 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ITEMS = "data"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FragmentFlySuccess : DialogFragment() {
     // TODO: Rename and change types of parameters
 
     private var flightDistance: Double ?= null
+    private var isReply : Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             flightDistance = it.getDouble("flightDistance")
+            isReply = it.getBoolean("isReply")
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun onCreateView(
@@ -71,10 +71,18 @@ class FragmentFlySuccess : DialogFragment() {
         btnClose?.setOnClickListener {
             dismiss()
         }
-        if(flightDistance!=null) {
-            flightResult?.text = getString(R.string.flight_result, convertDistanceToString(flightDistance!!))
+        if(!isReply) {
+            if(flightDistance!=null) {
+                flightResult?.text = getString(R.string.flight_result, convertDistanceToString(flightDistance!!))
+            } else {
+                flightResult?.text = getString(R.string.flight_result_untargeted)
+            }
         } else {
-            flightResult?.text = getString(R.string.flight_result_untargeted)
+            if(flightDistance!=null) {
+                flightResult?.text = getString(R.string.flight_reply_result, convertDistanceToString(flightDistance!!))
+            } else {
+                flightResult?.text = getString(R.string.flight_reply_result_untargeted)
+            }
         }
 
     }
@@ -83,12 +91,6 @@ class FragmentFlySuccess : DialogFragment() {
         return if(distance >= 1000) {
             (round((distance/1000)*100) /100).toString() + "km"
         } else distance.toString() + "m"
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
 
@@ -110,6 +112,14 @@ class FragmentFlySuccess : DialogFragment() {
             FragmentFlySuccess().apply {
                 arguments = Bundle().apply {
                     putDouble("flightDistance",flightDistance)
+                }
+            }
+        @JvmStatic
+        fun newInstance(isReply: Boolean, flightDistance: Double) =
+            FragmentFlySuccess().apply {
+                arguments = Bundle().apply {
+                    putBoolean("isReply",isReply)
+                    putDouble("flightDistance", flightDistance)
                 }
             }
     }

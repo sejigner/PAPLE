@@ -34,6 +34,11 @@
     <string name="limit_write">0/250</string>
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
+    <string name="enter_your_number">휴대전화 번호를 입력해주세요.</string>
+    <string name="send_otp">인증코드 요청</string>
+    <string name="login_otp">인증코드 요청</string>
+    <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
+    <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="init_chat_log">대화가 시작되었습니다.</string>
     <string name="report_title">신고하시겠어요?</string>
     <string name="reported_chatroom">신고처리된 채팅방입니다.</string>

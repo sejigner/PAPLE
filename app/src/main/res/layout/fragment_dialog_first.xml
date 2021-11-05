@@ -169,7 +169,6 @@
                     android:maxHeight="100dp"
                     android:maxLength="250"
                     android:padding="8dp"
-                    android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textColorHint="#c4c4c4"
                     android:textCursorDrawable="@color/paperplane_theme"
@@ -190,6 +189,7 @@
                     android:text="전송"
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/et_dialog_message_first"
                     app:layout_constraintEnd_toEndOf="parent" />
 

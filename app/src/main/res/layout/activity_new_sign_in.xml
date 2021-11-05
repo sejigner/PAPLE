@@ -16,7 +16,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Enter Phone Number"
+        android:hint="@string/enter_your_number"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,12 +24,16 @@
         tools:layout_editor_absoluteY="85dp" />
 
     <!--On click of this buttton OTP will be send to phone-->
-    <Button
+    <TextView
+        android:background="@drawable/btn_paper_send"
+        android:padding="12dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:id="@+id/button_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Send OTP"
+        android:text="@string/send_otp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_phone_number" />

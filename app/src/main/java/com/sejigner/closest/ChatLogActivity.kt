@@ -56,11 +56,12 @@ class ChatLogActivity : AppCompatActivity() {
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
-    private val FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
+
+
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)

@@ -42,7 +42,8 @@
         <activity android:name=".InitialSetupActivity" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

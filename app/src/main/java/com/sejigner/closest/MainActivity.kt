@@ -25,7 +25,7 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
-    FragmentDialogWritePaper.WritePaperListenerMain {
+    FragmentDialogWritePaper.WritePaperListenerMain, FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -35,24 +35,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
     private val fragmentMyPage by lazy { FragmentMyPage() }
-
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
-    val pageHistory = Stack<Int>()
-    var saveToHistory = false
-
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
-
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-
-
-    private var flightDistance: Double = 0.0
-    private var currentAddress: String = ""
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
-    private var userCurrentLocation: Location? = null
-    private var lastUser: String? = null
-
-    private lateinit var userFoundLocation: Location
     private lateinit var dialog : LoadingDialog
 
 
@@ -108,8 +93,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 App.prefs.myNickname = it.value.toString()
             }
         }
-
-        pageHistory.push(0)
 
         if(checkGooglePlayServices()) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -171,47 +154,17 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                         bnv_main.selectedItemId = navigation
                     }
 
-                    if (saveToHistory) {
-                        if (pageHistory.contains(position)) {
-                            pageHistory.remove(position)
-                            pageHistory.push(position)
-                        } else {
-                            pageHistory.push(position)
-                        }
-                    }
                 }
             })
-            saveToHistory = true
         }
     }
 
     override fun onBackPressed() {
-//        if (vp_main.currentItem == 0) {
-//            super.onBackPressed()
-//        } else {
-//            vp_main.currentItem = vp_main.currentItem - 1
-//        }
-
-        if (pageHistory.size > 1) {
-
-            saveToHistory = false;
-            pageHistory.pop()
-            vp_main?.currentItem = pageHistory.peek()
-            saveToHistory = true;
-
+        if(vp_main.currentItem == 0) {
+            finish()
         } else {
-            Log.i(TAG, "pageHistory inside 0 size ${pageHistory.size}")
-
-            if (pageHistory.size == 1) {
-                pageHistory.pop()
-            }
-            if (vp_main?.currentItem == 0) {
-                super.onBackPressed()
-            } else {
-                vp_main?.currentItem = 0
-            }
+            vp_main.currentItem = 0
         }
-
     }
 
     private fun checkGooglePlayServices() : Boolean {
@@ -266,5 +219,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         }
         ft.addToBackStack(null)
         ft.commit() // or ft.commitAllowingStateLoss()
+    }
+
+    override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
+        closeYourDialogFragment()
+        val fragmentFlySuccess = FragmentFlySuccess.newInstance(true, flightDistance)
+        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 }

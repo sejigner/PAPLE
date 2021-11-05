@@ -4,13 +4,12 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,7 +23,6 @@ import com.firebase.geofire.GeoQueryEventListener
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.LoadingDialog
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -55,7 +53,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private var uid: String? = null
     private var currentAddress: String? = null
     private var mCallbackMain: WritePaperListenerMain? = null
-    lateinit var ViewModel: FragmentChatViewModel
+    lateinit var viewModel: FragmentChatViewModel
     private var radius: Double = 0.0
     private var userFound: Boolean = false
     private var userFoundId: String = ""
@@ -72,7 +70,18 @@ class FragmentDialogWritePaper : DialogFragment() {
             latitude = it.getDouble("latitude", latitude)
             longitude = it.getDouble("longitude", longitude)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            dialog?.window?.setDecorFitsSystemWindows(true)
+        } else {
+            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +99,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
 
-        ViewModel =
+        viewModel =
             ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
         val etPaper = view.findViewById<View>(R.id.et_write_paper) as? EditText
@@ -103,11 +112,13 @@ class FragmentDialogWritePaper : DialogFragment() {
         userCurrentLocation?.latitude = latitude
 
 
-
         location?.text = currentAddress
         btnFly?.setOnClickListener {
             mCallbackMain?.showLoadingDialog()
+
             getClosestUser()
+
+
         }
 
         btnClose?.setOnClickListener {
@@ -140,9 +151,14 @@ class FragmentDialogWritePaper : DialogFragment() {
         fun dismissLoadingDialog()
     }
 
+    fun Window.getSoftInputMode(): Int {
+        return attributes.softInputMode
+    }
+
     // TODO : 파이어베이스 데이터베이스 내 세 개의 Path 설정; User-Location, Female-User-Location, Male-User-Location
     //  초기 설정 시 User-Location + 남/여 2가지 Path에 데이터 입력
     //  기본 탐색 -> User-Location 탐색, 필터 탐색 -> 성별-Location 탐색 (생년 탐색은 추후 고민)
+    //  getClosestUser -> onGeoQueryReady -> radius++ -> onKeyEntered ->
     fun getClosestUser() {
         val userLocation: DatabaseReference =
             FirebaseDatabase.getInstance().reference.child("User-Location")
@@ -152,29 +168,29 @@ class FragmentDialogWritePaper : DialogFragment() {
 
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
+                runBlocking {
+                    Log.d("geoQuery", key.toString())
+                    if ((!userFound) && key != UID) {
+                        var haveMet: Boolean
+                        // Room DB로 대체
+                        haveMet = viewModel.haveMet(UID, key!!).await()
+                        if (haveMet) {
+                            // user exists in the database
+                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
+                        } else {
+                            // user does not exist in the database
+                            userFound = true
 
-                Log.d("geoQuery", key.toString())
-                if ((!userFound) && key != UID) {
+                            userFoundId = key!!
+                            val userFoundLocation =
+                                GeoLocation(location!!.latitude, location!!.longitude)
 
-                    var haveMet: Boolean
-                    // Room DB로 대체
-                    CoroutineScope(Main).launch {
-                        runBlocking {
-                            haveMet = ViewModel.haveMet(UID, key!!).await()
-                            if (haveMet) {
-                                // user exists in the database
-                                Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
-                            } else {
-                                // user does not exist in the database
-                                userFound = true
+                            calDistance(userFoundLocation)
+                            partnerSet = true
 
-                                userFoundId = key
-                                val userFoundLocation = GeoLocation(location!!.latitude,location!!.longitude)
-
-                                calDistance(userFoundLocation)
-                                performSendAnonymousMessage()
-                                dismiss()
-                            }
+                            performSendAnonymousMessage()
+                            dismiss()
+                            // mCallbackMain?.dismissLoadingDialog()
                         }
                     }
                 }
@@ -193,6 +209,8 @@ class FragmentDialogWritePaper : DialogFragment() {
                     getClosestUser()
                 } else {
                     mCallbackMain?.dismissLoadingDialog()
+                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X'
+                    //   추후 사용자수가 확보되면 거리 제공
                     mCallbackMain?.showSuccessFragment()
                 }
             }
@@ -206,7 +224,7 @@ class FragmentDialogWritePaper : DialogFragment() {
     private fun calDistance(location: GeoLocation?) {
         var locationFoundLat = 0.0
         var locationFoundLng = 0.0
-        if(location!=null){
+        if (location != null) {
             locationFoundLat = location.latitude
             locationFoundLng = location.longitude
         }
@@ -249,10 +267,10 @@ class FragmentDialogWritePaper : DialogFragment() {
                 paperplaneMessage.text,
                 paperplaneMessage.timestamp
             )
-            ViewModel.insert(sentPaper)
+            viewModel.insert(sentPaper)
         }
         val acquaintances = Acquaintances(toId, UID)
-        ViewModel.insert(acquaintances)
+        viewModel.insert(acquaintances)
     }
 
     override fun onStart() {
@@ -261,9 +279,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-
-
-
 
 
     override fun onAttach(context: Context) {
@@ -275,9 +290,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
 
 
     companion object {

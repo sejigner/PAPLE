@@ -3,11 +3,13 @@ package com.sejigner.closest.fragment
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -25,6 +27,7 @@ import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
+import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -38,7 +41,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlaneCallback {
+class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPlaneCallback {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -46,11 +49,14 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
     private var mContext: Context? = null
-
+    private var mCallbackMain: FirstPlaneListenerMain? = null
     lateinit var repository : PaperPlaneRepository
     lateinit var factory : FragmentChatViewModelFactory
     lateinit var viewModel : FragmentChatViewModel
 
+    interface FirstPlaneListenerMain {
+        fun showReplySuccessFragment(isReply : Boolean, flightDistance: Double)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +65,12 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
             distance = it.getDouble("distance")
             time = it.getLong("time")
             fromId = it.getString("fromId")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            dialog?.window?.setDecorFitsSystemWindows(true)
+        } else {
+            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
     }
 
@@ -80,11 +92,8 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
         viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
-
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
         var textEntered: String
-
-
         val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
         val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
@@ -134,6 +143,7 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
                     Log.d(TAG, "Reply 실패")
                 }.addOnSuccessListener {
                     viewModel.delete(paper!!)
+                    mCallbackMain?.showReplySuccessFragment(true, distance!!)
                     dismiss()
                 }
 
@@ -147,6 +157,15 @@ class FragmentDialogFirst : DialogFragment(),FragmentDialogReportPlane.FirstPlan
 //            removePaper()
             viewModel.delete(paper!!)
             dismiss()
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentDialogFirst.FirstPlaneListenerMain) {
+            mCallbackMain = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
         }
     }
 

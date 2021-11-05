@@ -60,7 +60,6 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:padding="10dp"
-            android:layout_marginTop="18dp"
             android:id="@+id/cl_write_paper"
             android:background="@drawable/dialog_write_paper_et"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +81,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="260dp"
                 android:hint="@string/advice_write_paper"
                 />
 
