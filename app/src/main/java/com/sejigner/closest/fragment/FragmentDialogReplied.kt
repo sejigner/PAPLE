@@ -12,11 +12,13 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
+import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -26,6 +28,8 @@ import kotlinx.android.synthetic.main.fragment_dialog_second.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -48,7 +52,6 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
     private var paper: RepliedPaperPlanes? = null
     private var userMessage: String? = null
     private var firstTime: Long? = null
-    private var mCallback: RepliedPaperListener? = null
 
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
@@ -65,10 +68,6 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
             userMessage = it.getString("userMessage")
             firstTime = it.getLong("firstTime")
         }
-    }
-
-    interface RepliedPaperListener {
-        fun initChatLog()
     }
 
     override fun onStart() {
@@ -136,17 +135,62 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 // 두번째 비행기 기록 삭제
                 viewModel.insert(chatRoom)
                 viewModel.delete(paper!!)
-
-                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
-                intent.putExtra(FragmentChat.USER_KEY, fromId)
-                startActivity(intent)
-                (activity as ChatLogActivity).initChatLog()
+                initChatLog()
                 dismiss()
             }.addOnFailureListener {
                 Toast.makeText(requireActivity(), "상대방의 계정을 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
             }
+        }
+    }
 
+    fun initChatLog() {
+        val timestamp = System.currentTimeMillis() / 1000
+//        val text = resources.getString(R.string.init_chat_log)
+//        val toRef =
+//            FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID").push()
+//        val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, partnerUid!!, timestamp)
+//        toRef.setValue(chatMessage).addOnSuccessListener {
+//            Log.d(TAG, "sent your message: ${toRef.key}")
+        val noticeMessage =
+            ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
+        CoroutineScope(IO).launch {
+            var result: Boolean
+            runBlocking {
+                result = invitePartner()
+            }
+            if (result) {
+                viewModel.insert(noticeMessage)
+                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
+                intent.putExtra(FragmentChat.USER_KEY, fromId)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireActivity(), "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }
 
+        }
+    }
+
+    private suspend fun invitePartner(): Boolean {
+        return try {
+            var result = false
+            val timestamp = System.currentTimeMillis() / 1000
+            val text = resources.getString(R.string.init_chat_log)
+            val toRef =
+                FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
+                    .push()
+            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
+            toRef.setValue(chatMessage).addOnSuccessListener {
+                Log.d(ChatLogActivity.TAG, "sent your message: ${toRef.key}")
+                result = true
+            }.addOnFailureListener {
+                Log.d(ChatLogActivity.TAG, it.toString())
+                result = false
+            }.await()
+            result
+        } catch (e: FirebaseException) {
+            Log.d(ChatLogActivity.TAG, e.toString())
+            false
         }
     }
 

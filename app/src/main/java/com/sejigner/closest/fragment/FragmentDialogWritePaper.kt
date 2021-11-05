@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import kotlin.math.round
 
@@ -57,7 +58,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     lateinit var ViewModel: FragmentChatViewModel
     private var radius: Double = 0.0
     private var userFound: Boolean = false
-    private var partnerSet: Boolean = false
     private var userFoundId: String = ""
     private var flightDistance: Double = 0.0
     private var latitude: Double = 0.0
@@ -158,28 +158,23 @@ class FragmentDialogWritePaper : DialogFragment() {
 
                     var haveMet: Boolean
                     // Room DB로 대체
-                    CoroutineScope(IO).launch {
-                        haveMet = ViewModel.haveMet(UID, key!!).await()
-                        if (haveMet) {
-                            // user exists in the database
-                            Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
-                        } else {
-                            // user does not exist in the database
-                            userFound = true
+                    CoroutineScope(Main).launch {
+                        runBlocking {
+                            haveMet = ViewModel.haveMet(UID, key!!).await()
+                            if (haveMet) {
+                                // user exists in the database
+                                Log.d(FragmentHome.TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
+                            } else {
+                                // user does not exist in the database
+                                userFound = true
 
-                            userFoundId = key
-                            val userFoundLocation = GeoLocation(location!!.latitude,location!!.longitude)
+                                userFoundId = key
+                                val userFoundLocation = GeoLocation(location!!.latitude,location!!.longitude)
 
-
-
-                            calDistance(userFoundLocation)
-                            partnerSet = true
-
-                            performSendAnonymousMessage()
-                            dismiss()
-                            // mCallbackMain?.dismissLoadingDialog()
-
-
+                                calDistance(userFoundLocation)
+                                performSendAnonymousMessage()
+                                dismiss()
+                            }
                         }
                     }
                 }

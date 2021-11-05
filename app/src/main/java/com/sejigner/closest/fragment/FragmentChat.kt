@@ -300,10 +300,12 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             )
                             ViewModel.insert(chatRoom)
                             ViewModel.insert(chatMessages)
+                            ref.child(partnerId).removeValue()
 
                         }.addOnFailureListener {
                             Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
                                 .show()
+                            ref.child(partnerId).removeValue()
                         }
 
                     } else { // 이미 시작된 채팅
@@ -322,8 +324,9 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             latestChatMessage.timestamp
                         )
                         ViewModel.insert(chatMessages)
+                        ref.child(partnerId).removeValue()
                     }
-                    ref.child(partnerId).removeValue()
+
                 }
                 Log.d(TAG, "Child added successfully")
             }

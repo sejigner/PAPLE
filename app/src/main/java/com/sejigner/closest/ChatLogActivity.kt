@@ -44,7 +44,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperListener {
+class ChatLogActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "ChatLog"
@@ -364,7 +364,7 @@ class ChatLogActivity : AppCompatActivity(), FragmentDialogReplied.RepliedPaperL
         }
     }
 
-    override fun initChatLog() {
+    fun initChatLog() {
         val timestamp = System.currentTimeMillis() / 1000
 //        val text = resources.getString(R.string.init_chat_log)
 //        val toRef =
