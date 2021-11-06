@@ -1,20 +1,18 @@
 package com.sejigner.closest
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import kotlinx.android.synthetic.main.activity_otp.*
 import java.util.concurrent.TimeUnit
-
 
 
 class NewSignInActivity : AppCompatActivity() {
@@ -33,7 +31,7 @@ class NewSignInActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // start verification on click of the button
-        findViewById<Button>(R.id.button_otp).setOnClickListener {
+        findViewById<TextView>(R.id.button_otp).setOnClickListener {
             login()
         }
 

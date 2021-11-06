@@ -1,11 +1,11 @@
 package com.sejigner.closest
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
@@ -29,7 +29,7 @@ class OtpActivity : AppCompatActivity() {
         val storedVerificationId= intent.getStringExtra("storedVerificationId")
 
         // fill otp and call the on click on button
-        findViewById<Button>(R.id.login).setOnClickListener {
+        findViewById<TextView>(R.id.login).setOnClickListener {
             val otp = findViewById<EditText>(R.id.et_otp).text.trim().toString()
             if(otp.isNotEmpty()){
                 val credential : PhoneAuthCredential = PhoneAuthProvider.getCredential(

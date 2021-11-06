@@ -9,6 +9,8 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_report_send.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_report.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.17520491803278687" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.5" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date.xml" value="0.18237704918032788" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date_row.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_me_row.xml" value="0.17827868852459017" />
@@ -24,30 +26,20 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.19603825136612021" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.16154371584699453" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_paper_send.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_edit_text.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_frame.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.26979166666666665" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_write_paper.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/ic_paper_plane.xml" value="0.26979166666666665" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_8dp.xml" value="0.26979166666666665" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.26296296296296295" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_chat_log.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_otp.xml" value="0.536" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.176" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.2" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2341485507246377" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_home.xml" value="0.2341485507246377" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

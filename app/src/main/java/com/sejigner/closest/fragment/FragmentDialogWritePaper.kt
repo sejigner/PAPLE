@@ -186,7 +186,6 @@ class FragmentDialogWritePaper : DialogFragment() {
                                 GeoLocation(location!!.latitude, location!!.longitude)
 
                             calDistance(userFoundLocation)
-                            partnerSet = true
 
                             performSendAnonymousMessage()
                             dismiss()
