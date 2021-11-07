@@ -139,7 +139,7 @@ class ChatLogActivity : AppCompatActivity() {
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
             et_message_chat_log.text.clear()
-            hideKeyboard()
+            // hideKeyboard()
             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         }
 

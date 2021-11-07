@@ -143,7 +143,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         }
     }
 
-    fun initChatLog() {
+    private fun initChatLog() {
         val timestamp = System.currentTimeMillis() / 1000
 //        val text = resources.getString(R.string.init_chat_log)
 //        val toRef =
@@ -153,25 +153,25 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 //            Log.d(TAG, "sent your message: ${toRef.key}")
         val noticeMessage =
             ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
-        CoroutineScope(IO).launch {
-            var result: Boolean
-            runBlocking {
-                result = invitePartner()
-            }
-            if (result) {
-                viewModel.insert(noticeMessage)
-                val intent = Intent(requireActivity(), ChatLogActivity::class.java)
-                intent.putExtra(FragmentChat.USER_KEY, fromId)
-                startActivity(intent)
-            } else {
-                Toast.makeText(requireActivity(), "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }
 
+        var result =  invitePartner()
+
+        if (result) {
+            Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
+        } else {
+            Toast.makeText(requireActivity(), "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
+                .show()
         }
+        viewModel.insert(noticeMessage)
+        activity?.let{
+            val intent = Intent(context, ChatLogActivity::class.java)
+            intent.putExtra(FragmentChat.USER_KEY, fromId)
+            startActivity(intent)
+        }
+        dismiss()
     }
 
-    private suspend fun invitePartner(): Boolean {
+    private fun invitePartner(): Boolean {
         return try {
             var result = false
             val timestamp = System.currentTimeMillis() / 1000
@@ -186,7 +186,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
             }.addOnFailureListener {
                 Log.d(ChatLogActivity.TAG, it.toString())
                 result = false
-            }.await()
+            }
             result
         } catch (e: FirebaseException) {
             Log.d(ChatLogActivity.TAG, e.toString())
