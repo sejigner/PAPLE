@@ -263,7 +263,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         }.join()
     }
 
-
+    // TODO : 구조 수정 필요
     private fun listenForMessages() {
         val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID")
 
