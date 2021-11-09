@@ -30,6 +30,7 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(applicationContext,MainActivity::class.java))
             finish()
         } else {
+            App.prefs.myNickname = ""
             startActivity(Intent(applicationContext,NewSignInActivity::class.java))
             finish()
         }

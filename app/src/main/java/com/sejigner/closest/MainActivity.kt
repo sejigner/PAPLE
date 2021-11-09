@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         if (MYNICKNAME.isBlank()) {
             val ref =
                 FirebaseDatabase.getInstance().getReference("/Users/$UID")
-                    .child("strNickname")
+                    .child("nickname")
             ref.get().addOnSuccessListener {
                 App.prefs.myNickname = it.value.toString()
             }

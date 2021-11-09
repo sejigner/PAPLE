@@ -16,6 +16,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
+import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.models.ChatMessage
@@ -163,26 +164,27 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
             val intent = Intent(context, ChatLogActivity::class.java)
             intent.putExtra(FragmentChat.USER_KEY, fromId)
             startActivity(intent)
+            dismiss()
         }
-        dismiss()
+
 
     }
 
     private fun invitePartner(): Boolean {
         return try {
+            val myNickName = MYNICKNAME
             var result = false
             val timestamp = System.currentTimeMillis() / 1000
             val text = resources.getString(R.string.init_chat_log)
-            val toRef =
-                FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
-                    .push()
-            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
-//            val lastMessagesPartnerReference =
-//                FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
-//            val lastMessageToPartner = LatestChatMessage(MainActivity.MYNICKNAME, text, timestamp)
-//            lastMessagesPartnerReference.setValue(lastMessageToPartner)
-            toRef.setValue(chatMessage).addOnSuccessListener {
-                Log.d(ChatLogActivity.TAG, "sent your message: ${toRef.key}")
+//            val toRef =
+//                FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
+//                    .push()
+//            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
+            val lastMessagesPartnerReference =
+                FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
+            val lastMessageToPartner = LatestChatMessage(myNickName, text, timestamp)
+            lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
+                Log.d(ChatLogActivity.TAG, "sent your message: $fromId")
                 result = true
             }.addOnFailureListener {
                 Log.d(ChatLogActivity.TAG, it.toString())
