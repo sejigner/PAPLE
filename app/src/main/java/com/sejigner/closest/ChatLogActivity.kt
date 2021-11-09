@@ -329,16 +329,15 @@ class ChatLogActivity : AppCompatActivity() {
             Log.d(TAG, "sent your message: ${toRef.key}")
         }
 
-        // TODO : Last-messages 노드를 사용하지 않고, User-messages와 로컬 데이터베이스를 이용한 방식 이용
-//        val lastMessagesUserReference =
-//            FirebaseDatabase.getInstance().getReference("/Last-messages/$UID/$toId")
-//        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
-//        lastMessagesUserReference.setValue(lastMessageToMe)
-//
-//        val lastMessagesPartnerReference =
-//            FirebaseDatabase.getInstance().getReference("/Last-messages/$toId/$UID")
-//        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
-//        lastMessagesPartnerReference.setValue(lastMessageToPartner)
+        val lastMessagesUserReference =
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
+        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
+        lastMessagesUserReference.setValue(lastMessageToMe)
+
+        val lastMessagesPartnerReference =
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
+        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
+        lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 
         val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)

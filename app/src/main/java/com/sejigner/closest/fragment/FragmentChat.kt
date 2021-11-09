@@ -263,20 +263,19 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         }.join()
     }
 
-    // TODO : 구조 수정 필요
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID")
+        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
-                val partnerId = snapshot.key ?: return
-                val isPartner = setSender(latestChatMessage.fromId)
+                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+                val partnerId = snapshot.key!!
+                val isPartner = setSender(partnerId)
 
                 CoroutineScope(IO).launch {
-                    val isPartnerId = ViewModel.exists(UID, partnerId)
+                    val isPartnerId = ViewModel.exists(UID, partnerId).await()
                     // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
-                    if (!isPartnerId.await()) {
+                    if (!isPartnerId) {
                         val ref2 =
                             FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
                                 .child("nickname")
@@ -288,24 +287,15 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 partnerNickname,
                                 UID,
                                 latestChatMessage.message,
-                                latestChatMessage.timestamp
-                            )
-                            val chatMessages = ChatMessages(
-                                null,
-                                partnerId,
-                                UID,
-                                3,
-                                latestChatMessage.message,
-                                latestChatMessage.timestamp
+                                latestChatMessage.time
                             )
                             ViewModel.insert(chatRoom)
-                            ViewModel.insert(chatMessages)
-                            ref.child(partnerId).removeValue()
+                            Log.d("FbTest", ref.child(snapshot.key!!).toString())
+                            ref.child(snapshot.key!!).removeValue()
 
                         }.addOnFailureListener {
                             Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
                                 .show()
-                            ref.child(partnerId).removeValue()
                         }
 
                     } else { // 이미 시작된 채팅
@@ -313,18 +303,9 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             UID,
                             partnerId,
                             latestChatMessage.message,
-                            latestChatMessage.timestamp
+                            latestChatMessage.time
                         ).join()
-                        val chatMessages = ChatMessages(
-                            null,
-                            partnerId,
-                            UID,
-                            isPartner,
-                            latestChatMessage.message,
-                            latestChatMessage.timestamp
-                        )
-                        ViewModel.insert(chatMessages)
-                        ref.child(partnerId).removeValue()
+                        ref.child(snapshot.key!!).removeValue()
                     }
 
                 }
@@ -348,6 +329,93 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             }
         })
     }
+
+//    // Latest-Messages 노드 대신 User-Messages 활용 방식
+//    private fun listenForMessages() {
+//        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/")
+//
+//        ref.addChildEventListener(object : ChildEventListener {
+//            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+//                val latestChatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+//                val partnerId = latestChatMessage.fromId
+//                // TODO : 필요성 재고 (어차피 상대방에게 보낸 메세지는 로컬에 바로 저장, 상대가 보낸 메세지만 서버를 거쳐 전달됨)
+//                val isPartner = setSender(latestChatMessage.fromId)
+//
+//                CoroutineScope(IO).launch {
+//                    val isPartnerId = ViewModel.exists(UID, partnerId).await()
+//                    // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
+//                    if (!isPartnerId) {
+//                        val ref2 =
+//                            FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+//                                .child("nickname")
+//                        ref2.get().addOnSuccessListener {
+//                            val partnerNickname = it.value.toString()
+//
+//                            val chatRoom = ChatRooms(
+//                                partnerId,
+//                                partnerNickname,
+//                                UID,
+//                                latestChatMessage.message,
+//                                latestChatMessage.timestamp
+//                            )
+//                            val chatMessages = ChatMessages(
+//                                null,
+//                                partnerId,
+//                                UID,
+//                                3,
+//                                latestChatMessage.message,
+//                                latestChatMessage.timestamp
+//                            )
+//                            ViewModel.insert(chatRoom)
+//                            ViewModel.insert(chatMessages)
+//                            Log.d("FbTest", ref.child(snapshot.key!!).toString())
+//                            // ref.child(snapshot.key!!).removeValue()
+//
+//                        }.addOnFailureListener {
+//                            Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
+//
+//                    } else { // 이미 시작된 채팅
+//                        ViewModel.updateLastMessages(
+//                            UID,
+//                            partnerId,
+//                            latestChatMessage.message,
+//                            latestChatMessage.timestamp
+//                        ).join()
+//                        val chatMessages = ChatMessages(
+//                            null,
+//                            partnerId,
+//                            UID,
+//                            isPartner,
+//                            latestChatMessage.message,
+//                            latestChatMessage.timestamp
+//                        )
+//                        ViewModel.insert(chatMessages).join()
+//                        // ref.child(snapshot.key!!).removeValue()
+//                    }
+//
+//                }
+//                Log.d(TAG, "Child added successfully")
+//            }
+//
+//            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+//
+//            }
+//
+//            override fun onChildRemoved(snapshot: DataSnapshot) {
+//
+//            }
+//
+//            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+//
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//
+//            }
+//        })
+//    }
 
     private fun setSender(partnerId: String): Int {
         return if (partnerId != UID) 1
