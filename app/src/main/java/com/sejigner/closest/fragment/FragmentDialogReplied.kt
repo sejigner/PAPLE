@@ -19,6 +19,7 @@ import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.models.ChatMessage
+import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
@@ -153,22 +154,18 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 //            Log.d(TAG, "sent your message: ${toRef.key}")
         val noticeMessage =
             ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
+        invitePartner()
+        Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
 
-        var result =  invitePartner()
 
-        if (result) {
-            Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
-        } else {
-            Toast.makeText(requireActivity(), "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
-                .show()
-        }
         viewModel.insert(noticeMessage)
-        activity?.let{
+        activity?.let {
             val intent = Intent(context, ChatLogActivity::class.java)
             intent.putExtra(FragmentChat.USER_KEY, fromId)
             startActivity(intent)
         }
         dismiss()
+
     }
 
     private fun invitePartner(): Boolean {
@@ -180,6 +177,10 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
                 FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
                     .push()
             val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
+//            val lastMessagesPartnerReference =
+//                FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
+//            val lastMessageToPartner = LatestChatMessage(MainActivity.MYNICKNAME, text, timestamp)
+//            lastMessagesPartnerReference.setValue(lastMessageToPartner)
             toRef.setValue(chatMessage).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "sent your message: ${toRef.key}")
                 result = true

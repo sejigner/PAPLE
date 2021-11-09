@@ -16,6 +16,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sejigner.closest.MainActivity
+import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.fragment.FragmentHome
 import kotlin.random.Random
