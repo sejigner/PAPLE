@@ -276,12 +276,9 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                     val isPartnerId = ViewModel.exists(UID, partnerId).await()
                     // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
                     if (!isPartnerId) {
-                        val ref2 =
-                            FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                .child("nickname")
-                        ref2.get().addOnSuccessListener {
-                            val partnerNickname = it.value.toString()
-
+                        var partnerNickname : String
+                        if(latestChatMessage.nickname.isNotBlank()) {
+                            partnerNickname = latestChatMessage.nickname
                             val chatRoom = ChatRooms(
                                 partnerId,
                                 partnerNickname,
@@ -292,11 +289,30 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             ViewModel.insert(chatRoom)
                             Log.d("FbTest", ref.child(snapshot.key!!).toString())
                             ref.child(snapshot.key!!).removeValue()
+                        } else {
+                            val ref2 =
+                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                    .child("nickname")
+                            ref2.get().addOnSuccessListener {
+                                partnerNickname = it.value.toString()
 
-                        }.addOnFailureListener {
-                            Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
-                                .show()
+                                val chatRoom = ChatRooms(
+                                    partnerId,
+                                    partnerNickname,
+                                    UID,
+                                    latestChatMessage.message,
+                                    latestChatMessage.time
+                                )
+                                ViewModel.insert(chatRoom)
+                                Log.d("FbTest", ref.child(snapshot.key!!).toString())
+                                ref.child(snapshot.key!!).removeValue()
+
+                            }.addOnFailureListener {
+                                Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
+
 
                     } else { // 이미 시작된 채팅
                         ViewModel.updateLastMessages(
