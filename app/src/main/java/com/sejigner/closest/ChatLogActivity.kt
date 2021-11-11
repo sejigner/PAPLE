@@ -144,7 +144,7 @@ class ChatLogActivity : AppCompatActivity() {
         }
 
         iv_back_chat_log.setOnClickListener {
-            super.onBackPressed()
+            finish()
         }
 
         btn_leave_menu_chat_log.setOnClickListener {
@@ -165,6 +165,10 @@ class ChatLogActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     private fun setPartnersFcmToken() {
