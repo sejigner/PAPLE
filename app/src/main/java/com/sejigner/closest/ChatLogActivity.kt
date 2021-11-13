@@ -73,8 +73,6 @@ class ChatLogActivity : AppCompatActivity() {
         chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
         rv_chat_log.adapter = chatLogAdapter
 
-        mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
         mLayoutManagerMessages.stackFromEnd = true
@@ -168,7 +166,8 @@ class ChatLogActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-       listenForMessages()
+        mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        listenForMessages()
     }
 
 
@@ -276,8 +275,8 @@ class ChatLogActivity : AppCompatActivity() {
                         chatMessage.message,
                         chatMessage.timestamp
                     ).join()
-
                 }
+
                 rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
 
             }
