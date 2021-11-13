@@ -188,7 +188,7 @@
             app:layout_constraintBottom_toTopOf="@+id/et_message_chat_log"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/expandable_menu_chat_log" />
+            app:layout_constraintTop_toBottomOf="@id/cl_bar_chat_log" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

@@ -248,6 +248,7 @@ class FragmentHome : Fragment(){
             }
     }
 
+
     private fun getAddress(latitude: Double, longitude: Double): String {
         //locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         Log.d("CheckCurrentLocation", "현재 나의 위치 : $latitude, $longitude")

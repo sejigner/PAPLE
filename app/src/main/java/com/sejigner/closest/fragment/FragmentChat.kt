@@ -51,13 +51,13 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         const val USER_KEY = "USER_KEY"
     }
 
-    private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
-    private val adapterHorizontalReplied = GroupAdapter<GroupieViewHolder>()
-    private val adapterVertical = GroupAdapter<GroupieViewHolder>()
-    private val firstPlaneKeyList = ArrayList<String>()
-    private val repliedPlaneKeyList = ArrayList<String>()
-    private val messageKeyList = ArrayList<String>()
-    private var db: PaperPlaneDatabase? = null
+//    private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
+//    private val adapterHorizontalReplied = GroupAdapter<GroupieViewHolder>()
+//    private val adapterVertical = GroupAdapter<GroupieViewHolder>()
+//    private val firstPlaneKeyList = ArrayList<String>()
+//    private val repliedPlaneKeyList = ArrayList<String>()
+//    private val messageKeyList = ArrayList<String>()
+//    private var db: PaperPlaneDatabase? = null
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var list: List<FirstPaperPlanes>
     lateinit var mRefPlane : DatabaseReference
@@ -202,7 +202,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 paperplane.timestamp
                             )
                             ViewModel.insert(item)
-                            // immediate delete on setting data to local databasae
+                            // immediate delete on setting data to local database
                             mRefPlane.child(paperplane.fromId).removeValue()
                             val acquaintances = Acquaintances(paperplane.fromId,UID)
                             ViewModel.insert(acquaintances)

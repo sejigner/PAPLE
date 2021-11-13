@@ -1,8 +1,10 @@
 package com.sejigner.closest
 
 import android.app.Activity
+import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -39,6 +41,10 @@ import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import android.view.View.OnFocusChangeListener
+
+
+
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -51,7 +57,7 @@ class ChatLogActivity : AppCompatActivity() {
     private var partnerUid: String? = null
     private var partnerFcmToken: String? = null
     lateinit var ViewModel: FragmentChatViewModel
-    lateinit var chatLogAdapter: ChatLogAdapter
+    private lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
     lateinit var mRef : DatabaseReference
     lateinit var mListener : ChildEventListener
@@ -59,8 +65,6 @@ class ChatLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
-
-
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
@@ -79,15 +83,13 @@ class ChatLogActivity : AppCompatActivity() {
 
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
-        rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
+
 
 
         ViewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
+            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         })
 
 //        ViewModel.allChatMessages(partnerUid!!).observe(this, {
@@ -137,8 +139,6 @@ class ChatLogActivity : AppCompatActivity() {
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
             et_message_chat_log.text.clear()
-            // hideKeyboard()
-            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -161,13 +161,27 @@ class ChatLogActivity : AppCompatActivity() {
             val fm = supportFragmentManager
             dialog.show(fm, "reportChatMessage")
         }
-
     }
+
+
+
+//    private fun setLayoutMode() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            window?.setDecorFitsSystemWindows(true)
+//        } else {
+//            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+//        }
+//    }
+
+
+
+
 
     override fun onStart() {
         super.onStart()
         mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
         listenForMessages()
+//        setLayoutMode()
     }
 
 
@@ -205,6 +219,7 @@ class ChatLogActivity : AppCompatActivity() {
             getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
 
     private fun updatePartnersToken() {
         val ref =
@@ -276,8 +291,6 @@ class ChatLogActivity : AppCompatActivity() {
                         chatMessage.timestamp
                     ).join()
                 }
-
-                rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
 
             }
 
