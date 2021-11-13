@@ -16,10 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseException
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
@@ -56,6 +53,8 @@ class ChatLogActivity : AppCompatActivity() {
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
+    lateinit var mRef : DatabaseReference
+    lateinit var mListener : ChildEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +73,7 @@ class ChatLogActivity : AppCompatActivity() {
         chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
         rv_chat_log.adapter = chatLogAdapter
 
+        mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
 
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
@@ -111,7 +111,7 @@ class ChatLogActivity : AppCompatActivity() {
 //            supportActionBar?.title = it.value.toString()
 //        }
 
-        listenForMessages()
+
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
         btn_send_chat_log.isEnabled = false
@@ -164,7 +164,17 @@ class ChatLogActivity : AppCompatActivity() {
             dialog.show(fm, "reportChatMessage")
         }
 
+    }
 
+    override fun onStart() {
+        super.onStart()
+       listenForMessages()
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        mRef.removeEventListener(mListener)
     }
 
     override fun onBackPressed() {
@@ -225,10 +235,7 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun listenForMessages() {
-
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-
-        ref.addChildEventListener(object : ChildEventListener {
+        mListener = mRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 val currentMessageDate = getDateTime(chatMessage!!.timestamp)
@@ -261,7 +268,7 @@ class ChatLogActivity : AppCompatActivity() {
                     }
 
                     ViewModel.insert(chatMessages)
-                    ref.child(snapshot.key!!).removeValue()
+                    mRef.child(snapshot.key!!).removeValue()
 
                     ViewModel.updateLastMessages(
                         UID,
