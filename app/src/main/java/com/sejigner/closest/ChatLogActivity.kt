@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -42,9 +45,8 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import android.view.View.OnFocusChangeListener
-
-
-
+import android.widget.RelativeLayout
+import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -59,13 +61,17 @@ class ChatLogActivity : AppCompatActivity() {
     lateinit var ViewModel: FragmentChatViewModel
     private lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
-    lateinit var mRef : DatabaseReference
-    lateinit var mListener : ChildEventListener
+    lateinit var mRef: DatabaseReference
+    lateinit var mListener: ChildEventListener
+    lateinit var layout : RelativeLayout
+    private lateinit var inputMethodManager : InputMethodManager
+    private lateinit var softKeyboard : SoftKeyboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
+        layout = layout_chat_log
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
@@ -110,7 +116,6 @@ class ChatLogActivity : AppCompatActivity() {
 //            ref?.get()?.addOnSuccessListener {
 //            supportActionBar?.title = it.value.toString()
 //        }
-
 
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
@@ -161,27 +166,55 @@ class ChatLogActivity : AppCompatActivity() {
             val fm = supportFragmentManager
             dialog.show(fm, "reportChatMessage")
         }
+
+        rv_chat_log.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (bottom < oldBottom) {
+                rv_chat_log.postDelayed(Runnable {
+                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)
+                }, 100)
+            }
+        })
+
+
     }
 
 
-
-//    private fun setLayoutMode() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            window?.setDecorFitsSystemWindows(true)
-//        } else {
-//            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-//        }
-//    }
-
-
-
+    private fun setLayoutMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window?.setDecorFitsSystemWindows(true)
+        } else {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+    }
 
 
     override fun onStart() {
         super.onStart()
+
+//        setLayoutMode()
+
+        inputMethodManager =
+            getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
+        softKeyboard = SoftKeyboard(layout, inputMethodManager)
+        softKeyboard.setSoftKeyboardCallback(object : SoftKeyboardChanged {
+            override fun onSoftKeyboardHide() {
+                rv_chat_log.post(Runnable {
+                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                })
+//                Handler(Looper.getMainLooper()).post {
+//                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)
+//                }
+            }
+
+            override fun onSoftKeyboardShow() {
+//                Handler(Looper.getMainLooper()).post {
+//                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+//                }
+            }
+        })
+
         mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
         listenForMessages()
-//        setLayoutMode()
     }
 
 
@@ -192,6 +225,11 @@ class ChatLogActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        softKeyboard.unRegisterSoftKeyboardCallback()
     }
 
     private fun setPartnersFcmToken() {
@@ -347,19 +385,19 @@ class ChatLogActivity : AppCompatActivity() {
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
-        val chatMessage = ChatMessage(toRef.key!!,text, fromId, toId!!, timestamp)
+        val chatMessage = ChatMessage(toRef.key!!, text, fromId, toId!!, timestamp)
         toRef.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "sent your message: ${toRef.key}")
         }
 
         val lastMessagesUserReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
-        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
+        val lastMessageToMe = LatestChatMessage(partnerNickname, text, timestamp)
         lastMessagesUserReference.setValue(lastMessageToMe)
 
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
+        val lastMessageToPartner = LatestChatMessage(MYNICKNAME, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 
