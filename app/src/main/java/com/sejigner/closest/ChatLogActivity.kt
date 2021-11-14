@@ -347,7 +347,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
-        val chatMessage = ChatMessage(toRef.key!!, UID, text, fromId, toId!!, timestamp)
+        val chatMessage = ChatMessage(toRef.key!!,text, fromId, toId!!, timestamp)
         toRef.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "sent your message: ${toRef.key}")
         }
@@ -431,7 +431,7 @@ class ChatLogActivity : AppCompatActivity() {
             val toRef =
                 FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID")
                     .push()
-            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, partnerUid!!, timestamp)
+            val chatMessage = ChatMessage(toRef.key!!, text, UID, partnerUid!!, timestamp)
             toRef.setValue(chatMessage).addOnSuccessListener {
                 Log.d(TAG, "sent your message: ${toRef.key}")
                 result = true
