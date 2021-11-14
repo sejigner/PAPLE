@@ -95,6 +95,8 @@ class FragmentHome : Fragment(){
         bt_sign_out_test.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
