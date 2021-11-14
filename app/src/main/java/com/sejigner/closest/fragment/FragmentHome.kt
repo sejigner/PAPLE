@@ -103,7 +103,6 @@ class FragmentHome : Fragment(){
         iv_paper_plane_home.setOnClickListener {
             mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
-
     }
 
 

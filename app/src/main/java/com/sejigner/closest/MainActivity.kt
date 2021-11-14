@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         initViewPager()
         initNavigationBar()
 
