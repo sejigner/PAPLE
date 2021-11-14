@@ -315,7 +315,7 @@ class ChatLogActivity : AppCompatActivity() {
                     if (!lastMessageDate.equals(currentMessageDate)) {
                         lastMessageDate = currentMessageDate
                         val dateMessage =
-                            ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
+                            ChatMessages(null, partnerUid, UID, 2, lastMessageDate, chatMessages.timestamp)
                         ViewModel.insert(dateMessage).join()
                     }
 
