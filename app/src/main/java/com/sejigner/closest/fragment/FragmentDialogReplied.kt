@@ -220,7 +220,6 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 
         val reportMessage = ReportMessage(
             uid,
-            fromId,
             message,
             System.currentTimeMillis() / 1000L
         )
