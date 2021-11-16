@@ -95,13 +95,14 @@ class FragmentHome : Fragment(){
         bt_sign_out_test.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
         iv_paper_plane_home.setOnClickListener {
             mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
-
     }
 
 
@@ -247,6 +248,7 @@ class FragmentHome : Fragment(){
                 ).show()
             }
     }
+
 
     private fun getAddress(latitude: Double, longitude: Double): String {
         //locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

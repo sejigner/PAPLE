@@ -1,10 +1,15 @@
 package com.sejigner.closest
 
 import android.app.Activity
+import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -16,10 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseException
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
@@ -42,6 +44,9 @@ import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import android.view.View.OnFocusChangeListener
+import android.widget.RelativeLayout
+import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -54,14 +59,19 @@ class ChatLogActivity : AppCompatActivity() {
     private var partnerUid: String? = null
     private var partnerFcmToken: String? = null
     lateinit var ViewModel: FragmentChatViewModel
-    lateinit var chatLogAdapter: ChatLogAdapter
+    private lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
+    lateinit var mRef: DatabaseReference
+    lateinit var mListener: ChildEventListener
+    lateinit var layout: RelativeLayout
+    private lateinit var inputMethodManager: InputMethodManager
+    private lateinit var softKeyboard: SoftKeyboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
-
+        layout = layout_chat_log
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
@@ -73,22 +83,19 @@ class ChatLogActivity : AppCompatActivity() {
         chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
         rv_chat_log.adapter = chatLogAdapter
 
-
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
         mLayoutManagerMessages.stackFromEnd = true
 
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
-        rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
+
 
 
         ViewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
+            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         })
 
 //        ViewModel.allChatMessages(partnerUid!!).observe(this, {
@@ -110,7 +117,6 @@ class ChatLogActivity : AppCompatActivity() {
 //            supportActionBar?.title = it.value.toString()
 //        }
 
-        listenForMessages()
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
         btn_send_chat_log.isEnabled = false
@@ -138,8 +144,6 @@ class ChatLogActivity : AppCompatActivity() {
         btn_send_chat_log.setOnClickListener {
             performSendMessage()
             et_message_chat_log.text.clear()
-            // hideKeyboard()
-            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -164,11 +168,69 @@ class ChatLogActivity : AppCompatActivity() {
             dialog.show(fm, "reportChatMessage")
         }
 
+        rv_chat_log.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (bottom < oldBottom) {
+                rv_chat_log.postDelayed(Runnable {
+                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)
+                }, 100)
+            }
+        })
 
+
+    }
+
+
+    private fun setLayoutMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window?.setDecorFitsSystemWindows(true)
+        } else {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+//        setLayoutMode()
+
+        inputMethodManager =
+            getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
+        softKeyboard = SoftKeyboard(layout, inputMethodManager)
+        softKeyboard.setSoftKeyboardCallback(object : SoftKeyboardChanged {
+            override fun onSoftKeyboardHide() {
+                rv_chat_log.post(Runnable {
+                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                })
+//                Handler(Looper.getMainLooper()).post {
+//                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)
+//                }
+            }
+
+            override fun onSoftKeyboardShow() {
+//                Handler(Looper.getMainLooper()).post {
+//                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+//                }
+            }
+        })
+
+        mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        listenForMessages()
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        mRef.removeEventListener(mListener)
     }
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        softKeyboard.unRegisterSoftKeyboardCallback()
     }
 
     private fun setPartnersFcmToken() {
@@ -196,6 +258,7 @@ class ChatLogActivity : AppCompatActivity() {
             getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
 
     private fun updatePartnersToken() {
         val ref =
@@ -226,42 +289,43 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun listenForMessages() {
 
-        val ref = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        mListener = mRef.addChildEventListener(object : ChildEventListener {
 
-        ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                val currentMessageDate = getDateTime(chatMessage!!.timestamp)
-                val partnerUid: String = setPartnerId(chatMessage.fromId, chatMessage)
-                val isPartner = setSender(chatMessage.fromId)
+                CoroutineScope(IO).launch {
+                    launch {
+                        val isPartner = 1
+                        val chatMessage: ChatMessage? = snapshot.getValue(ChatMessage::class.java)
+                        val currentMessageDate: String? = getDateTime(chatMessage!!.timestamp)
+                        var lastMessageTimeStamp: Long? = 0L
+                        var lastMessageDate: String?
+                        val chatMessages = ChatMessages(
+                            null,
+                            partnerUid,
+                            UID,
+                            isPartner,
+                            chatMessage.message,
+                            chatMessage.timestamp
+                        )
 
+                        lastMessageTimeStamp =
+                            ViewModel.getChatRoomsTimestamp(UID, partnerUid!!).await()
+                        lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
-                val chatMessages = ChatMessages(
-                    null,
-                    partnerUid,
-                    UID,
-                    isPartner,
-                    chatMessage.message,
-                    chatMessage.timestamp
-                )
-                ref.child(snapshot.key!!).removeValue()
+                        if (!lastMessageDate.equals(currentMessageDate)) {
+                            lastMessageDate = currentMessageDate
+                            val dateMessage =
+                                ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
+                            ViewModel.insert(dateMessage).join()
+                        }
 
-
-                lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid).await()
-                lastMessageDate = getDateTime(lastMessageTimeStamp!!)
-
-                if (!lastMessageDate.equals(currentMessageDate)) {
-                    lastMessageDate = currentMessageDate
-                    val dateMessage =
-                        ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
-                    ViewModel.insert(dateMessage).join()
+                        val job = ViewModel.insert(chatMessages)
+                        if (job.isCompleted) {
+                            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                        }
+                    }.join()
+                    mRef.child(snapshot.key!!).removeValue()
                 }
-
-                val job = ViewModel.insert(chatMessages)
-                if (job.isCompleted) {
-                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
-                }
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -317,7 +381,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         val toRef =
             FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
-        val chatMessage = ChatMessage(toRef.key!!, UID, text, fromId, toId!!, timestamp)
+        val chatMessage = ChatMessage(toRef.key!!, text, fromId, toId!!, timestamp)
         toRef.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "sent your message: ${toRef.key}")
         }
@@ -401,7 +465,7 @@ class ChatLogActivity : AppCompatActivity() {
             val toRef =
                 FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID")
                     .push()
-            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, partnerUid!!, timestamp)
+            val chatMessage = ChatMessage(toRef.key!!, text, UID, partnerUid!!, timestamp)
             toRef.setValue(chatMessage).addOnSuccessListener {
                 Log.d(TAG, "sent your message: ${toRef.key}")
                 result = true

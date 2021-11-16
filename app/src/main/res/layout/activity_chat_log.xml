@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/layout_chat_log"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -188,7 +189,7 @@
             app:layout_constraintBottom_toTopOf="@+id/et_message_chat_log"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/expandable_menu_chat_log" />
+            app:layout_constraintTop_toBottomOf="@id/cl_bar_chat_log" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

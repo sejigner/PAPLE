@@ -4,6 +4,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
 }
 
 androidExtensions {
@@ -102,9 +103,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
-    implementation 'com.google.firebase:firebase-firestore:23.0.2'
+    implementation 'com.google.firebase:firebase-firestore:24.0.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.material:material:1.4.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -112,8 +113,9 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:7.2.0'
     implementation "com.github.lisawray.groupie:groupie:2.9.0"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
-    implementation "com.google.firebase:firebase-analytics:19.0.2"
+    implementation "com.google.firebase:firebase-analytics:20.0.0"
     annotationProcessor 'androidx.room:room-compiler:2.3.0'
-    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
 }

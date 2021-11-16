@@ -26,20 +26,26 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.19603825136612021" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.16154371584699453" />
+        <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_next_phone_auth.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_edit_text.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_frame.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/ic_paper_plane.xml" value="0.26979166666666665" />
+        <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_chat_log.xml" value="0.264" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.264" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_splash.xml" value="0.12" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_chat.xml" value="0.49149922720247297" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_home.xml" value="0.176" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

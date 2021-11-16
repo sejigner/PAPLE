@@ -143,7 +143,7 @@ interface ChatRoomsAndMessagesDao {
 
 @Dao
 interface ChatMessagesDao {
-    @Query("SELECT * FROM chat_messages WHERE uid = :uid and chatRoomId = :chatRoomId ")
+    @Query("SELECT * FROM chat_messages WHERE uid = :uid and chatRoomId = :chatRoomId ORDER BY timestamp ASC ")
     fun getAllChatMessages(uid: String, chatRoomId: String): LiveData<List<ChatMessages>>
 
     @Query("DELETE FROM chat_messages WHERE uid = :uid and chatRoomId = :partnerId")

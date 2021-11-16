@@ -52,16 +52,19 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         const val USER_KEY = "USER_KEY"
     }
 
-    private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
-    private val adapterHorizontalReplied = GroupAdapter<GroupieViewHolder>()
-    private val adapterVertical = GroupAdapter<GroupieViewHolder>()
-    private val firstPlaneKeyList = ArrayList<String>()
-    private val repliedPlaneKeyList = ArrayList<String>()
-    private val messageKeyList = ArrayList<String>()
-    private var db: PaperPlaneDatabase? = null
+//    private val adapterHorizontalFirst = GroupAdapter<GroupieViewHolder>()
+//    private val adapterHorizontalReplied = GroupAdapter<GroupieViewHolder>()
+//    private val adapterVertical = GroupAdapter<GroupieViewHolder>()
+//    private val firstPlaneKeyList = ArrayList<String>()
+//    private val repliedPlaneKeyList = ArrayList<String>()
+//    private val messageKeyList = ArrayList<String>()
+//    private var db: PaperPlaneDatabase? = null
     lateinit var ViewModel: FragmentChatViewModel
     lateinit var list: List<FirstPaperPlanes>
-
+    lateinit var mRefPlane : DatabaseReference
+    lateinit var mRefMessages : DatabaseReference
+    lateinit var mListenerPlane : ChildEventListener
+    lateinit var mListenerMessages : ChildEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -144,10 +147,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             latestMessageAdapter.notifyDataSetChanged()
         })
 
-        // fetchPapers()
-        listenForPlanes()
-        listenForMessages()
-
     }
     // val messagesMap = HashMap<String, ChatMessage>()
 
@@ -174,13 +173,24 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 //        rv_chat.adapter = adapterVertical
 //    }
 
+    override fun onStart() {
+        super.onStart()
+        // listeners for planes and messages
+        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
+        mRefMessages =  FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
+        listenForPlanes()
+        listenForMessages()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mRefPlane.removeEventListener(mListenerPlane)
+        mRefMessages.removeEventListener(mListenerMessages)
+    }
+
     private fun listenForPlanes() {
-        val ref = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
-
-        ref.addChildEventListener(object : ChildEventListener {
+        mListenerPlane = mRefPlane.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
-
                 val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
                 if (paperplane.id.isNotEmpty()) {
                     CoroutineScope(IO).launch {
@@ -194,13 +204,13 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 paperplane.timestamp
                             )
                             ViewModel.insert(item)
-                            // immediate delete on setting data to local databasae
-                            ref.child(paperplane.fromId).removeValue()
+                            // immediate delete on setting data to local database
+                            mRefPlane.child(paperplane.fromId).removeValue()
                             val acquaintances = Acquaintances(paperplane.fromId,UID)
                             ViewModel.insert(acquaintances)
                         } else { // 상대가 날린 답장 비행기
                             setRepliedPaperPlane(paperplane)
-                            ref.child(paperplane.fromId).removeValue()
+                            mRefPlane.child(paperplane.fromId).removeValue()
                         }
 
 
@@ -266,9 +276,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     }
 
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
-
-        ref.addChildEventListener(object : ChildEventListener {
+        mListenerMessages= mRefMessages.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
                 val partnerId = snapshot.key!!
@@ -289,8 +297,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 latestChatMessage.time
                             )
                             ViewModel.insert(chatRoom)
-                            Log.d("FbTest", ref.child(snapshot.key!!).toString())
-                            ref.child(snapshot.key!!).removeValue()
+                            mRefMessages.child(snapshot.key!!).removeValue()
                         } else {
                             val ref2 =
                                 FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
@@ -305,8 +312,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                     latestChatMessage.time
                                 )
                                 ViewModel.insert(chatRoom)
-                                Log.d("FbTest", ref.child(snapshot.key!!).toString())
-                                ref.child(snapshot.key!!).removeValue()
+                                mRefMessages.child(snapshot.key!!).removeValue()
 
                             }.addOnFailureListener {
                                 Toast.makeText(requireActivity(), "없는 유저입니다.", Toast.LENGTH_SHORT)
@@ -322,9 +328,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             latestChatMessage.message,
                             latestChatMessage.time
                         ).join()
-                        ref.child(snapshot.key!!).removeValue()
+                        mRefMessages.child(snapshot.key!!).removeValue()
                     }
-
                 }
                 Log.d(TAG, "Child added successfully")
             }

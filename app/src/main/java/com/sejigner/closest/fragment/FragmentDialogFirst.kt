@@ -206,7 +206,6 @@ class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPla
 
         val reportMessage = ReportMessage(
             uid,
-            fromId,
             message,
             System.currentTimeMillis() / 1000L
         )
