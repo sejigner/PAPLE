@@ -63,9 +63,9 @@ class ChatLogActivity : AppCompatActivity() {
     lateinit var partnerNickname: String
     lateinit var mRef: DatabaseReference
     lateinit var mListener: ChildEventListener
-    lateinit var layout : RelativeLayout
-    private lateinit var inputMethodManager : InputMethodManager
-    private lateinit var softKeyboard : SoftKeyboard
+    lateinit var layout: RelativeLayout
+    private lateinit var inputMethodManager: InputMethodManager
+    private lateinit var softKeyboard: SoftKeyboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,6 +159,7 @@ class ChatLogActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
 
 
         btn_report_menu_chat_log.setOnClickListener {
@@ -287,49 +288,44 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun listenForMessages() {
+
         mListener = mRef.addChildEventListener(object : ChildEventListener {
+
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                val currentMessageDate = getDateTime(chatMessage!!.timestamp)
-                val partnerUid: String = setPartnerId(chatMessage.fromId, chatMessage)
-                val isPartner = setSender(chatMessage.fromId)
-
-
-                val chatMessages = ChatMessages(
-                    null,
-                    partnerUid,
-                    UID,
-                    isPartner,
-                    chatMessage.message,
-                    chatMessage.timestamp
-                )
-
-
                 CoroutineScope(IO).launch {
-                    var lastMessageTimeStamp: Long? = 0L
-                    var lastMessageDate: String?
+                    launch {
+                        val isPartner = 1
+                        val chatMessage: ChatMessage? = snapshot.getValue(ChatMessage::class.java)
+                        val currentMessageDate: String? = getDateTime(chatMessage!!.timestamp)
+                        var lastMessageTimeStamp: Long? = 0L
+                        var lastMessageDate: String?
+                        val chatMessages = ChatMessages(
+                            null,
+                            partnerUid,
+                            UID,
+                            isPartner,
+                            chatMessage.message,
+                            chatMessage.timestamp
+                        )
 
-                    lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid).await()
-                    lastMessageDate = getDateTime(lastMessageTimeStamp!!)
+                        lastMessageTimeStamp =
+                            ViewModel.getChatRoomsTimestamp(UID, partnerUid!!).await()
+                        lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
-                    if (!lastMessageDate.equals(currentMessageDate)) {
-                        lastMessageDate = currentMessageDate
-                        val dateMessage =
-                            ChatMessages(null, partnerUid, UID, 2, lastMessageDate, chatMessages.timestamp)
-                        ViewModel.insert(dateMessage).join()
-                    }
+                        if (!lastMessageDate.equals(currentMessageDate)) {
+                            lastMessageDate = currentMessageDate
+                            val dateMessage =
+                                ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
+                            ViewModel.insert(dateMessage).join()
+                        }
 
-                    ViewModel.insert(chatMessages)
+                        val job = ViewModel.insert(chatMessages)
+                        if (job.isCompleted) {
+                            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                        }
+                    }.join()
                     mRef.child(snapshot.key!!).removeValue()
-
-                    ViewModel.updateLastMessages(
-                        UID,
-                        partnerUid,
-                        chatMessage.message,
-                        chatMessage.timestamp
-                    ).join()
                 }
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -351,10 +347,10 @@ class ChatLogActivity : AppCompatActivity() {
         })
     }
 
-    private fun setPartnerId(fromId: String, chatMessage: ChatMessage): String {
+    private fun setPartnerId(fromId: String, toId: String): String {
         if (fromId == UID) {
-            return chatMessage.toId
-        } else return chatMessage.fromId
+            return toId
+        } else return fromId
     }
 
     private fun setSender(partnerId: String): Int {
