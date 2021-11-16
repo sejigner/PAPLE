@@ -18,6 +18,7 @@ import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
 import com.sejigner.closest.Adapter.LatestMessageAdapter
 import com.sejigner.closest.Adapter.RepliedPaperPlaneAdapter
 import com.sejigner.closest.ChatLogActivity
+import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FirstPlaneListener
@@ -74,6 +75,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val uid = MainActivity.getUid()
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
         // initialized View Model
@@ -295,7 +297,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                     .child("nickname")
                             ref2.get().addOnSuccessListener {
                                 partnerNickname = it.value.toString()
-
                                 val chatRoom = ChatRooms(
                                     partnerId,
                                     partnerNickname,

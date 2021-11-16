@@ -62,7 +62,6 @@ class ChatLogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat_log)
 
 
-
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
         ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
@@ -158,6 +157,7 @@ class ChatLogActivity : AppCompatActivity() {
         }
 
 
+
         btn_report_menu_chat_log.setOnClickListener {
             val dialog = FragmentDialogReportChat()
             val fm = supportFragmentManager
@@ -244,34 +244,23 @@ class ChatLogActivity : AppCompatActivity() {
                     chatMessage.message,
                     chatMessage.timestamp
                 )
+                ref.child(snapshot.key!!).removeValue()
 
 
-                CoroutineScope(IO).launch {
-                    var lastMessageTimeStamp: Long? = 0L
-                    var lastMessageDate: String?
+                lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid).await()
+                lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
-                    lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid).await()
-                    lastMessageDate = getDateTime(lastMessageTimeStamp!!)
-
-                    if (!lastMessageDate.equals(currentMessageDate)) {
-                        lastMessageDate = currentMessageDate
-                        val dateMessage =
-                            ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
-                        ViewModel.insert(dateMessage).join()
-                    }
-
-                    ViewModel.insert(chatMessages)
-                    ref.child(snapshot.key!!).removeValue()
-
-                    ViewModel.updateLastMessages(
-                        UID,
-                        partnerUid,
-                        chatMessage.message,
-                        chatMessage.timestamp
-                    ).join()
-
+                if (!lastMessageDate.equals(currentMessageDate)) {
+                    lastMessageDate = currentMessageDate
+                    val dateMessage =
+                        ChatMessages(null, partnerUid, UID, 2, lastMessageDate, 0L)
+                    ViewModel.insert(dateMessage).join()
                 }
-                rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+
+                val job = ViewModel.insert(chatMessages)
+                if (job.isCompleted) {
+                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                }
 
             }
 
@@ -294,10 +283,10 @@ class ChatLogActivity : AppCompatActivity() {
         })
     }
 
-    private fun setPartnerId(fromId: String, chatMessage: ChatMessage): String {
+    private fun setPartnerId(fromId: String, toId: String): String {
         if (fromId == UID) {
-            return chatMessage.toId
-        } else return chatMessage.fromId
+            return toId
+        } else return fromId
     }
 
     private fun setSender(partnerId: String): Int {
@@ -335,12 +324,12 @@ class ChatLogActivity : AppCompatActivity() {
 
         val lastMessagesUserReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
-        val lastMessageToMe = LatestChatMessage(partnerNickname,text,timestamp)
+        val lastMessageToMe = LatestChatMessage(partnerNickname, text, timestamp)
         lastMessagesUserReference.setValue(lastMessageToMe)
 
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,text,timestamp)
+        val lastMessageToPartner = LatestChatMessage(MYNICKNAME, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 

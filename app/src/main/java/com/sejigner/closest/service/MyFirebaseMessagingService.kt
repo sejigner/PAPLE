@@ -26,48 +26,48 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val ADMIN_CHANNEL_ID = "admin_channel"
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
-        Log.d(TAG, "From: " + remoteMessage.from)
-
-        val intent = Intent(this, MainActivity::class.java)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationID = Random.nextInt(3000)
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            setupChannels(notificationManager)
-        }
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent, PendingIntent.FLAG_ONE_SHOT
-        )
-
-        val largeIcon = BitmapFactory.decodeResource(
-            resources,
-            R.drawable.ic_paper_plane
-        )
-
-        val notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_paper_plane)
-            .setLargeIcon(largeIcon)
-            .setContentTitle(remoteMessage.data["title"])
-            .setContentText(remoteMessage.data["message"])
-            .setAutoCancel(true)
-            .setSound(notificationSoundUri)
-            .setContentIntent(pendingIntent)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.color = resources.getColor(R.color.bg_initialSetting)
-        }
-        notificationManager.notify(notificationID, notificationBuilder.build())
+//        super.onMessageReceived(remoteMessage)
+//        Log.d(TAG, "From: " + remoteMessage.from)
+//
+//        val intent = Intent(this, MainActivity::class.java)
+//        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        val notificationID = Random.nextInt(3000)
+//
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            setupChannels(notificationManager)
+//        }
+//
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//        val pendingIntent = PendingIntent.getActivity(
+//            this, 0, intent, PendingIntent.FLAG_ONE_SHOT
+//        )
+//
+//        val largeIcon = BitmapFactory.decodeResource(
+//            resources,
+//            R.drawable.ic_paper_plane
+//        )
+//
+//        val notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+//        val notificationBuilder = NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+//            .setSmallIcon(R.drawable.ic_paper_plane)
+//            .setLargeIcon(largeIcon)
+//            .setContentTitle(remoteMessage.data["title"])
+//            .setContentText(remoteMessage.data["message"])
+//            .setAutoCancel(true)
+//            .setSound(notificationSoundUri)
+//            .setContentIntent(pendingIntent)
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            notificationBuilder.color = resources.getColor(R.color.bg_initialSetting)
+//        }
+//        notificationManager.notify(notificationID, notificationBuilder.build())
 
     }
 
     override fun onNewToken(token: String) {
         val fbDatabase = FirebaseDatabase.getInstance().reference
         val uid =
-        fbDatabase.child("Users").child(UID).child("registrationToken").setValue(token).addOnSuccessListener {
+        fbDatabase.child("Users").child(UID).child("registrationToken").child(token).setValue(true).addOnSuccessListener {
             Log.d(FragmentHome.TAG,"updated fcmToken: $token")
         }
     }

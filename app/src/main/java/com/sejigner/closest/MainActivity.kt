@@ -44,8 +44,19 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     companion object {
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
-        var UID = "UID"
+        var UID = ""
         var MYNICKNAME = ""
+
+        private lateinit var auth: FirebaseAuth
+
+        fun getUid() : String{
+
+            auth = FirebaseAuth.getInstance()
+
+            return auth.currentUser?.uid.toString()
+        }
+
+
     }
 
 
@@ -67,13 +78,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         fireBaseAuth = FirebaseAuth.getInstance()
         fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG, "got instance from Firestore successfully")
-
+        UID = getUid()
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
-        UID = fireBaseAuth?.uid!!
+        val uid = getUid()
 
 
-        val reference = fbDatabase?.reference?.child("Users")?.child(UID)?.child("nickname")
+        val reference = fbDatabase?.reference?.child("Users")?.child(uid)?.child("nickname")
         reference?.get()
             ?.addOnSuccessListener { it ->
                 if (it.value != null) {
@@ -87,7 +98,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         MYNICKNAME = App.prefs.myNickname!!
         if (MYNICKNAME.isBlank()) {
             val ref =
-                FirebaseDatabase.getInstance().getReference("/Users/$UID")
+                FirebaseDatabase.getInstance().getReference("/Users/$uid")
                     .child("nickname")
             ref.get().addOnSuccessListener {
                 App.prefs.myNickname = it.value.toString()
@@ -107,7 +118,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 Log.d(TAG, msg)
 
                 val ref =
-                    FirebaseDatabase.getInstance().getReference("/Users/$UID")
+                    FirebaseDatabase.getInstance().getReference("/Users/$uid")
                         .child("registrationToken")
                 // fcm토큰 업로드
                 ref.setValue(token)
