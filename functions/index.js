@@ -5,33 +5,32 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}/{senderUid}')
+exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}/{senderUid}/{messageId}')
     .onWrite(async (change, context) => {
-        const message = snapshot.data();
-        const recipientId = message['toId'];
-        
-        const recipientUid = context.params.recipient;
+        const recipientUid = context.params.recipientUid;
         const senderUid = context.params.senderUid;
         
         functions.logger.log(
             'New Message from:',
             senderUid,
             'for user:',
-            recipientId
+            recipientUid
           );
 
           const getDeviceTokensPromise = admin.database()
-          .ref('/Users/${sender}/registrationToken').once('value');
+          .ref(`/Users/${recipientUid}/registrationToken`).once('value');
 
-          const getSenderProfilePromise = admin.auth().getUser(senderUid);
+          const getSenderProfilePromise = admin.database()
+          .ref(`/Users/${senderUid}/nickname`).once('value');
 
           let tokensSnapshot;
+          let senderNicknameSnapshot;
 
           let tokens;
 
           const results = await Promise.all([getDeviceTokensPromise, getSenderProfilePromise]);
           tokensSnapshot = results[0];
-          const sender = results[1];
+          senderNicknameSnapshot = results[1];
 
     // check if there are any device tokens.
           if(!tokensSnapshot.hasChildren()) {
@@ -39,12 +38,14 @@ exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}
                   'There are no registration tokens to send to.'
               );
           }
-          functions.logger.log('Fetched sender profile', sender);
+            const senderNickname = senderNicknameSnapshot.val();
+            console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
+            console.log('Fetched sender profile', senderNickname);
 
           const payload = {
               notification: {
-                  title: '${sender.nickname}',
-                  body: '메세지가 도착했어요 :)'
+                  title: senderNickname,
+                  body: '메시지가 도착했어요!'
               }
           };
           

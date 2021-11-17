@@ -118,9 +118,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
                 val ref =
                     FirebaseDatabase.getInstance().getReference("/Users/$uid")
-                        .child("registrationToken")
+                        .child("registrationToken").child(token)
                 // fcm토큰 업로드
-                ref.setValue(token)
+                ref.setValue(true)
             })
         } else {
             Log.w(TAG, "Device doesn't have google play services")
