@@ -42,7 +42,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".OtpActivity" />
-        <activity android:name=".NewSignInActivity" />
+        <activity android:name=".NewSignInActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".InitialSetupActivity" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />

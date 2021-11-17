@@ -118,8 +118,6 @@ class InitialSetupActivity : AppCompatActivity() {
 
                 val token = task.result
 
-                userInfo.registrationToken = token
-
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(MainActivity.TAG, msg)
             })
