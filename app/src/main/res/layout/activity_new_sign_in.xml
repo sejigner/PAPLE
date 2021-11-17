@@ -7,12 +7,12 @@
     tools:context=".NewSignInActivity">
 
     <ImageView
-        android:id="@+id/ib_logo"
+        android:id="@+id/ic_logo"
         android:layout_width="76dp"
         android:layout_height="20dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/bg_logo"
+        android:src="@drawable/ic_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +29,7 @@
         android:textAppearance="@style/phone_auth_title"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ib_logo" />
+        app:layout_constraintTop_toBottomOf="@id/ic_logo" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,20 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--On click of this buttton OTP will be send to phone-->
-    <TextView
-        android:id="@+id/button_otp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/btn_paper_send"
-        android:padding="12dp"
-        android:text="@string/send_otp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_phone_number" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -76,8 +63,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+        <!--On click of this buttton OTP will be send to phone-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_request_otp"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="30dp"
@@ -90,7 +79,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/next"
+                android:text="@string/send_otp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

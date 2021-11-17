@@ -36,7 +36,7 @@
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
     <string name="enter_your_number">전화번호를 입력해주세요</string>
-    <string name="send_otp">인증코드 요청</string>
+    <string name="send_otp">인증코드 요청하기</string>
     <string name="login_otp">인증코드 요청</string>
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>

@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.android.synthetic.main.activity_new_sign_in.*
 import java.util.concurrent.TimeUnit
 
 
@@ -31,7 +32,7 @@ class NewSignInActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // start verification on click of the button
-        findViewById<TextView>(R.id.button_otp).setOnClickListener {
+        cl_request_otp.setOnClickListener {
             login()
         }
 

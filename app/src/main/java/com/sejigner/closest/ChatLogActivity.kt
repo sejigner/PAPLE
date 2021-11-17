@@ -347,16 +347,16 @@ class ChatLogActivity : AppCompatActivity() {
         })
     }
 
-    private fun setPartnerId(fromId: String, toId: String): String {
-        if (fromId == UID) {
-            return toId
-        } else return fromId
-    }
-
-    private fun setSender(partnerId: String): Int {
-        return if (partnerId != UID) 1
-        else 0
-    }
+//    private fun setPartnerId(fromId: String, toId: String): String {
+//        if (fromId == UID) {
+//            return toId
+//        } else return fromId
+//    }
+//
+//    private fun setSender(partnerId: String): Int {
+//        return if (partnerId != UID) 1
+//        else 0
+//    }
 
     private fun getDateTime(time: Long): String? {
         try {
