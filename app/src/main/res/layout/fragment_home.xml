@@ -20,14 +20,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="35sp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="@string/title"
-            android:textColor="@color/txt_gray"
+            android:src="@drawable/ic_logo"
             android:layout_marginStart="16dp"
             android:layout_marginTop="46dp"
             app:layout_constraintStart_toStartOf="parent"
