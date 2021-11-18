@@ -94,6 +94,8 @@ class FragmentHome : Fragment(){
 
         bt_sign_out_test.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+            val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(UID).child("registrationToken")
+            fbDatabase.removeValue()
             val intent = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
