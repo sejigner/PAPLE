@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:ems="10"
-        android:hint="@string/enter_your_number"
+        android:hint="@string/hint_enter_number"
         android:inputType="phone"
         android:textAppearance="@style/phone_auth_et"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/btn_next_phone_auth"
+            android:background="@drawable/selector_auth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

@@ -41,7 +41,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OtpActivity" />
+        <activity android:name=".OtpActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".NewSignInActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".InitialSetupActivity" />
