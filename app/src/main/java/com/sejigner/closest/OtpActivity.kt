@@ -46,7 +46,6 @@ class OtpActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
                     cl_otp_check.isEnabled = false
-                    cl_otp_check.setBackgroundColor(resources.getColor(R.color.inactive_gray))
                 }
 
             }
@@ -58,7 +57,6 @@ class OtpActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
                     cl_otp_check.isEnabled = true
-                    cl_otp_check.setBackgroundColor(resources.getColor(R.color.paperplane_theme))
                 }
             }
         })

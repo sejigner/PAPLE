@@ -79,7 +79,6 @@ class NewSignInActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
                     cl_request_otp.isEnabled = false
-                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.inactive_gray))
                 }
 
             }
@@ -91,7 +90,6 @@ class NewSignInActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
                     cl_request_otp.isEnabled = true
-                    cl_request_otp.setBackgroundColor(resources.getColor(R.color.paperplane_theme))
                 }
             }
         })

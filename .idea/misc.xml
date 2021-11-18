@@ -6,9 +6,11 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/background_border.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/background_loading.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_next_phone_auth.xml" value="0.14342105263157895" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_next_phone_auth_inactive.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_paper_send.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_report_send.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_report.xml" value="0.24473684210526317" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_auth.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.16" />
@@ -51,7 +53,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
