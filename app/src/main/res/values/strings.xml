@@ -14,6 +14,7 @@
     <string name="otp_time">%1$d초 내 입력</string>
     <string name="otp_resend">다시 요청하기</string>
     <string name="otp_body_no_otp">인증 번호가 오지 않아요</string>
+    <string name="otp_failure">인증 요청이 만료되었습니다. 다시 요청해주세요.</string>
 
 
     <string name="title">Paper Plane</string>

@@ -2,6 +2,8 @@ package com.sejigner.closest
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
@@ -12,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.activity_new_sign_in.*
 import java.util.concurrent.TimeUnit
 
@@ -30,6 +33,8 @@ class NewSignInActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_sign_in)
 
         auth = FirebaseAuth.getInstance()
+        auth.setLanguageCode("kr")
+        cl_request_otp.isEnabled = false
 
         // start verification on click of the button
         cl_request_otp.setOnClickListener {
@@ -64,10 +69,32 @@ class NewSignInActivity : AppCompatActivity() {
                 // we will use this id to send the otp back to firebase
                 val intent = Intent(applicationContext, OtpActivity::class.java)
                 intent.putExtra("storedVerificationId", storedVerificationId)
+                intent.putExtra("phoneNumber", phoneNumber)
                 startActivity(intent)
                 finish()
             }
         }
+
+        et_phone_number.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString().trim { it <= ' ' }.isEmpty()) {
+                    cl_request_otp.isEnabled = false
+                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.inactive_gray))
+                }
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
+                    cl_request_otp.isEnabled = true
+                    cl_request_otp.setBackgroundColor(resources.getColor(R.color.paperplane_theme))
+                }
+            }
+        })
     }
 
     private fun login() {
@@ -93,6 +120,6 @@ class NewSignInActivity : AppCompatActivity() {
                 .setCallbacks(callbacks)
                 .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-        Log.d("@MainActivity","Auth started")
+        Log.d("@OtpActivity","Auth started")
     }
 }

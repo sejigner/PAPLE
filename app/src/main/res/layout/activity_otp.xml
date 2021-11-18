@@ -35,7 +35,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/otp_subtitle"
-        android:textAppearance="@string/otp_subtitle"
+        android:textAppearance="@style/otp_subtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title_otp" />
 
@@ -86,7 +86,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
-        android:layout_marginBottom="8dp"
         android:text="@string/otp_time"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/et_otp"
@@ -106,7 +105,7 @@
             android:id="@+id/cl_otp_check"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="28dp"
             android:background="@drawable/selector_auth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
