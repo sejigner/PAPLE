@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     Log.d(TAG, "Checked, User Info already set - user nickname : ${it.value}")
                 } else {
                     val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
+                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(setupIntent)
                 }
             }
