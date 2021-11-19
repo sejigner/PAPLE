@@ -70,6 +70,10 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.getChatRoomsTimestamp(uid, partnerId)
     }
 
+    fun getLatestTimestamp(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.getLatestTimestamp(uid, partnerId)
+    }
+
     fun haveMet(uid : String, partnerId: String) = CoroutineScope(IO).async {
         repository.haveMet(uid, partnerId)
     }

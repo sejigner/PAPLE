@@ -309,7 +309,7 @@ class ChatLogActivity : AppCompatActivity() {
                         )
 
                         lastMessageTimeStamp =
-                            ViewModel.getChatRoomsTimestamp(UID, partnerUid!!).await()
+                            ViewModel.getLatestTimestamp(UID, partnerUid!!).await()
                         lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
                         if (!lastMessageDate.equals(currentMessageDate)) {
@@ -403,7 +403,7 @@ class ChatLogActivity : AppCompatActivity() {
             var lastMessageTimeStamp: Long? = 0L
             var lastMessageDate: String?
 
-            lastMessageTimeStamp = ViewModel.getChatRoomsTimestamp(UID, partnerUid!!).await()
+            lastMessageTimeStamp = ViewModel.getLatestTimestamp(UID, partnerUid!!).await()
             lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
             if (!lastMessageDate.equals(currentMessageDate)) {

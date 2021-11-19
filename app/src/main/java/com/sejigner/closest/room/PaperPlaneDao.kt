@@ -119,6 +119,9 @@ interface ChatRoomsDao {
 
     // Message
 
+    @Query("SELECT timestamp FROM chat_messages   WHERE uid = :uid and chatRoomId = :partnerId ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLatestTimestamp(uid: String, partnerId: String): Long?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(message: ChatMessages): Long
 
