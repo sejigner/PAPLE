@@ -129,9 +129,9 @@ class OtpActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        timerTask.cancel()
+    override fun onDestroy() {
+        super.onDestroy()
+        finish()
     }
 
     private fun sendVerificationCode(phoneNumber : String) {

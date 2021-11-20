@@ -17,21 +17,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <service android:name=".service.MyFirebaseMessagingService"
+        <activity
+            android:name=".SplashCongratsActivity"
+            android:exported="true" />
+
+        <service
+            android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <activity android:name=".ChatLogActivity"
+
+        <activity
+            android:name=".ChatLogActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"
-                />
+                android:value=".MainActivity" />
+
             <intent-filter>
-                <action android:name="ChatLogActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="ChatLogActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".SplashActivity">
@@ -41,15 +49,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OtpActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".NewSignInActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".OtpActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".NewSignInActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".InitialSetupActivity" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

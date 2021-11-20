@@ -4,59 +4,47 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_otp.*
+import kotlinx.android.synthetic.main.activity_splash_congrats.*
 
-class SplashActivity : AppCompatActivity() {
+class SplashCongratsActivity : AppCompatActivity() {
 
-    private lateinit var fbDatabase : FirebaseDatabase
+    lateinit var timerTask : CountDownTimer
 
-    private val time: Long = 2000
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.activity_splash_congrats)
+
         this.supportActionBar?.hide()
-
-        fbDatabase = FirebaseDatabase.getInstance()
         transparentStatusAndNavigation()
-        Handler().postDelayed({
-            verifyUserIsLoggedIn()
-        },time)
-    }
+        val splashAnimation : Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.anim_splash)
 
-    private fun verifyUserIsLoggedIn() {
-        val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
-        val uid = user?.uid
-        if (user != null) {
-            val reference = fbDatabase.reference.child("Users").child(uid!!).child("nickname")
-            reference.get()
-                .addOnSuccessListener { it ->
-                    if (it.value != null) {
-                        Log.d(MainActivity.TAG, "Checked, User Info already set - user nickname : ${it.value}")
-                        startActivity(Intent(applicationContext,MainActivity::class.java))
-                        finish()
-                    } else {
-                        val setupIntent = Intent(this@SplashActivity, InitialSetupActivity::class.java)
-                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(setupIntent)
-                        finish()
-                    }
-                }
+        timerTask = object : CountDownTimer(4000,1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                tv_second_splash.text = (millisUntilFinished/1000.0).toInt().toString()
+                tv_second_splash.startAnimation(splashAnimation)
+                iv_dot_splash.startAnimation(splashAnimation)
+            }
 
-        } else {
-            App.prefs.myNickname = ""
-            startActivity(Intent(applicationContext,NewSignInActivity::class.java))
-            finish()
+            override fun onFinish() {
+                val setupIntent = Intent(this@SplashCongratsActivity, InitialSetupActivity::class.java)
+                setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(setupIntent)
+            }
         }
+
     }
 
     private fun Activity.transparentStatusAndNavigation(

@@ -82,22 +82,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
 
-
-        val reference = fbDatabase?.reference?.child("Users")?.child(uid)?.child("nickname")
-        reference?.get()
-            ?.addOnSuccessListener { it ->
-                if (it.value != null) {
-                    Log.d(TAG, "Checked, User Info already set - user nickname : ${it.value}")
-                } else {
-                    val setupIntent = Intent(this@MainActivity, InitialSetupActivity::class.java)
-                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(setupIntent)
-                }
-            }
-
         MYNICKNAME = App.prefs.myNickname!!
-        if (MYNICKNAME.isBlank()) {
+        if (MainActivity.MYNICKNAME.isBlank()) {
             val ref =
                 FirebaseDatabase.getInstance().getReference("/Users/$uid")
                     .child("nickname")
