@@ -58,7 +58,7 @@ class MyPageActivity : AppCompatActivity() {
             // 유저의 정보 저장
             bt_save.setOnClickListener {
                 if (fireBaseUser != null) {
-                    val birthYear: String = et_birth_year.text.toString()
+                    val birthYear: String = et_birth_year_my_page.text.toString()
                     val gender: String = et_gender.text.toString()
                     if (birthYear == null || gender == null) Toast.makeText(this@MyPageActivity, "정보를 입력하세요.", Toast.LENGTH_SHORT).show()
                     else {

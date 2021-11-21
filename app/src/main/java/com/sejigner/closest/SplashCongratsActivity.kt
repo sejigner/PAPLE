@@ -29,22 +29,33 @@ class SplashCongratsActivity : AppCompatActivity() {
         this.supportActionBar?.hide()
         transparentStatusAndNavigation()
         val splashAnimation : Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.anim_splash)
+        val splashAnimationMove : Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.anim_splash_move)
+
+        tv_second_splash.text = ""
 
         timerTask = object : CountDownTimer(4000,1000) {
             override fun onTick(millisUntilFinished: Long) {
                 tv_second_splash.text = (millisUntilFinished/1000.0).toInt().toString()
                 tv_second_splash.startAnimation(splashAnimation)
-                iv_dot_splash.startAnimation(splashAnimation)
+                iv_dot_splash.startAnimation(splashAnimationMove)
             }
 
             override fun onFinish() {
-                val setupIntent = Intent(this@SplashCongratsActivity, InitialSetupActivity::class.java)
+                val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(setupIntent)
             }
-        }
+        }.start()
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(setupIntent)
     }
 
     private fun Activity.transparentStatusAndNavigation(

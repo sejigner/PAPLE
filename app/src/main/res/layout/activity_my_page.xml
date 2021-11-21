@@ -7,7 +7,7 @@
     tools:context=".MyPageActivity">
 
     <EditText
-        android:id="@+id/et_birth_year"
+        android:id="@+id/et_birth_year_my_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
@@ -25,8 +25,8 @@
         android:layout_marginEnd="2dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_birth_year"
-        app:layout_constraintTop_toBottomOf="@+id/et_birth_year" />
+        app:layout_constraintEnd_toEndOf="@+id/et_initial_birth_year"
+        app:layout_constraintTop_toBottomOf="@+id/et_initial_birth_year" />
 
     <Button
         android:id="@+id/bt_save"
@@ -45,7 +45,7 @@
         android:layout_marginStart="72dp"
         android:layout_marginBottom="4dp"
         android:text="@string/user_birth_year"
-        app:layout_constraintBottom_toBottomOf="@+id/et_birth_year"
+        app:layout_constraintBottom_toBottomOf="@+id/et_birth_year_my_page"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

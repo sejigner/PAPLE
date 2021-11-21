@@ -2,105 +2,148 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_initial_setup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_initialSetting"
     tools:context=".InitialSetupActivity">
+
 
     <TextView
         android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/montserrat_extra_light"
-        android:text="Welcome!"
-        android:textColor="#8e8e8e"
-        android:textSize="38sp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
+        android:text="@string/initial_title"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_inputRequest"
+        android:id="@+id/tv_initial_guidance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/noto_sans_cjj_kr_regular"
-        android:text="환영합니다:)\n기본정보를 입력해주세요"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:text="@string/initial_guidance"
         android:textColor="@color/txt_initialSetting"
-        android:textSize="12sp"
+        android:textSize="14sp"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="-3sp"
         app:layout_constraintStart_toStartOf="@id/tv_welcome"
         app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
 
-    <TextView
-        android:id="@+id/tv_advice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:alpha=".4"
-        android:text="작성 후 변경이 불가하오니, 신중히 작성해주세요:)"
-        android:textSize="12sp"
-        android:textColor="@color/txt_initialSetting"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_inputRequest" />
-
-    <TextView
-        android:id="@+id/tv_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="닉네임"
-        android:textSize="12sp"
-        android:textColor="@color/txt_initialSetting"
-        app:layout_constraintStart_toStartOf="@id/tv_welcome"
-        app:layout_constraintTop_toBottomOf="@id/tv_advice" />
 
     <EditText
+        android:singleLine="true"
+        android:imeOptions="actionDone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/rg_gender"
-        app:layout_constraintEnd_toEndOf="@id/rg_gender"
-        app:layout_constraintTop_toTopOf="@id/tv_nickname"
-        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
-        android:hint="닉네임을 입력해주세요"
+        android:layout_marginTop="80dp"
+        android:layout_marginHorizontal="20dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_initial_guidance"
+        android:hint="@string/initial_nickname"
         android:id="@+id/et_nickname"/>
 
     <TextView
-        android:id="@+id/tv_gender"
+        android:id="@+id/tv_initial_birth_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="@string/user_gender"
-        android:textSize="12sp"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@id/et_initial_birth_year"
+        app:layout_constraintBottom_toBottomOf="@id/et_initial_birth_year"
+        app:layout_constraintEnd_toEndOf="@id/et_initial_birth_year"
         android:textColor="@color/txt_initialSetting"
-        app:layout_constraintStart_toStartOf="@id/tv_welcome"
-        app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+        />
+
+    <EditText
+        android:id="@+id/et_initial_gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/user_gender"
+        android:textSize="24sp"
+        android:textColor="@color/txt_initialSetting"
+android:layout_marginHorizontal="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_initial_birth_year"/>
 
     <TextView
-        android:id="@+id/tv_birth_year"
+        android:id="@+id/tv_initial_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/user_birth_year"
-        android:textSize="12sp"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@id/et_initial_gender"
+        app:layout_constraintBottom_toBottomOf="@id/et_initial_gender"
+        app:layout_constraintEnd_toEndOf="@id/et_initial_gender"
         android:textColor="@color/txt_initialSetting"
-        app:layout_constraintStart_toStartOf="@id/tv_gender"
-        app:layout_constraintTop_toBottomOf="@id/tv_gender"
+        />
+
+    <View
+        android:id="@+id/btn_gender"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/et_initial_gender"
+        app:layout_constraintEnd_toEndOf="@id/et_initial_gender"
+        app:layout_constraintTop_toTopOf="@id/et_initial_gender"
+        app:layout_constraintBottom_toBottomOf="@id/et_initial_gender"
+        />
+
+    <EditText
+        android:id="@+id/et_initial_birth_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:text="@string/user_birth_year"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:textColor="@color/txt_initialSetting"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_nickname"
+        />
+
+    <View
+        android:id="@+id/btn_birth_year"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/et_initial_birth_year"
+        app:layout_constraintEnd_toEndOf="@id/et_initial_birth_year"
+        app:layout_constraintTop_toTopOf="@id/et_initial_birth_year"
+        app:layout_constraintBottom_toBottomOf="@id/et_initial_birth_year"
         />
 
 
+
     <RadioGroup
-        android:id="@+id/rg_gender"
+        android:id="@+id/rg_initial_gender"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginStart="20dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_gender"
-        app:layout_constraintStart_toEndOf="@id/tv_gender"
-        app:layout_constraintTop_toTopOf="@+id/tv_gender"
-        app:layout_constraintWidth_percent="0.7">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_initial_gender"
+        app:layout_constraintBottom_toTopOf="@id/cl_initial_start"
+        >
 
 
         <RadioButton
@@ -110,13 +153,16 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_initial_setting_normal"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:text="@string/gender_female"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:textSize="24sp"
+            android:layout_marginEnd="10dp"
             android:textColor="@color/btn_initial_setting_selector"
             android:paddingLeft="16dp"
             android:paddingTop="3dp"
             android:paddingRight="16dp"
             android:paddingBottom="3dp"
-            app:layout_constraintDimensionRatio="2.875"
              />
 
         <RadioButton
@@ -126,6 +172,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_initial_setting_normal"
             android:gravity="center"
+            android:textSize="24sp"
             android:text="@string/gender_male"
             android:textColor="@color/btn_initial_setting_selector"
             android:layout_marginStart="10dp"
@@ -133,7 +180,6 @@
             android:paddingTop="3dp"
             android:paddingRight="16dp"
             android:paddingBottom="3dp"
-            app:layout_constraintDimensionRatio="2.875"
              />
 
     </RadioGroup>
@@ -142,39 +188,49 @@
     <NumberPicker
         android:id="@+id/numberPicker_birth_year_initial_setup"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_birth_year"
-        app:layout_constraintStart_toEndOf="@id/tv_birth_year"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="6"
+        app:layout_constraintTop_toBottomOf="@id/et_initial_gender"
+        app:layout_constraintBottom_toTopOf="@id/cl_initial_start"
         android:solidColor="@color/bg_initialSetting"
         />
 
-    <TextView
-        app:layout_constraintBottom_toTopOf="@id/tv_done"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="정보 입력 후 서비스 이용이 가능합니다. "/>
-
-
-    <TextView
-        android:id="@+id/tv_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Done"
-        android:textSize="38sp"
-        android:textColor="@color/txt_initialSetting"
-        app:layout_constraintDimensionRatio="2.2"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_initial_start"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="50dp"
-        android:fontFamily="@font/montserrat_extra_light"
-        />
+        app:layout_constraintStart_toStartOf="parent">
+        <!--On click of this buttton OTP will be send to phone-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_initial_start"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/selector_auth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/initial_start"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

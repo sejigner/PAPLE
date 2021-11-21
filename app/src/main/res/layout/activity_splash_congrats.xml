@@ -33,16 +33,21 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:layout_marginTop="4dp"
-        android:textColor="#00FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_dot_splash"
         />
 
     <TextView
-        start
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_second_splash"
+        android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         android:text="@string/splash_congrats"
         android:textSize="14sp"/>
 

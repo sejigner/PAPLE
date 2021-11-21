@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.activity_new_sign_in.*
@@ -27,18 +28,18 @@ class OtpActivity : AppCompatActivity() {
 
     // get reference of the firebase auth
     lateinit var auth: FirebaseAuth
-    lateinit var fbFirestore : FirebaseFirestore
-    lateinit var resendToken : PhoneAuthProvider.ForceResendingToken
-    private lateinit var callbacks : PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    lateinit var timerTask : CountDownTimer
+    lateinit var fbDatabase: FirebaseDatabase
+    lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+    private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    lateinit var timerTask: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_otp)
 
-        auth=FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
-        fbFirestore=FirebaseFirestore.getInstance()
+        fbDatabase = FirebaseDatabase.getInstance()
         cl_otp_check.isEnabled = false
         tv_request_resend.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
@@ -62,24 +63,26 @@ class OtpActivity : AppCompatActivity() {
         })
 
         // get storedVerificationId from the intent
-        var storedVerificationId= intent.getStringExtra("storedVerificationId")
+        var storedVerificationId = intent.getStringExtra("storedVerificationId")
         val phoneNumber = intent.getStringExtra("phoneNumber")
 
         // fill otp and call the on click on button
         cl_otp_check.setOnClickListener {
             val otp = findViewById<EditText>(R.id.et_otp).text.trim().toString()
-            if(otp.isNotEmpty()){
-                val credential : PhoneAuthCredential = PhoneAuthProvider.getCredential(
-                    storedVerificationId.toString(),otp)
+            if (otp.isNotEmpty()) {
+                val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(
+                    storedVerificationId.toString(), otp
+                )
                 signInWithPhoneAuthCredential(credential)
             } else {
-                Toast.makeText(this,"인증 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "인증 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        timerTask = object : CountDownTimer(60000,1000) {
+        timerTask = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                tv_time_left.text = getString(R.string.otp_time, millisUntilFinished/1000.0f.toInt())
+                tv_time_left.text =
+                    getString(R.string.otp_time, millisUntilFinished / 1000.0f.toInt())
             }
 
             override fun onFinish() {
@@ -113,8 +116,11 @@ class OtpActivity : AppCompatActivity() {
 
             // On code is sent by the firebase this method is called
             // in here we start a new activity where user can enter the OTP
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                Log.d("@OtpActivity","onCodeSent: $verificationId")
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                Log.d("@OtpActivity", "onCodeSent: $verificationId")
                 storedVerificationId = verificationId
                 resendToken = token
 
@@ -134,7 +140,7 @@ class OtpActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun sendVerificationCode(phoneNumber : String) {
+    private fun sendVerificationCode(phoneNumber: String) {
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
@@ -142,7 +148,7 @@ class OtpActivity : AppCompatActivity() {
             .setCallbacks(callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-        Log.d("@OtpActivity","Auth started")
+        Log.d("@OtpActivity", "Auth started")
     }
 
     private fun startTimer() {
@@ -155,11 +161,29 @@ class OtpActivity : AppCompatActivity() {
     // if success start the main activity
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) {task ->
+            .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                    val reference =
+                        fbDatabase.reference.child("Users").child(uid!!).child("nickname")
+                    reference.get()
+                        .addOnSuccessListener { it ->
+                            if (it.value != null) {
+                                Log.d(
+                                    MainActivity.TAG,
+                                    "Checked, User Info already set - user nickname : ${it.value}"
+                                )
+                                startActivity(Intent(applicationContext, MainActivity::class.java))
+                                finish()
+                            } else {
+                                val setupIntent =
+                                    Intent(this@OtpActivity, InitialSetupActivity::class.java)
+                                setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(setupIntent)
+                                finish()
+                            }
+                        }
                 } else {
                     // Sign in failed, display a message and update the UI
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {

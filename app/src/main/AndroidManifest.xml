@@ -19,7 +19,8 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity
             android:name=".SplashCongratsActivity"
-            android:exported="true" />
+            android:exported="true"
+            />
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -31,7 +32,8 @@
 
         <activity
             android:name=".ChatLogActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -42,7 +44,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +58,8 @@
         <activity
             android:name=".NewSignInActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".InitialSetupActivity" />
+        <activity android:name=".InitialSetupActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />
         <activity

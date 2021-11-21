@@ -101,7 +101,7 @@
 
 
         <TextView
-            android:fontFamily="@font/noto_sans_cjj_kr_regular"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/white"

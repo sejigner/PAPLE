@@ -4,7 +4,7 @@
     <string name="send_otp">인증코드 요청하기</string>
     <string name="login_otp">인증코드 요청</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
-    <string name="phone_auth_info">청소년 보호법을 준수하여\n건전한 환경을 위해 SMS 인증을 시행하고 있어요</string>
+    <string name="phone_auth_info">건전한 환경을 위해\n청소년 보호법을 준수하여 SMS 인증을 시행하고 있어요</string>
 
     <!-- otp_activity -->
     <string name="otp_title">인증번호를 보냈어요!</string>
@@ -18,12 +18,17 @@
     <!-- splash_congrats_activity -->
     <string name="splash_congrats">초 후 메인홈으로 이동</string>
 
+    <!-- initial_setup_activity -->
+    <string name="initial_title">프로필 입력</string>
+    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다!</string>
+    <string name="initial_nickname">닉네임</string>
+    <string name="initial_start">시작하기</string>
 
     <string name="title">Paper Plane</string>
     <string name="app_name">PaperPlane</string>
     <string name="save">저장하기</string>
     <string name="location_update">위치정보 업데이트</string>
-    <string name="user_birth_year">생년</string>
+    <string name="user_birth_year">태어나신 해</string>
     <string name="user_gender">성별</string>
     <string name="send_paper">비행기를 날릴래요!</string>
     <string name="gender_male">남성</string>
