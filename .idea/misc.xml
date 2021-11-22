@@ -14,6 +14,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_report.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_auth.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.16" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.25" />
@@ -34,8 +35,6 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.19603825136612021" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.16154371584699453" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_home.xml" value="0.16495901639344263" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/background_border.xml" value="0.14583333333333334" />
-        <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_initial_setting_normal.xml" value="0.22719298245614036" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_next_phone_auth.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_next_phone_auth_inactive.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_edit_text.xml" value="0.26979166666666665" />
@@ -45,12 +44,9 @@
         <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/selector_auth.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_chat_log.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_my_page.xml" value="0.1296875" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.264" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_otp.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_splash.xml" value="0.12" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_splash_congrats.xml" value="0.176" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_chat.xml" value="0.49149922720247297" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
@@ -61,7 +57,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

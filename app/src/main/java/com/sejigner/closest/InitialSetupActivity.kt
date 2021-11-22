@@ -16,7 +16,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.sejigner.closest.fragment.FragmentHome
@@ -32,6 +31,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.R.attr.name
 import android.app.Service
+import android.text.InputFilter
+import androidx.core.content.ContextCompat
+import com.google.firebase.database.*
+import java.util.regex.Pattern
 
 
 class InitialSetupActivity : AppCompatActivity() {
@@ -149,6 +152,18 @@ class InitialSetupActivity : AppCompatActivity() {
             }
         }
 
+        et_nickname.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            val ps : Pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣu318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$")
+            if(source.equals("") || ps.matcher(source).matches()) {
+                return@InputFilter source
+            }
+            Toast.makeText(this, "한글, 영문, 숫자만 사용해주세요!", Toast.LENGTH_SHORT).show()
+            ""
+        }, InputFilter.LengthFilter(10))
+
+
+
+
 
     }
 
@@ -236,3 +251,5 @@ class InitialSetupActivity : AppCompatActivity() {
         lastTimePressed = System.currentTimeMillis()
     }
 }
+
+
