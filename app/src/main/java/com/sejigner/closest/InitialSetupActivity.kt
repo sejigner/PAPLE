@@ -183,10 +183,30 @@ class InitialSetupActivity : AppCompatActivity() {
         override fun afterTextChanged(s: Editable?) {
             if (s != null && s.toString().isNotEmpty()){
                 et_nickname.setGravity(Gravity.END)
-                userInfo.nickname = s.toString()
+                val reference =fbDatabase?.reference!!
+                val query: Query = reference.child("Users").orderByChild("nickname").equalTo(s.toString())
+                query.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.txt_red))
+                            duplication_check.text = "이미 사용중인 닉네임이에요!"
+                            Log.d(this.toString(), "닉네임 중복 : $s")
+                        } else {
+                            duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.paperplane_theme))
+                            duplication_check.text = "사용 가능한 닉네임이에요!"
+                            Log.d(this.toString(), "닉네임 사용 가능 : $s")
+                            userInfo.nickname = s.toString()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
             }else{
                 et_nickname.setGravity(Gravity.START)
+                duplication_check.text = ""
             }
+
 
         }
     }
