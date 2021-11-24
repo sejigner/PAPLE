@@ -52,12 +52,8 @@
     <string name="flight_distance_home">%1$sm 비행합니다</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
-    <string name="advice_write_paper">오늘 있었던 일, 지금 나의 기분,\n
-        그냥 문득 든 생각 등 옆에 누군가 있다면\n
-        하고 싶은 말을 적어서 날려보세요.\n\n
-        때로는 대답이 없어도\n
-        내 이야기를 하는 것만으로도\n기분이 좋아지지 않나요?</string>
-    <string name="limit_write">0/250</string>
+    <string name="advice_write_paper">지금 옆에 누군가 있다면\n하고 싶은 이야기를 적어서 날려보세요.\n비행기가 가까운 누군가에게 날아갑니다.</string>
+    <string name="limit_write">0/200</string>
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
 

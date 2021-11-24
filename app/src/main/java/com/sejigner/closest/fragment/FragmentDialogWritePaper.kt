@@ -105,7 +105,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         val etPaper = view.findViewById<View>(R.id.et_write_paper) as? EditText
         val textCount = view.findViewById<View>(R.id.tv_count_letter_paper) as? TextView
         val btnClose = view.findViewById<View>(R.id.iv_close_paper) as? ImageView
-        val btnFly = view.findViewById<View>(R.id.tv_paper_send) as? TextView
+        val btnFly = view.findViewById<View>(R.id.tv_paper_send_dialog) as? TextView
         val location = view.findViewById<View>(R.id.tv_update_location_paper) as? TextView
         val job = Job()
         userCurrentLocation?.longitude = longitude
@@ -126,21 +126,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         }
 
 
-        etPaper?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                textCount?.text = getString(R.string.limit_write)
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                var userinput = et_write_paper.text.toString()
-                textCount?.text = userinput.length.toString() + " / 250"
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                var userinput = et_write_paper.text.toString()
-                textCount?.text = userinput.length.toString() + " / 250"
-            }
-        })
 
     }
 
@@ -240,7 +225,7 @@ class FragmentDialogWritePaper : DialogFragment() {
 
 
         val toId = userFoundId
-        val message = et_write_paper.text.toString()
+        val message = et_write_paper_dialog.text.toString()
         val fromId = UID
         val distance = flightDistance
 

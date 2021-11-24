@@ -65,14 +65,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/constraintview_location"
-            app:layout_constraintBottom_toTopOf="@id/tv_paper_send"
+            app:layout_constraintBottom_toTopOf="@id/tv_paper_send_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
                 android:maxLength="250"
                 android:textColor="@color/black"
-                android:id="@+id/et_write_paper"
+                android:id="@+id/et_write_paper_dialog"
                 android:textAlignment="center"
                 android:textColorHint="#D4D4D4"
                 android:textSize="16sp"
@@ -105,7 +105,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/white"
-            android:id="@+id/tv_paper_send"
+            android:id="@+id/tv_paper_send_dialog"
             android:layout_width="0dp"
             android:layout_height="50dp"
             app:layout_constraintWidth_percent="0.66"

@@ -24,8 +24,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
-    FragmentDialogWritePaper.WritePaperListenerMain, FragmentDialogFirst.FirstPlaneListenerMain {
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -175,18 +174,18 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             true
         }
     }
-    override fun runFragmentDialogWritePaper(
-        currentAddress: String,
-        latitude: Double,
-        longitude: Double
-    ) {
-
-        val dialog = FragmentDialogWritePaper.newInstance(
-            UID, currentAddress, latitude, longitude
-        )
-        val fm = supportFragmentManager
-        dialog.show(fm, "write paper")
-    }
+//    override fun runFragmentDialogWritePaper(
+//        currentAddress: String,
+//        latitude: Double,
+//        longitude: Double
+//    ) {
+//
+//        val dialog = FragmentDialogWritePaper.newInstance(
+//            UID, currentAddress, latitude, longitude
+//        )
+//        val fm = supportFragmentManager
+//        dialog.show(fm, "write paper")
+//    }
 
     // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
     override fun showSuccessFragment(flightDistance: Double) {

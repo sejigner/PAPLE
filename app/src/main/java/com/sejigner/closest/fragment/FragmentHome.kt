@@ -5,14 +5,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.location.*
+import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
@@ -28,12 +33,16 @@ import com.google.firebase.ktx.Firebase
 import com.sejigner.closest.*
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
+import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.Acquaintances
+import com.sejigner.closest.room.MyPaperPlaneRecord
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
 import java.lang.Exception
 import java.util.*
@@ -61,8 +70,12 @@ class FragmentHome : Fragment(){
     private var currentAddress: String = ""
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private var userFound: Boolean = false
+    private var radius: Double = 0.0
+    private var foundUserId: String = ""
     private var userCurrentLocation: Location? = null
     private var mListener: FlightListener? = null
+    lateinit var viewModel: FragmentChatViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,12 +92,21 @@ class FragmentHome : Fragment(){
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
+        val factory = FragmentChatViewModelFactory(repository)
+
+        viewModel =
+            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        getCurrentLocation()
+        CoroutineScope(IO).launch {
+            getCurrentLocation()
+        }
 
         tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+
 
         tv_update_location.setOnClickListener {
             getCurrentLocation()
@@ -106,9 +128,136 @@ class FragmentHome : Fragment(){
             startActivity(intent)
         }
 
-        iv_paper_plane_home.setOnClickListener {
-            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
+        iv_paper_send.setOnClickListener {
+            performSendAnonymousMessage()
+//            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
+
+        et_write_paper?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                tv_count_letter_paper?.text = getString(R.string.limit_write)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val userinput = et_write_paper.text.toString()
+                tv_count_letter_paper?.text = userinput.length.toString() + " / 250"
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val userinput = et_write_paper.text.toString()
+                tv_count_letter_paper?.text = userinput.length.toString() + " / 250"
+            }
+        })
+
+    }
+
+    private fun performSendAnonymousMessage() {
+        val toId = foundUserId
+        val message = et_write_paper.text.toString()
+        val fromId = UID
+        val distance = flightDistance
+
+        val paperPlaneReceiverReference =
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+
+        val paperplaneMessage = PaperplaneMessage(
+            paperPlaneReceiverReference.key!!,
+            message,
+            fromId,
+            toId,
+            distance,
+            System.currentTimeMillis() / 1000L,
+            false
+        )
+
+        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+            Log.d(FragmentHome.TAG, "Receiver 실패")
+        }.addOnSuccessListener {
+            val sentPaper = MyPaperPlaneRecord(
+                paperplaneMessage.toId,
+                UID,
+                paperplaneMessage.text,
+                paperplaneMessage.timestamp
+            )
+            viewModel.insert(sentPaper)
+        }
+        val acquaintances = Acquaintances(toId, UID)
+        viewModel.insert(acquaintances)
+    }
+
+    fun getClosestUser() {
+        val userLocation: DatabaseReference =
+            FirebaseDatabase.getInstance().reference.child("User-Location")
+        val geoFire = GeoFire(userLocation)
+        val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
+        geoQuery.removeAllListeners()
+
+        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+            override fun onKeyEntered(key: String?, location: GeoLocation?) {
+                runBlocking {
+                    Log.d("geoQuery", key.toString())
+                    if ((!userFound) && key != UID) {
+                        // Room DB로 대체
+                        val haveMet: Boolean = viewModel.haveMet(UID, key!!).await()
+                        if (haveMet) {
+                            // user exists in the database
+                            Log.d(TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
+                        } else {
+                            // user does not exist in the database
+                            userFound = true
+
+                            foundUserId = key
+                            val userFoundLocation =
+                                GeoLocation(location!!.latitude, location.longitude)
+
+                            calDistance(userFoundLocation)
+
+                            performSendAnonymousMessage()
+                            // mCallbackMain?.dismissLoadingDialog()
+                        }
+                    }
+                }
+            }
+
+            override fun onKeyExited(key: String?) {
+            }
+
+            override fun onKeyMoved(key: String?, location: GeoLocation?) {
+
+            }
+
+            override fun onGeoQueryReady() {
+                if (!userFound && (radius < 15)) {
+                    radius++
+                    getClosestUser()
+                } else {
+                    mListener?.dismissLoadingDialog()
+                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X'
+                    //   추후 사용자수가 확보되면 거리 제공
+                    mListener?.showSuccessFragment()
+                }
+            }
+
+            override fun onGeoQueryError(error: DatabaseError?) {
+
+            }
+        })
+    }
+
+    private fun calDistance(location: GeoLocation?) {
+        var locationFoundLat = 0.0
+        var locationFoundLng = 0.0
+        if (location != null) {
+            locationFoundLat = location.latitude
+            locationFoundLng = location.longitude
+        }
+        val locationFound = Location("")
+        locationFound.latitude = locationFoundLat
+        locationFound.longitude = locationFoundLng
+
+        val distance: Float =
+            locationFound.distanceTo(userCurrentLocation)
+        flightDistance = round((distance.toDouble()) * 100) / 100
     }
 
 
@@ -123,7 +272,11 @@ class FragmentHome : Fragment(){
 
 
     interface FlightListener {
-        fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude: Double)
+        fun showSuccessFragment(flightDistance: Double)
+        fun showSuccessFragment()
+        fun showLoadingDialog()
+        fun dismissLoadingDialog()
+//        fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude: Double)
     }
 
 
@@ -222,7 +375,7 @@ class FragmentHome : Fragment(){
 //        }
 
 
-    fun getCurrentLocation() {
+    private fun getCurrentLocation() {
         // checking location permission
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
