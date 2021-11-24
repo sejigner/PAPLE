@@ -52,10 +52,11 @@
     <string name="flight_distance_home">%1$sm 비행합니다</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
-    <string name="advice_write_paper">지금 옆에 누군가 있다면\n하고 싶은 이야기를 적어서 날려보세요.\n비행기가 가까운 누군가에게 날아갑니다.</string>
+    <string name="advice_write_paper">지금 옆에 누군가 있다면\n하고 싶은 이야기를 적어서 날려보세요.\n비행기가 가까운 누군가에게 날아갑니다.\n\n위치는 상대에게 공개되지 않아요!</string>
     <string name="limit_write">0/200</string>
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
+    <string name="sent_paper">보낸 비행기</string>
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>

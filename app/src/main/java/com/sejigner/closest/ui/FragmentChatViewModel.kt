@@ -30,8 +30,16 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(rooms)
     }
 
+    fun insert(item: SentPaperPlanes) = viewModelScope.launch {
+        repository.insert(item)
+    }
+
     // In coroutines thread delete item in delete function.
     fun delete(item: FirstPaperPlanes) = viewModelScope.launch {
+        repository.delete(item)
+    }
+
+    fun delete(item: SentPaperPlanes) = viewModelScope.launch {
         repository.delete(item)
     }
 
@@ -108,4 +116,5 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     fun allRepliedPaperPlanes(uid: String) = repository.allRepliedPaperPlanes(uid)
     fun allChatMessages(uid: String, partnerId: String) = repository.allChatMessages(uid, partnerId)
     fun allChatRooms(uid: String) = repository.allChatRooms(uid)
+    fun allSentPapers(uid: String) = repository.allSentPapers(uid)
 }

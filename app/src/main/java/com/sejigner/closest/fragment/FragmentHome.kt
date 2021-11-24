@@ -14,10 +14,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
@@ -31,16 +35,19 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.sejigner.closest.*
+import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
+import com.sejigner.closest.Adapter.SentPaperPlaneAdapter
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.room.Acquaintances
-import com.sejigner.closest.room.MyPaperPlaneRecord
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.iv_update_location
+import kotlinx.android.synthetic.main.fragment_home.tv_count_letter_paper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import java.io.IOException
@@ -108,8 +115,12 @@ class FragmentHome : Fragment(){
         tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
 
 
+        val updateAnimation : Animation = AnimationUtils.loadAnimation(requireActivity(),R.anim.anim_update_location)
         tv_update_location.setOnClickListener {
-            getCurrentLocation()
+            CoroutineScope(IO).launch {
+                getCurrentLocation()
+            }
+            iv_update_location.startAnimation(updateAnimation)
         }
 
         FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID").child(UID).setValue("")
@@ -129,7 +140,9 @@ class FragmentHome : Fragment(){
         }
 
         iv_paper_send.setOnClickListener {
-            performSendAnonymousMessage()
+            mListener?.showLoadingDialog()
+
+            getClosestUser()
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
 
@@ -147,6 +160,27 @@ class FragmentHome : Fragment(){
                 val userinput = et_write_paper.text.toString()
                 tv_count_letter_paper?.text = userinput.length.toString() + " / 250"
             }
+        })
+
+        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { SentPaperPlanes ->
+
+            val dialog = FragmentDialogSent.newInstance(
+                SentPaperPlanes
+            )
+            val fm = childFragmentManager
+            dialog.show(fm, "my paper")
+        }
+        rv_sent_paper.adapter = sentPlaneAdapter
+
+        val mLayoutManager = LinearLayoutManager(requireActivity())
+        mLayoutManager.reverseLayout = true
+        mLayoutManager.stackFromEnd = true
+        mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        rv_sent_paper.layoutManager = mLayoutManager
+
+        viewModel.allSentPapers(UID).observe(viewLifecycleOwner, Observer {
+            sentPlaneAdapter.list = it
+            sentPlaneAdapter.notifyDataSetChanged()
         })
 
     }
@@ -180,6 +214,14 @@ class FragmentHome : Fragment(){
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
+
+            val myPaper = SentPaperPlanes(
+                null,
+                UID,
+                paperplaneMessage.text,
+                paperplaneMessage.timestamp
+            )
+            viewModel.insert(myPaper)
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
@@ -375,7 +417,7 @@ class FragmentHome : Fragment(){
 //        }
 
 
-    private fun getCurrentLocation() {
+    private suspend fun getCurrentLocation() {
         // checking location permission
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),

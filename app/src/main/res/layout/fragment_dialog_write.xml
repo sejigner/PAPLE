@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_update_location_paper"
-                android:id="@+id/iv_location"
+                android:id="@+id/iv_update_location_write"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_location"
@@ -52,7 +52,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_location"
+                app:layout_constraintStart_toEndOf="@id/iv_update_location_write"
 
                 app:layout_constraintTop_toTopOf="parent" />
 

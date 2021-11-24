@@ -7,7 +7,7 @@
     android:background="@color/backgroundColor"
     tools:context=".fragment.FragmentChat">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -40,7 +40,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="20dp"
-                android:id="@+id/iv_location"
+                android:id="@+id/iv_update_location"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_location"
@@ -49,10 +49,10 @@
             <TextView
                 android:textSize="14sp"
                 android:text="Current Location"
-                app:layout_constraintStart_toEndOf="@id/iv_location"
+                app:layout_constraintStart_toEndOf="@id/iv_update_location"
                 android:layout_marginStart="4dp"
-                app:layout_constraintTop_toTopOf="@id/iv_location"
-                app:layout_constraintBottom_toBottomOf="@id/iv_location"
+                app:layout_constraintTop_toTopOf="@id/iv_update_location"
+                app:layout_constraintBottom_toBottomOf="@id/iv_update_location"
                 android:textColor="@color/txt_gray"
                 android:id="@+id/tv_update_location"
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="20dp"
-                app:layout_constraintTop_toBottomOf="@id/iv_location"
+                app:layout_constraintTop_toBottomOf="@id/iv_update_location"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/dialog_write_paper"
                 android:gravity="top"
@@ -83,6 +83,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:maxLength="200"
+                    android:textColorHint="@color/txt_gray"
+                    android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -124,11 +126,38 @@
 
 
 
+            <TextView
+                android:id="@+id/tv_sent_paper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/sent_paper"
+                app:layout_constraintTop_toBottomOf="@id/cl_write_paper"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_sent_paper">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_sent_paper"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </HorizontalScrollView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 
