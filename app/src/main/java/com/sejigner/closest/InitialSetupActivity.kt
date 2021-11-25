@@ -97,6 +97,7 @@ class InitialSetupActivity : AppCompatActivity() {
                     Log.d("InitialSetupActivity", "oldVal : ${oldVal}, newVal : $newVal")
                     userInfo.birthYear = newVal.toString()
                     tv_initial_birth_year.text = newVal.toString()
+                    tv_initial_birth_year.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                     Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
 
                 }
@@ -112,11 +113,13 @@ class InitialSetupActivity : AppCompatActivity() {
                 rb_female.setOnClickListener {
                     userInfo.gender = "female"
                     tv_initial_gender.text = "여성"
+                    tv_initial_gender.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                 }
 
                 rb_male.setOnClickListener {
                     userInfo.gender = "male"
                     tv_initial_gender.text = "남성"
+                    tv_initial_gender.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                 }
             }
         }
