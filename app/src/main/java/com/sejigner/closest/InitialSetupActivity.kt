@@ -42,6 +42,7 @@ class InitialSetupActivity : AppCompatActivity() {
     private var fireBaseUser: FirebaseUser? = null
     private var fbFireStore: FirebaseFirestore? = null
     private var fbDatabase: FirebaseDatabase? = null
+    private var isDuplicated : Boolean = false
     private var uid: String? = null
     private var lastTimePressed = 0L
     private val date: Calendar = Calendar.getInstance()
@@ -141,14 +142,17 @@ class InitialSetupActivity : AppCompatActivity() {
             if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear == null || userInfo.gender == null))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
-                // 개인정보 확인 다이얼로그 구현
-                setInitialSetupToFireStore()
-
-                val intent = Intent(this, SplashCongratsActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
+                if(isDuplicated) {
+                    Toast.makeText(this, "다른 닉네임을 사용해주세요.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // 개인정보 확인 다이얼로그 구현
+                    setInitialSetupToFireStore()
+                    val intent = Intent(this, SplashCongratsActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
 
@@ -173,6 +177,7 @@ class InitialSetupActivity : AppCompatActivity() {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            duplication_check.text = ""
             if (s != null && s.toString().isNotEmpty()){
                 et_nickname.setGravity(Gravity.END)
             }else{
@@ -181,6 +186,8 @@ class InitialSetupActivity : AppCompatActivity() {
         }
 
         override fun afterTextChanged(s: Editable?) {
+            // TODO : 입력 딜레이 시키기
+            duplication_check_progress_bar.visibility = View.VISIBLE
             if (s != null && s.toString().isNotEmpty()){
                 et_nickname.setGravity(Gravity.END)
                 val reference =fbDatabase?.reference!!
@@ -189,13 +196,18 @@ class InitialSetupActivity : AppCompatActivity() {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if(snapshot.exists()) {
                             duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.txt_red))
-                            duplication_check.text = "이미 사용중인 닉네임이에요!"
+                            userInfo.nickname = s.toString()
+                            isDuplicated = true
                             Log.d(this.toString(), "닉네임 중복 : $s")
+                            duplication_check_progress_bar.visibility = View.INVISIBLE
+                            duplication_check.text = "이미 사용중인 닉네임이에요!"
                         } else {
                             duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.paperplane_theme))
-                            duplication_check.text = "사용 가능한 닉네임이에요!"
                             Log.d(this.toString(), "닉네임 사용 가능 : $s")
                             userInfo.nickname = s.toString()
+                            isDuplicated = false
+                            duplication_check_progress_bar.visibility = View.INVISIBLE
+                            duplication_check.text = "사용 가능한 닉네임이에요!"
                         }
                     }
 
@@ -203,6 +215,7 @@ class InitialSetupActivity : AppCompatActivity() {
                     }
                 })
             }else{
+                duplication_check_progress_bar.visibility = View.INVISIBLE
                 et_nickname.setGravity(Gravity.START)
                 duplication_check.text = ""
             }
