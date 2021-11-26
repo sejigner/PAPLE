@@ -6,10 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -26,7 +23,6 @@ import com.sejigner.closest.Adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
-import com.sejigner.closest.fragment.FragmentDialogReplied
 import com.sejigner.closest.fragment.FragmentDialogReportChat
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
@@ -41,10 +37,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
-import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import android.view.View.OnFocusChangeListener
 import android.widget.RelativeLayout
 import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
 
@@ -119,12 +113,11 @@ class ChatLogActivity : AppCompatActivity() {
 
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
-        btn_send_chat_log.isEnabled = false
+        iv_send_chat_log.isEnabled = false
         et_message_chat_log.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    btn_send_chat_log.isEnabled = false
-                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.txt_gray))
+                    iv_send_chat_log.isEnabled = false
                 }
 
             }
@@ -135,13 +128,16 @@ class ChatLogActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    btn_send_chat_log.isEnabled = true
-                    btn_send_chat_log.setBackgroundColor(resources.getColor(R.color.paperplane_theme))
+                    iv_send_chat_log.isEnabled = true
                 }
             }
         })
 
-        btn_send_chat_log.setOnClickListener {
+        iv_menu_chat_log.setOnClickListener {
+            menuToggle()
+        }
+
+        iv_send_chat_log.setOnClickListener {
             performSendMessage()
             et_message_chat_log.text.clear()
         }
@@ -177,6 +173,14 @@ class ChatLogActivity : AppCompatActivity() {
         })
 
 
+    }
+
+    private fun menuToggle() {
+        if(expandable_menu_chat_log.visibility == View.GONE) {
+            expandable_menu_chat_log.visibility = View.VISIBLE
+        } else {
+            expandable_menu_chat_log.visibility = View.GONE
+        }
     }
 
 

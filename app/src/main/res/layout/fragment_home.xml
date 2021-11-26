@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@color/bg_chat_log"
     tools:context=".fragment.FragmentChat">
 
     <androidx.core.widget.NestedScrollView
@@ -99,7 +99,7 @@
                     android:id="@+id/iv_paper_send"
                     android:layout_width="200dp"
                     android:layout_height="56dp"
-                    android:background="@drawable/btn_paper_send"
+                    android:background="@drawable/selector_send_paper"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/et_write_paper"
                     app:layout_constraintBottom_toBottomOf="parent"

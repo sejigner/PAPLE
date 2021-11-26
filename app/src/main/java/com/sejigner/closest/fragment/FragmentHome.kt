@@ -146,19 +146,20 @@ class FragmentHome : Fragment(){
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
 
+        iv_paper_send.isEnabled = false
         et_write_paper?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 tv_count_letter_paper?.text = getString(R.string.limit_write)
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val userinput = et_write_paper.text.toString()
-                tv_count_letter_paper?.text = userinput.length.toString() + " / 250"
+                
             }
 
             override fun afterTextChanged(s: Editable?) {
                 val userinput = et_write_paper.text.toString()
-                tv_count_letter_paper?.text = userinput.length.toString() + " / 250"
+                tv_count_letter_paper?.text = userinput.length.toString() + " / 200"
+                iv_paper_send.isEnabled = s != null && s.toString().isNotEmpty()
             }
         })
 
