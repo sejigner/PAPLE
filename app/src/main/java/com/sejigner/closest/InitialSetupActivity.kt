@@ -42,13 +42,13 @@ class InitialSetupActivity : AppCompatActivity() {
     private var fireBaseUser: FirebaseUser? = null
     private var fbFireStore: FirebaseFirestore? = null
     private var fbDatabase: FirebaseDatabase? = null
-    private var isDuplicated : Boolean = false
+    private var isDuplicated: Boolean = false
     private var uid: String? = null
     private var lastTimePressed = 0L
     private val date: Calendar = Calendar.getInstance()
     private val year = date.get(Calendar.YEAR)
     private var userInfo = Users()
-    lateinit var inputMethodManager : InputMethodManager
+    lateinit var inputMethodManager: InputMethodManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +61,14 @@ class InitialSetupActivity : AppCompatActivity() {
         uid = fireBaseAuth!!.currentUser?.uid
         initFcmToken()
 
+
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
 
         rg_initial_gender.visibility = View.GONE
         numberPicker_birth_year_initial_setup.visibility = View.GONE
 
-        cl_initial_setup.setOnTouchListener(object : View.OnTouchListener{
+        cl_initial_setup.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
                 et_nickname.clearFocus()
                 hideKeyboard()
@@ -97,7 +98,12 @@ class InitialSetupActivity : AppCompatActivity() {
                     Log.d("InitialSetupActivity", "oldVal : ${oldVal}, newVal : $newVal")
                     userInfo.birthYear = newVal.toString()
                     tv_initial_birth_year.text = newVal.toString()
-                    tv_initial_birth_year.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+                    tv_initial_birth_year.setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.black
+                        )
+                    )
                     Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
 
                 }
@@ -113,13 +119,23 @@ class InitialSetupActivity : AppCompatActivity() {
                 rb_female.setOnClickListener {
                     userInfo.gender = "female"
                     tv_initial_gender.text = "여성"
-                    tv_initial_gender.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+                    tv_initial_gender.setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.black
+                        )
+                    )
                 }
 
                 rb_male.setOnClickListener {
                     userInfo.gender = "male"
                     tv_initial_gender.text = "남성"
-                    tv_initial_gender.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+                    tv_initial_gender.setTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.black
+                        )
+                    )
                 }
             }
         }
@@ -127,12 +143,13 @@ class InitialSetupActivity : AppCompatActivity() {
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)
 
-        et_nickname.setOnEditorActionListener{ textView, action, event ->
+        et_nickname.setOnEditorActionListener { textView, action, event ->
             var handled = false
 
             if (action == EditorInfo.IME_ACTION_DONE) {
                 // 키보드 내리기
-                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(et_nickname.windowToken, 0)
                 handled = true
             }
@@ -145,7 +162,7 @@ class InitialSetupActivity : AppCompatActivity() {
             if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear == null || userInfo.gender == null))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
-                if(isDuplicated) {
+                if (isDuplicated) {
                     Toast.makeText(this, "다른 닉네임을 사용해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
                     // 개인정보 확인 다이얼로그 구현
@@ -160,8 +177,9 @@ class InitialSetupActivity : AppCompatActivity() {
         }
 
         et_nickname.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
-            val ps : Pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣu318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$")
-            if(source.equals("") || ps.matcher(source).matches()) {
+            val ps: Pattern =
+                Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣu318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$")
+            if (source.equals("") || ps.matcher(source).matches()) {
                 return@InputFilter source
             }
             Toast.makeText(this, "한글, 영문, 숫자만 사용해주세요!", Toast.LENGTH_SHORT).show()
@@ -169,57 +187,73 @@ class InitialSetupActivity : AppCompatActivity() {
         }, InputFilter.LengthFilter(10))
 
 
-
-
-
     }
 
     private val textWatcherNickname = object : TextWatcher {
+        private var timer = Timer()
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             duplication_check.text = ""
-            if (s != null && s.toString().isNotEmpty()){
-                et_nickname.setGravity(Gravity.END)
-            }else{
-                et_nickname.setGravity(Gravity.START)
+            if (s != null && s.toString().isNotEmpty()) {
+                et_nickname.gravity = Gravity.END
+            } else {
+                et_nickname.gravity = Gravity.START
             }
         }
 
         override fun afterTextChanged(s: Editable?) {
             // TODO : 입력 딜레이 시키기
             duplication_check_progress_bar.visibility = View.VISIBLE
-            if (s != null && s.toString().isNotEmpty()){
-                et_nickname.setGravity(Gravity.END)
-                val reference =fbDatabase?.reference!!
-                val query: Query = reference.child("Users").orderByChild("nickname").equalTo(s.toString())
-                query.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if(snapshot.exists()) {
-                            duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.txt_red))
-                            userInfo.nickname = s.toString()
-                            isDuplicated = true
-                            Log.d(this.toString(), "닉네임 중복 : $s")
-                            duplication_check_progress_bar.visibility = View.INVISIBLE
-                            duplication_check.text = "이미 사용중인 닉네임이에요!"
-                        } else {
-                            duplication_check.setTextColor(ContextCompat.getColor(applicationContext, R.color.paperplane_theme))
-                            Log.d(this.toString(), "닉네임 사용 가능 : $s")
-                            userInfo.nickname = s.toString()
-                            isDuplicated = false
-                            duplication_check_progress_bar.visibility = View.INVISIBLE
-                            duplication_check.text = "사용 가능한 닉네임이에요!"
-                        }
-                    }
+            timer.cancel()
+            timer = Timer()
+            if (s != null && s.toString().isNotEmpty()) {
+                et_nickname.gravity = Gravity.END
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        val reference = fbDatabase?.reference!!
+                        val query: Query =
+                            reference.child("Users").orderByChild("nickname").equalTo(s.toString())
+                        query.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.exists()) {
+                                    duplication_check.setTextColor(
+                                        ContextCompat.getColor(
+                                            applicationContext,
+                                            R.color.txt_red
+                                        )
+                                    )
+                                    userInfo.nickname = s.toString()
+                                    isDuplicated = true
+                                    Log.d(this.toString(), "닉네임 중복 : $s")
+                                    duplication_check_progress_bar.visibility = View.INVISIBLE
+                                    duplication_check.text = "이미 사용중인 닉네임이에요!"
+                                } else {
+                                    duplication_check.setTextColor(
+                                        ContextCompat.getColor(
+                                            applicationContext,
+                                            R.color.paperplane_theme
+                                        )
+                                    )
+                                    Log.d(this.toString(), "닉네임 사용 가능 : $s")
+                                    userInfo.nickname = s.toString()
+                                    isDuplicated = false
+                                    duplication_check_progress_bar.visibility = View.INVISIBLE
+                                    duplication_check.text = "사용 가능한 닉네임이에요!"
+                                }
+                            }
 
-                    override fun onCancelled(error: DatabaseError) {
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
                     }
-                })
-            }else{
+                }, 500)
+
+            } else {
                 duplication_check_progress_bar.visibility = View.INVISIBLE
-                et_nickname.setGravity(Gravity.START)
+                et_nickname.gravity = Gravity.START
                 duplication_check.text = ""
             }
 
