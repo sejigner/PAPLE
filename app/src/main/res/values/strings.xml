@@ -20,7 +20,7 @@
 
     <!-- initial_setup_activity -->
     <string name="initial_title">프로필 입력</string>
-    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다!</string>
+    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다</string>
     <string name="initial_nickname">닉네임</string>
     <string name="initial_start">시작하기</string>
 

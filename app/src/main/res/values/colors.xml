@@ -14,5 +14,6 @@
     <color name="paperplane_rest">#BCBCBC</color>
     <color name="paperplane_theme">#6174FF</color>
     <color name="report">#FFFF8282</color>
+    <color name="ic_count">#FF8125</color>
     <color name="txt_red">#FFFF8282</color>
 </resources>

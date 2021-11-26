@@ -45,20 +45,25 @@
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_edit_text.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_frame.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.26979166666666665" />
+        <entry key="..\:/develop/closest/app/src/main/res/drawable/ic_count.xml" value="0.23771929824561402" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/ic_paper_plane.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/selector_auth.xml" value="0.26979166666666665" />
+        <entry key="..\:/develop/closest/app/src/main/res/drawable/selector_count.xml" value="0.22719298245614036" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_chat_log.xml" value="0.264" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.4" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.152" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.264" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_otp.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/activity_splash.xml" value="0.12" />
-        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_chat.xml" value="0.49149922720247297" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/column_paperplane_first.xml" value="0.21359649122807017" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/column_sent_paper.xml" value="0.21359649122807017" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_chat.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.4" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
         <entry key="..\:/develop/closest/app/src/main/res/layout/fragment_home.xml" value="0.176" />
+        <entry key="..\:/develop/closest/app/src/main/res/layout/latest_chat_row.xml" value="0.4" />
       </map>
     </option>
   </component>
