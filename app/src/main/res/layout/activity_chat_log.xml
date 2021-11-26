@@ -37,16 +37,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/iv_menu_chat_log"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/ic_menu_horizontal"
-                        app:layout_constraintBottom_toBottomOf="@id/iv_back_chat_log"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/iv_back_chat_log" />
-
 
                     <ImageView
                         android:id="@+id/iv_back_chat_log"
@@ -126,6 +116,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_bar_chat_log" />
 
+        <ImageView
+            android:id="@+id/iv_menu_chat_log"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_menu_horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/cl_bar_chat_log"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/expandable_menu_chat_log"
@@ -134,7 +133,8 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_bar_chat_log">
+            app:layout_constraintTop_toBottomOf="@id/iv_menu_chat_log"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
