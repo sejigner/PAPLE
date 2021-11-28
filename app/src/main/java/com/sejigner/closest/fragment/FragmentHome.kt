@@ -222,6 +222,7 @@ class FragmentHome : Fragment(){
                 paperplaneMessage.timestamp
             )
             viewModel.insert(myPaper)
+            et_write_paper.text.clear()
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
