@@ -19,7 +19,7 @@
      android:top="4dp">
   <shape android:shape="oval" >
    <!-- fill the inside in the color you want (could also be a gradient again if you want to, just change solid to gradient and enter angle, start, maybe center, and end color) -->
-   <solid android:color="@color/backgroundColor" />
+   <solid android:color="@color/bg_chat_log" />
   </shape>
  </item>
 </layer-list>

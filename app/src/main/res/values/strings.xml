@@ -20,7 +20,7 @@
 
     <!-- initial_setup_activity -->
     <string name="initial_title">프로필 입력</string>
-    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다!</string>
+    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다</string>
     <string name="initial_nickname">닉네임</string>
     <string name="initial_start">시작하기</string>
 
@@ -57,6 +57,7 @@
     <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기가 날아갔어요!</string>
     <string name="sent_paper">보낸 비행기</string>
+    <string name="update_address">위치 정보 업데이트하기</string>
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
