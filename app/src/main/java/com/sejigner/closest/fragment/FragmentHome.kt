@@ -66,6 +66,8 @@ class FragmentHome : Fragment(){
     companion object {
         const val TAG = "FlightLog"
         val CURRENTADDRESS = "CURRENT_ADDRESS"
+        // GeoFire Query 최대 거리
+        const val RADIUS = 15
     }
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
@@ -83,6 +85,7 @@ class FragmentHome : Fragment(){
     private var userCurrentLocation: Location? = null
     private var mListener: FlightListener? = null
     lateinit var viewModel: FragmentChatViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -270,7 +273,7 @@ class FragmentHome : Fragment(){
             }
 
             override fun onGeoQueryReady() {
-                if (!userFound && (radius < 15)) {
+                if (!userFound && (radius < RADIUS)) {
                     radius++
                     getClosestUser()
                 } else {
