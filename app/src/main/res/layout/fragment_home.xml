@@ -91,7 +91,7 @@
                         android:layout_marginBottom="12dp"
                         android:background="@null"
                         android:gravity="top"
-                        android:hint="@string/advice_write_paper"
+                        android:hint="@string/advice_home_write"
                         android:includeFontPadding="false"
                         android:lineHeight="24sp"
                         android:maxLength="200"
