@@ -42,7 +42,7 @@ import java.util.*
 import android.widget.RelativeLayout
 import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
 
-// TODO : 채팅방 나가기 기능 구현
+// TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
 class ChatLogActivity : AppCompatActivity() {
 
     companion object {
