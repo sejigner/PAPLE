@@ -16,4 +16,5 @@
     <color name="report">#FFFF8282</color>
     <color name="ic_count">#FF8125</color>
     <color name="txt_red">#FFFF8282</color>
+    <color name="warning">#FF2424</color>
 </resources>

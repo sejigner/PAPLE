@@ -104,17 +104,12 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
         tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
 
-        // 버리기 -> 파이어베이스 데이터 삭제
-        tv_dialog_discard_replied.setOnClickListener {
+        cl_discard_replied.setOnClickListener {
             viewModel.delete(paper!!)
             dismiss()
         }
 
-        iv_back_reply_replied.setOnClickListener {
-            dismiss()
-        }
-
-        tv_report_replied.setOnClickListener {
+        layout_report_replied.setOnClickListener {
             val dialog = FragmentDialogReportPlane.newInstanceReplied(
                 partnerMessage!!,
                 replyTime!!

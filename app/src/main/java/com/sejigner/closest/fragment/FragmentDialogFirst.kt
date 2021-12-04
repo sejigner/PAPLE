@@ -94,14 +94,13 @@ class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPla
 
         val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
         var textEntered: String
-        val btnCancel = view.findViewById<View>(R.id.iv_back_reply_first) as? ImageView
-        val btnDiscard = view.findViewById<View>(R.id.tv_dialog_discard_first) as? TextView
         val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
 
 
         tv_dialog_time_first.text = setDateToTextView(time!!)
         tv_dialog_message_first.text = message
         tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
+
 
         tv_report_first.setOnClickListener {
             val dialog = FragmentDialogReportPlane.newInstanceFirst(
@@ -112,12 +111,7 @@ class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPla
             dialog.show(fm, "report")
         }
 
-
-        btnCancel?.setOnClickListener {
-            dismiss()
-        }
-
-        btnDiscard?.setOnClickListener {
+        cl_discard_first.setOnClickListener {
             // Firebase 내 해당 데이터 삭제
             viewModel.delete(paper!!)
             dismiss()

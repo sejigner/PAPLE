@@ -9,8 +9,8 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="120dp"
-            android:layout_height="200dp"
+            android:layout_width="160dp"
+            android:layout_height="188dp"
             android:background="@drawable/bg_sent_paper"
             android:layout_marginEnd="8dp"
             android:layout_marginVertical="4dp"
