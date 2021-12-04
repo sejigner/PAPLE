@@ -1,47 +1,48 @@
-package com.sejigner.closest.Adapter
+package com.sejigner.closest.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
+import com.sejigner.closest.ui.FirstPlaneListener
 import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.room.FirstPaperPlanes
-import kotlinx.android.synthetic.main.column_paperplane_first.view.*
+import com.sejigner.closest.room.RepliedPaperPlanes
+import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.round
 
-class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (FirstPaperPlanes) -> Unit) : RecyclerView.Adapter<FirstPaperPlaneAdapter.FirstPaperPlaneViewHolder>() {
+class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.Adapter<RepliedPaperPlaneAdapter.RepliedPaperPlaneViewHolder>() {
 
+    val mListener : FirstPlaneListener ?= null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): FirstPaperPlaneViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.column_paperplane_first, parent, false)
-        return FirstPaperPlaneViewHolder(view, itemClick)
+    ): RepliedPaperPlaneViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.column_paperplane_replied, parent, false)
+        return RepliedPaperPlaneViewHolder(view, itemClick)
     }
 
     override fun onBindViewHolder(
-        holder: FirstPaperPlaneViewHolder,
+        holder: RepliedPaperPlaneViewHolder,
         position: Int
     ) {
         var currentPosition = list[position]
-        holder.itemView.tv_paperplane_message_first.text = currentPosition.message
-        holder.itemView.tv_paperplane_distance_first.text = convertDistanceToString(currentPosition.flightDistance)
-        holder.itemView.tv_paperplane_time_first.text = setDateToTextView(currentPosition.timestamp)
+        holder.itemView.tv_paperplane_message_replied.text = currentPosition.partnerMessage
+        holder.itemView.tv_paperplane_distance_replied.text = convertDistanceToString(currentPosition.flightDistance)
+        holder.itemView.tv_paperplane_time_replied.text = setDateToTextView(currentPosition.replyTimestamp)
         holder.itemView.setOnClickListener{ itemClick(currentPosition) }
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
     }
 
     private fun convertDistanceToString(distance : Double) : String {
         return if(distance >= 1000) {
-            (round((distance/1000)*100)/100).toString() + "km"
+            (((distance/1000)*100)/100).toString() + "km"
         } else distance.toString() + "m"
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
     }
 
     private fun setDateToTextView(timestamp: Long) : String {
@@ -66,7 +67,7 @@ class FirstPaperPlaneAdapter(var list : List<FirstPaperPlanes>, val viewModel : 
         return sdf.format(timestamp * 1000L)
     }
 
-    inner class FirstPaperPlaneViewHolder(itemView : View, itemClick: (FirstPaperPlanes) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    inner class RepliedPaperPlaneViewHolder(itemView : View, itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
     }
 }

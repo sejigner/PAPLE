@@ -1,4 +1,4 @@
-package com.sejigner.closest.Adapter
+package com.sejigner.closest.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

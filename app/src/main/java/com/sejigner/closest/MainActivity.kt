@@ -1,6 +1,5 @@
 package com.sejigner.closest
 
-import android.content.Intent
 import android.location.*
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
@@ -17,14 +19,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sejigner.closest.Adapter.MainViewPagerAdapter
+import com.sejigner.closest.adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
-
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentDialogFirst.FirstPlaneListenerMain {
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
+    FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -37,7 +39,10 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentD
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-    private lateinit var dialog : LoadingDialog
+    private lateinit var dialog: LoadingDialog
+    private var mInterstitialAd: InterstitialAd? = null
+    private var mAdIsLoading: Boolean = false
+    private var wasAd : Boolean = false
 
 
     companion object {
@@ -48,7 +53,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentD
 
         private lateinit var auth: FirebaseAuth
 
-        fun getUid() : String{
+        fun getUid(): String {
 
             auth = FirebaseAuth.getInstance()
 
@@ -91,9 +96,18 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentD
             }
         }
 
-        if(checkGooglePlayServices()) {
+        MobileAds.initialize(this) {}
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder().setTestDeviceIds(
+                listOf("ABCDEF012345")).build()
+        )
+
+
+
+
+        if (checkGooglePlayServices()) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if(!task.isSuccessful) {
+                if (!task.isSuccessful) {
                     Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                     return@OnCompleteListener
                 }
@@ -113,7 +127,74 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentD
             Log.w(TAG, "Device doesn't have google play services")
         }
 
+        if (!mAdIsLoading && mInterstitialAd == null) {
+            mAdIsLoading = true
+            loadAd()
+        }
+
     }
+
+    private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            this, AD_UNIT_ID, adRequest, object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Log.d(TAG, "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                    mAdIsLoading = false
+                    Toast.makeText(this@MainActivity, "onAdLoaded()", Toast.LENGTH_SHORT).show()
+                    if(!wasAd) {
+                        showInterstitial()
+                        wasAd = true
+                    }
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d(TAG, adError?.message)
+                    mInterstitialAd = null
+                    mAdIsLoading = false
+                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
+                            "message: ${adError.message}"
+                    Toast.makeText(
+                        this@MainActivity,
+                        "onAdFailedToLoad() with error $error",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+    }
+
+    private fun showInterstitial() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    Log.d(TAG, "Ad was dismissed.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                    loadAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                    Log.d(TAG, "Ad failed to show.")
+                    // Don't forget to set the ad reference to null so you
+                    // don't show the ad a second time.
+                    mInterstitialAd = null
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    Log.d(TAG, "Ad showed fullscreen content.")
+                    // Called when ad is dismissed.
+                }
+            }
+            mInterstitialAd?.show(this)
+        } else {
+            Toast.makeText(this, "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun initNavigationBar() {
         bnv_main.run {
@@ -157,14 +238,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentD
     }
 
     override fun onBackPressed() {
-        if(vp_main.currentItem == 0) {
+        if (vp_main.currentItem == 0) {
             finish()
         } else {
             vp_main.currentItem = 0
         }
     }
 
-    private fun checkGooglePlayServices() : Boolean {
+    private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         return if (status != ConnectionResult.SUCCESS) {
             Log.e(TAG, "Error")

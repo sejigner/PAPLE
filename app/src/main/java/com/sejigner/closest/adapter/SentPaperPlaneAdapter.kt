@@ -1,4 +1,4 @@
-package com.sejigner.closest.Adapter
+package com.sejigner.closest.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
 import com.sejigner.closest.room.SentPaperPlanes
 import com.sejigner.closest.ui.FragmentChatViewModel
-import kotlinx.android.synthetic.main.column_paperplane_first.view.*
 import kotlinx.android.synthetic.main.column_sent_paper.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.round
 
 class SentPaperPlaneAdapter(
     var list: List<SentPaperPlanes>,

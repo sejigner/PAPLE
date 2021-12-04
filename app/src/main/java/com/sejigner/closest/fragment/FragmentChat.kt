@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.google.firebase.database.*
-import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
-import com.sejigner.closest.Adapter.LatestMessageAdapter
-import com.sejigner.closest.Adapter.RepliedPaperPlaneAdapter
+import com.sejigner.closest.adapter.FirstPaperPlaneAdapter
+import com.sejigner.closest.adapter.LatestMessageAdapter
+import com.sejigner.closest.adapter.RepliedPaperPlaneAdapter
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
@@ -30,7 +30,6 @@ import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
-import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_chat.*
@@ -39,7 +38,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 // TODO : ChatLogActivity 내 chatRoomAndAllMessages 참고하여 일대다관계 데이터 활용
 //  chatRoomAndAllMessages ( UID - ChatRoomId - Message 구조)

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -13,13 +13,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 
+
+private const val LOG_TAG = "SplashActivity"
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var fbDatabase : FirebaseDatabase
 
-    private val time: Long = 2000
+    private val time: Long = 2L
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -27,10 +30,23 @@ class SplashActivity : AppCompatActivity() {
 
         fbDatabase = FirebaseDatabase.getInstance()
         transparentStatusAndNavigation()
-        Handler().postDelayed({
-            verifyUserIsLoggedIn()
-        },time)
+        createTimer(time)
     }
+
+    private fun createTimer(seconds: Long) {
+
+        val countDownTimer: CountDownTimer = object : CountDownTimer(seconds * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                verifyUserIsLoggedIn()
+            }
+        }
+        countDownTimer.start()
+    }
+
+
 
     private fun verifyUserIsLoggedIn() {
         val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
@@ -41,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
                 .addOnSuccessListener { it ->
                     if (it.value != null) {
                         Log.d(MainActivity.TAG, "Checked, User Info already set - user nickname : ${it.value}")
-                        startActivity(Intent(applicationContext,MainActivity::class.java))
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                         finish()
                     } else {
                         val setupIntent = Intent(this@SplashActivity, InitialSetupActivity::class.java)

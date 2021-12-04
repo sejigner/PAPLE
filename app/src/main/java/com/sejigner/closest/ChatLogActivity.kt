@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
-import com.sejigner.closest.Adapter.ChatLogAdapter
+import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat

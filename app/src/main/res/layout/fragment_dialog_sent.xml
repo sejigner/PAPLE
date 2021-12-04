@@ -26,7 +26,7 @@
                 android:id="@+id/iv_delete_sent"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_delete"
+                android:src="@drawable/ic_discard"
                 app:layout_constraintBottom_toTopOf="@id/tv_dialog_discard_sent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

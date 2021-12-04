@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.location.*
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -28,15 +26,12 @@ import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.sejigner.closest.*
-import com.sejigner.closest.Adapter.FirstPaperPlaneAdapter
-import com.sejigner.closest.Adapter.SentPaperPlaneAdapter
+import com.sejigner.closest.adapter.SentPaperPlaneAdapter
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
@@ -51,9 +46,7 @@ import kotlinx.android.synthetic.main.fragment_home.tv_count_letter_paper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
-import kotlin.coroutines.resumeWithException
 import kotlin.math.round
 
 

@@ -1,4 +1,4 @@
-package com.sejigner.closest.Adapter
+package com.sejigner.closest.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.room.ChatRooms
-import com.sejigner.closest.room.ChatRoomsWithUid
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
 import java.util.*
