@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -34,6 +35,11 @@ class FragmentFlySuccess : DialogFragment() {
 
     private var flightDistance: Double ?= null
     private var isReply : Boolean = false
+    private var mCallbackMain: FlySuccessListenerMain? = null
+
+    interface FlySuccessListenerMain {
+        fun showInterstitial()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +91,20 @@ class FragmentFlySuccess : DialogFragment() {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mCallbackMain?.showInterstitial()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FlySuccessListenerMain) {
+            mCallbackMain = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
+        }
     }
 
     private fun convertDistanceToString(distance : Double) : String {

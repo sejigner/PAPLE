@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentFlySuccess.FlySuccessListenerMain,
     FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         )
     }
 
-    private fun showInterstitial() {
+    override fun showInterstitial() {
         if (mInterstitialAd != null) {
             mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
