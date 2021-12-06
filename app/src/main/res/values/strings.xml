@@ -66,6 +66,7 @@
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="init_chat_log">대화가 시작되었습니다.</string>
+    <string name="finish_chat_log">상대방이 대화방을 나갔어요.</string>
     <string name="report_title">신고하시겠어요?</string>
     <string name="btn_login">로그인</string>
     <string name="reported_chatroom">신고처리된 채팅방입니다.</string>

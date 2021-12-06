@@ -312,6 +312,7 @@ class ChatLogActivity : AppCompatActivity() {
                             chatMessage.timestamp
                         )
 
+
                         lastMessageTimeStamp =
                             ViewModel.getLatestTimestamp(UID, partnerUid!!).await()
                         lastMessageDate = getDateTime(lastMessageTimeStamp!!)
@@ -422,6 +423,41 @@ class ChatLogActivity : AppCompatActivity() {
                 text,
                 timestamp
             ).join()
+        }
+    }
+
+    private fun finishChat(): Boolean {
+        return try {
+            val myNickName = MYNICKNAME
+            var result = false
+            val timestamp = System.currentTimeMillis() / 1000
+            val text = resources.getString(R.string.finish_chat_log)
+//            val toRef =
+//                FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
+//                    .push()
+//            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
+
+            val toRef =
+                FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID").push()
+            val chatMessage = ChatMessage(toRef.key!!, text, UID, partnerUid!!, timestamp)
+            toRef.setValue(chatMessage).addOnSuccessListener {
+                Log.d(TAG, "finished the chat: $partnerUid")
+            }
+
+            val lastMessagesPartnerReference =
+                FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
+            val lastMessageToPartner = LatestChatMessage(myNickName, text, timestamp)
+            lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
+                Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
+                result = true
+            }.addOnFailureListener {
+                Log.d(ChatLogActivity.TAG, it.toString())
+                result = false
+            }
+            result
+        } catch (e: FirebaseException) {
+            Log.d(ChatLogActivity.TAG, e.toString())
+            false
         }
     }
 
