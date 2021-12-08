@@ -394,12 +394,12 @@ class ChatLogActivity : AppCompatActivity() {
         // TODO : 필요성 고민(보내자마자 updateLastMessages 실행해서 업데이트 하는 걸로 충분하지 않나?)
         val lastMessagesUserReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
-        val lastMessageToMe = LatestChatMessage(partnerNickname, text, timestamp)
+        val lastMessageToMe = LatestChatMessage(toId, partnerNickname, text, timestamp)
         lastMessagesUserReference.setValue(lastMessageToMe)
 
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(MYNICKNAME, text, timestamp)
+        val lastMessageToPartner = LatestChatMessage(toId,MYNICKNAME, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
 
@@ -447,7 +447,7 @@ class ChatLogActivity : AppCompatActivity() {
 
             val lastMessagesPartnerReference =
                 FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
-            val lastMessageToPartner = LatestChatMessage(myNickName, text, timestamp)
+            val lastMessageToPartner = LatestChatMessage(UID, myNickName, text, timestamp)
             lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
                 result = true
