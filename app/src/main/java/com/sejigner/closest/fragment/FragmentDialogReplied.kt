@@ -177,7 +177,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
 //            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
             val lastMessagesPartnerReference =
                 FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
-            val lastMessageToPartner = LatestChatMessage(myNickName, text, timestamp)
+            val lastMessageToPartner = LatestChatMessage(fromId!!, myNickName, text, timestamp)
             lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "sent your message: $fromId")
                 result = true
