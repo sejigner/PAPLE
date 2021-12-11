@@ -433,6 +433,7 @@ class ChatLogActivity : AppCompatActivity() {
 
             val lastMessagesPartnerReference =
                 FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
+                FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
             lastMessagesPartnerReference.setValue("true").addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
                 result = true

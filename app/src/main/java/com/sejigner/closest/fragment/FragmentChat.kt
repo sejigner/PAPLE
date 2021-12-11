@@ -62,8 +62,10 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     lateinit var list: List<FirstPaperPlanes>
     lateinit var mRefPlane : DatabaseReference
     lateinit var mRefMessages : DatabaseReference
+    lateinit var mRefFinish : DatabaseReference
     lateinit var mListenerPlane : ChildEventListener
     lateinit var mListenerMessages : ChildEventListener
+    lateinit var mListenerFinish : ChildEventListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,14 +183,51 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         // listeners for planes and messages
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
         mRefMessages =  FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
+        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
         listenForPlanes()
         listenForMessages()
+        listenForFinishedChat()
     }
 
     override fun onStop() {
         super.onStop()
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
+    }
+
+    private fun listenForFinishedChat() {
+        mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                if(snapshot.value.toString()=="true") {
+                    val partnerUid = snapshot.key.toString()
+                    val timestamp = System.currentTimeMillis() / 1000
+                    val chatMessages = ChatMessages(null,
+                        partnerUid,
+                        UID,
+                        2,
+                        getString(R.string.finish_chat_log),
+                        timestamp
+                        )
+                }
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     private fun listenForPlanes() {
