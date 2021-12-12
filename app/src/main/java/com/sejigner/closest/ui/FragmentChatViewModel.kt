@@ -70,6 +70,14 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.exists(uid, partnerId)
     }
 
+    fun isOver(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.isOver(uid,partnerId)
+    }
+
+    fun updateChatRoom(uid: String, partnerId: String, isOver : Boolean) = CoroutineScope(IO).launch {
+        repository.updateChatRoom(uid, partnerId, isOver)
+    }
+
     fun updateLastMessages(uid: String, partnerId: String, message : String, messageTimestamp : Long) = CoroutineScope(IO).launch {
         repository.updateLastMessages(uid, partnerId, message, messageTimestamp)
     }

@@ -32,6 +32,8 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun getChatRoomsTimestamp(uid: String, partnerId: String) : Long? = db.getChatRoomsDao().getChatRoomsTimestamp(uid, partnerId)
     suspend fun getLatestTimestamp(uid: String, partnerId: String) : Long? = db.getChatRoomsDao().getLatestTimestamp(uid, partnerId)
     suspend fun deleteChatRoom(uid: String, partnerId: String) = db.getChatRoomsDao().deleteChatRoom(uid, partnerId)
+    suspend fun isOver(uid: String, partnerId: String) = db.getChatRoomsDao().isOver(uid,partnerId)
+    suspend fun updateChatRoom(uid:String, partnerId: String, isOver: Boolean) = db.getChatRoomsDao().updateChatroom(uid, partnerId, isOver)
 
     // 메세지
     suspend fun insert(messages: ChatMessages) = db.getChatMessagesDao().insert(messages)

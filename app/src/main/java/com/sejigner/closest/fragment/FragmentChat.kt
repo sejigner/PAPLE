@@ -199,15 +199,20 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if(snapshot.value.toString()=="true") {
-                    val partnerUid = snapshot.key.toString()
-                    val timestamp = System.currentTimeMillis() / 1000
-                    val chatMessages = ChatMessages(null,
-                        partnerUid,
-                        UID,
-                        2,
-                        getString(R.string.finish_chat_log),
-                        timestamp
+                    CoroutineScope(IO).launch {
+                        val partnerUid = snapshot.key.toString()
+                        val timestamp = System.currentTimeMillis() / 1000
+                        val noticeFinish = getString(R.string.finish_chat_log)
+                        val chatMessages = ChatMessages(null,
+                            partnerUid,
+                            UID,
+                            2,
+                            noticeFinish,
+                            timestamp
                         )
+                        ViewModel.insert(chatMessages)
+                        ViewModel.updateChatRoom(UID, partnerUid,true)
+                    }
                 }
 
             }
@@ -336,7 +341,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                 partnerNickname,
                                 UID,
                                 latestChatMessage.message,
-                                latestChatMessage.time
+                                latestChatMessage.time,
+                                false
                             )
                             ViewModel.insert(chatRoom)
                             mRefMessages.child(snapshot.key!!).removeValue()
@@ -351,7 +357,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                                     partnerNickname,
                                     UID,
                                     latestChatMessage.message,
-                                    latestChatMessage.time
+                                    latestChatMessage.time,
+                                    false
                                 )
                                 ViewModel.insert(chatRoom)
                                 mRefMessages.child(snapshot.key!!).removeValue()

@@ -60,6 +60,9 @@ class ChatLogActivity : AppCompatActivity() {
     lateinit var layout: RelativeLayout
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var softKeyboard: SoftKeyboard
+    private var isOver: Boolean = false
+    lateinit var mListenerFinish: ChildEventListener
+    lateinit var mRefFinish: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,10 +101,14 @@ class ChatLogActivity : AppCompatActivity() {
 //        })
 
         CoroutineScope(IO).launch {
+            isOver = ViewModel.isOver(UID, partnerUid!!).await()
             if (!partnerUid.isNullOrBlank()) {
                 val chatRoom = ViewModel.getChatRoom(UID, partnerUid!!).await()
                 tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
                 partnerNickname = chatRoom.partnerNickname!!
+            }
+            if (isOver) {
+                TODO("Lock the editText and update UI")
             }
         }
 
@@ -171,12 +178,51 @@ class ChatLogActivity : AppCompatActivity() {
                 }, 100)
             }
         })
+    }
 
+    private fun listenForFinishedChat() {
+        mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                if(snapshot.value.toString()=="true") {
+                    CoroutineScope(IO).launch {
+                        val partnerUid = snapshot.key.toString()
+                        val timestamp = System.currentTimeMillis() / 1000
+                        val noticeFinish = getString(R.string.finish_chat_log)
+                        val chatMessages = ChatMessages(null,
+                            partnerUid,
+                            UID,
+                            2,
+                            noticeFinish,
+                            timestamp
+                        )
+                        ViewModel.insert(chatMessages)
+                        ViewModel.updateChatRoom(UID, partnerUid,true)
+                        TODO("Lock the editText and update UI")
+                    }
+                }
 
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     private fun menuToggle() {
-        if(expandable_menu_chat_log.visibility == View.GONE) {
+        if (expandable_menu_chat_log.visibility == View.GONE) {
             expandable_menu_chat_log.visibility = View.VISIBLE
         } else {
             expandable_menu_chat_log.visibility = View.GONE
@@ -195,7 +241,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
+        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
 //        setLayoutMode()
 
         inputMethodManager =
@@ -320,7 +366,14 @@ class ChatLogActivity : AppCompatActivity() {
                         if (!lastMessageDate.equals(currentMessageDate)) {
                             lastMessageDate = currentMessageDate
                             val dateMessage =
-                                ChatMessages(null, partnerUid, UID, 2, lastMessageDate, chatMessage.timestamp)
+                                ChatMessages(
+                                    null,
+                                    partnerUid,
+                                    UID,
+                                    2,
+                                    lastMessageDate,
+                                    chatMessage.timestamp
+                                )
                             ViewModel.insert(dateMessage).join()
                         }
 
@@ -432,8 +485,9 @@ class ChatLogActivity : AppCompatActivity() {
             var result = false
 
             val lastMessagesPartnerReference =
-                FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
-                FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
+                FirebaseDatabase.getInstance()
+                    .getReference("/Latest-messages/$partnerUid/isOver/$UID")
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
             lastMessagesPartnerReference.setValue("true").addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
                 result = true

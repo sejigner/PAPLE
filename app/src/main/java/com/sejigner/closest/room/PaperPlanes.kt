@@ -95,7 +95,9 @@ data class ChatRooms(
     @ColumnInfo(name = "lastMessage")
     val lastMessage: String?,
     @ColumnInfo(name = "lastMessageTimestamp")
-    val lastMessageTimestamp: Long?
+    val lastMessageTimestamp: Long?,
+    @ColumnInfo(name = "isOver")
+    val isOver : Boolean
 )
 
 @Entity(tableName = "uid")

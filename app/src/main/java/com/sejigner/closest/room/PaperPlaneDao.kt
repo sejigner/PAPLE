@@ -86,8 +86,18 @@ interface ChatRoomsDao {
     @Query("SELECT EXISTS (SELECT 1 FROM chat_rooms WHERE uid = :uid and partnerId = :partnerId)")
     suspend fun exists(uid: String, partnerId: String): Boolean
 
+    @Query("SELECT isOver FROM chat_rooms  WHERE uid = :uid and partnerId = :partnerId")
+    suspend fun isOver(uid: String, partnerId: String): Boolean
+
     @Update
     suspend fun update(messageList: List<ChatMessages>)
+
+    @Query("UPDATE chat_rooms  SET isOver = :isOver WHERE uid = :uid and partnerId = :partnerId ")
+    suspend fun updateChatroom(
+        uid : String,
+        partnerId: String,
+        isOver : Boolean
+    )
 
     @Transaction
     suspend fun insertOrUpdate(messageList: List<ChatMessages>) {
