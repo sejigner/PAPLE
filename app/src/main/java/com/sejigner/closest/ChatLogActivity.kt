@@ -157,6 +157,7 @@ class ChatLogActivity : AppCompatActivity() {
             CoroutineScope(IO).launch {
                 val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
                 viewModel.delete(chatroom)
+                finishChat()
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
