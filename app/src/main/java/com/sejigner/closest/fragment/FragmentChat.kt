@@ -193,6 +193,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         super.onStop()
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
+        mRefFinish.removeEventListener(mListenerFinish)
     }
 
     private fun listenForFinishedChat() {
@@ -210,8 +211,15 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                             noticeFinish,
                             timestamp
                         )
+                        ViewModel.updateChatRoom(UID, partnerUid,true).join()
                         ViewModel.insert(chatMessages)
-                        ViewModel.updateChatRoom(UID, partnerUid,true)
+                        ViewModel.updateLastMessages(
+                            UID,
+                            partnerUid,
+                            noticeFinish,
+                            timestamp
+                        )
+                        mRefFinish.child(partnerUid).removeValue()
                     }
                 }
 

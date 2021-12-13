@@ -52,7 +52,7 @@ class ChatLogActivity : AppCompatActivity() {
     private var fbDatabase: FirebaseDatabase? = null
     private var partnerUid: String? = null
     private var partnerFcmToken: String? = null
-    lateinit var ViewModel: FragmentChatViewModel
+    lateinit var viewModel: FragmentChatViewModel
     private lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
     lateinit var mRef: DatabaseReference
@@ -71,13 +71,13 @@ class ChatLogActivity : AppCompatActivity() {
         layout = layout_chat_log
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
-        ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
 
         updatePartnersToken()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
-        chatLogAdapter = ChatLogAdapter(listOf(), ViewModel)
+        chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
         rv_chat_log.adapter = chatLogAdapter
 
         val mLayoutManagerMessages = LinearLayoutManager(this)
@@ -89,7 +89,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
 
-        ViewModel.allChatMessages(UID, partnerUid!!).observe(this, {
+        viewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.list = it
             chatLogAdapter.notifyDataSetChanged()
             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
@@ -101,9 +101,9 @@ class ChatLogActivity : AppCompatActivity() {
 //        })
 
         CoroutineScope(IO).launch {
-            isOver = ViewModel.isOver(UID, partnerUid!!).await()
+            isOver = viewModel.isOver(UID, partnerUid!!).await()
             if (!partnerUid.isNullOrBlank()) {
-                val chatRoom = ViewModel.getChatRoom(UID, partnerUid!!).await()
+                val chatRoom = viewModel.getChatRoom(UID, partnerUid!!).await()
                 tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
                 partnerNickname = chatRoom.partnerNickname!!
             }
@@ -155,8 +155,8 @@ class ChatLogActivity : AppCompatActivity() {
 
         btn_leave_menu_chat_log.setOnClickListener {
             CoroutineScope(IO).launch {
-                val chatroom = ViewModel.getChatRoom(UID, partnerUid!!).await()
-                ViewModel.delete(chatroom)
+                val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
+                viewModel.delete(chatroom)
             }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -195,8 +195,15 @@ class ChatLogActivity : AppCompatActivity() {
                             noticeFinish,
                             timestamp
                         )
-                        ViewModel.insert(chatMessages)
-                        ViewModel.updateChatRoom(UID, partnerUid,true)
+                        viewModel.updateChatRoom(UID, partnerUid,true).join()
+                        viewModel.insert(chatMessages)
+                        viewModel.updateLastMessages(
+                            UID,
+                            partnerUid,
+                            noticeFinish,
+                            timestamp
+                        )
+                        mRefFinish.child(partnerUid).removeValue()
                         TODO("Lock the editText and update UI")
                     }
                 }
@@ -241,7 +248,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
+
 //        setLayoutMode()
 
         inputMethodManager =
@@ -266,12 +273,15 @@ class ChatLogActivity : AppCompatActivity() {
 
         mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
         listenForMessages()
+        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
+        listenForFinishedChat()
     }
 
 
     override fun onStop() {
         super.onStop()
         mRef.removeEventListener(mListener)
+        mRefFinish.removeEventListener(mListenerFinish)
     }
 
     override fun onBackPressed() {
@@ -360,7 +370,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
                         lastMessageTimeStamp =
-                            ViewModel.getLatestTimestamp(UID, partnerUid!!).await()
+                            viewModel.getLatestTimestamp(UID, partnerUid!!).await()
                         lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
                         if (!lastMessageDate.equals(currentMessageDate)) {
@@ -374,10 +384,10 @@ class ChatLogActivity : AppCompatActivity() {
                                     lastMessageDate,
                                     chatMessage.timestamp
                                 )
-                            ViewModel.insert(dateMessage).join()
+                            viewModel.insert(dateMessage).join()
                         }
 
-                        val job = ViewModel.insert(chatMessages)
+                        val job = viewModel.insert(chatMessages)
                         if (job.isCompleted) {
                             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
                         }
@@ -462,16 +472,16 @@ class ChatLogActivity : AppCompatActivity() {
             var lastMessageTimeStamp: Long? = 0L
             var lastMessageDate: String?
 
-            lastMessageTimeStamp = ViewModel.getLatestTimestamp(UID, partnerUid!!).await()
+            lastMessageTimeStamp = viewModel.getLatestTimestamp(UID, partnerUid!!).await()
             lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
             if (!lastMessageDate.equals(currentMessageDate)) {
                 lastMessageDate = currentMessageDate
                 val dateMessage = ChatMessages(null, partnerUid, UID, 2, lastMessageDate, timestamp)
-                ViewModel.insert(dateMessage).join()
+                viewModel.insert(dateMessage).join()
             }
-            ViewModel.insert(chatMessages)
-            ViewModel.updateLastMessages(
+            viewModel.insert(chatMessages)
+            viewModel.updateLastMessages(
                 UID,
                 partnerUid!!,
                 text,
@@ -517,7 +527,7 @@ class ChatLogActivity : AppCompatActivity() {
                 result = sendMessage()
             }
             if (result) {
-                ViewModel.insert(noticeMessage)
+                viewModel.insert(noticeMessage)
             } else {
                 Toast.makeText(this@ChatLogActivity, "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
                     .show()
@@ -564,15 +574,15 @@ class ChatLogActivity : AppCompatActivity() {
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
             // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)
-            val messageList = ViewModel.chatRoomAndAllMessages(UID, partnerUid!!).await()
+            val messageList = viewModel.chatRoomAndAllMessages(UID, partnerUid!!).await()
             val reportRef =
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
             reportRef.setValue(messageList).addOnFailureListener {
                 Log.d("ReportChatLog", "Report 실패")
             }.addOnSuccessListener {
                 Log.d("Report", "신고가 접수되었어요")
-                ViewModel.deleteAllMessages(UID, partnerUid!!)
-                ViewModel.deleteChatRoom(UID, partnerUid!!)
+                viewModel.deleteAllMessages(UID, partnerUid!!)
+                viewModel.deleteChatRoom(UID, partnerUid!!)
                 startActivity(Intent(this@ChatLogActivity, MainActivity::class.java))
             }
         }
