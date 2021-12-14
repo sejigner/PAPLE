@@ -100,17 +100,7 @@ class ChatLogActivity : AppCompatActivity() {
 //            chatLogAdapter.notifyDataSetChanged()
 //        })
 
-        CoroutineScope(IO).launch {
-            isOver = viewModel.isOver(UID, partnerUid!!).await()
-            if (!partnerUid.isNullOrBlank()) {
-                val chatRoom = viewModel.getChatRoom(UID, partnerUid!!).await()
-                tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
-                partnerNickname = chatRoom.partnerNickname!!
-            }
-            if (isOver) {
-                TODO("Lock the editText and update UI")
-            }
-        }
+
 
 
 //        val ref = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("strNickname")
@@ -120,25 +110,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
-        iv_send_chat_log.isEnabled = false
-        et_message_chat_log.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    iv_send_chat_log.isEnabled = false
-                }
-
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    iv_send_chat_log.isEnabled = true
-                }
-            }
-        })
+        watchEditText()
 
         iv_menu_chat_log.setOnClickListener {
             menuToggle()
@@ -179,6 +151,50 @@ class ChatLogActivity : AppCompatActivity() {
                 }, 100)
             }
         })
+
+        checkChatOver()
+    }
+
+    private fun watchEditText() {
+        iv_send_chat_log.isEnabled = false
+        et_message_chat_log.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString().trim { it <= ' ' }.isEmpty()) {
+                    iv_send_chat_log.isEnabled = false
+                }
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
+                    iv_send_chat_log.isEnabled = true
+                }
+            }
+        })
+    }
+
+    private fun preventSend() {
+        et_message_chat_log.isEnabled = false
+        iv_send_chat_log.isEnabled = false
+    }
+
+
+    private fun checkChatOver() {
+        CoroutineScope(IO).launch {
+            isOver = viewModel.isOver(UID, partnerUid!!).await()
+            if (!partnerUid.isNullOrBlank()) {
+                val chatRoom = viewModel.getChatRoom(UID, partnerUid!!).await()
+                tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
+                partnerNickname = chatRoom.partnerNickname!!
+            }
+            if (isOver) {
+                preventSend()
+            }
+        }
     }
 
     private fun listenForFinishedChat() {
