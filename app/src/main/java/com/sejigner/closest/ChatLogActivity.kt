@@ -185,13 +185,7 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun checkChatOver() {
         CoroutineScope(IO).launch {
-            isOver = viewModel.isOver(UID, partnerUid!!).await()
-            if (!partnerUid.isNullOrBlank()) {
-                val chatRoom = viewModel.getChatRoom(UID, partnerUid!!).await()
-                tv_partner_nickname_chat_log.text = chatRoom.partnerNickname
-                partnerNickname = chatRoom.partnerNickname!!
-            }
-            if (isOver) {
+            if (viewModel.isOver(UID, partnerUid!!).await()) {
                 preventSend()
             }
         }
@@ -200,7 +194,7 @@ class ChatLogActivity : AppCompatActivity() {
     private fun listenForFinishedChat() {
         mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                if(snapshot.value.toString()=="true") {
+                if(snapshot.value==true) {
                     CoroutineScope(IO).launch {
                         val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
@@ -512,9 +506,8 @@ class ChatLogActivity : AppCompatActivity() {
             var result = false
 
             val lastMessagesPartnerReference = FirebaseDatabase.getInstance()
-                    .getReference("/Latest-messages/$partnerUid/isOver/$UID")
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/isOver/$UID")
-            lastMessagesPartnerReference.setValue("true").addOnSuccessListener {
+                    .getReference("/Finished-chat/$partnerUid/isOver/$UID")
+            lastMessagesPartnerReference.setValue(true).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
                 result = true
             }.addOnFailureListener {

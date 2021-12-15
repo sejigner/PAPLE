@@ -137,7 +137,6 @@ class FragmentHome : Fragment(){
 
         iv_paper_send.setOnClickListener {
             mListener?.showLoadingDialog()
-            et_write_paper.text.clear()
             getClosestUser()
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
@@ -183,11 +182,12 @@ class FragmentHome : Fragment(){
     }
 
     private fun performSendAnonymousMessage() {
+        et_write_paper.text.clear()
+
         val toId = foundUserId
         val message = et_write_paper.text.toString()
         val fromId = UID
         val distance = flightDistance
-
         val paperPlaneReceiverReference =
             FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
@@ -219,7 +219,6 @@ class FragmentHome : Fragment(){
                 paperplaneMessage.timestamp
             )
             viewModel.insert(myPaper)
-            et_write_paper.text.clear()
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)

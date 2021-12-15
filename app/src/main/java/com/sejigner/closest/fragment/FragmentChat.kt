@@ -183,7 +183,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         // listeners for planes and messages
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
         mRefMessages =  FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
-        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
+        mRefFinish = FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver")
         listenForPlanes()
         listenForMessages()
         listenForFinishedChat()
@@ -199,7 +199,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     private fun listenForFinishedChat() {
         mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                if(snapshot.value.toString()=="true") {
+                Log.d(TAG, "Detect the end signal")
+                if(snapshot.value==true) {
                     CoroutineScope(IO).launch {
                         val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
@@ -222,6 +223,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                         mRefFinish.child(partnerUid).removeValue()
                     }
                 }
+
 
             }
 

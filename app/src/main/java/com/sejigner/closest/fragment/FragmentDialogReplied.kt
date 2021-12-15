@@ -128,7 +128,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
                 val timestamp = System.currentTimeMillis() / 1000
-                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp)
+                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp,false)
                 // 두번째 비행기 기록 삭제
                 viewModel.insert(chatRoom)
                 viewModel.delete(paper!!)

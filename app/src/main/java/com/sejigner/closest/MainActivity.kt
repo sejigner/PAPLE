@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
     private lateinit var dialog: LoadingDialog
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
-    private var wasAd : Boolean = false
+    private var wasAd = true
 
 
     companion object {
@@ -71,7 +71,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
         initNavigationBar()
 
         dialog = LoadingDialog(this@MainActivity)
-
+        // 첫 실행시 광고 실행
+        wasAd = false
         userName = ANONYMOUS
 
         fireBaseAuth = FirebaseAuth.getInstance()
@@ -151,7 +152,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d(TAG, adError?.message)
+                    Log.d(TAG, adError.message)
                     mInterstitialAd = null
                     mAdIsLoading = false
                     val error = "domain: ${adError.domain}, code: ${adError.code}, " +
