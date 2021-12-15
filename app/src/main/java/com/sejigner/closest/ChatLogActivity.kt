@@ -215,7 +215,7 @@ class ChatLogActivity : AppCompatActivity() {
                             timestamp
                         )
                         mRefFinish.child(partnerUid).removeValue()
-                        TODO("Lock the editText and update UI")
+                        preventSend()
                     }
                 }
 
