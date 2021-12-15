@@ -137,7 +137,7 @@ class FragmentHome : Fragment(){
 
         iv_paper_send.setOnClickListener {
             mListener?.showLoadingDialog()
-
+            et_write_paper.text.clear()
             getClosestUser()
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
