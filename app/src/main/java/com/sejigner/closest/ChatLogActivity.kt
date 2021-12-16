@@ -80,6 +80,13 @@ class ChatLogActivity : AppCompatActivity() {
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
         rv_chat_log.adapter = chatLogAdapter
 
+        CoroutineScope(IO).launch {
+            partnerNickname = viewModel.getChatRoom(UID,partnerUid!!).await().partnerNickname!!
+            tv_partner_nickname_chat_log.text = partnerNickname
+        }
+
+
+
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
         mLayoutManagerMessages.stackFromEnd = true
@@ -99,14 +106,6 @@ class ChatLogActivity : AppCompatActivity() {
 //            chatLogAdapter.list = it
 //            chatLogAdapter.notifyDataSetChanged()
 //        })
-
-
-
-
-//        val ref = fbDatabase?.reference?.child("Users")?.child(partnerUid!!)?.child("strNickname")
-//            ref?.get()?.addOnSuccessListener {
-//            supportActionBar?.title = it.value.toString()
-//        }
 
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
