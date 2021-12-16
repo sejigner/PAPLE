@@ -71,6 +71,7 @@ class FragmentHome : Fragment(){
     private var fireBaseUser: FirebaseUser? = null
     private var currentAddress: String = ""
     private var latitude: Double = 0.0
+    private var sentMessage : String = ""
     private var longitude: Double = 0.0
     private var userFound: Boolean = false
     private var radius: Double = 0.0
@@ -137,6 +138,8 @@ class FragmentHome : Fragment(){
 
         iv_paper_send.setOnClickListener {
             mListener?.showLoadingDialog()
+            sentMessage = et_write_paper.text.toString()
+            et_write_paper.text.clear()
             getClosestUser()
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
@@ -182,10 +185,9 @@ class FragmentHome : Fragment(){
     }
 
     private fun performSendAnonymousMessage() {
-        et_write_paper.text.clear()
 
         val toId = foundUserId
-        val message = et_write_paper.text.toString()
+        val message = sentMessage
         val fromId = UID
         val distance = flightDistance
         val paperPlaneReceiverReference =
