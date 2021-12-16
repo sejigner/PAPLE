@@ -125,14 +125,15 @@ class ChatLogActivity : AppCompatActivity() {
         }
 
         btn_leave_menu_chat_log.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             CoroutineScope(IO).launch {
                 val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
                 viewModel.delete(chatroom)
                 finishChat()
+                startActivity(intent)
+                finish()
             }
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+
         }
 
 

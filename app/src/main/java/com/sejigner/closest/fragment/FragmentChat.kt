@@ -328,7 +328,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             )
             ViewModel.insert(item)
             ViewModel.delete(myPaperPlaneRecord)
-
         }.join()
     }
 
