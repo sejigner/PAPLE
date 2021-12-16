@@ -137,12 +137,12 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
             firstPlaneAdapter.list = it
             firstPlaneAdapter.notifyDataSetChanged()
-            tv_count_first.text = rv_paperplane_first.size.toString()
+            tv_count_first.text = firstPlaneAdapter.list.size.toString()
         })
         ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
             repliedPlaneAdapter.list = it
             repliedPlaneAdapter.notifyDataSetChanged()
-            tv_count_replied.text = rv_paperplane_replied.size.toString()
+            tv_count_replied.text = repliedPlaneAdapter.list.size.toString()
         })
 
         ViewModel.allChatRooms(UID).observe(viewLifecycleOwner, {
