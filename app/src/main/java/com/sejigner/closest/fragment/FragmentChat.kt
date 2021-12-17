@@ -332,6 +332,12 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             }
         }.join()
     }
+    // TODO: unread messages indicator
+    //  1. chatRoom data class 필드에 unreadMessages 변수를 추가
+    //  2. Listener가 메시지 받으면 받은 갯수 만큼 unreadMessages 플러스
+    //  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
+    //  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
+    //  
 
     private fun listenForMessages() {
         mListenerMessages= mRefMessages.addChildEventListener(object : ChildEventListener {
