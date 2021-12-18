@@ -486,7 +486,25 @@ class ChatLogActivity : AppCompatActivity(), BottomSheetChatLogInterface {
         }
     }
 
-    private fun finishChat(): Boolean {
+    override fun finishChat() {
+        sendFinishSignalToFirebase()
+        val intent = Intent(this, MainActivity::class.java)
+        CoroutineScope(IO).launch {
+            val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
+            viewModel.delete(chatroom)
+            finishChat()
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun reportPartner() {
+        val dialog = FragmentDialogReportChat()
+        val fm = supportFragmentManager
+        dialog.show(fm, "reportChatMessage")
+    }
+
+    private fun sendFinishSignalToFirebase(): Boolean {
         return try {
             var result = false
 
