@@ -62,6 +62,11 @@
     <string name="sent_paper">보낸 비행기</string>
     <string name="loading_flying">비행 중…</string>
     <string name="update_address">위치 정보 업데이트하기</string>
+    <!-- Chat Log Bottom Sheet -->
+    <string name="finish_bottom_sheet">채팅방 나가기</string>
+    <string name="report_bottom_sheet">신고하기</string>
+    <string name="cancel_bottom_sheet">취소</string>
+    
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>

@@ -41,9 +41,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.RelativeLayout
 import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
+import com.sejigner.closest.fragment.FragmentFlySuccess
+import com.sejigner.closest.ui.BottomSheet
+import com.sejigner.closest.ui.BottomSheetChatLogInterface
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity() {
+class ChatLogActivity : AppCompatActivity(), BottomSheetChatLogInterface {
 
     companion object {
         const val TAG = "ChatLog"
@@ -112,7 +115,8 @@ class ChatLogActivity : AppCompatActivity() {
         watchEditText()
 
         iv_menu_chat_log.setOnClickListener {
-            menuToggle()
+            val bottomSheet = BottomSheet(this)
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
 
         iv_send_chat_log.setOnClickListener {
@@ -122,26 +126,6 @@ class ChatLogActivity : AppCompatActivity() {
 
         iv_back_chat_log.setOnClickListener {
             finish()
-        }
-
-        btn_leave_menu_chat_log.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            CoroutineScope(IO).launch {
-                val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
-                viewModel.delete(chatroom)
-                finishChat()
-                startActivity(intent)
-                finish()
-            }
-
-        }
-
-
-
-        btn_report_menu_chat_log.setOnClickListener {
-            val dialog = FragmentDialogReportChat()
-            val fm = supportFragmentManager
-            dialog.show(fm, "reportChatMessage")
         }
 
         rv_chat_log.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
@@ -181,6 +165,7 @@ class ChatLogActivity : AppCompatActivity() {
         et_message_chat_log.isEnabled = false
         iv_send_chat_log.isEnabled = false
     }
+
 
 
     private fun checkChatOver() {
@@ -239,13 +224,13 @@ class ChatLogActivity : AppCompatActivity() {
         })
     }
 
-    private fun menuToggle() {
-        if (expandable_menu_chat_log.visibility == View.GONE) {
-            expandable_menu_chat_log.visibility = View.VISIBLE
-        } else {
-            expandable_menu_chat_log.visibility = View.GONE
-        }
-    }
+//    private fun menuToggle() {
+//        if (expandable_menu_chat_log.visibility == View.GONE) {
+//            expandable_menu_chat_log.visibility = View.VISIBLE
+//        } else {
+//            expandable_menu_chat_log.visibility = View.GONE
+//        }
+//    }
 
 
     private fun setLayoutMode() {
