@@ -317,17 +317,19 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         CoroutineScope(IO).launch {
             val myPaperPlaneRecord = ViewModel.getWithId(UID, paperPlane.fromId).await()
-            val item = RepliedPaperPlanes(
-                myPaperPlaneRecord?.partnerId!!,
-                UID,
-                myPaperPlaneRecord.userMessage,
-                paperPlane.text,
-                paperPlane.flightDistance,
-                myPaperPlaneRecord.firstTimestamp,
-                paperPlane.timestamp
-            )
-            ViewModel.insert(item)
-            ViewModel.delete(myPaperPlaneRecord)
+            if(myPaperPlaneRecord!=null) {
+                val item = RepliedPaperPlanes(
+                    myPaperPlaneRecord.partnerId,
+                    UID,
+                    myPaperPlaneRecord.userMessage,
+                    paperPlane.text,
+                    paperPlane.flightDistance,
+                    myPaperPlaneRecord.firstTimestamp,
+                    paperPlane.timestamp
+                )
+                ViewModel.insert(item)
+                ViewModel.delete(myPaperPlaneRecord)
+            }
         }.join()
     }
 
