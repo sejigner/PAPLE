@@ -1,4 +1,4 @@
-package com.sejigner.closest.ui
+package com.sejigner.closest.interfaces
 
 import com.sejigner.closest.room.FirstPaperPlanes
 

@@ -22,7 +22,7 @@ import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
-import com.sejigner.closest.ui.FirstPlaneListener
+import com.sejigner.closest.interfaces.FirstPlaneListener
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.Users

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
-import com.sejigner.closest.ui.FirstPlaneListener
+import com.sejigner.closest.interfaces.FirstPlaneListener
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.room.RepliedPaperPlanes
 import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
@@ -14,7 +14,7 @@ import java.util.*
 
 class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.Adapter<RepliedPaperPlaneAdapter.RepliedPaperPlaneViewHolder>() {
 
-    val mListener : FirstPlaneListener ?= null
+    val mListener : FirstPlaneListener?= null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
