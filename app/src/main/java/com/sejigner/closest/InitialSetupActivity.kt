@@ -33,11 +33,14 @@ import android.R.attr.name
 import android.app.Service
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import com.google.firebase.database.*
+import com.sejigner.closest.fragment.AlertDialogFragment
+import com.sejigner.closest.fragment.FragmentDialogFirst
 import java.util.regex.Pattern
 
 
-class InitialSetupActivity : AppCompatActivity() {
+class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirmedListener {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var fbFireStore: FirebaseFirestore? = null
@@ -165,13 +168,7 @@ class InitialSetupActivity : AppCompatActivity() {
                 if (isDuplicated) {
                     Toast.makeText(this, "다른 닉네임을 사용해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
-                    // 개인정보 확인 다이얼로그 구현
-                    setInitialSetupToFireStore()
-                    val intent = Intent(this, SplashCongratsActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
+                    conformInformation()
                 }
             }
         }
@@ -187,6 +184,18 @@ class InitialSetupActivity : AppCompatActivity() {
         }, InputFilter.LengthFilter(10))
 
 
+    }
+
+    private fun conformInformation() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "이대로 가입하시겠습니까? 개인정보는 수정이 불가능합니다", "가입하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "confirmation")
+    }
+
+    override fun proceed() {
+        setInitialSetupToFireStore()
     }
 
     private val textWatcherNickname = object : TextWatcher {
@@ -296,7 +305,13 @@ class InitialSetupActivity : AppCompatActivity() {
                 "Saved Users info to Firebase Realtime database: ${database.key}"
             )
         }
-        database?.child("Acquaintances/$uid")?.setValue(uid)
+        database?.child("Acquaintances/$uid")?.setValue(uid)?.addOnSuccessListener {
+            val intent = Intent(this, SplashCongratsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -320,6 +335,7 @@ class InitialSetupActivity : AppCompatActivity() {
 
         lastTimePressed = System.currentTimeMillis()
     }
+
 }
 
 
