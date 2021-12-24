@@ -2,7 +2,6 @@ package com.sejigner.closest.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_my_page.*
 
-class FragmentMyPage : Fragment() {
+class MyPageFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
     : View? {
         return inflater.inflate(R.layout.fragment_my_page, container, false)
@@ -39,7 +38,7 @@ class FragmentMyPage : Fragment() {
             // SharedPreference 닉네임 값 제거
             App.prefs.myNickname = ""
             // 로그인 페이지 이동
-            val intent = Intent(this@FragmentMyPage.context, NewSignInActivity::class.java)
+            val intent = Intent(this@MyPageFragment.context, NewSignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)

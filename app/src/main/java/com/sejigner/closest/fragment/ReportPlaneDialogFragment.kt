@@ -28,7 +28,7 @@ import java.util.*
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReportPlane : DialogFragment() {
+class ReportPlaneDialogFragment : DialogFragment() {
 
 
     var message: String? = ""
@@ -118,7 +118,7 @@ class FragmentDialogReportPlane : DialogFragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstanceFirst(message: String, time: Long) =
-            FragmentDialogReportPlane().apply {
+            ReportPlaneDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putLong("time", time)
@@ -128,7 +128,7 @@ class FragmentDialogReportPlane : DialogFragment() {
             }
 
         fun newInstanceReplied(message: String, time: Long) =
-            FragmentDialogReportPlane().apply {
+            ReportPlaneDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString("message", message)
                     putLong("time", time)

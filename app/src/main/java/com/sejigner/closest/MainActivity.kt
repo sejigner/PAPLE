@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentFlySuccess.FlySuccessListenerMain,
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySuccessFragment.FlySuccessListenerMain,
     FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
     private var fbDatabase: FirebaseDatabase? = null
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
-    private val fragmentMyPage by lazy { FragmentMyPage() }
+    private val fragmentMyPage by lazy { MyPageFragment() }
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
@@ -272,13 +272,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
     // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
     override fun showSuccessFragment(flightDistance: Double) {
         closeYourDialogFragment()
-        val fragmentFlySuccess = FragmentFlySuccess.newInstance(flightDistance)
+        val fragmentFlySuccess = FlySuccessFragment.newInstance(flightDistance)
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 
     override fun showSuccessFragment() {
         closeYourDialogFragment()
-        val fragmentFlySuccess = FragmentFlySuccess()
+        val fragmentFlySuccess = FlySuccessFragment()
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 
@@ -302,7 +302,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FragmentF
 
     override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
         closeYourDialogFragment()
-        val fragmentFlySuccess = FragmentFlySuccess.newInstance(true, flightDistance)
+        val fragmentFlySuccess = FlySuccessFragment.newInstance(true, flightDistance)
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 }

@@ -1,36 +1,23 @@
 package com.sejigner.closest.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.NewSignInActivity
 import com.sejigner.closest.R
-import com.sejigner.closest.models.PaperplaneMessage
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-class FragmentFlySuccess : DialogFragment() {
+class FlySuccessFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
 
     private var flightDistance: Double ?= null
@@ -124,19 +111,19 @@ class FragmentFlySuccess : DialogFragment() {
          * @return A new instance of fragment FragmentDialog.
          */
 
-        const val TAG = "FragmentFlySuccess"
+        const val TAG = "FlySuccessFragment"
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(flightDistance: Double) =
-            FragmentFlySuccess().apply {
+            FlySuccessFragment().apply {
                 arguments = Bundle().apply {
                     putDouble("flightDistance",flightDistance)
                 }
             }
         @JvmStatic
         fun newInstance(isReply: Boolean, flightDistance: Double) =
-            FragmentFlySuccess().apply {
+            FlySuccessFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean("isReply",isReply)
                     putDouble("flightDistance", flightDistance)

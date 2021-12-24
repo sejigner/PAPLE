@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
@@ -27,7 +26,6 @@ import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
-import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -41,7 +39,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPlaneCallback {
+class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPlaneCallback {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -103,7 +101,7 @@ class FragmentDialogFirst : DialogFragment(), FragmentDialogReportPlane.FirstPla
 
 
         tv_report_first.setOnClickListener {
-            val dialog = FragmentDialogReportPlane.newInstanceFirst(
+            val dialog = ReportPlaneDialogFragment.newInstanceFirst(
                 message!!,
                 time!!
             )

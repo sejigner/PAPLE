@@ -23,7 +23,7 @@ import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.fragment.FragmentChat
-import com.sejigner.closest.fragment.FragmentDialogReportChat
+import com.sejigner.closest.fragment.ReportChatDialogFragment
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
@@ -41,7 +41,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.RelativeLayout
 import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
-import com.sejigner.closest.fragment.FragmentFlySuccess
 import com.sejigner.closest.ui.BottomSheet
 import com.sejigner.closest.ui.BottomSheetChatLogInterface
 
@@ -499,7 +498,7 @@ class ChatLogActivity : AppCompatActivity(), BottomSheetChatLogInterface {
     }
 
     override fun reportPartner() {
-        val dialog = FragmentDialogReportChat()
+        val dialog = ReportChatDialogFragment()
         val fm = supportFragmentManager
         dialog.show(fm, "reportChatMessage")
     }

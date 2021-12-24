@@ -19,7 +19,6 @@ import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
-import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
@@ -27,11 +26,6 @@ import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_second.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -45,7 +39,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.RepliedPlaneCallback {
+class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.RepliedPlaneCallback {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -110,7 +104,7 @@ class FragmentDialogReplied : DialogFragment(), FragmentDialogReportPlane.Replie
         }
 
         layout_report_replied.setOnClickListener {
-            val dialog = FragmentDialogReportPlane.newInstanceReplied(
+            val dialog = ReportPlaneDialogFragment.newInstanceReplied(
                 partnerMessage!!,
                 replyTime!!
             )

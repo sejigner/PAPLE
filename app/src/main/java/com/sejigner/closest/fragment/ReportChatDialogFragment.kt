@@ -27,7 +27,7 @@ import java.util.*
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReportChat : DialogFragment() {
+class ReportChatDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +76,7 @@ class FragmentDialogReportChat : DialogFragment() {
          * @return A new instance of fragment FragmentDialog.
          */
 
-        const val TAG = "FragmentDialogReportChat"
+        const val TAG = "ReportChatDialogFragment"
 
     }
 }
