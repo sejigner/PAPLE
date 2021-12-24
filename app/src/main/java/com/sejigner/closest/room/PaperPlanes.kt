@@ -100,13 +100,19 @@ data class ChatRooms(
     val isOver : Boolean
 )
 
-@Entity(tableName = "uid")
-data class Uid(
-    @PrimaryKey val uid: String
+@Entity(tableName = "user")
+data class User(
+    @PrimaryKey val uid: String,
+    @ColumnInfo(name = "nickname")
+    val nickname : String,
+    @ColumnInfo(name = "gender")
+    val gender : String,
+    @ColumnInfo(name = "birthYear")
+    val birthYear : Int
 )
 
 data class FirstPlanesWithUid(
-    @Embedded val uid: Uid,
+    @Embedded val uid: User,
     @Relation(
         parentColumn = "uid",
         entity = FirstPaperPlanes::class,
@@ -116,7 +122,7 @@ data class FirstPlanesWithUid(
 )
 
 data class RepliedPlanesWithUid(
-    @Embedded val uid: Uid,
+    @Embedded val uid: User,
     @Relation(
         parentColumn = "uid",
         entity = RepliedPaperPlanes::class,
@@ -126,7 +132,7 @@ data class RepliedPlanesWithUid(
 )
 
 data class ChatRoomsWithUid(
-    @Embedded val uid: Uid,
+    @Embedded val uid: User,
     @Relation(
         parentColumn = "uid",
         entity = ChatRooms::class,
@@ -175,7 +181,7 @@ data class ChatRoomMessageCrossRef(
 )
 
 data class UidWithChatRoomsAndMessages (
-    @Embedded val uid : Uid,
+    @Embedded val uid : User,
     @Relation(
         entity = ChatRooms::class,
         parentColumn = "uid",

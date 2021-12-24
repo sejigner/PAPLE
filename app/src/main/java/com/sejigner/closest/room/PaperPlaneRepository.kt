@@ -7,6 +7,11 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 
 //    private val rooms: LiveData<List<ChatRooms>> = db.getChatRoomsDao().getAllChatRooms()
 
+    // 유저 정보
+    suspend fun insert(user : User) = db.getUserInfoDao().insert(user)
+    suspend fun getUser(uid : String) = db.getUserInfoDao().getUserInfo(uid)
+    suspend fun delete(user: User) = db.getUserInfoDao().delete(user)
+
     // 첫 비행기
     suspend fun insert(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().insert(paperPlane)
     suspend fun delete(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().delete(paperPlane)

@@ -159,6 +159,18 @@ interface ChatRoomsDao {
 }
 
 @Dao
+interface UserInfoDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(user : User)
+
+    @Query("SELECT 1 FROM user WHERE uid = :uid")
+    suspend fun getUserInfo(uid : String)
+
+    @Delete
+    suspend fun delete(user : User)
+}
+
+@Dao
 interface ChatRoomsAndMessagesDao {
     @Transaction
     @Query("SELECT * FROM chat_rooms WHERE uid = :uid and partnerId = :partnerId")
