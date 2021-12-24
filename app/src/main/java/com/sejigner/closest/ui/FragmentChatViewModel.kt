@@ -119,6 +119,18 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.getChatRoomsAndAllMessages(uid, partnerId)
     }
 
+    fun insert(user: User) = viewModelScope.launch {
+        repository.insert(user)
+    }
+
+    fun getUser(uid : String) = viewModelScope.async {
+        repository.getUser(uid)
+    }
+
+    fun delete(user: User) = viewModelScope.launch {
+        repository.delete(user)
+    }
+
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes(uid: String) = repository.allFirstPaperPlanes(uid)
     fun allRepliedPaperPlanes(uid: String) = repository.allRepliedPaperPlanes(uid)
