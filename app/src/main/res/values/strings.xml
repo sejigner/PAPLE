@@ -1,4 +1,8 @@
 <resources>
+    <!-- menu -->
+    <string name="user_info">개인정보</string>
+    <string name="birth_date">생년월일</string>
+
     <!-- sign_in_activity -->
     <string name="hint_enter_number">전화번호를 입력해주세요</string>
     <string name="send_otp">인증코드 요청하기</string>
