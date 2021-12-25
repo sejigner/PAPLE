@@ -2,7 +2,8 @@
   "projects": {
     "default": "theclosest-fdd67",
     ":wq": "theclosest-fdd67",
-    "staging": "theclosest-fdd67"
+    "staging": "theclosest-fdd67",
+    "laptop": "theclosest-fdd67"
   },
   "targets": {}
 }
