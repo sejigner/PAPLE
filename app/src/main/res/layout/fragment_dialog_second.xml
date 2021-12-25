@@ -12,75 +12,6 @@
         android:layout_gravity="center">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_report_replied"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/cl_discard_replied"
-            app:layout_constraintTop_toTopOf="@id/cl_discard_replied"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_report_first"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_report"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_report_first"
-                android:layout_width="45dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:text="신고하기"
-                android:textColor="@color/warning"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_report_first"
-                app:layout_constraintStart_toEndOf="@id/iv_report_first"
-                app:layout_constraintTop_toTopOf="@id/iv_report_first" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_discard_replied"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="96dp"
-            android:background="@drawable/btn_transparent"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"
-            app:layout_constraintBottom_toTopOf="@id/cl_message_replied"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_delete_first"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_discard"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/tv_dialog_discard_first"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/discard_paper"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_delete_first"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginHorizontal="16dp"
             android:id="@+id/cl_message_replied"
             android:layout_width="match_parent"
@@ -93,6 +24,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/iv_menu_replied_plane"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_dialog_distance_replied"
@@ -186,7 +124,65 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_menu_replied_plane"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner_chat_box"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_cancel_replied_plane">
+
+                <TextView
+                    android:id="@+id/tv_discard_replied_plane"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="24sp"
+                    android:text="@string/discard_paper"
+                    android:textColor="@color/warning"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#CDCDCD"
+                    app:layout_constraintTop_toBottomOf="@id/tv_discard_replied_plane" />
+
+                <TextView
+                    android:id="@+id/tv_report_replied_paper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="24sp"
+                    android:text="@string/report_bottom_sheet"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_discard_replied_plane" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:paddingVertical="24dp"
+                android:id="@+id/tv_cancel_replied_plane"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dialog_frame"
+                android:gravity="center"
+                android:text="취소"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_bottom"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="164dp"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -200,7 +196,9 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="9dp"
                 card_view:cardElevation="8dp" >
+
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_start_chat_replied_paper"
                     android:paddingHorizontal="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

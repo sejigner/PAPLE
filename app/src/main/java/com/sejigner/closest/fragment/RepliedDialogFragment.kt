@@ -98,12 +98,12 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
         tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
         tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
 
-        cl_discard_replied.setOnClickListener {
+        tv_discard_replied_plane.setOnClickListener {
             viewModel.delete(paper!!)
             dismiss()
         }
 
-        layout_report_replied.setOnClickListener {
+        tv_report_replied_paper.setOnClickListener {
             val dialog = ReportPlaneDialogFragment.newInstanceReplied(
                 partnerMessage!!,
                 replyTime!!
@@ -112,6 +112,7 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
             dialog.show(fm, "report")
         }
 
+        addOnClickListenerMenu()
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
@@ -183,6 +184,18 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
         } catch (e: FirebaseException) {
             Log.d(ChatLogActivity.TAG, e.toString())
             false
+        }
+    }
+
+    private fun addOnClickListenerMenu() {
+        iv_menu_first_plane.setOnClickListener {
+            if(cl_start_chat_replied_paper.visibility == View.VISIBLE) {
+                cl_start_chat_replied_paper.visibility = View.GONE
+                cl_menu_replied_plane.visibility = View.VISIBLE
+            } else {
+                cl_start_chat_replied_paper.visibility = View.VISIBLE
+                cl_menu_replied_plane.visibility = View.GONE
+            }
         }
     }
 

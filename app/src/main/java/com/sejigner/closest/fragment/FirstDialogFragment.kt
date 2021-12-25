@@ -90,17 +90,17 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
         viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
 
-        val etReply = view.findViewById<View>(R.id.et_dialog_message_first) as? EditText
+
         var textEntered: String
-        val btnReply = view.findViewById<View>(R.id.tv_dialog_send) as? TextView
 
 
         tv_dialog_time_first.text = setDateToTextView(time!!)
         tv_dialog_message_first.text = message
         tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
 
+        addOnClickListenerMenu()
 
-        tv_report_first.setOnClickListener {
+        tv_report_first_plane.setOnClickListener {
             val dialog = ReportPlaneDialogFragment.newInstanceFirst(
                 message!!,
                 time!!
@@ -109,15 +109,15 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
             dialog.show(fm, "report")
         }
 
-        cl_discard_first.setOnClickListener {
+        tv_discard_first_plane.setOnClickListener {
             // Firebase 내 해당 데이터 삭제
             viewModel.delete(paper!!)
             dismiss()
         }
 
 
-        btnReply?.setOnClickListener {
-            textEntered = etReply?.text.toString()
+        iv_send_first_paper?.setOnClickListener {
+            textEntered = et_dialog_message_first?.text.toString()
             if (textEntered.isNotEmpty()) {
                 val paperPlaneReceiverReference =
                     FirebaseDatabase.getInstance()
@@ -145,10 +145,22 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
             }
         }
 
-        tv_dialog_discard_first.setOnClickListener {
+        tv_discard_first_plane.setOnClickListener {
 //            removePaper()
             viewModel.delete(paper!!)
             dismiss()
+        }
+    }
+
+    private fun addOnClickListenerMenu() {
+        iv_menu_first_plane.setOnClickListener {
+            if(cl_content_reply_first.visibility == View.VISIBLE) {
+                cl_content_reply_first.visibility = View.GONE
+                cl_menu_first_plane.visibility = View.VISIBLE
+            } else {
+                cl_content_reply_first.visibility = View.VISIBLE
+                cl_menu_first_plane.visibility = View.GONE
+            }
         }
     }
 
