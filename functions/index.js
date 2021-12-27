@@ -9,7 +9,6 @@ exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}
     .onWrite(async (change, context) => {
         const recipientUid = context.params.recipientUid;
         const senderUid = context.params.senderUid;
-        const topic = 'messages'
 
         functions.logger.log(
             'New Message from:',
@@ -44,11 +43,11 @@ exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}
         console.log('Fetched sender profile', senderNickname);
 
         const payload = {
-            notification: {
+            data: {
                 title: senderNickname,
                 body: '메시지가 도착했어요!'
-            },
-            topic : topic
+            }
+            
         };
 
         // Listing all tokens as an array.
@@ -80,7 +79,6 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
     .onWrite(async (change, context) => {
         const recipientUid = context.params.recipientUid;
         const senderUid = context.params.senderUid;
-        const topic = 'planes';
 
         functions.logger.log(
             'New Plane from:',
@@ -122,11 +120,10 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
         console.log('got plane message', planeMessage);
 
         const payload = {
-            notification: {
+            data: {
                 title: (flightDistance + 'm 거리에서 비행기가 날아왔어요!'),
                 body: planeMessage
-            }, 
-            topic : topic
+            }
         };
 
         // Listing all tokens as an array.
