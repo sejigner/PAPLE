@@ -3,6 +3,7 @@ package com.sejigner.closest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.sejigner.closest.App.Companion.prefs
 import kotlinx.android.synthetic.main.activity_setting.*
 
 class SettingActivity : AppCompatActivity() {
@@ -15,6 +16,12 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        sb_toggle_notification.color
+        sb_toggle_notification.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked) {
+                prefs.setBoolean("Notification",true)
+            } else {
+                prefs.setBoolean("Notification",false)
+            }
+        }
     }
 }
