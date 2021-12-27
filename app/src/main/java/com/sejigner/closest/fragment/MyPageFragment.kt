@@ -24,7 +24,8 @@ class MyPageFragment : Fragment() {
     }
 
     private fun init() {
-        tv_nickname_my_page.text = App.prefs.myNickname!!
+        val nickname = App.prefs.myNickname!!
+        tv_nickname_my_page.text = nickname
         tv_log_out_my_page.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             // Firebase 내 토큰 제거
@@ -43,6 +44,7 @@ class MyPageFragment : Fragment() {
 
         tv_setting_my_page.setOnClickListener {
             val intent = Intent(this@MyPageFragment.context, SettingActivity::class.java)
+            intent.putExtra("nickname", nickname)
             startActivity(intent)
         }
 
