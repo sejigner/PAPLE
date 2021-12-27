@@ -297,6 +297,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     }
 
+
     private fun setInitialSetupToFireStore() {
         val database = fbDatabase?.reference
         database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {

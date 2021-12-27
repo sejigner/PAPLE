@@ -13,6 +13,10 @@ class SettingActivity : AppCompatActivity() {
 
         val nickname = intent.getStringExtra("nickname")
 
+        iv_back_setting_activity.setOnClickListener {
+            finish()
+        }
+
         tv_sign_out_setting.setOnClickListener {
             val intent = Intent(this@SettingActivity, SignOutActivity::class.java)
             intent.putExtra("nickname", nickname)

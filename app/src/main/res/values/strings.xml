@@ -4,7 +4,7 @@
     <string name="default_notification_channel_id">알림 설정</string>
     <!-- menu -->
     <string name="user_info">개인정보</string>
-    <string name="birth_date">생년월일</string>
+    <string name="birth_year">태어나신 해</string>
     <!-- my page -->
     <string name="setting">설정</string>
     <string name="guide">PAPLE 사용법</string>

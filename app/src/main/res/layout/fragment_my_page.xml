@@ -33,6 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:scrollbarSize="24sp"
             android:textSize="24dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:scrollbarSize="14sp"
-            android:text="@string/birth_date"
+            android:text="@string/birth_year"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_nickname_my_page" />
 
