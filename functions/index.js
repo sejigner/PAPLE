@@ -45,7 +45,8 @@ exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}
         const payload = {
             data: {
                 title: senderNickname,
-                body: '메시지가 도착했어요!'
+                body: '메시지가 도착했어요!',
+                type: 'message'
             }
             
         };
@@ -122,7 +123,8 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
         const payload = {
             data: {
                 title: (flightDistance + 'm 거리에서 비행기가 날아왔어요!'),
-                body: planeMessage
+                body: planeMessage,
+                type: 'plane'
             }
         };
 
