@@ -34,9 +34,15 @@ import android.app.Service
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.sejigner.closest.fragment.AlertDialogFragment
 import com.sejigner.closest.fragment.FragmentDialogFirst
+import com.sejigner.closest.room.PaperPlaneDatabase
+import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.room.User
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import java.util.regex.Pattern
 
 
@@ -52,6 +58,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private val year = date.get(Calendar.YEAR)
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
+    lateinit var viewModel:FragmentChatViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +71,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         uid = fireBaseAuth!!.currentUser?.uid
         initFcmToken()
 
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
+        val factory = FragmentChatViewModelFactory(repository)
+
+        viewModel =
+            ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -196,6 +208,12 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     override fun proceed() {
         setInitialSetupToFireStore()
+        setInfoToRoomDB()
+    }
+
+    private fun setInfoToRoomDB() {
+        val user = User(uid!!, userInfo.nickname!!, userInfo.gender!!, userInfo.birthYear!!.toInt())
+        viewModel.insert(user)
     }
 
     private val textWatcherNickname = object : TextWatcher {
