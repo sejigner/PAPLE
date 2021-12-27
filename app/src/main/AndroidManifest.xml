@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:name=".App"
@@ -18,15 +18,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <activity
+            android:name=".GuideActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignOutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingActivity"
+            android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
-        <!-- 릴리즈 전 내 앱 UI로 변경 ca-app-pub-5118743253590971~3228826273-->
+            android:value="ca-app-pub-3940256099942544~3347511713" /> <!-- 릴리즈 전 내 앱 UI로 변경 ca-app-pub-5118743253590971~3228826273 -->
         <activity
             android:name=".SplashCongratsActivity"
-            android:exported="true"
-            />
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"
@@ -38,8 +48,8 @@
 
         <activity
             android:name=".ChatLogActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -50,7 +60,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,8 +75,9 @@
         <activity
             android:name=".NewSignInActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".InitialSetupActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".InitialSetupActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MyPageActivity" />
         <activity android:name=".SignInActivity" />
         <activity

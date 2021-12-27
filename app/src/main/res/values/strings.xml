@@ -1,7 +1,27 @@
 <resources>
+
+    <!-- system -->
+    <string name="default_notification_channel_id">알림 설정</string>
     <!-- menu -->
     <string name="user_info">개인정보</string>
     <string name="birth_date">생년월일</string>
+    <!-- my page -->
+    <string name="setting">설정</string>
+    <string name="guide">PAPLE 사용법</string>
+    <string name="version_title">버전 정보</string>
+    <string name="version_latest">최신버전 : %1$s</string>
+    <string name="version_current">%1$s</string>
+    <string name="log_out">로그아웃</string>
+    <string name="setting_notification">알림 설정하기</string>
+    <string name="sign_out">탈퇴하기</string>
+    <string name="content_setting_notification">비행기와 메시지가 오면 알림이 울려요!</string>
+    <!-- sign_out -->
+    <string name="title_sign_out">정말 탈퇴 하시겠어요…?</string>
+    <string name="content_sign_out">%1$s님과 이별한다니 정말 아쉬워요…\n계정 탈퇴를 하면 서비스 내의 모든 정보가 삭제됩니다.</string>
+    <string name="title_reason_sign_out">탈퇴 사유</string>
+    <string name="hint_reason_sign_out">떠나시려는 사유를 말씀 해주시겠어요?\n서비스가 발전하는데 큰 도움이 됩니다.</string>
+    <string name="confirm_sign_out">탈퇴할래요</string>
+
 
     <!-- sign_in_activity -->
     <string name="hint_enter_number">전화번호를 입력해주세요</string>
@@ -37,7 +57,7 @@
     <string name="send_paper">비행기를 날릴래요!</string>
     <string name="gender_male">남성</string>
     <string name="gender_female">여성</string>
-    <string name="log_out">로그아웃</string>
+
     <string name="home">HOME</string>
     <string name="chat">Chat</string>
     <string name="myPage_title">님, 안녕하세요</string>
@@ -70,7 +90,7 @@
     <string name="finish_bottom_sheet">채팅방 나가기</string>
     <string name="report_bottom_sheet">신고하기</string>
     <string name="cancel_bottom_sheet">취소</string>
-    
+
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20dp"
+    tools:context=".SignOutActivity">
+
+    <ImageView
+        android:id="@+id/iv_back_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:letterSpacing="-0.03"
+        android:text="@string/title_sign_out"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_back_sign_out" />
+
+    <TextView
+        android:id="@+id/tv_content_sign_out_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:lineSpacingExtra="1sp"
+        android:text="@string/content_sign_out"
+        android:textColor="@color/gray_2"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_sign_out" />
+
+    <TextView
+        android:id="@+id/tv_title_reason_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/title_reason_sign_out"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_content_sign_out_activity" />
+
+    <EditText
+        android:id="@+id/et_reason_sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_edit_text_sign_out"
+        android:gravity="top"
+        android:hint="@string/hint_reason_sign_out"
+        android:inputType="text"
+        android:maxLength="200"
+        android:maxLines="15"
+        android:padding="20dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_cancel_sign_out"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_reason_sign_out" />
+
+    <TextView
+        android:id="@+id/tv_cancel_sign_out"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/bg_round_button"
+        android:gravity="center"
+        android:text="@string/cancel_bottom_sheet"
+        android:textColor="#4d4d4d"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_reason_sign_out" />
+
+    <TextView
+        android:id="@+id/tv_sign_out"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_round_button"
+        android:gravity="center"
+        android:text="@string/confirm_sign_out"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_cancel_sign_out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_cancel_sign_out"
+        app:layout_constraintTop_toTopOf="@id/tv_cancel_sign_out" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

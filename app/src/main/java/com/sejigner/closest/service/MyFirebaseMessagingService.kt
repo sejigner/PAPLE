@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.RingtoneManager
@@ -14,17 +13,12 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.sejigner.closest.App
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.fragment.FragmentHome
-import kotlin.random.Random
-import androidx.core.app.NotificationManagerCompat
-import android.os.FileUtils
 import com.sejigner.closest.R
+import com.sejigner.closest.fragment.FragmentHome
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -40,6 +34,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
+            // TODO : 마이페이지 - 알림 설정 값을 바탕으로 분기 작성
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
                 // Handle message within 10 seconds
                 sendNotification(remoteMessage)
