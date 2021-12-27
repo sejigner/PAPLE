@@ -88,7 +88,8 @@ data class RepliedPaperPlanes(
 
 @Entity(tableName = "chat_rooms")
 data class ChatRooms(
-    @PrimaryKey @ColumnInfo val partnerId: String,
+    @PrimaryKey @ColumnInfo(name= "partnerId")
+    val partnerId: String,
     val partnerNickname: String?,
     @ColumnInfo(name = "uid", index = true)
     val uid: String,
@@ -102,7 +103,8 @@ data class ChatRooms(
 
 @Entity(tableName = "user")
 data class User(
-    @PrimaryKey val uid: String,
+    @PrimaryKey @ColumnInfo(name = "uid")
+    val uid: String,
     @ColumnInfo(name = "nickname")
     val nickname : String,
     @ColumnInfo(name = "gender")

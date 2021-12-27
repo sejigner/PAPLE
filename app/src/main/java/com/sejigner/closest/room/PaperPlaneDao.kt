@@ -163,8 +163,8 @@ interface UserInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user : User)
 
-    @Query("SELECT 1 FROM user WHERE uid = :uid")
-    suspend fun getUserInfo(uid : String)
+    @Query("SELECT * FROM user WHERE uid = :uid")
+    suspend fun getUserInfo(uid : String) : User
 
     @Delete
     suspend fun delete(user : User)
