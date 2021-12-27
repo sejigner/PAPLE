@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
@@ -36,9 +37,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             // TODO : 마이페이지 - 알림 설정 값을 바탕으로 분기 작성
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+            if(prefs.getBoolean("notification",true)) {
                 // Handle message within 10 seconds
                 sendNotification(remoteMessage)
-
+            }
         }
     }
 
