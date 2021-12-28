@@ -100,7 +100,7 @@ class FragmentHome : Fragment(){
         val factory = FragmentChatViewModelFactory(repository)
 
         viewModel =
-            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+            ViewModelProvider(requireActivity(), factory)[FragmentChatViewModel::class.java]
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
