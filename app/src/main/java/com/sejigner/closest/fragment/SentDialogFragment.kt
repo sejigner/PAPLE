@@ -49,8 +49,7 @@ class FragmentDialogSent : DialogFragment() {
     private var message: String? = null
     private var distance: Double? = null
     private var time: Long? = null
-    private var paper: SentPaperPlanes? = null
-    private var mContext: Context? = null
+    private var paper: MyPaperPlaneRecord? = null
     lateinit var repository : PaperPlaneRepository
     lateinit var factory : FragmentChatViewModelFactory
     lateinit var viewModel : FragmentChatViewModel
@@ -128,11 +127,11 @@ class FragmentDialogSent : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(paperPlane: SentPaperPlanes) =
+        fun newInstance(paperPlane: MyPaperPlaneRecord) =
             FragmentDialogSent().apply {
                 arguments = Bundle().apply {
-                    putString("message", paperPlane.message)
-                    putLong("time", paperPlane.timestamp)
+                    putString("message", paperPlane.userMessage)
+                    putLong("time", paperPlane.firstTimestamp)
                 }
                 paper = paperPlane
             }

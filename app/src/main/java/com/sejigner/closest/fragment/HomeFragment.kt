@@ -213,14 +213,6 @@ class FragmentHome : Fragment(){
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
-
-            val myPaper = SentPaperPlanes(
-                null,
-                UID,
-                paperplaneMessage.text,
-                paperplaneMessage.timestamp
-            )
-            viewModel.insert(myPaper)
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
@@ -273,7 +265,7 @@ class FragmentHome : Fragment(){
                     getClosestUser()
                 } else {
                     mListener?.dismissLoadingDialog()
-                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X'
+                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X
                     //   추후 사용자수가 확보되면 거리 제공
                     mListener?.showSuccessFragment()
                 }

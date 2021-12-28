@@ -5,16 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
-import com.sejigner.closest.room.SentPaperPlanes
+import com.sejigner.closest.room.MyPaperPlaneRecord
 import com.sejigner.closest.ui.FragmentChatViewModel
 import kotlinx.android.synthetic.main.column_sent_paper.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SentPaperPlaneAdapter(
-    var list: List<SentPaperPlanes>,
+    var list: List<MyPaperPlaneRecord>,
     val viewModel: FragmentChatViewModel,
-    val itemClick: (SentPaperPlanes) -> Unit
+    val itemClick: (MyPaperPlaneRecord) -> Unit
 ) : RecyclerView.Adapter<SentPaperPlaneAdapter.SentPaperPlaneViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -31,8 +31,8 @@ class SentPaperPlaneAdapter(
         position: Int
     ) {
         var currentPosition = list[position]
-        holder.itemView.tv_sent_paper_message.text = currentPosition.message
-        holder.itemView.tv_sent_paper_time.text = setDateToTextView(currentPosition.timestamp)
+        holder.itemView.tv_sent_paper_message.text = currentPosition.userMessage
+        holder.itemView.tv_sent_paper_time.text = setDateToTextView(currentPosition.firstTimestamp)
         holder.itemView.setOnClickListener { itemClick(currentPosition) }
     }
 
@@ -62,7 +62,7 @@ class SentPaperPlaneAdapter(
         return sdf.format(timestamp * 1000L)
     }
 
-    inner class SentPaperPlaneViewHolder(itemView: View, itemClick: (SentPaperPlanes) -> Unit) :
+    inner class SentPaperPlaneViewHolder(itemView: View, itemClick: (MyPaperPlaneRecord) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
     }
 }

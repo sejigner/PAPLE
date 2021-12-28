@@ -30,8 +30,20 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(rooms)
     }
 
+    fun insert(record: MyPaperPlaneRecord) = CoroutineScope(IO).launch {
+        repository.insert(record)
+    }
+
     fun insert(item: SentPaperPlanes) = viewModelScope.launch {
         repository.insert(item)
+    }
+
+    fun insert(user: User) = viewModelScope.launch {
+        repository.insert(user)
+    }
+
+    fun insert(acquaintance : Acquaintances) = CoroutineScope(IO).launch {
+        repository.insert(acquaintance)
     }
 
     // In coroutines thread delete item in delete function.
@@ -55,6 +67,14 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
+    fun delete(user: User) = viewModelScope.launch {
+        repository.delete(user)
+    }
+
+    fun deleteAll(uid : String) = viewModelScope.launch {
+        repository.deleteAll(uid)
+    }
+
     fun getChatRoom(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.getChatRoom(uid, partnerId)
     }
@@ -62,9 +82,7 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     fun getWithId(uid: String, fromId: String) = CoroutineScope(IO).async{
         repository.getWithId(uid, fromId)
     }
-    fun insert(record: MyPaperPlaneRecord) = CoroutineScope(IO).launch {
-        repository.insert(record)
-    }
+
 
     fun exists(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.exists(uid, partnerId)
@@ -82,20 +100,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.updateLastMessages(uid, partnerId, message, messageTimestamp)
     }
 
-    fun getChatRoomsTimestamp(uid: String, partnerId: String) = CoroutineScope(IO).async {
-        repository.getChatRoomsTimestamp(uid, partnerId)
-    }
-
     fun getLatestTimestamp(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.getLatestTimestamp(uid, partnerId)
     }
 
     fun haveMet(uid : String, partnerId: String) = CoroutineScope(IO).async {
         repository.haveMet(uid, partnerId)
-    }
-
-    fun insert(acquaintance : Acquaintances) = CoroutineScope(IO).launch {
-        repository.insert(acquaintance)
     }
 
     fun deleteChatRoom(uid: String, partnerId: String) = CoroutineScope(IO).launch {
@@ -106,35 +116,22 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.deleteAllMessages(uid, partnerId)
     }
 
-
-    fun insertOrUpdate(rooms : List<ChatMessages>) = viewModelScope.launch {
-        repository.insertOrUpdate(rooms)
-    }
-
-    fun insertOrUpdate(message: ChatMessages) = viewModelScope.launch {
-        repository.insertOrUpdate(message)
-    }
-
     fun chatRoomAndAllMessages(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.getChatRoomsAndAllMessages(uid, partnerId)
     }
 
-    fun insert(user: User) = viewModelScope.launch {
-        repository.insert(user)
-    }
 
     fun getUser(uid : String) = viewModelScope.async {
         repository.getUser(uid)
     }
 
-    fun delete(user: User) = viewModelScope.launch {
-        repository.delete(user)
-    }
+
 
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes(uid: String) = repository.allFirstPaperPlanes(uid)
     fun allRepliedPaperPlanes(uid: String) = repository.allRepliedPaperPlanes(uid)
     fun allChatMessages(uid: String, partnerId: String) = repository.allChatMessages(uid, partnerId)
     fun allChatRooms(uid: String) = repository.allChatRooms(uid)
+    fun allMyPaperPlaneRecord(uid: String) = repository.allPaperRecords(uid)
     fun allSentPapers(uid: String) = repository.allSentPapers(uid)
 }

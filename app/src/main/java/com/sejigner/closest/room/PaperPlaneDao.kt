@@ -39,12 +39,15 @@ interface FirstPaperPlaneDao {
     @Delete
     suspend fun delete(paperPlane: FirstPaperPlanes)
 
-    @Query("DELETE FROM first_paper_planes")
-    suspend fun deleteAll()
+    @Query("DELETE FROM first_paper_planes WHERE uid =: uid")
+    suspend fun deleteAll(uid : String)
 }
 
 @Dao
 interface MyPaperPlaneRecordDao {
+
+    @Query("SELECT * FROM my_message_record WHERE uid = :uid")
+    fun getAllPlaneRecord(uid: String): LiveData<List<MyPaperPlaneRecord>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(record: MyPaperPlaneRecord)
@@ -52,8 +55,11 @@ interface MyPaperPlaneRecordDao {
     @Query("SELECT * FROM my_message_record WHERE uid = :uid and partnerId = :partnerId LIMIT 1")
     suspend fun getWithId(uid: String, partnerId: String): MyPaperPlaneRecord?
 
+    @Query("DELETE FROM my_message_record WHERE uid = :uid")
+    suspend fun deleteAll(uid : String)
+
     @Delete
-    suspend fun delete(record: MyPaperPlaneRecord)
+    suspend fun delete(record : MyPaperPlaneRecord)
 }
 
 
