@@ -13,7 +13,6 @@ abstract class PaperPlaneDatabase: RoomDatabase() {
     abstract fun getFirstPaperPlaneDao() : FirstPaperPlaneDao
     abstract fun getRepliedPaperPlaneDao() : RepliedPaperPlaneDao
     abstract fun getMyPaperPlaneRecordDao() : MyPaperPlaneRecordDao
-    abstract fun getSentPaperPlaneDao() : SentPaperPlaneDao
     abstract fun getChatRoomsDao() : ChatRoomsDao
     abstract fun getChatMessagesDao() : ChatMessagesDao
     abstract fun getChatRoomAndMessageDao() : ChatRoomsAndMessagesDao

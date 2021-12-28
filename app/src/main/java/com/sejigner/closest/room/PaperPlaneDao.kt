@@ -14,18 +14,6 @@ interface AcquaintancesDao {
 }
 
 @Dao
-interface SentPaperPlaneDao {
-    @Query("SELECT * FROM sent_paper_planes WHERE uid = :uid")
-    fun getAllSentPlanes(uid: String): LiveData<List<SentPaperPlanes>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(paperPlane: SentPaperPlanes)
-
-    @Delete
-    suspend fun delete(paperPlane: SentPaperPlanes)
-}
-
-@Dao
 interface FirstPaperPlaneDao {
     @Query("SELECT * FROM first_paper_planes WHERE uid = :uid")
     fun getAllFirstPlanes(uid: String): LiveData<List<FirstPaperPlanes>>
@@ -39,7 +27,7 @@ interface FirstPaperPlaneDao {
     @Delete
     suspend fun delete(paperPlane: FirstPaperPlanes)
 
-    @Query("DELETE FROM first_paper_planes WHERE uid =: uid")
+    @Query("DELETE FROM first_paper_planes WHERE uid = :uid")
     suspend fun deleteAll(uid : String)
 }
 

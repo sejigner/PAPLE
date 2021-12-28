@@ -23,9 +23,7 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun getWithId(uid: String, fromId: String): MyPaperPlaneRecord? = db.getMyPaperPlaneRecordDao().getWithId(uid, fromId)
     suspend fun delete(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().delete(record)
     suspend fun deleteAll(uid: String) = db.getMyPaperPlaneRecordDao().deleteAll(uid)
-    suspend fun delete(record: SentPaperPlanes) = db.getSentPaperPlaneDao().delete(record)
     suspend fun insert(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().insert(record)
-    suspend fun insert(record: SentPaperPlanes) = db.getSentPaperPlaneDao().insert(record)
 
     // 채팅방
     suspend fun insert(messageList: List<ChatMessages>) = db.getChatRoomsDao().insert(messageList)
@@ -59,7 +57,6 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 //        return rooms
 //    }
     fun allChatRooms(uid: String) = db.getChatRoomsDao().getAllChatRooms(uid)
-    fun allSentPapers(uid: String) = db.getSentPaperPlaneDao().getAllSentPlanes(uid)
     fun allPaperRecords(uid: String) = db.getMyPaperPlaneRecordDao().getAllPlaneRecord(uid)
 
 }
