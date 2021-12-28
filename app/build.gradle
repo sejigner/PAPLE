@@ -26,8 +26,9 @@ android {
 
     defaultConfig {
         applicationId "com.sejigner.closest"
-        minSdkVersion 21
-        targetSdkVersion 31
+        minSdkVersion 23
+        // S10 5G 기준
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
