@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -353,7 +354,10 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     }
 
     private fun onCommunicationUpdated() {
-        badge.isVisible = true
+        if(!badge.isVisible) {
+            badge.backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.point)
+            badge.isVisible = true
+        }
     }
 
     override fun removeBadge() {
