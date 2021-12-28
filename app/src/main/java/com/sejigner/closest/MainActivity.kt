@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -21,11 +22,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.sejigner.closest.adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
+import com.sejigner.closest.models.LatestChatMessage
+import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySuccessFragment.FlySuccessListenerMain,
+// TODO: unread messages indicator
+//  1. chatRoom data class 필드에 unreadMessages 변수를 추가
+//  2. Listener가 메시지 받으면 받은 갯수 만큼 unreadMessages 플러스
+//  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
+//  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
+
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
     FragmentDialogFirst.FirstPlaneListenerMain {
 
     private var userName: String? = null
@@ -37,12 +52,20 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     private val fragmentChat by lazy { FragmentChat() }
     private val fragmentMyPage by lazy { MyPageFragment() }
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
-    private val LOCATION_PERMISSION_REQ_CODE = 1000;
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
     private lateinit var dialog: LoadingDialog
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     private var wasAd = true
+    private val badge = bnv_main.getOrCreateBadge(1)
+    lateinit var mRefPlane : DatabaseReference
+    lateinit var mRefMessages : DatabaseReference
+    lateinit var mRefFinish : DatabaseReference
+    lateinit var mListenerPlane : ChildEventListener
+    lateinit var mListenerMessages : ChildEventListener
+    lateinit var mListenerFinish : ChildEventListener
+    lateinit var ViewModel: FragmentChatViewModel
+
 
 
     companion object {
@@ -83,6 +106,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
         fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG, "got instance from Firestore successfully")
         UID = getUid()
+
+        val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
+        val factory = FragmentChatViewModelFactory(repository)
+        ViewModel =
+            ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
+
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
@@ -133,6 +162,23 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
             loadAd()
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
+        mRefMessages =  FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
+        mRefFinish = FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver")
+        listenForPlanes()
+        listenForMessages()
+        listenForFinishedChat()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mRefPlane.removeEventListener(mListenerPlane)
+        mRefMessages.removeEventListener(mListenerMessages)
+        mRefFinish.removeEventListener(mListenerFinish)
     }
 
     private fun loadAd() {
@@ -304,5 +350,229 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
         closeYourDialogFragment()
         val fragmentFlySuccess = FlySuccessFragment.newInstance(true, flightDistance)
         fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
+    }
+
+    private fun onCommunicationUpdated() {
+        badge.isVisible = true
+    }
+
+    override fun removeBadge() {
+        bnv_main.removeBadge(1)
+    }
+
+    private fun listenForPlanes() {
+        mListenerPlane = mRefPlane.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
+                if (paperplane.id.isNotEmpty()) {
+                    onCommunicationUpdated()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (!paperplane.isReplied) { // 상대가 날린 첫 비행기
+
+                            val item = FirstPaperPlanes(
+                                paperplane.fromId,
+                                UID,
+                                paperplane.text,
+                                paperplane.flightDistance,
+                                paperplane.timestamp
+                            )
+                            ViewModel.insert(item)
+                            // immediate delete on setting data to local database
+                            mRefPlane.child(paperplane.fromId).removeValue()
+                            val acquaintances = Acquaintances(paperplane.fromId,UID)
+                            ViewModel.insert(acquaintances)
+                        } else { // 상대가 날린 답장 비행기
+                            setRepliedPaperPlane(paperplane)
+                            mRefPlane.child(paperplane.fromId).removeValue()
+                        }
+
+
+                        // immediate delete on setting data to local databasae
+
+
+//                        repliedPlaneMap[snapshot.key!!] = paperplane
+//                        repliedPlaneKeyList.add(snapshot.key!!)
+//                        refreshRecyclerViewPlanesReplied()
+                    }
+                }
+
+
+                Log.d(FragmentChat.TAG, "Child added successfully")
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+//                    // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
+//                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
+//                    if (!paperplane.isReplied) {
+//                        val index: Int = firstPlaneKeyList.indexOf(snapshot.key)
+//                        adapterHorizontalFirst.removeGroupAtAdapterPosition(index)
+//                        firstPlaneKeyList.removeAt(index)
+//                    } else {
+//                        val index: Int = repliedPlaneKeyList.indexOf(snapshot.key)
+//                        adapterHorizontalReplied.removeGroupAtAdapterPosition(index)
+//                        repliedPlaneKeyList.removeAt(index)
+//                    }
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun listenForMessages() {
+        mListenerMessages= mRefMessages.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
+                val partnerId = snapshot.key!!
+                onCommunicationUpdated()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val isPartnerId = ViewModel.exists(UID, partnerId).await()
+                    // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
+                    if (!isPartnerId) {
+                        var partnerNickname : String
+                        if(latestChatMessage.nickname.isNotBlank()) {
+                            partnerNickname = latestChatMessage.nickname
+                            val chatRoom = ChatRooms(
+                                partnerId,
+                                partnerNickname,
+                                UID,
+                                latestChatMessage.message,
+                                latestChatMessage.time,
+                                false
+                            )
+                            ViewModel.insert(chatRoom)
+                            mRefMessages.child(snapshot.key!!).removeValue()
+                        } else {
+                            val ref2 =
+                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                    .child("nickname")
+                            ref2.get().addOnSuccessListener {
+                                partnerNickname = it.value.toString()
+                                val chatRoom = ChatRooms(
+                                    partnerId,
+                                    partnerNickname,
+                                    UID,
+                                    latestChatMessage.message,
+                                    latestChatMessage.time,
+                                    false
+                                )
+                                ViewModel.insert(chatRoom)
+                                mRefMessages.child(snapshot.key!!).removeValue()
+
+                            }.addOnFailureListener {
+                                Toast.makeText(this@MainActivity, "탈퇴한 유저입니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+
+
+                    } else { // 이미 시작된 채팅
+                        ViewModel.updateLastMessages(
+                            UID,
+                            partnerId,
+                            latestChatMessage.message,
+                            latestChatMessage.time
+                        ).join()
+                        mRefMessages.child(snapshot.key!!).removeValue()
+                    }
+                }
+                Log.d(FragmentChat.TAG, "Child added successfully")
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun listenForFinishedChat() {
+        mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d(FragmentChat.TAG, "Detect the end signal")
+                if(snapshot.value==true) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val partnerUid = snapshot.key.toString()
+                        val timestamp = System.currentTimeMillis() / 1000
+                        val noticeFinish = getString(R.string.finish_chat_log)
+                        val chatMessages = ChatMessages(null,
+                            partnerUid,
+                            UID,
+                            2,
+                            noticeFinish,
+                            timestamp
+                        )
+                        ViewModel.updateChatRoom(UID, partnerUid,true).join()
+                        ViewModel.insert(chatMessages)
+                        ViewModel.updateLastMessages(
+                            UID,
+                            partnerUid,
+                            noticeFinish,
+                            timestamp
+                        )
+                        mRefFinish.child(partnerUid).removeValue()
+                    }
+                }
+
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    suspend fun setRepliedPaperPlane(paperPlane: PaperplaneMessage) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val myPaperPlaneRecord = ViewModel.getWithId(UID, paperPlane.fromId).await()
+            if(myPaperPlaneRecord!=null) {
+                val item = RepliedPaperPlanes(
+                    myPaperPlaneRecord.partnerId,
+                    UID,
+                    myPaperPlaneRecord.userMessage,
+                    paperPlane.text,
+                    paperPlane.flightDistance,
+                    myPaperPlaneRecord.firstTimestamp,
+                    paperPlane.timestamp
+                )
+                ViewModel.insert(item)
+                ViewModel.delete(myPaperPlaneRecord)
+            }
+        }.join()
     }
 }

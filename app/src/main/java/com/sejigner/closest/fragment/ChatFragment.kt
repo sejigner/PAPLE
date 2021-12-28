@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -155,7 +156,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     // val messagesMap = HashMap<String, ChatMessage>()
 
 
-//    private fun refreshRecyclerViewMessages() {
+    //    private fun refreshRecyclerViewMessages() {
 //        adapterVertical.clear()
 //        messagesMap.values.forEach {
 //            adapterVertical.add(LatestMessages(it))
