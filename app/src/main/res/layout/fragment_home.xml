@@ -149,6 +149,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cv_write_paper" />
 
+            <TextView
+                android:id="@+id/tv_delete_all_records"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/delete_all_records"
+                android:textColor="@color/gray_2"
+                app:layout_constraintEnd_toEndOf="@id/cv_write_paper"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sent_paper"
+                />
+
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

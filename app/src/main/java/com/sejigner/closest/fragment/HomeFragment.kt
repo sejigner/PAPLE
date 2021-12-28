@@ -54,7 +54,7 @@ private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 
-class FragmentHome : Fragment(){
+class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 
     companion object {
         const val TAG = "FlightLog"
@@ -144,6 +144,10 @@ class FragmentHome : Fragment(){
 //            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
         }
 
+        tv_delete_all_records.setOnClickListener {
+            confirmDelete()
+        }
+
         iv_paper_send.isEnabled = false
         et_write_paper?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -161,15 +165,26 @@ class FragmentHome : Fragment(){
             }
         })
 
-        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { SentPaperPlanes ->
+        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { MyPaperPlaneRecord ->
 
             val dialog = FragmentDialogSent.newInstance(
-                SentPaperPlanes
+                MyPaperPlaneRecord
             )
             val fm = childFragmentManager
             dialog.show(fm, "my paper")
         }
         rv_sent_paper.adapter = sentPlaneAdapter
+
+
+//        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { SentPaperPlanes ->
+//
+//            val dialog = FragmentDialogSent.newInstance(
+//                SentPaperPlanes
+//            )
+//            val fm = childFragmentManager
+//            dialog.show(fm, "my paper")
+//        }
+//        rv_sent_paper.adapter = sentPlaneAdapter
 
         val mLayoutManager = LinearLayoutManager(requireActivity())
         mLayoutManager.reverseLayout = true
@@ -177,11 +192,28 @@ class FragmentHome : Fragment(){
         mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rv_sent_paper.layoutManager = mLayoutManager
 
-        viewModel.allSentPapers(UID).observe(viewLifecycleOwner, Observer {
+        viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
             sentPlaneAdapter.list = it
             sentPlaneAdapter.notifyDataSetChanged()
         })
 
+    }
+
+    override fun proceed() {
+        deleteAllMyPaper()
+    }
+
+    private fun deleteAllMyPaper() {
+        viewModel.deleteAll(UID)
+        Toast.makeText(requireContext(), "제거되었습니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun confirmDelete() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "날려보낸 모든 비행기 기록을 제거하시겠습니까?", "제거하기"
+        )
+        val fm = childFragmentManager
+        alertDialog.show(fm, "deleteConfirmation")
     }
 
     private fun performSendAnonymousMessage() {
