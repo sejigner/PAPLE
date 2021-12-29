@@ -13,48 +13,6 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="16dp">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_delete_sent_paper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back_reply_sent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_back_reply_sent">
-
-            <ImageView
-                android:id="@+id/iv_delete_sent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_discard"
-                app:layout_constraintBottom_toTopOf="@id/tv_dialog_discard_sent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_dialog_discard_sent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="버리기"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageView
-            android:id="@+id/iv_back_reply_sent"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="95dp"
-            android:src="@drawable/ic_close"
-            app:layout_constraintBottom_toTopOf="@id/cl_message_sent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_message_sent"
             android:layout_width="match_parent"
@@ -66,6 +24,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_discard_my_paper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discard_paper"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
                 android:id="@+id/tv_dialog_message_sent"

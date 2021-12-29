@@ -25,6 +25,7 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.BottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.tv_dialog_message_first
 import kotlinx.android.synthetic.main.fragment_dialog_first.tv_dialog_time_first
@@ -82,11 +83,7 @@ class FragmentDialogSent : DialogFragment() {
         tv_dialog_time_sent.text = setDateToTextView(time!!)
         tv_dialog_message_sent.text = message
 
-        iv_back_reply_sent.setOnClickListener {
-            dismiss()
-        }
-
-        layout_delete_sent_paper.setOnClickListener {
+        tv_discard_my_paper.setOnClickListener {
             viewModel.delete(paper!!)
             dismiss()
         }
