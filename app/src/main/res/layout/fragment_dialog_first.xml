@@ -128,63 +128,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_menu_first_plane"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_corner_chat_box"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_cancel_first_plane">
-
-                <TextView
-                    android:id="@+id/tv_discard_first_plane"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="24sp"
-                    android:text="@string/discard_paper"
-                    android:textColor="@color/warning"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CDCDCD"
-                    app:layout_constraintTop_toBottomOf="@id/tv_discard_first_plane" />
-
-                <TextView
-                    android:id="@+id/tv_report_first_plane"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="24sp"
-                    android:text="@string/report_bottom_sheet"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/tv_discard_first_plane" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <TextView
-                android:paddingVertical="24dp"
-                android:id="@+id/tv_cancel_first_plane"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_frame"
-                android:gravity="center"
-                android:text="취소"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
