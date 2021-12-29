@@ -62,17 +62,17 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_first.xml" value="0.15263157894736842" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_replied.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_sent_paper.xml" value="0.33" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.4" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.176" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_chat.xml" value="0.264" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert.xml" value="0.22" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.264" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert.xml" value="0.4" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.176" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.20150273224043716" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.264" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_sent.xml" value="0.25" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_sent.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_home.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_my_page.xml" value="0.264" />

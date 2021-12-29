@@ -1,7 +1,6 @@
 package com.sejigner.closest
 
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -24,20 +23,16 @@ import kotlinx.android.synthetic.main.activity_initial_setup.*
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_female
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_male
 import java.util.*
-import android.R.attr.name
 import android.content.Context
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.R.attr.name
 import android.app.Service
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.sejigner.closest.fragment.AlertDialogFragment
-import com.sejigner.closest.fragment.FragmentDialogFirst
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.room.User
@@ -180,7 +175,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 if (isDuplicated) {
                     Toast.makeText(this, "다른 닉네임을 사용해주세요.", Toast.LENGTH_SHORT).show()
                 } else {
-                    conformInformation()
+                    confirmInformation()
                 }
             }
         }
@@ -198,7 +193,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     }
 
-    private fun conformInformation() {
+    private fun confirmInformation() {
         val alertDialog = AlertDialogFragment.newInstance(
             "이대로 가입하시겠습니까? 개인정보는 수정이 불가능합니다", "가입하기"
         )
