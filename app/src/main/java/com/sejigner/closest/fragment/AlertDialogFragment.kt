@@ -44,6 +44,7 @@ class AlertDialogFragment : DialogFragment() {
 
         tv_confirm_alert.setOnClickListener {
             listener?.proceed()
+            dismiss()
         }
     }
 

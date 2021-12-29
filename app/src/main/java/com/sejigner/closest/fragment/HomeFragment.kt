@@ -137,11 +137,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         }
 
         iv_paper_send.setOnClickListener {
-            mListener?.showLoadingDialog()
-            sentMessage = et_write_paper.text.toString()
-            et_write_paper.text.clear()
-            getClosestUser()
-//            mListener?.runFragmentDialogWritePaper(currentAddress, latitude, longitude)
+            mListener?.confirmFlight()
         }
 
         tv_delete_all_records.setOnClickListener {
@@ -197,6 +193,14 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             sentPlaneAdapter.notifyDataSetChanged()
         })
 
+    }
+
+    fun sendPaperPlane() {
+        mListener?.confirmFlight()
+        mListener?.showLoadingDialog()
+        sentMessage = et_write_paper.text.toString()
+        et_write_paper.text.clear()
+        getClosestUser()
     }
 
     override fun proceed() {
@@ -337,6 +341,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 
 
     interface FlightListener {
+        fun confirmFlight()
         fun showSuccessFragment(flightDistance: Double)
         fun showSuccessFragment()
         fun showLoadingDialog()

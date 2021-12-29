@@ -16,6 +16,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.badge.BadgeDrawable
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -41,8 +42,9 @@ import java.util.*
 //  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
 //  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
-    FragmentDialogFirst.FirstPlaneListenerMain {
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
+    FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
+    FragmentDialogFirst.FirstPlaneListenerMain, AlertDialogFragment.OnConfirmedListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -58,15 +60,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     private var wasAd = true
-    private val badge = bnv_main.getOrCreateBadge(1)
-    lateinit var mRefPlane : DatabaseReference
-    lateinit var mRefMessages : DatabaseReference
-    lateinit var mRefFinish : DatabaseReference
-    lateinit var mListenerPlane : ChildEventListener
-    lateinit var mListenerMessages : ChildEventListener
-    lateinit var mListenerFinish : ChildEventListener
+    lateinit var badge: BadgeDrawable
+    lateinit var mRefPlane: DatabaseReference
+    lateinit var mRefMessages: DatabaseReference
+    lateinit var mRefFinish: DatabaseReference
+    lateinit var mListenerPlane: ChildEventListener
+    lateinit var mListenerMessages: ChildEventListener
+    lateinit var mListenerFinish: ChildEventListener
     lateinit var ViewModel: FragmentChatViewModel
-
 
 
     companion object {
@@ -130,7 +131,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
         MobileAds.initialize(this) {}
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder().setTestDeviceIds(
-                listOf("ABCDEF012345")).build()
+                listOf("ABCDEF012345")
+            ).build()
         )
 
 
@@ -168,7 +170,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     override fun onStart() {
         super.onStart()
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
-        mRefMessages =  FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
+        mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
         mRefFinish = FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver")
         listenForPlanes()
         listenForMessages()
@@ -192,7 +194,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
                     mInterstitialAd = interstitialAd
                     mAdIsLoading = false
                     Toast.makeText(this@MainActivity, "onAdLoaded()", Toast.LENGTH_SHORT).show()
-                    if(!wasAd) {
+                    if (!wasAd) {
                         showInterstitial()
                         wasAd = true
                     }
@@ -243,6 +245,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
         }
     }
 
+    override fun confirmFlight() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "이대로 비행기를 날릴까요?", "날리기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "flight-confirmation")
+    }
 
     private fun initNavigationBar() {
         bnv_main.run {
@@ -354,10 +363,10 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     }
 
     private fun onCommunicationUpdated() {
-        if(!badge.isVisible) {
-            badge.backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.point)
-            badge.isVisible = true
-        }
+        bnv_main.getOrCreateBadge(1)
+        badge.backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.point)
+        badge.isVisible = true
+
     }
 
     override fun removeBadge() {
@@ -383,7 +392,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
                             ViewModel.insert(item)
                             // immediate delete on setting data to local database
                             mRefPlane.child(paperplane.fromId).removeValue()
-                            val acquaintances = Acquaintances(paperplane.fromId,UID)
+                            val acquaintances = Acquaintances(paperplane.fromId, UID)
                             ViewModel.insert(acquaintances)
                         } else { // 상대가 날린 답장 비행기
                             setRepliedPaperPlane(paperplane)
@@ -434,7 +443,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
     }
 
     private fun listenForMessages() {
-        mListenerMessages= mRefMessages.addChildEventListener(object : ChildEventListener {
+        mListenerMessages = mRefMessages.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
                 val partnerId = snapshot.key!!
@@ -443,8 +452,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
                     val isPartnerId = ViewModel.exists(UID, partnerId).await()
                     // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
                     if (!isPartnerId) {
-                        var partnerNickname : String
-                        if(latestChatMessage.nickname.isNotBlank()) {
+                        var partnerNickname: String
+                        if (latestChatMessage.nickname.isNotBlank()) {
                             partnerNickname = latestChatMessage.nickname
                             val chatRoom = ChatRooms(
                                 partnerId,
@@ -515,19 +524,20 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
         mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(FragmentChat.TAG, "Detect the end signal")
-                if(snapshot.value==true) {
+                if (snapshot.value == true) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
                         val noticeFinish = getString(R.string.finish_chat_log)
-                        val chatMessages = ChatMessages(null,
+                        val chatMessages = ChatMessages(
+                            null,
                             partnerUid,
                             UID,
                             2,
                             noticeFinish,
                             timestamp
                         )
-                        ViewModel.updateChatRoom(UID, partnerUid,true).join()
+                        ViewModel.updateChatRoom(UID, partnerUid, true).join()
                         ViewModel.insert(chatMessages)
                         ViewModel.updateLastMessages(
                             UID,
@@ -564,7 +574,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
 
         CoroutineScope(Dispatchers.IO).launch {
             val myPaperPlaneRecord = ViewModel.getWithId(UID, paperPlane.fromId).await()
-            if(myPaperPlaneRecord!=null) {
+            if (myPaperPlaneRecord != null) {
                 val item = RepliedPaperPlanes(
                     myPaperPlaneRecord.partnerId,
                     UID,
@@ -578,5 +588,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener, FlySucces
                 ViewModel.delete(myPaperPlaneRecord)
             }
         }.join()
+    }
+
+    override fun proceed() {
+        fragmentHome.sendPaperPlane()
     }
 }
