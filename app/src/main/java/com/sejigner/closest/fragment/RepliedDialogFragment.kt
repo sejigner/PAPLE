@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -22,8 +23,10 @@ import com.sejigner.closest.R
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.BottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_replied.*
 import java.text.SimpleDateFormat
@@ -39,7 +42,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.RepliedPlaneCallback {
+class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.RepliedPlaneCallback, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -97,20 +100,6 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
             getString(R.string.replied_plane_dialog, convertDistanceToString(distance!!))
         tv_dialog_time_my_message.text = setDateToTextView(firstTime!!)
         tv_dialog_time_reply.text = setDateToTextView(replyTime!!)
-
-        tv_discard_replied_plane.setOnClickListener {
-            viewModel.delete(paper!!)
-            dismiss()
-        }
-
-        tv_report_replied_paper.setOnClickListener {
-            val dialog = ReportPlaneDialogFragment.newInstanceReplied(
-                partnerMessage!!,
-                replyTime!!
-            )
-            val fm = childFragmentManager
-            dialog.show(fm, "report")
-        }
 
         addOnClickListenerMenu()
 
@@ -189,12 +178,9 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
 
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
-            if(cl_start_chat_replied_paper.visibility == View.VISIBLE) {
-                cl_start_chat_replied_paper.visibility = View.GONE
-                cl_menu_replied_plane.visibility = View.VISIBLE
-            } else {
-                cl_start_chat_replied_paper.visibility = View.VISIBLE
-                cl_menu_replied_plane.visibility = View.GONE
+            iv_menu_first_plane.setOnClickListener {
+                val bottomSheet = BottomSheet()
+                bottomSheet.show(childFragmentManager, bottomSheet.tag)
             }
         }
     }
@@ -212,7 +198,7 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
         return sdf.format(timestamp * 1000L)
     }
 
-    override fun reportFirebase() {
+    override fun reportPlane() {
         val fromId = fromId!!
         val message = partnerMessage!!
         val uid = MainActivity.UID
@@ -263,5 +249,31 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
             }
     }
 
+    override fun confirmDiscardPaper() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
+        )
+        val fm = childFragmentManager
+        alertDialog.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        alertDialog.show(fm, "confirmation")
+    }
+
+    override fun confirmReportPaper() {
+        val dialog = ReportPlaneDialogFragment.newInstanceReplied(
+            partnerMessage!!,
+            replyTime!!
+        )
+        val fm = childFragmentManager
+        dialog.show(fm, "report")
+    }
+    // 비행기 버리기
+    override fun proceed() {
+        discardPaper()
+    }
+
+    private fun discardPaper() {
+        viewModel.delete(paper!!)
+        dismiss()
+    }
 
 }

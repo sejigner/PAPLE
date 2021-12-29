@@ -71,7 +71,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
             if (isFirst!!) {
                 (parentFragment as FragmentDialogFirst).reportPaper()
             } else {
-                (parentFragment as FragmentDialogReplied).reportFirebase()
+                (parentFragment as FragmentDialogReplied).reportPlane()
             }
             dismiss()
         }
@@ -99,7 +99,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
     }
 
     interface RepliedPlaneCallback {
-        fun reportFirebase()
+        fun reportPlane()
     }
 
 
