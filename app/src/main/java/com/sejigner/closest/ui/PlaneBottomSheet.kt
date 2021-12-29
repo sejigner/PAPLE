@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sejigner.closest.R
-import kotlinx.android.synthetic.main.dialog_bottom_sheet.*
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_plane.*
 
 class PlaneBottomSheet() : BottomSheetDialogFragment() {
@@ -24,24 +23,21 @@ class PlaneBottomSheet() : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tv_cancel.setOnClickListener {
-            dismiss()
-        }
-        setButton()
+        setButtonOnClickListener()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
     }
 
-    private fun setButton() {
+    private fun setButtonOnClickListener() {
         tv_discard_paper_bottom_sheet.setOnClickListener {
             callback.confirmDiscardPaper()
         }
         tv_report_plane_bottom_sheet.setOnClickListener {
             callback.confirmReportPaper()
         }
-        tv_cancel.setOnClickListener {
+        tv_cancel_plane_bottom_sheet.setOnClickListener {
             dismiss()
         }
     }
