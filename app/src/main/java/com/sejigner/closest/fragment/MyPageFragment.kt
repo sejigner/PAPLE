@@ -1,6 +1,7 @@
 package com.sejigner.closest.fragment
 
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +85,7 @@ class MyPageFragment : Fragment() {
     private fun setInfo() {
         val nickname = App.prefs.myNickname!!
         tv_nickname_my_page.text = nickname
+        tv_current_version.text = getVersionInfo()
         CoroutineScope(Main).launch {
 
             val info = viewModel.getUser(UID).await()
@@ -94,5 +96,11 @@ class MyPageFragment : Fragment() {
             }
             tv_birth_date_my_page.text = info.birthYear.toString()
         }
+    }
+
+    fun getVersionInfo() : String {
+        val info: PackageInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
+        val version = info.versionName
+        return version
     }
 }
