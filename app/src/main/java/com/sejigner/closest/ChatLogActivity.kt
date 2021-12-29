@@ -24,6 +24,7 @@ import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
 import com.sejigner.closest.adapter.ChatLogAdapter
+import com.sejigner.closest.fragment.AlertDialogFragment
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.ReportChatDialogFragment
 import com.sejigner.closest.models.ChatMessage
@@ -44,7 +45,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface {
+class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface, AlertDialogFragment.OnConfirmedListener {
 
     companion object {
         const val TAG = "ChatLog"
@@ -484,13 +485,21 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         }
     }
 
-    override fun finishChat() {
+    override fun confirmChatLeave() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "정말 채팅방을 나가시겠어요?", "나가기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "confirmation")
+    }
+
+    private fun leaveChatRoom() {
         sendFinishSignalToFirebase()
         val intent = Intent(this, MainActivity::class.java)
         CoroutineScope(IO).launch {
             val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
             viewModel.delete(chatroom)
-            finishChat()
+            confirmChatLeave()
             startActivity(intent)
             finish()
         }
@@ -603,6 +612,10 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 //                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
 //            reportRef.setValue(it)
 //        })
+    }
+
+    override fun proceed() {
+        leaveChatRoom()
     }
 }
 

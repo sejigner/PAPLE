@@ -37,7 +37,7 @@ class ChatBottomSheet() : BottomSheetDialogFragment() {
 
     private fun setButton() {
         tv_finish_bottom_sheet.setOnClickListener {
-            callback.finishChat()
+            callback.confirmChatLeave()
         }
         tv_report_bottom_sheet.setOnClickListener {
             callback.reportPartner()
@@ -49,7 +49,7 @@ class ChatBottomSheet() : BottomSheetDialogFragment() {
 
     interface BottomSheetChatLogInterface {
         fun reportPartner()
-        fun finishChat()
+        fun confirmChatLeave()
     }
 
 }
