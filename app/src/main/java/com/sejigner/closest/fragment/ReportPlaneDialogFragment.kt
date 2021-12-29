@@ -69,7 +69,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
 
         tv_send_report.setOnClickListener {
             if (isFirst!!) {
-                (parentFragment as FragmentDialogFirst).reportFirebase()
+                (parentFragment as FragmentDialogFirst).reportPaper()
             } else {
                 (parentFragment as FragmentDialogReplied).reportFirebase()
             }
@@ -95,7 +95,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
     }
 
     interface FirstPlaneCallback {
-        fun reportFirebase()
+        fun reportPaper()
     }
 
     interface RepliedPlaneCallback {
