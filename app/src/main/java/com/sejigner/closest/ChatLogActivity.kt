@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -19,9 +20,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
-import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
+import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.fragment.FragmentChat
 import com.sejigner.closest.fragment.ReportChatDialogFragment
 import com.sejigner.closest.models.ChatMessage
@@ -29,6 +31,7 @@ import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
+import com.sejigner.closest.ui.BottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_chat_log.*
@@ -39,13 +42,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
-import android.widget.RelativeLayout
-import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
-import com.sejigner.closest.ui.BottomSheet
-import com.sejigner.closest.ui.BottomSheetChatLogInterface
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity(), BottomSheetChatLogInterface {
+class ChatLogActivity : AppCompatActivity(), BottomSheet.BottomSheetChatLogInterface {
 
     companion object {
         const val TAG = "ChatLog"
@@ -114,7 +113,7 @@ class ChatLogActivity : AppCompatActivity(), BottomSheetChatLogInterface {
         watchEditText()
 
         iv_menu_chat_log.setOnClickListener {
-            val bottomSheet = BottomSheet(this)
+            val bottomSheet = BottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
 

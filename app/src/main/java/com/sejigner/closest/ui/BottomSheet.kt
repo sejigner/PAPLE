@@ -1,16 +1,18 @@
 package com.sejigner.closest.ui
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sejigner.closest.R
+import com.sejigner.closest.fragment.AlertDialogFragment
 import kotlinx.android.synthetic.main.dialog_bottom_sheet.*
 
-class BottomSheet(bottomSheetChatLogInterface : BottomSheetChatLogInterface) : BottomSheetDialogFragment() {
+class BottomSheet() : BottomSheetDialogFragment() {
 
-    private val mListener = bottomSheetChatLogInterface
+    lateinit var callback : BottomSheetChatLogInterface
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,24 +31,27 @@ class BottomSheet(bottomSheetChatLogInterface : BottomSheetChatLogInterface) : B
         setButton()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        callback = context as BottomSheetChatLogInterface
     }
 
     private fun setButton() {
         tv_finish_bottom_sheet.setOnClickListener {
-            mListener.finishChat()
+            callback.finishChat()
         }
         tv_report_bottom_sheet.setOnClickListener {
-            mListener.reportPartner()
+            callback.reportPartner()
         }
         tv_cancel.setOnClickListener {
             dismiss()
         }
     }
+
+    interface BottomSheetChatLogInterface {
+        fun reportPartner()
+        fun finishChat()
+    }
+
 }
 
-interface BottomSheetChatLogInterface {
-    fun reportPartner()
-    fun finishChat()
-}
