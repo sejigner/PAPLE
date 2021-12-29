@@ -54,10 +54,11 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_dialog_distance_replied" />
 
             <TextView
+                android:scrollbars="vertical"
                 android:layout_marginTop="12dp"
                 android:id="@+id/tv_dialog_my_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="my message"
                 android:textAlignment="center"
                 android:textColor="@color/txt_gray"
@@ -96,10 +97,11 @@
                 app:layout_constraintTop_toBottomOf="@id/dialog_divider_second" />
 
             <TextView
+                android:scrollbars="vertical"
                 android:layout_marginTop="6dp"
                 android:id="@+id/tv_dialog_message_replied"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="reply"
                 android:textAlignment="center"
                 android:textColor="@color/black"
@@ -121,63 +123,6 @@
 
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_menu_replied_plane"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_corner_chat_box"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_cancel_replied_plane">
-
-                <TextView
-                    android:id="@+id/tv_discard_replied_plane"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="24sp"
-                    android:text="@string/discard_paper"
-                    android:textColor="@color/warning"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#CDCDCD"
-                    app:layout_constraintTop_toBottomOf="@id/tv_discard_replied_plane" />
-
-                <TextView
-                    android:id="@+id/tv_report_replied_paper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="24sp"
-                    android:text="@string/report_bottom_sheet"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/tv_discard_replied_plane" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <TextView
-                android:paddingVertical="24dp"
-                android:id="@+id/tv_cancel_replied_plane"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dialog_frame"
-                android:gravity="center"
-                android:text="취소"
-                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
