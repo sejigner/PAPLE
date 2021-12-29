@@ -31,7 +31,7 @@ import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.ui.BottomSheet
+import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_chat_log.*
@@ -44,7 +44,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity(), BottomSheet.BottomSheetChatLogInterface {
+class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface {
 
     companion object {
         const val TAG = "ChatLog"
@@ -113,7 +113,7 @@ class ChatLogActivity : AppCompatActivity(), BottomSheet.BottomSheetChatLogInter
         watchEditText()
 
         iv_menu_chat_log.setOnClickListener {
-            val bottomSheet = BottomSheet()
+            val bottomSheet = ChatBottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
 

@@ -10,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -24,7 +22,7 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.BottomSheet
+import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
@@ -135,7 +133,7 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
 
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
-            val bottomSheet = BottomSheet()
+            val bottomSheet = ChatBottomSheet()
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
     }

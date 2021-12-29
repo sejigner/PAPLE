@@ -7,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sejigner.closest.R
-import com.sejigner.closest.fragment.AlertDialogFragment
-import kotlinx.android.synthetic.main.dialog_bottom_sheet.*
+import kotlinx.android.synthetic.main.dialog_bottom_sheet_chat.*
 
-class BottomSheet() : BottomSheetDialogFragment() {
+class ChatBottomSheet() : BottomSheetDialogFragment() {
 
     lateinit var callback : BottomSheetChatLogInterface
 
@@ -20,7 +19,7 @@ class BottomSheet() : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.dialog_bottom_sheet, container, false)
+        return inflater.inflate(R.layout.dialog_bottom_sheet_chat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

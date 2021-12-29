@@ -23,7 +23,7 @@ import com.sejigner.closest.R
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.BottomSheet
+import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.PlaneBottomSheet
@@ -179,7 +179,7 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
             iv_menu_first_plane.setOnClickListener {
-                val bottomSheet = BottomSheet()
+                val bottomSheet = ChatBottomSheet()
                 bottomSheet.show(childFragmentManager, bottomSheet.tag)
             }
         }
