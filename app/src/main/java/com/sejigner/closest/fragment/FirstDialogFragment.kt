@@ -228,7 +228,7 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
 
     override fun confirmDiscardPaper() {
         val alertDialog = AlertDialogFragment.newInstance(
-            "이 비행기를 버리시겠어요? \n 버린 비행기는 복구가 안 돼요!", "버리기"
+            "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
         )
         val fm = childFragmentManager
         alertDialog.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)

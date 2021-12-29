@@ -195,7 +195,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     private fun confirmInformation() {
         val alertDialog = AlertDialogFragment.newInstance(
-            "이대로 가입하시겠습니까? 개인정보는 수정이 불가능합니다", "가입하기"
+            "이대로 가입하시겠어요?\n가입 후 수정이 불가능합니다", "가입하기"
         )
         val fm = supportFragmentManager
         alertDialog.show(fm, "confirmation")
