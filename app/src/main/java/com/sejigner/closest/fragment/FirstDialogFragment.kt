@@ -24,6 +24,8 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.BottomSheet
+import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import java.text.SimpleDateFormat
@@ -39,7 +41,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPlaneCallback {
+class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPlaneCallback, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -100,21 +102,6 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
 
         addOnClickListenerMenu()
 
-        tv_report_first_plane.setOnClickListener {
-            val dialog = ReportPlaneDialogFragment.newInstanceFirst(
-                message!!,
-                time!!
-            )
-            val fm = childFragmentManager
-            dialog.show(fm, "report")
-        }
-
-        tv_discard_first_plane.setOnClickListener {
-            // Firebase 내 해당 데이터 삭제
-            viewModel.delete(paper!!)
-            dismiss()
-        }
-
 
         iv_send_first_paper?.setOnClickListener {
             textEntered = et_dialog_message_first?.text.toString()
@@ -144,23 +131,12 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
                 Toast.makeText(requireActivity(), "메세지를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
-
-        tv_discard_first_plane.setOnClickListener {
-//            removePaper()
-            viewModel.delete(paper!!)
-            dismiss()
-        }
     }
 
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
-            if(cl_content_reply_first.visibility == View.VISIBLE) {
-                cl_content_reply_first.visibility = View.GONE
-                cl_menu_first_plane.visibility = View.VISIBLE
-            } else {
-                cl_content_reply_first.visibility = View.VISIBLE
-                cl_menu_first_plane.visibility = View.GONE
-            }
+            val bottomSheet = BottomSheet()
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
     }
 
@@ -199,7 +175,7 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
         return sdf.format(timestamp * 1000L)
     }
 
-    override fun reportFirebase() {
+    override fun reportPaper() {
 
         val fromId = fromId!!
         val message = message!!
@@ -217,10 +193,10 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
         ref.setValue(reportMessage).addOnFailureListener {
             // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
         }.addOnSuccessListener {
-            Toast.makeText(requireActivity(),"정상적으로 신고되었습니다.",Toast.LENGTH_LONG).show()
             // 해당 플레인 DB에서 제거
             viewModel.delete(paper!!)
             dismiss()
+            Toast.makeText(requireActivity(),"비행기를 신고했어요.",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -249,6 +225,37 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPla
                 paper = paperPlane
             }
     }
+
+    override fun confirmDiscardPaper() {
+        val alertDialog = AlertDialogFragment.newInstance(
+            "이 비행기를 버리시겠어요? \n 버린 비행기는 복구가 안 돼요!", "버리기"
+        )
+        val fm = childFragmentManager
+        alertDialog.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        alertDialog.show(fm, "confirmation")
+    }
+
+    override fun confirmReportPaper() {
+        val dialog = ReportPlaneDialogFragment.newInstanceFirst(
+            message!!,
+            time!!
+        )
+        val fm = childFragmentManager
+        dialog.show(fm, "report")
+    }
+
+    private fun discardPaper() {
+        viewModel.delete(paper!!)
+        dismiss()
+        Toast.makeText(requireActivity(),"비행기를 버렸어요.", Toast.LENGTH_SHORT).show()
+    }
+
+    // 비행기 버리기
+    override fun proceed() {
+        discardPaper()
+    }
+
+
 
 
 }
