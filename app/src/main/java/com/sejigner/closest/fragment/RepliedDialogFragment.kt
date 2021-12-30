@@ -177,11 +177,9 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
     }
 
     private fun addOnClickListenerMenu() {
-        iv_menu_first_plane.setOnClickListener {
-            iv_menu_first_plane.setOnClickListener {
-                val bottomSheet = ChatBottomSheet()
+        iv_menu_replied_plane.setOnClickListener {
+                val bottomSheet = PlaneBottomSheet()
                 bottomSheet.show(childFragmentManager, bottomSheet.tag)
-            }
         }
     }
 

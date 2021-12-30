@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     private var wasAd = true
-    lateinit var badge: BadgeDrawable
     lateinit var mRefPlane: DatabaseReference
     lateinit var mRefMessages: DatabaseReference
     lateinit var mRefFinish: DatabaseReference
@@ -363,14 +362,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     private fun onCommunicationUpdated() {
-        bnv_main.getOrCreateBadge(1)
+        val badge = bnv_main.getOrCreateBadge(R.id.chat)
         badge.backgroundColor = ContextCompat.getColor(this@MainActivity, R.color.point)
         badge.isVisible = true
-
     }
 
     override fun removeBadge() {
-        bnv_main.removeBadge(1)
+        bnv_main.removeBadge(R.id.chat)
     }
 
     private fun listenForPlanes() {

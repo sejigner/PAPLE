@@ -196,7 +196,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
     }
 
     fun sendPaperPlane() {
-        mListener?.confirmFlight()
         mListener?.showLoadingDialog()
         sentMessage = et_write_paper.text.toString()
         et_write_paper.text.clear()
@@ -252,6 +251,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
+        mListener?.dismissLoadingDialog()
     }
 
     fun getClosestUser() {
