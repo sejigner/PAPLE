@@ -51,12 +51,10 @@ class ReportChatDialogFragment : DialogFragment() {
             dismiss()
         }
 
-    }
+        tv_cancel_report_chat.setOnClickListener {
+            dismiss()
+        }
 
-    private fun setDateToTextView(timestamp: Long): String {
-        val sdf = SimpleDateFormat("yyyy.MM.dd a hh:mm")
-        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-        return sdf.format(timestamp * 1000L)
     }
 
     override fun onStart() {
