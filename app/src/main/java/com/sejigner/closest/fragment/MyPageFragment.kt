@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.*
@@ -20,10 +20,8 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_my_page.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class MyPageFragment : Fragment() {
 
@@ -76,9 +74,8 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
-        tv_guide_my_page.setOnClickListener {
-            val intent = Intent(this@MyPageFragment.context, GuideActivity::class.java)
-            startActivity(intent)
+        tv_open_source_license.setOnClickListener {
+            startActivity(Intent(this@MyPageFragment.context, OssLicensesMenuActivity::class.java))
         }
     }
 
