@@ -13,7 +13,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +21,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.SoftKeyboard.SoftKeyboardChanged
+import com.sejigner.closest.ui.SoftKeyboard.SoftKeyboardChanged
 import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.fragment.AlertDialogFragment
 import com.sejigner.closest.fragment.FragmentChat
@@ -35,11 +34,11 @@ import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import com.sejigner.closest.ui.SoftKeyboard
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
@@ -248,7 +247,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
-        softKeyboard = SoftKeyboard(layout, inputMethodManager)
+        softKeyboard =
+            SoftKeyboard(layout, inputMethodManager)
         softKeyboard.setSoftKeyboardCallback(object : SoftKeyboardChanged {
             override fun onSoftKeyboardHide() {
                 rv_chat_log.post(Runnable {

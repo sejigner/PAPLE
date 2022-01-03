@@ -130,7 +130,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             // SharedPreference 닉네임 값 제거
             App.prefs.myNickname = ""
             // 로그인 페이지 이동
-            val intent = Intent(this@FragmentHome.context, NewSignInActivity::class.java)
+            val intent = Intent(this@FragmentHome.context, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)

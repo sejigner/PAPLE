@@ -72,13 +72,12 @@
             android:name=".OtpActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".NewSignInActivity"
+            android:name=".SignInActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".InitialSetupActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MyPageActivity" />
-        <activity android:name=".SignInActivity" />
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" />

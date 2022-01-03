@@ -1,4 +1,4 @@
-package com.sejigner.closest;
+package com.sejigner.closest.ui;
 
 import java.util.ArrayList;
 import java.util.List;
