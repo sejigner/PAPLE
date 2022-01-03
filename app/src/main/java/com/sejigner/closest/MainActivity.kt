@@ -149,11 +149,13 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 val msg = getString(R.string.msg_token_fmt, token)
                 Log.d(TAG, msg)
 
+
                 val ref =
                     FirebaseDatabase.getInstance().getReference("/Users/$uid")
-                        .child("registrationToken").child(token)
+                        .child("registrationToken")
+                ref.removeValue()
                 // fcm토큰 업로드
-                ref.setValue(true)
+                ref.child(token).setValue(true)
             })
         } else {
             Log.w(TAG, "Device doesn't have google play services")
@@ -311,19 +313,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             true
         }
     }
-//    override fun runFragmentDialogWritePaper(
-//        currentAddress: String,
-//        latitude: Double,
-//        longitude: Double
-//    ) {
-//
-//        val dialog = FragmentDialogWritePaper.newInstance(
-//            UID, currentAddress, latitude, longitude
-//        )
-//        val fm = supportFragmentManager
-//        dialog.show(fm, "write paper")
-//    }
-
     // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
     override fun showSuccessFragment(flightDistance: Double) {
         closeYourDialogFragment()
@@ -396,14 +385,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                             setRepliedPaperPlane(paperplane)
                             mRefPlane.child(paperplane.fromId).removeValue()
                         }
-
-
-                        // immediate delete on setting data to local databasae
-
-
-//                        repliedPlaneMap[snapshot.key!!] = paperplane
-//                        repliedPlaneKeyList.add(snapshot.key!!)
-//                        refreshRecyclerViewPlanesReplied()
                     }
                 }
 

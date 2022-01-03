@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class MyPageFragment : Fragment() {
 
@@ -100,6 +101,14 @@ class MyPageFragment : Fragment() {
             } else {
                 val userInfo = getUserInfoFromFirebase()
                 setInfoToRoomDB(userInfo.nickname!!, userInfo.gender!!, userInfo.birthYear!!.toInt())
+                CoroutineScope(Main).launch {
+                    if (userInfo.gender == "male") {
+                        tv_gender_my_page.text = "남성"
+                    } else {
+                        tv_gender_my_page.text = "여성"
+                    }
+                    tv_birth_date_my_page.text = userInfo.birthYear
+                }
             }
         }
     }

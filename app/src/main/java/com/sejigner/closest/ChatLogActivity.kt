@@ -530,43 +530,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             false
         }
     }
-
-    fun initChatLog() {
-        val timestamp = System.currentTimeMillis() / 1000
-//        val text = resources.getString(R.string.init_chat_log)
-//        val toRef =
-//            FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID").push()
-//        val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, partnerUid!!, timestamp)
-//        toRef.setValue(chatMessage).addOnSuccessListener {
-//            Log.d(TAG, "sent your message: ${toRef.key}")
-        val noticeMessage =
-            ChatMessages(null, partnerUid, UID, 3, getString(R.string.init_chat_log), timestamp)
-        CoroutineScope(IO).launch {
-            var result: Boolean
-            runBlocking {
-                result = sendMessage()
-            }
-            if (result) {
-                viewModel.insert(noticeMessage)
-            } else {
-                Toast.makeText(this@ChatLogActivity, "상대방과의 연결에 실패하였습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-        }
-    }
-
-//        val lastMessagesUserReference =
-//            FirebaseDatabase.getInstance().getReference("/Last-messages/$UID/$partnerUid")
-//        val lastMessageToMe = LatestChatMessage(partnerNickname,getString(R.string.init_chat_log),timestamp)
-//        lastMessagesUserReference.setValue(lastMessageToMe)
-//
-//        val lastMessagesPartnerReference =
-//            FirebaseDatabase.getInstance().getReference("/Last-messages/$partnerUid/$UID")
-//        val lastMessageToPartner = LatestChatMessage(MYNICKNAME,getString(R.string.init_chat_log),timestamp)
-//        lastMessagesPartnerReference.setValue(lastMessageToPartner)
-
-
     private suspend fun sendMessage(): Boolean {
         return try {
             var result = false
