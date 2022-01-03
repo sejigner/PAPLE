@@ -14,7 +14,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.sejigner.closest.ui.LoadingDialog
-import kotlinx.android.synthetic.main.activity_new_sign_in.*
+import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
