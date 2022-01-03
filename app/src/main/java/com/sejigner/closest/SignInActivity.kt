@@ -14,11 +14,8 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.sejigner.closest.ui.LoadingDialog
-import com.sejigner.closest.ui.SendLoadingDialog
 import kotlinx.android.synthetic.main.activity_new_sign_in.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import java.util.concurrent.TimeUnit
 
 
@@ -34,7 +31,7 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_sign_in)
+        setContentView(R.layout.activity_sign_in)
 
         auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
@@ -61,12 +58,17 @@ class SignInActivity : AppCompatActivity() {
             // Called when verification is failed add log statement to see the exception
             override fun onVerificationFailed(e: FirebaseException) {
                 Log.d("@MainActivity", "onVerificationFailed $e")
+                Toast.makeText(this@SignInActivity,"인증 실패 - 번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
+                dismissLoadingDialog()
             }
 
             // On code is sent by the firebase this method is called
             // in here we start a new activity where user can enter the OTP
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                Log.d("@MainActivity","onCodeSent: $verificationId")
+            override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
+            ) {
+                Log.d("@MainActivity", "onCodeSent: $verificationId")
                 storedVerificationId = verificationId
                 resendToken = token
 
@@ -103,11 +105,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun showLoadingDialog() {
-        dialog.show()
+        loadingDialog.show()
     }
 
     private fun dismissLoadingDialog() {
-        dialog.dismiss()
+        loadingDialog.dismiss()
     }
 
     private fun signIn() {

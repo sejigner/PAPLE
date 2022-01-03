@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sejigner.closest.ui.LoadingDialog
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.activity_new_sign_in.*
 import kotlinx.android.synthetic.main.activity_otp.*
@@ -32,6 +33,7 @@ class OtpActivity : AppCompatActivity() {
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     lateinit var timerTask: CountDownTimer
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class OtpActivity : AppCompatActivity() {
         fbDatabase = FirebaseDatabase.getInstance()
         cl_otp_check.isEnabled = false
         tv_request_resend.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        loadingDialog = LoadingDialog(this@OtpActivity)
 
         et_otp.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -74,6 +77,7 @@ class OtpActivity : AppCompatActivity() {
                     storedVerificationId.toString(), otp
                 )
                 signInWithPhoneAuthCredential(credential)
+                showLoadingDialog()
             } else {
                 Toast.makeText(this, "인증 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
@@ -96,6 +100,7 @@ class OtpActivity : AppCompatActivity() {
         tv_request_resend.setOnClickListener {
             startTimer()
             sendVerificationCode(phoneNumber!!)
+            showLoadingDialog()
         }
 
         // Callback function for Phone Auth
@@ -103,15 +108,17 @@ class OtpActivity : AppCompatActivity() {
 
             // This method is called when the verification is completed
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
+                dismissLoadingDialog()
                 startActivity(Intent(applicationContext, MainActivity::class.java))
                 finish()
                 Log.d("@OtpActivity", "onVerificationCompleted Success")
-
             }
 
             // Called when verification is failed add log statement to see the exception
             override fun onVerificationFailed(e: FirebaseException) {
                 Log.d("@OtpActivity", "onVerificationFailed $e")
+                dismissLoadingDialog()
+                Toast.makeText(this@OtpActivity, "인증 실패 - 번호를 다시 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
 
             // On code is sent by the firebase this method is called
@@ -123,7 +130,7 @@ class OtpActivity : AppCompatActivity() {
                 Log.d("@OtpActivity", "onCodeSent: $verificationId")
                 storedVerificationId = verificationId
                 resendToken = token
-
+                dismissLoadingDialog()
 //                // Start a new activity using intent
 //                // also send the storedVerificationId using intent
 //                // we will use this id to send the otp back to firebase
@@ -133,6 +140,14 @@ class OtpActivity : AppCompatActivity() {
 //                finish()
             }
         }
+    }
+
+    private fun showLoadingDialog() {
+        loadingDialog.show()
+    }
+
+    private fun dismissLoadingDialog() {
+        loadingDialog.dismiss()
     }
 
     override fun onDestroy() {
@@ -188,7 +203,8 @@ class OtpActivity : AppCompatActivity() {
                     // Sign in failed, display a message and update the UI
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
-                        Toast.makeText(this, "인증 번호가 틀렸어요", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "인증 실패 - 받으신 인증 코드를 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        dismissLoadingDialog()
                     }
                 }
             }

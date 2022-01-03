@@ -28,6 +28,7 @@ import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import com.sejigner.closest.ui.SendLoadingDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private val fragmentMyPage by lazy { MyPageFragment() }
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-    private lateinit var dialog: LoadingDialog
+    private lateinit var sendLoadingDialog: SendLoadingDialog
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     private var wasAd = true
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         initViewPager()
         initNavigationBar()
 
-        dialog = LoadingDialog(this@MainActivity)
+        sendLoadingDialog = SendLoadingDialog(this@MainActivity)
         // 첫 실행시 광고 실행
         wasAd = false
         userName = ANONYMOUS
@@ -326,11 +327,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     override fun showLoadingDialog() {
-        dialog.show()
+        sendLoadingDialog.show()
     }
 
     override fun dismissLoadingDialog() {
-        dialog.dismiss()
+        sendLoadingDialog.dismiss()
     }
 
     private fun closeYourDialogFragment() {
