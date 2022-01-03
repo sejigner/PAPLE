@@ -9,4 +9,6 @@ data class Users(
     var gender : String? = null,
     var birthYear : String? = null,
     var registrationToken : String? = null
-    )
+    ) {
+    constructor() : this("", "", "", "")
+}

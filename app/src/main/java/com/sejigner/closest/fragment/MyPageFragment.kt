@@ -118,14 +118,20 @@ class MyPageFragment : Fragment() {
         viewModel.insert(user)
     }
 
-    private fun getUserInfoFromFirebase() : Users {
+    private suspend fun getUserInfoFromFirebase() : Users {
         val ref = FirebaseDatabase.getInstance().reference.child("Users/$UID")
         var user : Users ?= null
-        ref.get().addOnSuccessListener {
-            user = it.getValue(Users::class.java)
-        }.addOnFailureListener {
-            user = Users("unknown", "unknown", 0.toString(), "unknown")
-        }
+        CoroutineScope(IO).launch {
+            ref.get().addOnSuccessListener {
+                val nickname = it.child("nickname").value.toString()
+                val gender = it.child("gender").value.toString()
+                val birthYear = it.child("birthYear").value.toString()
+                val registrationToken = "0"
+                user = Users(nickname, gender, birthYear, registrationToken)
+            }.addOnFailureListener {
+                user = Users("unknown", "unknown", 0.toString(), "unknown")
+            }.await()
+        }.join()
         return user!!
     }
 
