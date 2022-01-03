@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 // TODO: unread messages indicator
-//  1. chatRoom data class 필드에 unreadMessages 변수를 추가
+//  1. sharedPreferences에 unreadMessages 변수를 추가
 //  2. Listener가 메시지 받으면 받은 갯수 만큼 unreadMessages 플러스
 //  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
 //  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
@@ -416,17 +416,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-//                    // 데이터를 받은 순서대로 리스트에 저장될 것이고 정렬순을 바꾸지 않으므로 인덱스 저장 위치를 신경쓰지 않아도 됨
-//                    val paperplane = snapshot.getValue(PaperplaneMessage::class.java) ?: return
-//                    if (!paperplane.isReplied) {
-//                        val index: Int = firstPlaneKeyList.indexOf(snapshot.key)
-//                        adapterHorizontalFirst.removeGroupAtAdapterPosition(index)
-//                        firstPlaneKeyList.removeAt(index)
-//                    } else {
-//                        val index: Int = repliedPlaneKeyList.indexOf(snapshot.key)
-//                        adapterHorizontalReplied.removeGroupAtAdapterPosition(index)
-//                        repliedPlaneKeyList.removeAt(index)
-//                    }
 
             }
 
