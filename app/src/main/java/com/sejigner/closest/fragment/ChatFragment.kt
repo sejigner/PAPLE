@@ -33,6 +33,7 @@ import com.sejigner.closest.room.*
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.latest_chat_row.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -107,8 +108,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         val latestMessageAdapter =
             LatestMessageAdapter(listOf(), ViewModel) { LatestMessages ->
+                cl_latest_chat_row.performClick()
                 val messageItem = LatestMessages
-
                 val intent = Intent(requireActivity(), ChatLogActivity::class.java)
                 val chatPartnerId = messageItem.partnerId
                 intent.putExtra(USER_KEY, chatPartnerId)

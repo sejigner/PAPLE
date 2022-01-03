@@ -106,6 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="28dp"
+            android:foreground="?android:attr/selectableItemBackground"
             android:background="@drawable/selector_auth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

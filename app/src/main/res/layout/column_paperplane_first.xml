@@ -7,6 +7,7 @@
     android:padding="4dp">
 
     <androidx.cardview.widget.CardView
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_width="145dp"
         android:layout_height="80dp"
         app:cardBackgroundColor="@color/white"

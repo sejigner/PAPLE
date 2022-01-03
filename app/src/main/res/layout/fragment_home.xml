@@ -107,6 +107,7 @@
                         android:id="@+id/iv_paper_send"
                         android:layout_width="200dp"
                         android:layout_height="56dp"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:background="@drawable/selector_send_paper"
                         android:fontFamily="@font/noto_sans_cjj_kr_medium"
                         android:gravity="center"

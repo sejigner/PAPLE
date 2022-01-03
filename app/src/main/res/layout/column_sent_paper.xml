@@ -9,6 +9,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:foreground="?android:attr/selectableItemBackground"
             android:layout_width="160dp"
             android:layout_height="188dp"
             android:background="@drawable/bg_sent_paper"
