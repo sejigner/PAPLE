@@ -25,17 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_back_report"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_close"
-                app:layout_constraintBottom_toBottomOf="@id/tv_title_report"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_title_report" />
-
 
             <TextView
                 android:id="@+id/tv_title_report"
@@ -43,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/report_title"
-                android:textColor="@color/report"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/tv_guidance_report"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,18 +49,20 @@
                 android:textColor="@color/txt_gray"
                 android:textSize="12dp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/dialog_divider_first"
+                app:layout_constraintBottom_toTopOf="@id/tv_dialog_message_report"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_report" />
 
             <View
-                android:id="@+id/dialog_divider_first"
+                android:id="@+id/report_dialog_divider"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
+                android:layout_marginTop="16dp"
                 android:background="#ECECEC"
-                app:layout_constraintBottom_toTopOf="@id/tv_dialog_message_report"
+                app:layout_constraintBottom_toTopOf="@id/tv_send_report_plane"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_guidance_report" />
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_report" />
 
             <TextView
                 android:id="@+id/tv_dialog_message_report"
@@ -83,7 +74,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/dialog_divider_first" />
+                app:layout_constraintTop_toBottomOf="@id/tv_guidance_report" />
 
             <TextView
                 android:id="@+id/tv_dialog_time_report"
@@ -99,22 +90,30 @@
 
 
             <TextView
-                android:id="@+id/tv_send_report"
+                android:id="@+id/tv_cancel_report_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/btn_report_send"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:text="신고하기"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_report" />
+                android:layout_marginEnd="16sp"
+                android:text="@string/cancel_bottom_sheet"
+                android:textColor="#4D4D4D"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_send_report_plane"
+                app:layout_constraintEnd_toStartOf="@id/tv_send_report_plane"
+                app:layout_constraintTop_toTopOf="@id/tv_send_report_plane" />
 
+            <TextView
+                android:id="@+id/tv_send_report_plane"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/report_bottom_sheet"
+                android:textColor="@color/warning"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/report_dialog_divider" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -42,7 +42,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogReplied.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.RepliedPlaneCallback, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -196,7 +196,7 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.Replie
         return sdf.format(timestamp * 1000L)
     }
 
-    override fun reportPlane() {
+    override fun reportPaper() {
         val fromId = fromId!!
         val message = partnerMessage!!
         val uid = MainActivity.UID

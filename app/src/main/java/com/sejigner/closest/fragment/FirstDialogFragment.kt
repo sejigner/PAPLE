@@ -39,7 +39,7 @@ private const val ITEMS = "data"
  * Use the [FragmentDialogFirst.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.FirstPlaneCallback, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
