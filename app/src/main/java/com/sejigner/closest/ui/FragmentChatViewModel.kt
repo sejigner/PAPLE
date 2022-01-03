@@ -113,8 +113,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     }
 
 
-    fun getUser(uid : String) = viewModelScope.async {
+    fun getUser(uid : String) = CoroutineScope(IO).async {
         repository.getUser(uid)
+    }
+
+    fun isExists(uid: String) = CoroutineScope(IO).async {
+        repository.isExists(uid)
     }
 
 

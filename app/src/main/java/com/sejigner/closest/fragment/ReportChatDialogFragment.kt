@@ -1,5 +1,7 @@
 package com.sejigner.closest.fragment
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -29,6 +31,12 @@ import java.util.*
  */
 class ReportChatDialogFragment : DialogFragment() {
 
+    private var callback : OnReportConfirmedListener ?= null
+
+    interface OnReportConfirmedListener {
+        fun reportMessagesFirebase()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -41,13 +49,21 @@ class ReportChatDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_dialog_report_chat, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnReportConfirmedListener) {
+            callback = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement OnReportConfirmedListener")
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
         tv_send_report_chat.setOnClickListener {
-            (activity as ChatLogActivity).reportMessagesFirebase()
+            callback?.reportMessagesFirebase()
             dismiss()
         }
 

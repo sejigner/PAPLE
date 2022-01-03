@@ -45,7 +45,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface, AlertDialogFragment.OnConfirmedListener {
+class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface, AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
 
     companion object {
         const val TAG = "ChatLog"
@@ -590,7 +590,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         }
     }
 
-    fun reportMessagesFirebase() {
+    override fun reportMessagesFirebase() {
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
             // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)

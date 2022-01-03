@@ -11,6 +11,7 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun insert(user : User) = db.getUserInfoDao().insert(user)
     suspend fun getUser(uid : String) = db.getUserInfoDao().getUserInfo(uid)
     suspend fun delete(user: User) = db.getUserInfoDao().delete(user)
+    suspend fun isExists(uid : String) = db.getUserInfoDao().isExists(uid)
 
     // 첫 비행기
     suspend fun insert(paperPlane: FirstPaperPlanes) = db.getFirstPaperPlaneDao().insert(paperPlane)

@@ -160,6 +160,9 @@ interface UserInfoDao {
     @Query("SELECT * FROM user WHERE uid = :uid")
     suspend fun getUserInfo(uid : String) : User
 
+    @Query("SELECT EXISTS(SELECT * FROM user WHERE uid = :uid)")
+    fun isExists(uid: String): Boolean
+
     @Delete
     suspend fun delete(user : User)
 }
