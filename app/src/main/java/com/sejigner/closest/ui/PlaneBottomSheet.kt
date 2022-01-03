@@ -26,8 +26,8 @@ class PlaneBottomSheet() : BottomSheetDialogFragment() {
         setButtonOnClickListener()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun getTheme(): Int {
+        return R.style.AppBottomSheetDialogTheme
     }
 
     private fun setButtonOnClickListener() {

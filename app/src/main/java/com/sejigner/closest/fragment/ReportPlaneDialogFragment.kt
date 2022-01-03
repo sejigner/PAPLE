@@ -1,5 +1,7 @@
 package com.sejigner.closest.fragment
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,7 +15,6 @@ import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*
-import kotlinx.android.synthetic.main.fragment_dialog_report_plane.iv_back_report
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -34,8 +35,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
     var message: String? = ""
     var time: Long? = null
     var isFirst: Boolean? = null
-    private var firstPlaneCallback: FirstPlaneCallback? = null
-    private var repliedPlaneCallback: RepliedPlaneCallback? = null
+    private var callback: OnConfirmedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,19 +67,26 @@ class ReportPlaneDialogFragment : DialogFragment() {
             tvTime?.text = setDateToTextView(time!!)
         }
 
-        tv_send_report.setOnClickListener {
-            if (isFirst!!) {
-                (parentFragment as FragmentDialogFirst).reportPaper()
-            } else {
-                (parentFragment as FragmentDialogReplied).reportPlane()
+        tv_send_report_plane.setOnClickListener {
+            if(callback!=null) {
+                callback!!.reportPaper()
             }
             dismiss()
         }
 
-        iv_back_report.setOnClickListener {
+        tv_cancel_report_plane.setOnClickListener {
             dismiss()
         }
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnConfirmedListener) {
+            callback = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement OnConfirmedListener")
+        }
     }
 
     private fun setDateToTextView(timestamp: Long): String {
@@ -94,12 +101,8 @@ class ReportPlaneDialogFragment : DialogFragment() {
         dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    interface FirstPlaneCallback {
+    interface OnConfirmedListener {
         fun reportPaper()
-    }
-
-    interface RepliedPlaneCallback {
-        fun reportPlane()
     }
 
 

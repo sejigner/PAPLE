@@ -55,14 +55,15 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_sent_paper.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.22135416666666666" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet_chat.xml" value="0.16" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet_plane.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_chat.xml" value="0.4466666666666667" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.14666666666666667" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.20150273224043716" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.22" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.23453947368421052" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.23453947368421052" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.536" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_sent.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2" />

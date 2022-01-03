@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/backgroundTransparent">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_first_bottom_sheet"
+        android:id="@+id/cl_first_bottom_sheet_plane"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner_chat_box"
@@ -53,7 +52,7 @@
         android:padding="24dp"
         android:text="@string/cancel_bottom_sheet"
         android:textColor="@color/txt_gray"
-        app:layout_constraintTop_toBottomOf="@id/cl_first_bottom_sheet" />
+        app:layout_constraintTop_toBottomOf="@id/cl_first_bottom_sheet_plane" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
