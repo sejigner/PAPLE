@@ -9,9 +9,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_chat.*
 
+
 class ChatBottomSheet() : BottomSheetDialogFragment() {
 
-    lateinit var callback : BottomSheetChatLogInterface
+    lateinit var callback: BottomSheetChatLogInterface
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +29,10 @@ class ChatBottomSheet() : BottomSheetDialogFragment() {
             dismiss()
         }
         setButton()
+    }
+
+    override fun getTheme(): Int {
+        return R.style.AppBottomSheetDialogTheme
     }
 
     override fun onAttach(activity: Activity) {
