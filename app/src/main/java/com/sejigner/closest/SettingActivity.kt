@@ -55,6 +55,7 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        sb_toggle_notification.isChecked = prefs.getBoolean("notification", true)
         sb_toggle_notification.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked) {
                 prefs.setBoolean("notification",true)

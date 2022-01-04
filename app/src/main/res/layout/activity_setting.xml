@@ -50,7 +50,6 @@
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/sb_toggle_notification"
             app:track="@drawable/switch_track_selector"
-            android:checked="true"
             app:thumbTint="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

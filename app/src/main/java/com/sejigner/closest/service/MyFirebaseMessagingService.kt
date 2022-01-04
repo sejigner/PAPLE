@@ -32,9 +32,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: ${remoteMessage.from}")
-
+        Log.d(TAG, "noti preference : ${prefs.getBoolean("notification", true)}")
         // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
+        if (!remoteMessage.data.isNullOrEmpty()) {
             // TODO : 마이페이지 - 알림 설정 값을 바탕으로 분기 작성
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
             if(prefs.getBoolean("notification",true)) {
