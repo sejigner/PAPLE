@@ -46,16 +46,20 @@ exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}
             data: {
                 title: senderNickname,
                 body: '메시지가 도착했어요!',
+                sender : senderUid,
                 type: 'message'
             }
-            
+        };
+
+        const options = {
+            priority: "high"
         };
 
         // Listing all tokens as an array.
         tokens = Object.keys(tokensSnapshot.val());
 
         // Send notifications to all tokens.
-        const response = await admin.messaging().sendToDevice(tokens, payload);
+        const response = await admin.messaging().sendToDevice(tokens, payload, options);
 
         // For each message check if there was an error.
         const tokensToRemove = [];
@@ -124,15 +128,20 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
             data: {
                 title: (flightDistance + 'm 거리에서 비행기가 날아왔어요!'),
                 body: planeMessage,
+                sender : senderUid,
                 type: 'plane'
             }
+        };
+
+        const options = {
+            priority: "high"
         };
 
         // Listing all tokens as an array.
         tokens = Object.keys(tokensSnapshot.val());
 
         // Send notifications to all tokens.
-        const response = await admin.messaging().sendToDevice(tokens, payload);
+        const response = await admin.messaging().sendToDevice(tokens, payload, options);
 
         // For each message check if there was an error.
         const tokensToRemove = [];
