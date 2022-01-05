@@ -16,7 +16,9 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_transparent_.xml" value="0.3333333333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/custom_ripple_effect.xml" value="0.10364583333333334" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_frame.xml" value="0.24342105263157895" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_write_paper.xml" value="0.1457236842105263" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_write_paper_et.xml" value="0.12552083333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat_checked.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat_new.xml" value="0.24473684210526317" />
@@ -62,11 +64,11 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading_send.xml" value="0.22135416666666666" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_chat.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert.xml" value="0.22" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.14666666666666667" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.20150273224043716" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.536" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.536" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_sent.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2" />

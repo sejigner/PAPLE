@@ -45,7 +45,6 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
-    private var mContext: Context? = null
     private var mCallbackMain: FirstPlaneListenerMain? = null
     lateinit var repository : PaperPlaneRepository
     lateinit var factory : FragmentChatViewModelFactory
@@ -88,6 +87,17 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         factory = FragmentChatViewModelFactory(repository)
         viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
+        cl_message_first.setOnClickListener {
+            cl_fragment_dialog_first.requestDisallowInterceptTouchEvent(true)
+        }
+
+        cl_content_reply_first.setOnClickListener {
+            cl_fragment_dialog_first.requestDisallowInterceptTouchEvent(true)
+        }
+
+        cl_fragment_dialog_first.setOnClickListener {
+            dismiss()
+        }
 
 
         var textEntered: String
@@ -158,8 +168,8 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         paperPlaneReceiverReference.removeValue()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.MATCH_PARENT
         dialog!!.window!!.setLayout(width, height)
@@ -225,10 +235,9 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
     override fun confirmDiscardPaper() {
         val alertDialog = AlertDialogFragment.newInstance(
-            "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
+            "정말 비행기를 버리시겠어요? \n한번 버린 비행기는 복구가 안 돼요.", "버리기"
         )
         val fm = childFragmentManager
-        alertDialog.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         alertDialog.show(fm, "confirmation")
     }
 

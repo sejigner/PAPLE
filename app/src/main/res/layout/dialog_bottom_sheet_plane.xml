@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_corner_chat_box"
+        android:background="@drawable/bg_half_rounded_corner"
         android:gravity="center"
         android:padding="24dp"
         android:text="@string/cancel_bottom_sheet"

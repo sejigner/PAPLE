@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
+import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*
@@ -43,6 +45,7 @@ class ReportPlaneDialogFragment : DialogFragment() {
             time = it.getLong("time")
             isFirst = it.getBoolean("isFirst")
         }
+        onAttach(requireParentFragment())
     }
 
     override fun onCreateView(
@@ -57,13 +60,10 @@ class ReportPlaneDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val tvMessage = view.findViewById<View>(R.id.tv_dialog_message_report) as? TextView
-        val tvTime = view.findViewById<View>(R.id.tv_dialog_time_report) as? TextView
-
-        tvMessage?.text = message
+        tv_dialog_message_report.text = message
+        tv_dialog_message_report.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         if (time != null) {
-            tvTime?.text = setDateToTextView(time!!)
+            tv_dialog_time_report.text = setDateToTextView(time!!)
         }
 
         tv_send_report_plane.setOnClickListener {
@@ -79,12 +79,20 @@ class ReportPlaneDialogFragment : DialogFragment() {
 
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnConfirmedListener) {
-            callback = context
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        if (context is OnConfirmedListener) {
+//            callback = context
+//        } else {
+//            throw RuntimeException(context.toString() + "must implement OnConfirmedListener")
+//        }
+//    }
+
+    fun onAttach(fragment: Fragment) {
+        if (fragment is OnConfirmedListener) {
+            callback = fragment
         } else {
-            throw RuntimeException(context.toString() + "must implement OnConfirmedListener")
+            throw RuntimeException(context.toString() + "must implement OnMenuClickedListener")
         }
     }
 
@@ -94,10 +102,15 @@ class ReportPlaneDialogFragment : DialogFragment() {
         return sdf.format(timestamp * 1000L)
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    override fun onResume() {
+        super.onResume()
+//        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        if(dialog != null) {
+//            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        }
+
     }
 
     interface OnConfirmedListener {

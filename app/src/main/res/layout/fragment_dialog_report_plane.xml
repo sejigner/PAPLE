@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundTransparent"
     tools:context=".fragment.FirstDialogFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +15,6 @@
             android:id="@+id/cl_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
             android:background="@drawable/dialog_frame"
             android:paddingHorizontal="16dp"
             android:paddingTop="22dp"
@@ -48,7 +46,6 @@
                 android:text="@string/report_guidance"
                 android:textColor="@color/txt_gray"
                 android:textSize="12dp"
-                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/tv_dialog_message_report"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title_report" />
@@ -70,10 +67,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:maxLines="10"
+                android:gravity="center"
                 android:text="paperplane message"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_guidance_report" />
 
             <TextView

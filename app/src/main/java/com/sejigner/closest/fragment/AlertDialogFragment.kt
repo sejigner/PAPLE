@@ -1,10 +1,13 @@
 package com.sejigner.closest.fragment
 
 import android.app.Activity
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.sejigner.closest.R
 import com.sejigner.closest.room.FirstPaperPlanes
@@ -30,6 +33,16 @@ class AlertDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_dialog_alert, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        if(dialog != null) {
+//            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
