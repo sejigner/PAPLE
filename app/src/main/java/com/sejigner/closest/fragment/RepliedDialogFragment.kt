@@ -41,7 +41,8 @@ private const val ITEMS = "data"
  * Use the [RepliedDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
+    PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -68,8 +69,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.MATCH_PARENT
         dialog!!.window!!.setLayout(width, height)
@@ -92,6 +93,17 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         viewModel =
             ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
+        cl_message_replied.setOnClickListener {
+            cl_fragment_dialog_replied.requestDisallowInterceptTouchEvent(true)
+        }
+
+        cl_start_chat_replied_paper.setOnClickListener {
+            cl_fragment_dialog_replied.requestDisallowInterceptTouchEvent(true)
+        }
+
+        cl_fragment_dialog_replied.setOnClickListener {
+            dismiss()
+        }
 
         tv_dialog_my_message.text = userMessage
         tv_dialog_message_replied.text = partnerMessage
@@ -111,7 +123,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
                 val timestamp = System.currentTimeMillis() / 1000
-                val chatRoom = ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp,false)
+                val chatRoom =
+                    ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp, false)
                 // 두번째 비행기 기록 삭제
                 viewModel.insert(chatRoom)
                 viewModel.delete(paper!!)
@@ -177,8 +190,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
 
     private fun addOnClickListenerMenu() {
         iv_menu_replied_plane.setOnClickListener {
-                val bottomSheet = PlaneBottomSheet()
-                bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            val bottomSheet = PlaneBottomSheet()
+            bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
     }
 
@@ -251,7 +264,6 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
             "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
         )
         val fm = childFragmentManager
-        alertDialog.requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         alertDialog.show(fm, "confirmation")
     }
 
@@ -263,6 +275,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         val fm = childFragmentManager
         dialog.show(fm, "report")
     }
+
     // 비행기 버리기
     override fun proceed() {
         discardPaper()
@@ -271,6 +284,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     private fun discardPaper() {
         viewModel.delete(paper!!)
         dismiss()
+        Toast.makeText(requireActivity(), "비행기를 버렸어요.", Toast.LENGTH_SHORT).show()
     }
 
 }

@@ -38,7 +38,8 @@ private const val ITEMS = "data"
  * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
+    PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -46,12 +47,12 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
     private var mCallbackMain: FirstPlaneListenerMain? = null
-    lateinit var repository : PaperPlaneRepository
-    lateinit var factory : FragmentChatViewModelFactory
-    lateinit var viewModel : FragmentChatViewModel
+    lateinit var repository: PaperPlaneRepository
+    lateinit var factory: FragmentChatViewModelFactory
+    lateinit var viewModel: FragmentChatViewModel
 
     interface FirstPlaneListenerMain {
-        fun showReplySuccessFragment(isReply : Boolean, flightDistance: Double)
+        fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +86,8 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
         repository = PaperPlaneRepository(PaperPlaneDatabase.invoke(requireActivity()))
         factory = FragmentChatViewModelFactory(repository)
-        viewModel = ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
+        viewModel =
+            ViewModelProvider(requireActivity(), factory).get(FragmentChatViewModel::class.java)
 
         cl_message_first.setOnClickListener {
             cl_fragment_dialog_first.requestDisallowInterceptTouchEvent(true)
@@ -105,7 +107,8 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
         tv_dialog_time_first.text = setDateToTextView(time!!)
         tv_dialog_message_first.text = message
-        tv_dialog_distance_first.text = getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
+        tv_dialog_distance_first.text =
+            getString(R.string.first_plane_dialog, convertDistanceToString(distance!!))
 
         addOnClickListenerMenu()
 
@@ -156,16 +159,10 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         }
     }
 
-    private fun convertDistanceToString(distance : Double) : String {
-        return if(distance >= 1000) {
-            (round((distance/1000)*100) /100).toString() + "km"
+    private fun convertDistanceToString(distance: Double): String {
+        return if (distance >= 1000) {
+            (round((distance / 1000) * 100) / 100).toString() + "km"
         } else distance.toString() + "m"
-    }
-
-    private fun removePaper() {
-        val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID/$fromId")
-        paperPlaneReceiverReference.removeValue()
     }
 
     override fun onResume() {
@@ -203,7 +200,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
             // 해당 플레인 DB에서 제거
             viewModel.delete(paper!!)
             dismiss()
-            Toast.makeText(requireActivity(),"비행기를 신고했어요.",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), "비행기를 신고했어요.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -253,15 +250,13 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private fun discardPaper() {
         viewModel.delete(paper!!)
         dismiss()
-        Toast.makeText(requireActivity(),"비행기를 버렸어요.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireActivity(), "비행기를 버렸어요.", Toast.LENGTH_SHORT).show()
     }
 
     // 비행기 버리기
     override fun proceed() {
         discardPaper()
     }
-
-
 
 
 }
