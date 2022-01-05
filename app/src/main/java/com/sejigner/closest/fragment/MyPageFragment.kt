@@ -126,10 +126,11 @@ class MyPageFragment : Fragment() {
                 val nickname = it.child("nickname").value.toString()
                 val gender = it.child("gender").value.toString()
                 val birthYear = it.child("birthYear").value.toString()
+                val status = it.child("status").value.toString()
                 val registrationToken = "0"
-                user = Users(nickname, gender, birthYear, registrationToken)
+                user = Users(nickname, gender, birthYear, status, registrationToken)
             }.addOnFailureListener {
-                user = Users("unknown", "unknown", 0.toString(), "unknown")
+                user = Users("unknown", "unknown", 0.toString(),"unknown", "unknown")
             }.await()
         }.join()
         return user!!

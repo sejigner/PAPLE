@@ -9,14 +9,17 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.fragment.AlertDialogFragment
+import com.sejigner.closest.fragment.SuspendAlertDialogFragment
 
 
 private const val LOG_TAG = "SplashActivity"
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {
 
     private lateinit var fbDatabase : FirebaseDatabase
 
@@ -46,19 +49,30 @@ class SplashActivity : AppCompatActivity() {
         countDownTimer.start()
     }
 
+    private fun confirmSuspend() {
+        val alertDialog = SuspendAlertDialogFragment.newInstance(
+            "규정 위반으로 사용 정지된 계정입니다.", "종료하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "suspend-confirmation")
+    }
 
 
     private fun verifyUserIsLoggedIn() {
         val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
         if (user != null) {
-            val reference = fbDatabase.reference.child("Users").child(uid!!).child("nickname")
+            val reference = fbDatabase.reference.child("Users").child(uid!!).child("active")
             reference.get()
                 .addOnSuccessListener { it ->
                     if (it.value != null) {
-                        Log.d(MainActivity.TAG, "Checked, User Info already set - user nickname : ${it.value}")
-                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        finish()
+                        if(it.value == "suspended") {
+                            confirmSuspend()
+                        } else {
+                            Log.d("SplashActivity", "Checked, User Info already set - user's status : ${it.value}")
+                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                            finish()
+                        }
                     } else {
                         val setupIntent = Intent(this@SplashActivity, InitialSetupActivity::class.java)
                         setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -115,5 +129,9 @@ class SplashActivity : AppCompatActivity() {
         }
 
         window.attributes = winParams
+    }
+
+    override fun proceed() {
+        finish()
     }
 }

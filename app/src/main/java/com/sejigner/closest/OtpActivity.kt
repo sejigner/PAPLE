@@ -8,24 +8,20 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
+import com.sejigner.closest.fragment.SuspendAlertDialogFragment
 import com.sejigner.closest.ui.LoadingDialog
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_otp.*
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
 
-class OtpActivity : AppCompatActivity() {
+class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {
 
     // get reference of the firebase auth
     lateinit var auth: FirebaseAuth
@@ -180,16 +176,20 @@ class OtpActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val uid = FirebaseAuth.getInstance().currentUser?.uid
                     val reference =
-                        fbDatabase.reference.child("Users").child(uid!!).child("nickname")
+                        fbDatabase.reference.child("Users").child(uid!!).child("status")
                     reference.get()
                         .addOnSuccessListener { it ->
                             if (it.value != null) {
-                                Log.d(
-                                    MainActivity.TAG,
-                                    "Checked, User Info already set - user nickname : ${it.value}"
-                                )
-                                startActivity(Intent(applicationContext, MainActivity::class.java))
-                                finish()
+                                if(it.value == "suspended") {
+                                    confirmSuspend()
+                                } else {
+                                    Log.d(
+                                        MainActivity.TAG,
+                                        "Checked, User Info already set - user's status : ${it.value}"
+                                    )
+                                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                                    finish()
+                                }
                             } else {
                                 val setupIntent =
                                     Intent(this@OtpActivity, InitialSetupActivity::class.java)
@@ -208,5 +208,16 @@ class OtpActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+    private fun confirmSuspend() {
+        val alertDialog = SuspendAlertDialogFragment.newInstance(
+            "규정 위반으로 사용 정지된 계정입니다.", "종료하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "suspend-confirmation")
+    }
+
+    override fun proceed() {
+        finish()
     }
 }
