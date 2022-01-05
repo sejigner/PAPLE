@@ -60,7 +60,7 @@ class MyPageFragment : Fragment() {
             FirebaseAuth.getInstance().signOut()
             // Firebase 내 토큰 제거
             val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(
-                MainActivity.UID
+                UID
             ).child("registrationToken")
             fbDatabase.removeValue()
             // SharedPreference 닉네임 값 제거

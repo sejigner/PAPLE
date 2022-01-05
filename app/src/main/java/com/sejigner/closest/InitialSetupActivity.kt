@@ -53,7 +53,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private val year = date.get(Calendar.YEAR)
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
-    lateinit var viewModel:FragmentChatViewModel
+    lateinit var viewModel: FragmentChatViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -313,19 +313,19 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     private fun setInitialSetupToFireStore() {
         val database = fbDatabase?.reference
+        userInfo.status = "active"
         database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
             Log.d(
                 FragmentHome.TAG,
                 "Saved Users info to Firebase Realtime database: ${database.key}"
             )
         }
-        database?.child("Acquaintances/$uid")?.setValue(uid)?.addOnSuccessListener {
-            val intent = Intent(this, SplashCongratsActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-        }
+        val intent = Intent(this, SplashCongratsActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+
     }
 
     private fun checkGooglePlayServices(): Boolean {

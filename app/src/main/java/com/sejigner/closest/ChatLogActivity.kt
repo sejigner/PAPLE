@@ -21,7 +21,6 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.ui.SoftKeyboard.SoftKeyboardChanged
 import com.sejigner.closest.adapter.ChatLogAdapter
 import com.sejigner.closest.fragment.AlertDialogFragment
 import com.sejigner.closest.fragment.FragmentChat
@@ -35,6 +34,7 @@ import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.SoftKeyboard
+import com.sejigner.closest.ui.SoftKeyboard.SoftKeyboardChanged
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO

@@ -12,16 +12,15 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
+import com.sejigner.closest.ui.FragmentChatViewModel
+import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
@@ -29,15 +28,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ITEMS = "data"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FirstDialogFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
     PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
@@ -46,12 +36,12 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
-    private var mCallbackMain: FirstPlaneListenerMain? = null
+    private var mCallback: OnSuccessListener? = null
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
 
-    interface FirstPlaneListenerMain {
+    interface OnSuccessListener {
         fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double)
     }
 
@@ -132,7 +122,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                     Log.d(TAG, "Reply 실패")
                 }.addOnSuccessListener {
                     viewModel.delete(paper!!)
-                    mCallbackMain?.showReplySuccessFragment(true, distance!!)
+                    mCallback?.showReplySuccessFragment(true, distance!!)
                     dismiss()
                 }
 
@@ -152,8 +142,8 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FirstPlaneListenerMain) {
-            mCallbackMain = context
+        if (context is OnSuccessListener) {
+            mCallback = context
         } else {
             throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
         }

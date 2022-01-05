@@ -120,8 +120,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             iv_update_location.startAnimation(updateAnimation)
         }
 
-        FirebaseDatabase.getInstance().getReference("/Acquaintances/$UID").child(UID).setValue("")
-
         bt_sign_out_test.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             // Firebase 내 토큰 제거

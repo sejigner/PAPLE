@@ -1,8 +1,10 @@
 package com.sejigner.closest
 
+import android.content.Intent
 import android.location.*
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -44,7 +46,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
-    FirstDialogFragment.FirstPlaneListenerMain, AlertDialogFragment.OnConfirmedListener {
+    FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
+    RepliedDialogFragment.OnChatStartListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -313,6 +316,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             true
         }
     }
+
     // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
     override fun showSuccessFragment(flightDistance: Double) {
         closeYourDialogFragment()
@@ -560,5 +564,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun proceed() {
         fragmentHome.sendPaperPlane()
+    }
+
+    override fun startChatRoom(message: ChatMessages, partnerUid : String) {
+        ViewModel.insert(message)
+        val intent = Intent(this, ChatLogActivity::class.java)
+        intent.putExtra(FragmentChat.USER_KEY, partnerUid)
+        startActivity(intent)
     }
 }

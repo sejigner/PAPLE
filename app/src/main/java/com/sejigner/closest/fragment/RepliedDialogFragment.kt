@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,10 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
@@ -32,15 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ITEMS = "data"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RepliedDialogFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
     PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
@@ -51,11 +42,27 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     private var paper: RepliedPaperPlanes? = null
     private var userMessage: String? = null
     private var firstTime: Long? = null
-
+    var partnerNickname: String? = null
+    lateinit var mCallback: OnChatStartListener
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
 
+
+    interface OnChatStartListener {
+        fun startChatRoom(message: ChatMessages, partnerUid: String)
+        fun showLoadingDialog()
+        fun dismissLoadingDialog()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnChatStartListener) {
+            mCallback = context
+        } else {
+            throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,48 +123,60 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
-            var partnerNickname: String? = null
+
+            if (fromId != null) {
+                if(getPartnerNickname(fromId!!)) {
+                    val timestamp = System.currentTimeMillis() / 1000
+                    val chatRoom =
+                        ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp, false)
+                    // 두번째 비행기 기록 삭제
+                    viewModel.insert(chatRoom)
+                    viewModel.delete(paper!!)
+                    initChat()
+                }
+            }
+        }
+
+        tv_chat_no.setOnClickListener {
+            dismiss()
+        }
+    }
+
+    private fun getPartnerNickname(fromId: String): Boolean {
+        return try {
+            var result = false
             val ref2 =
                 FirebaseDatabase.getInstance().getReference("/Users/$fromId")
                     .child("nickname")
             ref2.get().addOnSuccessListener {
                 partnerNickname = it.value.toString()
-                val timestamp = System.currentTimeMillis() / 1000
-                val chatRoom =
-                    ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp, false)
-                // 두번째 비행기 기록 삭제
-                viewModel.insert(chatRoom)
-                viewModel.delete(paper!!)
-                initChatLog()
-                dismiss()
+                result = true
             }.addOnFailureListener {
-                Toast.makeText(requireActivity(), "상대방의 계정을 찾을 수 없습니다.", Toast.LENGTH_LONG).show()
+                Log.d(ChatLogActivity.TAG, it.toString())
+                result = false
             }
+            result
+        } catch (e: FirebaseException) {
+            Log.d(ChatLogActivity.TAG, e.toString())
+            false
         }
     }
 
-    private fun initChatLog() {
+    private fun initChat() {
+        mCallback.showLoadingDialog()
         val timestamp = System.currentTimeMillis() / 1000
-//        val text = resources.getString(R.string.init_chat_log)
-//        val toRef =
-//            FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID").push()
-//        val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, partnerUid!!, timestamp)
-//        toRef.setValue(chatMessage).addOnSuccessListener {
-//            Log.d(TAG, "sent your message: ${toRef.key}")
         val noticeMessage =
             ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
-        invitePartner()
-        Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
-
-
-        viewModel.insert(noticeMessage)
-        activity?.let {
-            val intent = Intent(context, ChatLogActivity::class.java)
-            intent.putExtra(FragmentChat.USER_KEY, fromId)
-            startActivity(intent)
-            dismiss()
+        if (invitePartner()) {
+            Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
+            if (fromId != null) {
+                mCallback.dismissLoadingDialog()
+                mCallback.startChatRoom(noticeMessage, fromId!!)
+                dismiss()
+            } else {
+                Toast.makeText(requireActivity(), "상대 계정의 문제로 채팅 시작이 불가능합니다.", Toast.LENGTH_SHORT).show()
+            }
         }
-
 
     }
 

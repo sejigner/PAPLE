@@ -7,14 +7,10 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.activity_splash_congrats.*
 
@@ -41,7 +37,7 @@ class SplashCongratsActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
+                val setupIntent = Intent(this@SplashCongratsActivity, Activity::class.java)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(setupIntent)
@@ -52,7 +48,7 @@ class SplashCongratsActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
+        val setupIntent = Intent(this@SplashCongratsActivity, Activity::class.java)
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(setupIntent)
