@@ -23,7 +23,6 @@ import com.sejigner.closest.R
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.PlaneBottomSheet
@@ -39,10 +38,10 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogReplied.newInstance] factory method to
+ * Use the [RepliedDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -234,7 +233,7 @@ class FragmentDialogReplied : DialogFragment(), ReportPlaneDialogFragment.OnConf
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(paperPlane: RepliedPaperPlanes) =
-            FragmentDialogReplied().apply {
+            RepliedDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString("partnerMessage", paperPlane.partnerMessage)
                     putDouble("distance", paperPlane.flightDistance)

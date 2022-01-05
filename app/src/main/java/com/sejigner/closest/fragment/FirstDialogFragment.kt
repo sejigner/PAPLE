@@ -22,7 +22,6 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
 import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.ChatBottomSheet
 import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
@@ -36,10 +35,10 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
+ * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener, PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -133,14 +132,14 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
-            val bottomSheet = ChatBottomSheet()
+            val bottomSheet = PlaneBottomSheet()
             bottomSheet.show(childFragmentManager, bottomSheet.tag)
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentDialogFirst.FirstPlaneListenerMain) {
+        if (context is FirstPlaneListenerMain) {
             mCallbackMain = context
         } else {
             throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
@@ -213,7 +212,7 @@ class FragmentDialogFirst : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(paperPlane: FirstPaperPlanes) =
-            FragmentDialogFirst().apply {
+            FirstDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString("message", paperPlane.message)
                     putDouble("distance", paperPlane.flightDistance)

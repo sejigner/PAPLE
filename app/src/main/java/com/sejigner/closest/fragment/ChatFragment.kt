@@ -7,14 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
-import com.google.firebase.database.*
 import com.sejigner.closest.adapter.FirstPaperPlaneAdapter
 import com.sejigner.closest.adapter.LatestMessageAdapter
 import com.sejigner.closest.adapter.RepliedPaperPlaneAdapter
@@ -25,20 +23,9 @@ import com.sejigner.closest.R
 import com.sejigner.closest.interfaces.FirstPlaneListener
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.models.Users
-import com.sejigner.closest.models.ChatMessage
-import com.sejigner.closest.models.LatestChatMessage
-import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
-import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.*
-import kotlinx.android.synthetic.main.latest_chat_row.view.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import java.text.SimpleDateFormat
-import java.util.*
 
 // TODO : ChatLogActivity 내 chatRoomAndAllMessages 참고하여 일대다관계 데이터 활용
 //  chatRoomAndAllMessages ( UID - ChatRoomId - Message 구조)
@@ -90,7 +77,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
             ViewModelProvider(this, factory).get(FragmentChatViewModel::class.java)
         val firstPlaneAdapter = FirstPaperPlaneAdapter(listOf(), ViewModel) { FirstPaperPlanes ->
 
-            val dialog = FragmentDialogFirst.newInstance(
+            val dialog = FirstDialogFragment.newInstance(
                 FirstPaperPlanes
             )
             val fm = childFragmentManager
@@ -99,7 +86,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         val repliedPlaneAdapter =
             RepliedPaperPlaneAdapter(listOf(), ViewModel) { RepliedPaperPlanes ->
-                val dialog = FragmentDialogReplied.newInstance(
+                val dialog = RepliedDialogFragment.newInstance(
                     RepliedPaperPlanes
                 )
                 val fm = childFragmentManager
@@ -161,7 +148,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
     override fun onPaperClicked(item: FirstPaperPlanes) {
         Log.d("FirstPlane", "clicked")
-        val dialog = FragmentDialogFirst.newInstance(
+        val dialog = FirstDialogFragment.newInstance(
             item
         )
         val fm = childFragmentManager

@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sejigner.closest.R
+import com.sejigner.closest.fragment.FirstDialogFragment
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_plane.*
 
 class PlaneBottomSheet() : BottomSheetDialogFragment() {
-
-    lateinit var callback : OnMenuClickedListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,9 +29,10 @@ class PlaneBottomSheet() : BottomSheetDialogFragment() {
         return R.style.AppBottomSheetDialogTheme
     }
 
+
     private fun setButtonOnClickListener() {
         tv_discard_paper_bottom_sheet.setOnClickListener {
-            callback.confirmDiscardPaper()
+            (FirstDialogFragment).confirmDiscardPaper()
         }
         tv_report_plane_bottom_sheet.setOnClickListener {
             callback.confirmReportPaper()

@@ -1,6 +1,5 @@
 package com.sejigner.closest.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -26,7 +25,7 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
+ * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class ReportPlaneDialogFragment : DialogFragment() {

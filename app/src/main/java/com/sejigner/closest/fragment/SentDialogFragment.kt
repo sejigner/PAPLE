@@ -26,7 +26,7 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
+ * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class FragmentDialogSent : DialogFragment() {

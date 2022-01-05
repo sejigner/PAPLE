@@ -44,7 +44,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
-    FragmentDialogFirst.FirstPlaneListenerMain, AlertDialogFragment.OnConfirmedListener {
+    FirstDialogFragment.FirstPlaneListenerMain, AlertDialogFragment.OnConfirmedListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null

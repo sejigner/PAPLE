@@ -1,6 +1,5 @@
 package com.sejigner.closest.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,16 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,7 +22,7 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
+ * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class ReportChatDialogFragment : DialogFragment() {

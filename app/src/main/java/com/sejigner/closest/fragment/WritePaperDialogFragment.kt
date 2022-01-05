@@ -6,8 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.EditText
@@ -33,8 +31,6 @@ import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import kotlin.math.round
 
@@ -45,7 +41,7 @@ private const val ITEMS = "data"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentDialogFirst.newInstance] factory method to
+ * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class FragmentDialogWritePaper : DialogFragment() {
