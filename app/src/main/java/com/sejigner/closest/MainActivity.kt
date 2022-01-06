@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onResume() {
         super.onResume()
-        // generateDummy()
+        generateDummy()
     }
 
     override fun onStop() {
@@ -287,6 +287,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     private fun initViewPager() {
         vp_main.run {
+            this.isUserInputEnabled = false
             adapter = pagerAdapter
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
