@@ -7,6 +7,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/background_loading.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_bottom_navi.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_bottom_sheet.xml" value="0.14375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_paper.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button_theme_color.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_splash.xml" value="0.24473684210526317" />
@@ -56,7 +57,8 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_me_row.xml" value="0.17827868852459017" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice_row.xml" value="0.23453947368421052" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_first.xml" value="0.15263157894736842" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane.xml" value="0.22135416666666666" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_first.xml" value="0.72" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_replied.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_sent_paper.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.22135416666666666" />

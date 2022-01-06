@@ -32,6 +32,7 @@ import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.SendLoadingDialog
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -171,6 +172,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     }
 
+
+
     override fun onStart() {
         super.onStart()
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
@@ -179,6 +182,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         listenForPlanes()
         listenForMessages()
         listenForFinishedChat()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // generateDummy()
     }
 
     override fun onStop() {
@@ -362,6 +370,33 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun removeBadge() {
         bnv_main.removeBadge(R.id.chat)
+    }
+
+    private fun generateDummy() {
+        for (i in 1..10 ) {
+            val item = FirstPaperPlanes(
+                i.toString(),
+                UID,
+                "test $i",
+                i*100.0,
+            System.currentTimeMillis() / 1000L
+            )
+            ViewModel.insert(item)
+        }
+
+        for (i in 1..20 ) {
+            val item = RepliedPaperPlanes(
+                i.toString(),
+                UID,
+                "test $i",
+                "test $i",
+                i*100.0,
+                System.currentTimeMillis() / 1000L,
+                System.currentTimeMillis() / 1000L
+            )
+            ViewModel.insert(item)
+        }
+
     }
 
     private fun listenForPlanes() {

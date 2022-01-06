@@ -62,7 +62,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
         val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
         if (user != null) {
-            val reference = fbDatabase.reference.child("Users").child(uid!!).child("active")
+            val reference = fbDatabase.reference.child("Users").child(uid!!).child("status")
             reference.get()
                 .addOnSuccessListener { it ->
                     if (it.value != null) {

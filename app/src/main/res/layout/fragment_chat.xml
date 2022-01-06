@@ -16,10 +16,8 @@
             android:id="@+id/constraintview_first"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="28dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -27,6 +25,7 @@
                 android:id="@+id/tv_first_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="@string/first_plane"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -34,37 +33,60 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_paperplane_first"
+            <TextView
+                android:id="@+id/tv_notice_first_paper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginTop="16dp"
+                android:text="@string/notice_no_paper"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_first_plane" />
 
-            <TextView
-                android:includeFontPadding="false"
-                android:id="@+id/tv_count_first"
-                android:text="0"
-                app:layout_constraintStart_toEndOf="@id/tv_first_plane"
-                app:layout_constraintTop_toTopOf="@id/tv_first_plane"
-                app:layout_constraintBottom_toBottomOf="@id/tv_first_plane"
+            <com.sejigner.closest.NestedScrollableHost
                 android:layout_width="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_height="wrap_content"
-                style="@style/count_number"/>
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_first_plane">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_paperplane_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </com.sejigner.closest.NestedScrollableHost>
+
+
+            <TextView
+                android:id="@+id/tv_count_first"
+                style="@style/count_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:includeFontPadding="false"
+                android:text="0"
+                app:layout_constraintBottom_toBottomOf="@id/tv_first_plane"
+                app:layout_constraintStart_toEndOf="@id/tv_first_plane"
+                app:layout_constraintTop_toTopOf="@id/tv_first_plane" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintview_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="4dp"
+            android:paddingBottom="44dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/constraintview_first">
 
@@ -72,6 +94,7 @@
                 android:id="@+id/tv_replied_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="@string/returned_plane"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -79,36 +102,48 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_paperplane_replied"
+            <com.sejigner.closest.NestedScrollableHost
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_notice_replied_paper">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_paperplane_replied"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+            </com.sejigner.closest.NestedScrollableHost>
+
+            <TextView
+                android:id="@+id/tv_count_replied"
+                style="@style/count_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:includeFontPadding="false"
+                android:text="0"
+                app:layout_constraintBottom_toBottomOf="@id/tv_replied_plane"
+                app:layout_constraintStart_toEndOf="@id/tv_replied_plane"
+                app:layout_constraintTop_toTopOf="@id/tv_replied_plane" />
+
+            <TextView
+                android:id="@+id/tv_notice_replied_paper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/tip_replied_paper"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_replied_plane" />
-
-            <TextView
-                android:includeFontPadding="false"
-                android:id="@+id/tv_count_replied"
-                android:text="0"
-                app:layout_constraintStart_toEndOf="@id/tv_replied_plane"
-                app:layout_constraintTop_toTopOf="@id/tv_replied_plane"
-                app:layout_constraintBottom_toBottomOf="@id/tv_replied_plane"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_height="wrap_content"
-                style="@style/count_number"/>
-
-            <TextView
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_paperplane_replied"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_marginTop="16dp"
-                android:text="@string/advice_chat_start"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -154,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"

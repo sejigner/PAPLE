@@ -74,7 +74,8 @@
     <string name="replied_plane_dialog">%1$s 거리에서\n답장이 날아왔어요!</string>
     <string name="returned_plane">비행기 답장이 왔어요!</string>
     <string name="open_chat">열린 대화</string>
-    <string name="advice_chat_start">비행기 답장을 열면 대화창을 열 수 있어요!</string>
+    <string name="tip_replied_paper">비행기 답장을 열면 대화창을 열 수 있어요!</string>
+    <string name="notice_no_paper">아직 날아온 비행기가 없어요.</string>
     <string name="chatting">채팅</string>
     <string name="meter">m</string>
     <string name="distance">%1$sm</string>
