@@ -30,6 +30,21 @@ data class FirstPaperPlanes(
     val timestamp: Long
 )
 
+@Entity(tableName = "my_paper")
+data class MyPaper(
+    @PrimaryKey(autoGenerate = true)
+    var messageId: Int? = null,
+
+    @ColumnInfo(name = "uid", index = true)
+    val uid : String,
+
+    @ColumnInfo(name = "text")
+    val text : String,
+
+    @ColumnInfo(name = "timestamp")
+    val timestamp : Long
+)
+
 @Entity(tableName = "my_message_record")
 data class MyPaperPlaneRecord(
     @PrimaryKey @ColumnInfo(name = "partnerId")

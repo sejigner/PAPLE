@@ -50,6 +50,22 @@ interface MyPaperPlaneRecordDao {
     suspend fun delete(record : MyPaperPlaneRecord)
 }
 
+@Dao
+interface MyPaperDao {
+
+    @Query("SELECT * FROM my_message_record WHERE uid = :uid")
+    fun getAllPaper(uid: String): LiveData<List<MyPaper>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPaperRecord(paper: MyPaper)
+
+    @Query("DELETE FROM my_paper WHERE uid = :uid")
+    suspend fun deleteAllPaperRecord(uid : String)
+
+    @Delete
+    suspend fun deletePaperRecord(record : MyPaper)
+}
+
 
 @Dao
 interface RepliedPaperPlaneDao {

@@ -10,23 +10,23 @@ import kotlinx.coroutines.Dispatchers.IO
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {
 
     // In coroutines thread insert item in insert function.
-    fun insert(item: FirstPaperPlanes) = viewModelScope.launch {
+    fun insert(item: FirstPaperPlanes) = CoroutineScope(IO).launch {
         repository.insert(item)
     }
 
-    fun insert(item: RepliedPaperPlanes) = viewModelScope.launch {
+    fun insert(item: RepliedPaperPlanes) = CoroutineScope(IO).launch {
         repository.insert(item)
     }
 
-    fun insert(item: List<ChatMessages>) = viewModelScope.launch {
+    fun insert(item: List<ChatMessages>) = CoroutineScope(IO).launch {
         repository.insert(item)
     }
 
-    fun insert(item: ChatMessages) = viewModelScope.launch {
+    fun insert(item: ChatMessages) = CoroutineScope(IO).launch {
         repository.insert(item)
     }
 
-    fun insert(rooms: ChatRooms) = viewModelScope.launch {
+    fun insert(rooms: ChatRooms) = CoroutineScope(IO).launch {
         repository.insert(rooms)
     }
 
@@ -34,7 +34,7 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(record)
     }
 
-    fun insert(user: User) = viewModelScope.launch {
+    fun insert(user: User) = CoroutineScope(IO).launch {
         repository.insert(user)
     }
 
@@ -42,8 +42,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(acquaintance)
     }
 
+    fun insertPaperRecord(paper: MyPaper) = CoroutineScope(IO).launch {
+        repository.insertPaperRecord(paper)
+    }
+
     // In coroutines thread delete item in delete function.
-    fun delete(item: FirstPaperPlanes) = viewModelScope.launch {
+    fun delete(item: FirstPaperPlanes) = CoroutineScope(IO).launch {
         repository.delete(item)
     }
 
@@ -59,8 +63,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.delete(item)
     }
 
-    fun delete(user: User) = viewModelScope.launch {
+    fun delete(user: User) = CoroutineScope(IO).launch {
         repository.delete(user)
+    }
+
+    fun delete(paper: MyPaper) = CoroutineScope(IO).launch {
+        repository.deletePaperRecord(paper)
     }
 
     fun deleteAll(uid : String) = viewModelScope.launch {
@@ -110,6 +118,10 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
 
     fun chatRoomAndAllMessages(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.getChatRoomsAndAllMessages(uid, partnerId)
+    }
+
+    fun deleteAllPaperRecord(uid: String) = CoroutineScope(IO).launch {
+        repository.deleteAllPaperRecord(uid)
     }
 
 

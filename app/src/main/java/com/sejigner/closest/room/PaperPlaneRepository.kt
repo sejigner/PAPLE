@@ -20,11 +20,16 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
     suspend fun insert(paperPlane: RepliedPaperPlanes) = db.getRepliedPaperPlaneDao().insert(paperPlane)
     suspend fun delete(paperPlane: RepliedPaperPlanes) = db.getRepliedPaperPlaneDao().delete(paperPlane)
 
-    // 내가 보낸 비행기
+    // 내가 보낸 비행기(답장용)
     suspend fun getWithId(uid: String, fromId: String): MyPaperPlaneRecord? = db.getMyPaperPlaneRecordDao().getWithId(uid, fromId)
     suspend fun delete(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().delete(record)
     suspend fun deleteAll(uid: String) = db.getMyPaperPlaneRecordDao().deleteAll(uid)
     suspend fun insert(record: MyPaperPlaneRecord) = db.getMyPaperPlaneRecordDao().insert(record)
+
+    // 내가 보낸 비행기(기록용)
+    suspend fun deleteAllPaperRecord(uid: String) = db.getMyPaperDao().deleteAllPaperRecord(uid)
+    suspend fun insertPaperRecord(paper: MyPaper) = db.getMyPaperDao().insertPaperRecord(paper)
+    suspend fun deletePaperRecord(paper: MyPaper) = db.getMyPaperDao().deletePaperRecord(paper)
 
     // 채팅방
     suspend fun insert(messageList: List<ChatMessages>) = db.getChatRoomsDao().insert(messageList)
@@ -58,6 +63,6 @@ class PaperPlaneRepository(private val db: PaperPlaneDatabase) {
 //        return rooms
 //    }
     fun allChatRooms(uid: String) = db.getChatRoomsDao().getAllChatRooms(uid)
-    fun allPaperRecords(uid: String) = db.getMyPaperPlaneRecordDao().getAllPlaneRecord(uid)
+    fun allPaperRecords(uid: String) = db.getMyPaperDao().getAllPaper(uid)
 
 }
