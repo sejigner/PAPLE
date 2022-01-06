@@ -1,5 +1,6 @@
 package com.sejigner.closest.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -15,10 +16,8 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_sent.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.round
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,12 +28,11 @@ private const val ITEMS = "data"
  * Use the [FirstDialogFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentDialogSent : DialogFragment() {
+class FragmentDialogSent : DialogFragment(), AlertDialogChildFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
-    private var distance: Double? = null
     private var time: Long? = null
-    private var paper: MyPaperPlaneRecord? = null
+    private var paper: MyPaper? = null
     lateinit var repository : PaperPlaneRepository
     lateinit var factory : FragmentChatViewModelFactory
     lateinit var viewModel : FragmentChatViewModel
@@ -67,24 +65,33 @@ class FragmentDialogSent : DialogFragment() {
         tv_dialog_time_sent.text = setDateToTextView(time!!)
         tv_dialog_message_sent.text = message
 
-        tv_discard_my_paper.setOnClickListener {
-            viewModel.delete(paper!!)
+        tv_discard_my_paper.paint.isUnderlineText = true
+
+        frame_dialog_sent.setOnClickListener {
             dismiss()
+        }
+
+        cl_dialog_frame.setOnClickListener {
+            frame_dialog_sent.requestDisallowInterceptTouchEvent(true)
+        }
+
+        tv_discard_my_paper.setOnClickListener {
+            val alertDialog = AlertDialogChildFragment.newInstance(
+                "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
+            )
+            val fm = childFragmentManager
+            alertDialog.show(fm, "My paper discard confirmation")
         }
     }
 
-    private fun convertDistanceToString(distance : Double) : String {
-        return if(distance >= 1000) {
-            (round((distance/1000)*100) /100).toString() + "km"
-        } else distance.toString() + "m"
-    }
 
-    override fun onStart() {
-        super.onStart()
-        val width = ViewGroup.LayoutParams.MATCH_PARENT
-        val height = ViewGroup.LayoutParams.MATCH_PARENT
-        dialog!!.window!!.setLayout(width, height)
-        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    override fun onResume() {
+        super.onResume()
+        if(dialog != null) {val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.MATCH_PARENT
+            dialog!!.window!!.setLayout(width, height)
+            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
     }
 
     private fun setDateToTextView(timestamp: Long): String {
@@ -108,14 +115,19 @@ class FragmentDialogSent : DialogFragment() {
 
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(paperPlane: MyPaperPlaneRecord) =
+        fun newInstance(paperPlane: MyPaper) =
             FragmentDialogSent().apply {
                 arguments = Bundle().apply {
-                    putString("message", paperPlane.userMessage)
-                    putLong("time", paperPlane.firstTimestamp)
+                    putString("message", paperPlane.text)
+                    putLong("time", paperPlane.timestamp)
                 }
                 paper = paperPlane
             }
+    }
+
+    override fun proceed() {
+        viewModel.delete(paper!!)
+        dismiss()
     }
 
 

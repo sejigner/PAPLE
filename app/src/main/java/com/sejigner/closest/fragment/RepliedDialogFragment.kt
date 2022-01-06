@@ -33,7 +33,7 @@ import kotlin.math.round
 
 
 class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
-    PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+    PlaneBottomSheet.OnMenuClickedListener, AlertDialogChildFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var partnerMessage: String? = null
     private var distance: Double? = null
@@ -47,6 +47,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
+    private var bottomSheet : PlaneBottomSheet ?= null
 
 
     interface OnChatStartListener {
@@ -54,6 +55,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         fun showLoadingDialog()
         fun dismissLoadingDialog()
     }
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -209,8 +212,10 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
 
     private fun addOnClickListenerMenu() {
         iv_menu_replied_plane.setOnClickListener {
-            val bottomSheet = PlaneBottomSheet()
-            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            bottomSheet = PlaneBottomSheet()
+            if(bottomSheet!=null) {
+                bottomSheet!!.show(childFragmentManager, bottomSheet!!.tag)
+            }
         }
     }
 
@@ -279,7 +284,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     }
 
     override fun confirmDiscardPaper() {
-        val alertDialog = AlertDialogFragment.newInstance(
+        bottomSheet?.dismiss()
+        val alertDialog = AlertDialogChildFragment.newInstance(
             "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
         )
         val fm = childFragmentManager
@@ -287,6 +293,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     }
 
     override fun confirmReportPaper() {
+        bottomSheet?.dismiss()
         val dialog = ReportPlaneDialogFragment.newInstanceReplied(
             partnerMessage!!,
             replyTime!!

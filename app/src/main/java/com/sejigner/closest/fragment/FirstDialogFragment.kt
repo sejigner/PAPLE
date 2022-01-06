@@ -23,13 +23,12 @@ import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
 class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfirmedListener,
-    PlaneBottomSheet.OnMenuClickedListener, AlertDialogFragment.OnConfirmedListener {
+    PlaneBottomSheet.OnMenuClickedListener, AlertDialogChildFragment.OnConfirmedListener {
     // TODO: Rename and change types of parameters
     private var message: String? = null
     private var distance: Double? = null
@@ -40,6 +39,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
+    private var bottomSheet : PlaneBottomSheet ?= null
 
     interface OnSuccessListener {
         fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double)
@@ -135,8 +135,10 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
-            val bottomSheet = PlaneBottomSheet()
-            bottomSheet.show(childFragmentManager, bottomSheet.tag)
+            bottomSheet = PlaneBottomSheet()
+            if(bottomSheet!=null) {
+                bottomSheet!!.show(childFragmentManager, bottomSheet!!.tag)
+            }
         }
     }
 
@@ -221,7 +223,8 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     }
 
     override fun confirmDiscardPaper() {
-        val alertDialog = AlertDialogFragment.newInstance(
+        bottomSheet?.dismiss()
+        val alertDialog = AlertDialogChildFragment.newInstance(
             "정말 비행기를 버리시겠어요? \n한번 버린 비행기는 복구가 안 돼요.", "버리기"
         )
         val fm = childFragmentManager
@@ -229,6 +232,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     }
 
     override fun confirmReportPaper() {
+        bottomSheet?.dismiss()
         val dialog = ReportPlaneDialogFragment.newInstanceFirst(
             message!!,
             time!!
@@ -247,6 +251,5 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     override fun proceed() {
         discardPaper()
     }
-
 
 }

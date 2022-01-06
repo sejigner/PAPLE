@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
@@ -69,10 +68,13 @@ class ReportChatDialogFragment : DialogFragment() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    override fun onResume() {
+        super.onResume()
+//        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        if(dialog != null) {
+//            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
     }
 
 

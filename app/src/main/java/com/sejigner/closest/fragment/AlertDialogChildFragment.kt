@@ -9,11 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.sejigner.closest.R
 import com.sejigner.closest.room.FirstPaperPlanes
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 
-class AlertDialogFragment : DialogFragment() {
+class AlertDialogChildFragment : DialogFragment() {
 
     var listener : OnConfirmedListener ?= null
     private var question : String ?= null
@@ -25,6 +26,7 @@ class AlertDialogFragment : DialogFragment() {
             confirm = it.getString("confirm")
             question =  it.getString("question")
         }
+        onAttach(requireParentFragment())
     }
 
     override fun onCreateView(
@@ -59,11 +61,10 @@ class AlertDialogFragment : DialogFragment() {
     }
 
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        listener = context as? OnConfirmedListener
+     fun onAttach(fragment: Fragment) {
+        listener = fragment as? OnConfirmedListener
         if (listener == null) {
-            throw ClassCastException("$context must implement OnConfirmedListener")
+            throw ClassCastException("$fragment must implement OnConfirmedListener")
         }
     }
 
@@ -78,7 +79,7 @@ class AlertDialogFragment : DialogFragment() {
 
         @JvmStatic
         fun newInstance(question: String, confirm : String) =
-            AlertDialogFragment().apply {
+            AlertDialogChildFragment().apply {
                 arguments = Bundle().apply {
                     putString("question", question)
                     putString("confirm", confirm)

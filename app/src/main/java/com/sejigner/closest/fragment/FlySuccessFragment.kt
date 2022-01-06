@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 import kotlin.math.round

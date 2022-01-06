@@ -31,18 +31,16 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sejigner.closest.*
-import com.sejigner.closest.adapter.SentPaperPlaneAdapter
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
+import com.sejigner.closest.adapter.SentPaperPlaneAdapter
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.iv_update_location
-import kotlinx.android.synthetic.main.fragment_home.tv_count_letter_paper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import java.io.IOException
@@ -60,7 +58,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         const val TAG = "FlightLog"
         val CURRENTADDRESS = "CURRENT_ADDRESS"
         // GeoFire Query 최대 거리
-        const val RADIUS = 15
+        const val MAX_RADIUS = 550
     }
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
@@ -79,6 +77,8 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
     private var userCurrentLocation: Location? = null
     private var mListener: FlightListener? = null
     lateinit var viewModel: FragmentChatViewModel
+//    private var timerTask: Timer ?= null
+//    private var milliSec = 0.0
 
 
     override fun onCreateView(
@@ -159,26 +159,16 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             }
         })
 
-        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { MyPaperPlaneRecord ->
+        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { MyPaper ->
 
             val dialog = FragmentDialogSent.newInstance(
-                MyPaperPlaneRecord
+                MyPaper
             )
             val fm = childFragmentManager
             dialog.show(fm, "my paper")
         }
+
         rv_sent_paper.adapter = sentPlaneAdapter
-
-
-//        val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { SentPaperPlanes ->
-//
-//            val dialog = FragmentDialogSent.newInstance(
-//                SentPaperPlanes
-//            )
-//            val fm = childFragmentManager
-//            dialog.show(fm, "my paper")
-//        }
-//        rv_sent_paper.adapter = sentPlaneAdapter
 
         val mLayoutManager = LinearLayoutManager(requireActivity())
         mLayoutManager.reverseLayout = true
@@ -187,18 +177,28 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         rv_sent_paper.layoutManager = mLayoutManager
 
         viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
-            sentPlaneAdapter.list = it
-            sentPlaneAdapter.notifyDataSetChanged()
-            tv_delete_all_records.isEnabled = !it.isEmpty()
+            sentPlaneAdapter.differ.submitList(it)
+            tv_delete_all_records.isEnabled = it.isNotEmpty()
         })
-
     }
+
+
 
     fun sendPaperPlane() {
         mListener?.showLoadingDialog()
         sentMessage = et_write_paper.text.toString()
+        savePaperToDB(sentMessage)
         et_write_paper.text.clear()
         getClosestUser()
+
+//        timerTask = timer(period=1) {
+//            milliSec++
+//        }
+    }
+
+    private fun savePaperToDB(message : String) {
+        val myPaperRecord = MyPaper(null, UID, message, System.currentTimeMillis() / 1000L)
+        viewModel.insertPaperRecord(myPaperRecord)
     }
 
     override fun proceed() {
@@ -224,6 +224,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         val message = sentMessage
         val fromId = UID
         val distance = flightDistance
+        val timestamp = System.currentTimeMillis() / 1000L
         val paperPlaneReceiverReference =
             FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
 
@@ -233,7 +234,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             fromId,
             toId,
             distance,
-            System.currentTimeMillis() / 1000L,
+            timestamp,
             false
         )
 
@@ -247,6 +248,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
+
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
@@ -295,16 +297,20 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             }
 
             override fun onGeoQueryReady() {
-                if (!userFound && (radius < RADIUS)) {
+                if (!userFound && (radius < MAX_RADIUS)) {
                     radius++
+                    Log.d("test","$radius")
                     getClosestUser()
                 } else {
                     mListener?.dismissLoadingDialog()
+//                    timerTask?.cancel()
+//                    Log.d("Timer", "it took ${milliSec/1000} seconds for 550km flight")
                     // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X
                     //   추후 사용자수가 확보되면 거리 제공
-                    mListener?.showSuccessFragment()
                     userFound = false
                     foundUserId = ""
+                    radius = 0.0
+                    mListener?.showSuccessFragment()
                 }
             }
 

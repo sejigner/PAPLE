@@ -16,7 +16,6 @@ import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*
-import kotlinx.android.synthetic.main.fragment_dialog_write.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -108,7 +107,6 @@ class ReportPlaneDialogFragment : DialogFragment() {
         if(dialog != null) {
 //            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
 
     }

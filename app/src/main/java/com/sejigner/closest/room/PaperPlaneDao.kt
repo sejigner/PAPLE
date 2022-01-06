@@ -53,7 +53,7 @@ interface MyPaperPlaneRecordDao {
 @Dao
 interface MyPaperDao {
 
-    @Query("SELECT * FROM my_message_record WHERE uid = :uid")
+    @Query("SELECT * FROM my_paper WHERE uid = :uid")
     fun getAllPaper(uid: String): LiveData<List<MyPaper>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
