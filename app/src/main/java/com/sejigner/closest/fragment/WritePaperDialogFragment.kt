@@ -78,7 +78,6 @@ class FragmentDialogWritePaper : DialogFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -120,7 +119,6 @@ class FragmentDialogWritePaper : DialogFragment() {
         btnClose?.setOnClickListener {
             dismiss()
         }
-
 
 
     }
@@ -224,6 +222,7 @@ class FragmentDialogWritePaper : DialogFragment() {
         val message = et_write_paper_dialog.text.toString()
         val fromId = UID
         val distance = flightDistance
+        val timestamp = System.currentTimeMillis() / 1000L
 
         val paperPlaneReceiverReference =
             FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
@@ -234,7 +233,7 @@ class FragmentDialogWritePaper : DialogFragment() {
             fromId,
             toId,
             distance,
-            System.currentTimeMillis() / 1000L,
+            timestamp,
             false
         )
 
@@ -242,12 +241,14 @@ class FragmentDialogWritePaper : DialogFragment() {
             Log.d(FragmentHome.TAG, "Receiver 실패")
         }.addOnSuccessListener {
             val sentPaper = MyPaperPlaneRecord(
-                paperplaneMessage.toId,
+                toId,
                 UID,
-                paperplaneMessage.text,
-                paperplaneMessage.timestamp
+                message,
+                timestamp
             )
+            val myPaperRecord = MyPaper(null, UID, message, timestamp)
             viewModel.insert(sentPaper)
+            viewModel.insertPaperRecord(myPaperRecord)
         }
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
@@ -269,8 +270,6 @@ class FragmentDialogWritePaper : DialogFragment() {
             throw RuntimeException(context.toString() + "must implement WritePaperListener")
         }
     }
-
-
 
 
     companion object {
