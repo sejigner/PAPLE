@@ -3,58 +3,78 @@ package com.sejigner.closest.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
-import com.sejigner.closest.interfaces.FirstPlaneListener
-import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.room.RepliedPaperPlanes
-import kotlinx.android.synthetic.main.column_paperplane_replied.view.*
+import com.sejigner.closest.ui.FragmentChatViewModel
+import kotlinx.android.synthetic.main.column_paperplane.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewModel : FragmentChatViewModel, val itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.Adapter<RepliedPaperPlaneAdapter.RepliedPaperPlaneViewHolder>() {
-
-    val mListener : FirstPlaneListener?= null
+class RepliedPaperPlaneAdapter(
+    var list: List<RepliedPaperPlanes>,
+    val viewModel: FragmentChatViewModel,
+    val itemClick: (RepliedPaperPlanes) -> Unit
+) : RecyclerView.Adapter<RepliedPaperPlaneAdapter.RepliedPaperPlaneViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): RepliedPaperPlaneViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.column_paperplane_replied, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.column_paperplane, parent, false)
         return RepliedPaperPlaneViewHolder(view, itemClick)
     }
+
+    private val differCallback = object : DiffUtil.ItemCallback<RepliedPaperPlanes>() {
+        override fun areItemsTheSame(
+            oldItem: RepliedPaperPlanes,
+            newItem: RepliedPaperPlanes
+        ): Boolean {
+            return oldItem.fromId == newItem.fromId
+        }
+
+        override fun areContentsTheSame(
+            oldItem: RepliedPaperPlanes,
+            newItem: RepliedPaperPlanes
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val differ = AsyncListDiffer(this, differCallback)
 
     override fun onBindViewHolder(
         holder: RepliedPaperPlaneViewHolder,
         position: Int
     ) {
-        var currentPosition = list[position]
-        holder.itemView.tv_paperplane_message_replied.text = currentPosition.partnerMessage
-        holder.itemView.tv_paperplane_distance_replied.text = convertDistanceToString(currentPosition.flightDistance)
-        holder.itemView.tv_paperplane_time_replied.text = setDateToTextView(currentPosition.replyTimestamp)
-        holder.itemView.setOnClickListener{ itemClick(currentPosition) }
+        val currentPosition = differ.currentList[position]
+        holder.itemView.setOnClickListener { itemClick(currentPosition) }
+        holder.bind(currentPosition)
     }
 
-    private fun convertDistanceToString(distance : Double) : String {
-        return if(distance >= 1000) {
-            (((distance/1000)*100)/100).toString() + "km"
+    private fun convertDistanceToString(distance: Double): String {
+        return if (distance >= 1000) {
+            (((distance / 1000) * 100) / 100).toString() + "km"
         } else distance.toString() + "m"
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return differ.currentList.size
     }
 
-    private fun setDateToTextView(timestamp: Long) : String {
+    private fun setDateToTextView(timestamp: Long): String {
         var sdf: SimpleDateFormat
-        val date = Date(timestamp*1000)
+        val date = Date(timestamp * 1000)
         val messageTime = Calendar.getInstance()
         messageTime.time = date
 
         val now = Calendar.getInstance()
-        sdf = if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE) ) {
+        sdf = if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE)) {
             SimpleDateFormat("a hh:mm")
-        } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1  ){
+        } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1) {
             return "어제"
         } else if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)) {
             SimpleDateFormat("MM월 dd일")
@@ -67,8 +87,18 @@ class RepliedPaperPlaneAdapter(var list : List<RepliedPaperPlanes>, val viewMode
         return sdf.format(timestamp * 1000L)
     }
 
-    inner class RepliedPaperPlaneViewHolder(itemView : View, itemClick: (RepliedPaperPlanes) -> Unit) : RecyclerView.ViewHolder(itemView) {
-
+    inner class RepliedPaperPlaneViewHolder(
+        itemView: View,
+        itemClick: (RepliedPaperPlanes) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
+        fun bind(plane: RepliedPaperPlanes?) {
+            //check for null
+            plane?.let {
+                itemView.tv_paperplane_message.text = it.partnerMessage
+                itemView.tv_paperplane_distance.text = convertDistanceToString(it.flightDistance)
+                itemView.tv_paperplane_time.text = setDateToTextView(it.replyTimestamp)
+            }
+        }
     }
 }
 

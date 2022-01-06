@@ -69,7 +69,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val uid = MainActivity.getUid()
+
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
         // initialized View Model
@@ -125,19 +125,26 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
         ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
-            firstPlaneAdapter.list = it
-            firstPlaneAdapter.notifyDataSetChanged()
-            tv_count_first.text = firstPlaneAdapter.list.size.toString()
+            firstPlaneAdapter.differ.submitList(it)
+            tv_count_first.text = firstPlaneAdapter.differ.currentList.size.toString()
+            if(firstPlaneAdapter.differ.currentList.size>0) {
+                tv_notice_first_paper.visibility = View.GONE
+            } else {
+                tv_notice_first_paper.visibility = View.VISIBLE
+            }
         })
         ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
-            repliedPlaneAdapter.list = it
-            repliedPlaneAdapter.notifyDataSetChanged()
-            tv_count_replied.text = repliedPlaneAdapter.list.size.toString()
+            repliedPlaneAdapter.differ.submitList(it)
+            tv_count_replied.text = repliedPlaneAdapter.differ.currentList.size.toString()
+            if(repliedPlaneAdapter.differ.currentList.size>0) {
+                tv_notice_replied_paper.text = resources.getText(R.string.tip_replied_paper)
+            } else {
+                tv_notice_replied_paper.text = resources.getText(R.string.notice_no_paper)
+            }
         })
 
         ViewModel.allChatRooms(UID).observe(viewLifecycleOwner, {
-            latestMessageAdapter.list = it
-            latestMessageAdapter.notifyDataSetChanged()
+            latestMessageAdapter.differ.submitList(it)
         })
     }
 

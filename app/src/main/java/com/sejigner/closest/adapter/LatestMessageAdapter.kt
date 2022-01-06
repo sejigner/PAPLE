@@ -3,10 +3,14 @@ package com.sejigner.closest.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.room.ChatRooms
+import com.sejigner.closest.room.RepliedPaperPlanes
+import kotlinx.android.synthetic.main.column_paperplane.view.*
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,15 +27,31 @@ class LatestMessageAdapter(var list : List<ChatRooms>, val viewModel : FragmentC
         return ChatRoomsViewHolder(view, itemClick)
     }
 
+    private val differCallback = object : DiffUtil.ItemCallback<ChatRooms>() {
+        override fun areItemsTheSame(
+            oldItem: ChatRooms,
+            newItem: ChatRooms
+        ): Boolean {
+            return oldItem.partnerId == newItem.partnerId
+        }
+
+        override fun areContentsTheSame(
+            oldItem: ChatRooms,
+            newItem: ChatRooms
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val differ = AsyncListDiffer(this, differCallback)
+
     override fun onBindViewHolder(
         holder: ChatRoomsViewHolder,
         position: Int
     ) {
-        val currentPosition = list[position]
-        holder.itemView.tv_chat_nickname.text = currentPosition.partnerNickname
-        holder.itemView.tv_chat_time.text = setDateToTextView(currentPosition.lastMessageTimestamp!!)
-        holder.itemView.tv_chat_message.text = currentPosition.lastMessage
-        holder.itemView.setOnClickListener{ itemClick(currentPosition) }
+        val currentPosition = differ.currentList[position]
+        holder.itemView.setOnClickListener { itemClick(currentPosition) }
+        holder.bind(currentPosition)
     }
 
     override fun getItemCount(): Int {
@@ -61,7 +81,14 @@ class LatestMessageAdapter(var list : List<ChatRooms>, val viewModel : FragmentC
     }
 
     inner class ChatRoomsViewHolder(itemView : View, itemClick: (ChatRooms) -> Unit) : RecyclerView.ViewHolder(itemView) {
-
+        fun bind(chatRoom: ChatRooms?) {
+            //check for null
+            chatRoom?.let {
+                itemView.tv_chat_nickname.text = it.partnerNickname
+                itemView.tv_chat_time.text = setDateToTextView(it.lastMessageTimestamp!!)
+                itemView.tv_chat_message.text = it.lastMessage
+            }
+        }
     }
 }
 
