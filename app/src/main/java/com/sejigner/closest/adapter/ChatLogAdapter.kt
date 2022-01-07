@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sejigner.closest.ChatLogActivity
 import com.sejigner.closest.R
 import com.sejigner.closest.room.ChatMessages
+import com.sejigner.closest.room.FirstPaperPlanes
 import com.sejigner.closest.ui.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,7 +21,7 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        return list[position].meOrPartner
+        return differ.currentList[position].meOrPartner
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -57,30 +60,48 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                 NoticeViewHolder(view)
             }
 
-            else ->  throw RuntimeException("알 수 없는 뷰 타입 에러")
+            else -> throw RuntimeException("알 수 없는 뷰 타입 에러")
         }
     }
+
+    private val differCallback = object : DiffUtil.ItemCallback<ChatMessages>() {
+        override fun areItemsTheSame(
+            oldItem: ChatMessages,
+            newItem: ChatMessages
+        ): Boolean {
+            return oldItem.messageId == newItem.messageId
+        }
+
+        override fun areContentsTheSame(
+            oldItem: ChatMessages,
+            newItem: ChatMessages
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val differ = AsyncListDiffer(this, differCallback)
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int
     ) {
 
-        when (list[position].meOrPartner) {
+        when (differ.currentList[position].meOrPartner) {
             0 -> {
-                (holder as MessageFromMeViewHolder).bind(list[position])
+                (holder as MessageFromMeViewHolder).bind(differ.currentList[position])
                 holder.setIsRecyclable(false)
             }
             1 -> {
-                (holder as MessageFromPartnerViewHolder).bind(list[position])
+                (holder as MessageFromPartnerViewHolder).bind(differ.currentList[position])
                 holder.setIsRecyclable(false)
             }
             2 -> {
-                (holder as DateViewHolder).bind(list[position])
+                (holder as DateViewHolder).bind(differ.currentList[position])
                 holder.setIsRecyclable(false)
             }
             3 -> {
-                (holder as NoticeViewHolder).bind(list[position])
+                (holder as NoticeViewHolder).bind(differ.currentList[position])
                 holder.setIsRecyclable(false)
             }
         }
@@ -92,15 +113,18 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
 //        holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = differ.currentList.size
 
     inner class MessageFromMeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val time: TextView = itemView.findViewById(R.id.tv_time_me)
         private val message: TextView = itemView.findViewById(R.id.tv_message_me)
 
-        fun bind(item: ChatMessages) {
-            time.text = setDateToTextView(item.timestamp!!)
-            message.text = item.message
+        fun bind(item: ChatMessages?) {
+            item?.let {
+                time.text = setDateToTextView(it.timestamp!!)
+                message.text = it.message
+            }
+
         }
     }
 
@@ -108,25 +132,31 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
         private val time: TextView = itemView.findViewById(R.id.tv_time_partner)
         private val message: TextView = itemView.findViewById(R.id.tv_message_partner)
 
-        fun bind(item: ChatMessages) {
-            time.text = setDateToTextView(item.timestamp!!)
-            message.text = item.message
+        fun bind(item: ChatMessages?) {
+            item?.let {
+                time.text = setDateToTextView(it.timestamp!!)
+                message.text = it.message
+            }
+
         }
     }
 
     inner class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val date: TextView = itemView.findViewById(R.id.tv_chat_date)
-
-        fun bind(item: ChatMessages) {
-            date.text = item.message
+        fun bind(item: ChatMessages?) {
+            item?.let {
+                date.text = it.message
+            }
         }
     }
 
     inner class NoticeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val date: TextView = itemView.findViewById(R.id.tv_chat_notice)
 
-        fun bind(item: ChatMessages) {
-            date.text = item.message
+        fun bind(item: ChatMessages?) {
+            item?.let {
+                date.text = it.message
+            }
         }
     }
 
@@ -137,16 +167,16 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
         return date.toString()
     }
 
-    private fun getDateTime(time: Long): String? {
-        try {
-            val sdf = SimpleDateFormat("yyyy년 MM월 dd일")
-            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-            val netDate = Date(time * 1000)
-            return sdf.format(netDate)
-        } catch (e: Exception) {
-            Log.d(ChatLogActivity.TAG, e.toString())
-            return e.toString()
-        }
-    }
+//    private fun getDateTime(time: Long): String? {
+//        try {
+//            val sdf = SimpleDateFormat("yyyy년 MM월 dd일")
+//            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
+//            val netDate = Date(time * 1000)
+//            return sdf.format(netDate)
+//        } catch (e: Exception) {
+//            Log.d(ChatLogActivity.TAG, e.toString())
+//            return e.toString()
+//        }
+//    }
 }
 

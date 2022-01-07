@@ -61,7 +61,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var layout: RelativeLayout
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var softKeyboard: SoftKeyboard
-    private var isOver: Boolean = false
     lateinit var mListenerFinish: ChildEventListener
     lateinit var mRefFinish: DatabaseReference
 
@@ -98,8 +97,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
 
         viewModel.allChatMessages(UID, partnerUid!!).observe(this, {
-            chatLogAdapter.list = it
-            chatLogAdapter.notifyDataSetChanged()
+            chatLogAdapter.differ.submitList(it)
             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         })
 
