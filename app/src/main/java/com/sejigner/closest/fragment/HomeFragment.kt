@@ -16,6 +16,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -40,6 +41,7 @@ import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_dialog_sent.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -64,7 +66,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var fbFirestore: FirebaseFirestore? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var currentAddress: String = ""
@@ -108,9 +109,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         CoroutineScope(IO).launch {
             getCurrentLocation()
         }
-
-        tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-
 
         val updateAnimation : Animation = AnimationUtils.loadAnimation(requireActivity(),R.anim.anim_update_location)
         tv_update_location.setOnClickListener {
@@ -182,7 +180,12 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         })
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        tv_update_location
+        tv_delete_all_records.paint.isUnderlineText = true
+    }
 
     fun sendPaperPlane() {
         mListener?.showLoadingDialog()
@@ -379,7 +382,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             longitude = location.longitude
             userCurrentLocation = location
             currentAddress = getAddress(location.latitude, location.longitude)
-
+            tv_update_location.text = currentAddress
         }
             .addOnFailureListener {
                 Toast.makeText(
@@ -412,7 +415,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             currentAddress = currentAddress.substring(4)
             Log.d("CheckCurrentLocation", "$currentAddress")
         }
-        tv_update_location.text = currentAddress
         setLocationToDatabase(latitude, longitude)
 
         return currentAddress

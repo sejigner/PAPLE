@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     Log.d(TAG, "Ad was loaded.")
                     mInterstitialAd = interstitialAd
                     mAdIsLoading = false
-                    Toast.makeText(this@MainActivity, "onAdLoaded()", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainActivity, "onAdLoaded()", Toast.LENGTH_SHORT).show()
                     if (isAd) {
                         showInterstitial()
                         isAd = false

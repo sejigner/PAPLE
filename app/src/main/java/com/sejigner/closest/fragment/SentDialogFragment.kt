@@ -77,7 +77,7 @@ class FragmentDialogSent : DialogFragment(), AlertDialogChildFragment.OnConfirme
 
         tv_discard_my_paper.setOnClickListener {
             val alertDialog = AlertDialogChildFragment.newInstance(
-                "이 비행기를 버리시겠어요? \n버린 비행기는 복구가 안 돼요!", "버리기"
+                "이 비행기를 버리시겠어요?\n버린 비행기는 복구가 안 돼요!", "버리기"
             )
             val fm = childFragmentManager
             alertDialog.show(fm, "My paper discard confirmation")

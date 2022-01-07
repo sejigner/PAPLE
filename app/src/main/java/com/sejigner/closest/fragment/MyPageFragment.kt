@@ -26,8 +26,9 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlin.math.sign
 
-class MyPageFragment : Fragment() {
+class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     lateinit var viewModel: FragmentChatViewModel
 
@@ -57,19 +58,11 @@ class MyPageFragment : Fragment() {
         val nickname = App.prefs.myNickname!!
 
         tv_log_out_my_page.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            // Firebase 내 토큰 제거
-            val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(
-                UID
-            ).child("registrationToken")
-            fbDatabase.removeValue()
-            // SharedPreference 닉네임 값 제거
-            App.prefs.myNickname = ""
-            // 로그인 페이지 이동
-            val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            val alertDialog = AlertDialogChildFragment.newInstance(
+                "정말 로그아웃 하시겠어요?", "로그아웃"
+            )
+            val fm = childFragmentManager
+            alertDialog.show(fm, "My paper logout confirmation")
         }
 
         tv_setting_my_page.setOnClickListener {
@@ -81,6 +74,22 @@ class MyPageFragment : Fragment() {
         tv_open_source_license.setOnClickListener {
             startActivity(Intent(this@MyPageFragment.context, OssLicensesMenuActivity::class.java))
         }
+    }
+
+    private fun signOutFromFirebase() {
+        FirebaseAuth.getInstance().signOut()
+        // Firebase 내 토큰 제거
+        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(
+            UID
+        ).child("registrationToken")
+        fbDatabase.removeValue()
+        // SharedPreference 닉네임 값 제거
+        App.prefs.myNickname = ""
+        // 로그인 페이지 이동
+        val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     private fun setInfo() {
@@ -140,5 +149,9 @@ class MyPageFragment : Fragment() {
         val info: PackageInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
         val version = info.versionName
         return version
+    }
+
+    override fun proceed() {
+        signOutFromFirebase()
     }
 }

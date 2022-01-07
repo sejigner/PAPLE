@@ -124,7 +124,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_first.layoutManager = mLayoutManagerFirst
         rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
-        ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
+        ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, {
             firstPlaneAdapter.differ.submitList(it)
             tv_count_first.text = firstPlaneAdapter.differ.currentList.size.toString()
             if(firstPlaneAdapter.differ.currentList.size>0) {
@@ -133,7 +133,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 tv_notice_first_paper.visibility = View.VISIBLE
             }
         })
-        ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, Observer {
+        ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, {
             repliedPlaneAdapter.differ.submitList(it)
             tv_count_replied.text = repliedPlaneAdapter.differ.currentList.size.toString()
             if(repliedPlaneAdapter.differ.currentList.size>0) {
