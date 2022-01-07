@@ -29,6 +29,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_home.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_home_checked.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_home_new.xml" value="0.24473684210526317" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_launcher_paple_background.xml" value="0.259375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_logo.xml" value="0.16282894736842105" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_my_page.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_profile.xml" value="0.2375" />
@@ -82,6 +83,9 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_my_page.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/latest_chat_row.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/menu/navi_menu.xml" value="0.4" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.259375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/mipmap-anydpi-v26/ic_launcher_paple.xml" value="0.259375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/mipmap-anydpi-v26/ic_launcher_paple_round.xml" value="0.259375" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/bg_sent_paper.xml" value="0.22719298245614036" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_next_phone_auth.xml" value="0.26979166666666665" />
         <entry key="..\:/develop/closest/app/src/main/res/drawable/btn_next_phone_auth_inactive.xml" value="0.26979166666666665" />
