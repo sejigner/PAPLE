@@ -70,7 +70,9 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                             confirmSuspend()
                         } else {
                             Log.d("SplashActivity", "Checked, User Info already set - user's status : ${it.value}")
-                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                            intent.putExtra("IS_AD",true)
+                            startActivity(intent)
                             finish()
                         }
                     } else {

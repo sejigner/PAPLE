@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private lateinit var sendLoadingDialog: SendLoadingDialog
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
-    private var wasAd = true
     lateinit var mRefPlane: DatabaseReference
     lateinit var mRefMessages: DatabaseReference
     lateinit var mRefFinish: DatabaseReference
@@ -71,6 +70,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     lateinit var mListenerMessages: ChildEventListener
     lateinit var mListenerFinish: ChildEventListener
     lateinit var ViewModel: FragmentChatViewModel
+    private var isAd = false
+    private var isNotification = false
 
 
     companion object {
@@ -100,7 +101,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         sendLoadingDialog = SendLoadingDialog(this@MainActivity)
         // 첫 실행시 광고 실행
-        wasAd = false
         userName = ANONYMOUS
 
         fireBaseAuth = FirebaseAuth.getInstance()
@@ -114,9 +114,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
-        ViewModel =
-            ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
-
+        ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
+        isNotification = intent.getBooleanExtra("IS_NOTIFICATION", false)
+        isAd = intent.getBooleanExtra("IS_AD", false)
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
@@ -186,7 +186,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onResume() {
         super.onResume()
-        generateDummy()
+//        generateDummy()
+        // 노티 푸시 타고 들어왔을 경우 ChatFragment로 swipe
+        if(isNotification) {
+            vp_main.currentItem = 1
+        }
     }
 
     override fun onStop() {
@@ -206,9 +210,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     mInterstitialAd = interstitialAd
                     mAdIsLoading = false
                     Toast.makeText(this@MainActivity, "onAdLoaded()", Toast.LENGTH_SHORT).show()
-                    if (!wasAd) {
+                    if (isAd) {
                         showInterstitial()
-                        wasAd = true
+                        isAd = false
                     }
                 }
 
