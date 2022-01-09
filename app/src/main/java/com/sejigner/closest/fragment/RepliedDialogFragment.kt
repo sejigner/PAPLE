@@ -42,12 +42,11 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     private var paper: RepliedPaperPlanes? = null
     private var userMessage: String? = null
     private var firstTime: Long? = null
-    var partnerNickname: String? = null
     lateinit var mCallback: OnChatStartListener
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
-    private var bottomSheet : PlaneBottomSheet ?= null
+    private var bottomSheet: PlaneBottomSheet? = null
 
 
     interface OnChatStartListener {
@@ -55,7 +54,6 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         fun showLoadingDialog()
         fun dismissLoadingDialog()
     }
-
 
 
     override fun onAttach(context: Context) {
@@ -126,17 +124,32 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
 
         tv_chat_yes.setOnClickListener {
             // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
-
             if (fromId != null) {
-                if(getPartnerNickname(fromId!!)) {
-                    val timestamp = System.currentTimeMillis() / 1000
-                    val chatRoom =
-                        ChatRooms(fromId!!, partnerNickname, UID, "대화가 시작되었습니다.", timestamp, false)
-                    // 두번째 비행기 기록 삭제
-                    viewModel.insert(chatRoom)
-                    viewModel.delete(paper!!)
-                    initChat()
-                }
+                getPartnerNicknameFromFirebase(object : PartnerNicknameCallback {
+                    override fun onCallback(partnerNickname: String) {
+                        if (partnerNickname.isNotEmpty()) {
+                            val timestamp = System.currentTimeMillis() / 1000
+                            val chatRoom =
+                                ChatRooms(
+                                    fromId!!,
+                                    partnerNickname,
+                                    UID,
+                                    "대화가 시작되었습니다.",
+                                    timestamp,
+                                    false
+                                )
+                            viewModel.insert(chatRoom)
+                            viewModel.delete(paper!!)
+                            initChat()
+                        } else {
+                            Toast.makeText(
+                                requireActivity(),
+                                "상대방 계정을 찾을 수 없습니다.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                })
             }
         }
 
@@ -145,75 +158,68 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         }
     }
 
-    private fun getPartnerNickname(fromId: String): Boolean {
-        return try {
-            var result = false
-            val ref2 =
-                FirebaseDatabase.getInstance().getReference("/Users/$fromId")
-                    .child("nickname")
-            ref2.get().addOnSuccessListener {
-                partnerNickname = it.value.toString()
-                result = true
-            }.addOnFailureListener {
-                Log.d(ChatLogActivity.TAG, it.toString())
-                result = false
-            }
-            result
-        } catch (e: FirebaseException) {
-            Log.d(ChatLogActivity.TAG, e.toString())
-            false
+    interface PartnerNicknameCallback {
+        fun onCallback(partnerNickname: String)
+    }
+
+    private fun getPartnerNicknameFromFirebase(firebaseCallback: PartnerNicknameCallback) {
+        val refNickname =
+            FirebaseDatabase.getInstance().getReference("/Users/$fromId")
+                .child("nickname")
+        refNickname.get().addOnFailureListener {
+            Log.d(ChatLogActivity.TAG, it.toString())
+            firebaseCallback.onCallback("")
+        }.addOnSuccessListener {
+            firebaseCallback.onCallback(it.value.toString())
         }
+    }
+
+    interface ChatStartCallback {
+        fun onCallback()
     }
 
     private fun initChat() {
         mCallback.showLoadingDialog()
-        val timestamp = System.currentTimeMillis() / 1000
-        val noticeMessage =
-            ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
-        if (invitePartner()) {
-            Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
-            if (fromId != null) {
-                mCallback.dismissLoadingDialog()
-                mCallback.startChatRoom(noticeMessage, fromId!!)
-                dismiss()
-            } else {
-                Toast.makeText(requireActivity(), "상대 계정의 문제로 채팅 시작이 불가능합니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
 
+        invitePartner(object : ChatStartCallback {
+            override fun onCallback() {
+                Log.d("FragmentDialogReplied", "시작 메세지 전송 성공")
+
+                val timestamp = System.currentTimeMillis() / 1000
+                val noticeMessage =
+                    ChatMessages(null, fromId, UID, 3, getString(R.string.init_chat_log), timestamp)
+
+                if (fromId != null) {
+                    mCallback.dismissLoadingDialog()
+                    mCallback.startChatRoom(noticeMessage, fromId!!)
+                    dismiss()
+                } else {
+                    Toast.makeText(requireActivity(), "상대 계정의 문제로 채팅 시작이 불가능합니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
     }
 
-    private fun invitePartner(): Boolean {
-        return try {
+    private fun invitePartner(firebaseCallback : ChatStartCallback) {
             val myNickName = MYNICKNAME
-            var result = false
             val timestamp = System.currentTimeMillis() / 1000
             val text = resources.getString(R.string.init_chat_log)
-//            val toRef =
-//                FirebaseDatabase.getInstance().getReference("/User-messages/$fromId/$UID")
-//                    .push()
-//            val chatMessage = ChatMessage(toRef.key!!, UID, text, UID, fromId!!, timestamp)
             val lastMessagesPartnerReference =
                 FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
             val lastMessageToPartner = LatestChatMessage(fromId!!, myNickName, text, timestamp)
             lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "sent your message: $fromId")
-                result = true
+                firebaseCallback.onCallback()
             }.addOnFailureListener {
-                Log.d(ChatLogActivity.TAG, it.toString())
-                result = false
+                Log.e(ChatLogActivity.TAG, it.toString())
             }
-            result
-        } catch (e: FirebaseException) {
-            Log.d(ChatLogActivity.TAG, e.toString())
-            false
-        }
     }
 
     private fun addOnClickListenerMenu() {
         iv_menu_replied_plane.setOnClickListener {
             bottomSheet = PlaneBottomSheet()
-            if(bottomSheet!=null) {
+            if (bottomSheet != null) {
                 bottomSheet!!.show(childFragmentManager, bottomSheet!!.tag)
             }
         }
