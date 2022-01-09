@@ -11,6 +11,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_me_row_new.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row_new.xml" value="0.1640625" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_edit_text_sign_out.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_paper.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button_theme_color.xml" value="0.2375" />
@@ -26,6 +27,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_paper_fragment_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_write_paper.xml" value="0.1457236842105263" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/dialog_write_paper_et.xml" value="0.12552083333333333" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/edit_text_cursor.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat_checked.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/ic_chat_new.xml" value="0.24473684210526317" />

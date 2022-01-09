@@ -12,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,13 +55,15 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var viewModel: FragmentChatViewModel
     private lateinit var chatLogAdapter: ChatLogAdapter
     lateinit var partnerNickname: String
-    lateinit var mRef: DatabaseReference
-    lateinit var mListener: ChildEventListener
+    lateinit var mMessageRef: DatabaseReference
+    lateinit var mMessageListener: ChildEventListener
     lateinit var layout: RelativeLayout
     private lateinit var inputMethodManager: InputMethodManager
     private lateinit var softKeyboard: SoftKeyboard
-    lateinit var mListenerFinish: ChildEventListener
-    lateinit var mRefFinish: DatabaseReference
+    lateinit var mFinishListener: ChildEventListener
+    lateinit var mFinishRef: DatabaseReference
+    lateinit var mPartnersTokenRef : DatabaseReference
+    lateinit var mPartnersTokenListener : ChildEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,7 +174,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     private fun listenForFinishedChat() {
-        mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
+        mFinishListener = mFinishRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if(snapshot.value==true) {
                     CoroutineScope(IO).launch {
@@ -193,7 +196,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             noticeFinish,
                             timestamp
                         )
-                        mRefFinish.child(partnerUid).removeValue()
+                        mFinishRef.child(partnerUid).removeValue()
                         preventSend()
                     }
                 }
@@ -218,28 +221,17 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         })
     }
 
-//    private fun menuToggle() {
-//        if (expandable_menu_chat_log.visibility == View.GONE) {
-//            expandable_menu_chat_log.visibility = View.VISIBLE
-//        } else {
-//            expandable_menu_chat_log.visibility = View.GONE
-//        }
-//    }
-
-
-    private fun setLayoutMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window?.setDecorFitsSystemWindows(true)
-        } else {
-            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        }
-    }
-
 
     override fun onStart() {
         super.onStart()
 
-//        setLayoutMode()
+        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        listenForMessages()
+        mFinishRef = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
+        listenForFinishedChat()
+        mPartnersTokenRef =
+            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+        listenForPartnersToken()
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -261,18 +253,13 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 //                }
             }
         })
-
-        mRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-        listenForMessages()
-        mRefFinish = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
-        listenForFinishedChat()
     }
-
 
     override fun onStop() {
         super.onStop()
-        mRef.removeEventListener(mListener)
-        mRefFinish.removeEventListener(mListenerFinish)
+        mMessageRef.removeEventListener(mMessageListener)
+        mFinishRef.removeEventListener(mFinishListener)
+        mPartnersTokenRef.removeEventListener(mPartnersTokenListener)
     }
 
     override fun onBackPressed() {
@@ -311,11 +298,10 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
 
-    private fun updatePartnersToken() {
-        val ref =
-            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+    private fun listenForPartnersToken() {
 
-        ref.addChildEventListener(object : ChildEventListener {
+
+        mPartnersTokenListener = mPartnersTokenRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 partnerFcmToken = snapshot.value.toString()
             }
@@ -340,7 +326,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     private fun listenForMessages() {
 
-        mListener = mRef.addChildEventListener(object : ChildEventListener {
+        mMessageListener = mMessageRef.addChildEventListener(object : ChildEventListener {
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 CoroutineScope(IO).launch {
@@ -383,7 +369,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
                         }
                     }.join()
-                    mRef.child(snapshot.key!!).removeValue()
+                    mMessageRef.child(snapshot.key!!).removeValue()
                 }
             }
 
