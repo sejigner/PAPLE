@@ -9,7 +9,7 @@
         android:id="@+id/tv_chat_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/txt_gray"
+        android:textColor="#4D4D4D"
         android:textSize="12sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
