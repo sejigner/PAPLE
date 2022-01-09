@@ -55,7 +55,7 @@ class LatestMessageAdapter(var list : List<ChatRooms>, val viewModel : FragmentC
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return differ.currentList.size
     }
 
     private fun setDateToTextView(timestamp: Long) : String {

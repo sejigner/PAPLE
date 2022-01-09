@@ -126,8 +126,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, {
             firstPlaneAdapter.differ.submitList(it)
-            tv_count_first.text = firstPlaneAdapter.differ.currentList.size.toString()
-            if(firstPlaneAdapter.differ.currentList.size>0) {
+            tv_count_first.text = it.size.toString()
+            if(it.isNotEmpty()) {
                 tv_notice_first_paper.visibility = View.GONE
             } else {
                 tv_notice_first_paper.visibility = View.VISIBLE
@@ -135,8 +135,8 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         })
         ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, {
             repliedPlaneAdapter.differ.submitList(it)
-            tv_count_replied.text = repliedPlaneAdapter.differ.currentList.size.toString()
-            if(repliedPlaneAdapter.differ.currentList.size>0) {
+            tv_count_replied.text = it.size.toString()
+            if(it.isNotEmpty()) {
                 tv_notice_replied_paper.text = resources.getText(R.string.tip_replied_paper)
             } else {
                 tv_notice_replied_paper.text = resources.getText(R.string.notice_no_paper)
