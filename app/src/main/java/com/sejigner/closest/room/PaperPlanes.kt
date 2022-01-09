@@ -14,7 +14,7 @@ data class Acquaintances(
 
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
-    @PrimaryKey @ColumnInfo(name = "fromId")
+    @PrimaryKey @ColumnInfo(name = "fromId", index = true)
     val fromId: String,
 
     @ColumnInfo(name = "uid", index = true)
@@ -63,7 +63,7 @@ data class MyPaperPlaneRecord(
 
 @Entity(tableName = "replied_paper_planes")
 data class RepliedPaperPlanes(
-    @PrimaryKey @ColumnInfo(name = "fromId")
+    @PrimaryKey @ColumnInfo(name = "fromId", index = true)
     val fromId: String,
 
     @ColumnInfo(name = "uid", index = true)
@@ -88,7 +88,7 @@ data class RepliedPaperPlanes(
 
 @Entity(tableName = "chat_rooms")
 data class ChatRooms(
-    @PrimaryKey @ColumnInfo(name= "partnerId")
+    @PrimaryKey @ColumnInfo(name= "partnerId", index = true)
     val partnerId: String,
     val partnerNickname: String?,
     @ColumnInfo(name = "uid", index = true)
