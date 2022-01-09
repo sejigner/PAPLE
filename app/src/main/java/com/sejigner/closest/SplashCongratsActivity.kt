@@ -38,7 +38,7 @@ class SplashCongratsActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
-                setupIntent.putExtra("IS_AD", true)
+                setupIntent.putExtra("IS_AD", false)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(setupIntent)

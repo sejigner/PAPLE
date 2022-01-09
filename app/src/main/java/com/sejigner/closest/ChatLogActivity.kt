@@ -76,7 +76,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         fbDatabase = FirebaseDatabase.getInstance()
 
-        updatePartnersToken()
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
         rv_chat_log.adapter = chatLogAdapter
@@ -86,27 +85,16 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             tv_partner_nickname_chat_log.text = partnerNickname
         }
 
-
-
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
         mLayoutManagerMessages.stackFromEnd = true
 
-
         rv_chat_log.layoutManager = mLayoutManagerMessages
-
-
 
         viewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.differ.submitList(it)
             rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
         })
-
-//        ViewModel.allChatMessages(partnerUid!!).observe(this, {
-//            chatLogAdapter.list = it
-//            chatLogAdapter.notifyDataSetChanged()
-//        })
-
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
         watchEditText()
@@ -271,17 +259,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         softKeyboard.unRegisterSoftKeyboardCallback()
     }
 
-    private fun setPartnersFcmToken() {
-        val ref =
-            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-        ref.get()
-            .addOnSuccessListener { it ->
-                partnerFcmToken = it.value.toString()
-            }.addOnFailureListener {
-                Log.d("ChatLogActivity", it.message!!)
-            }
-    }
-
 
     private fun Fragment.hideKeyboard() {
         view?.let { activity?.hideKeyboard(it) }
@@ -391,17 +368,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         })
     }
-
-//    private fun setPartnerId(fromId: String, toId: String): String {
-//        if (fromId == UID) {
-//            return toId
-//        } else return fromId
-//    }
-//
-//    private fun setSender(partnerId: String): Int {
-//        return if (partnerId != UID) 1
-//        else 0
-//    }
 
     private fun getDateTime(time: Long): String? {
         try {
