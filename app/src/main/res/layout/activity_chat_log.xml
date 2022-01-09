@@ -92,7 +92,7 @@
             android:inputType="textPersonName"
             android:padding="4dp"
             android:textColor="@color/black"
-            android:textCursorDrawable="@color/paperplane_theme"
+            android:textCursorDrawable="@drawable/edit_text_cursor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_send_chat_log"
             app:layout_constraintStart_toStartOf="parent" />

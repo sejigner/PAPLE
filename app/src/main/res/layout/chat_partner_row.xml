@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_chat_partner_row"
         android:maxWidth="240dp"
-        android:minWidth="80dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
