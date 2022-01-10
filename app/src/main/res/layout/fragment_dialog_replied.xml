@@ -57,7 +57,8 @@
             <TextView
                 android:id="@+id/tv_dialog_my_message"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="50dp"
                 android:layout_marginTop="12dp"
                 android:scrollbars="vertical"
                 android:text="my message"
@@ -100,7 +101,8 @@
             <TextView
                 android:id="@+id/tv_dialog_message_replied"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="50dp"
                 android:layout_marginTop="6dp"
                 android:scrollbars="vertical"
                 android:text="reply"
