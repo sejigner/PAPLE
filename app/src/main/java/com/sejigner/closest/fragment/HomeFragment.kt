@@ -118,20 +118,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             iv_update_location.startAnimation(updateAnimation)
         }
 
-        bt_sign_out_test.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            // Firebase 내 토큰 제거
-            val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(UID).child("registrationToken")
-            fbDatabase.removeValue()
-            // SharedPreference 닉네임 값 제거
-            App.prefs.myNickname = ""
-            // 로그인 페이지 이동
-            val intent = Intent(this@FragmentHome.context, SignInActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-
         iv_paper_send.setOnClickListener {
             mListener?.confirmFlight()
         }
@@ -199,6 +185,8 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 //        }
     }
 
+
+
     private fun savePaperToDB(message : String) {
         val myPaperRecord = MyPaper(null, UID, message, System.currentTimeMillis() / 1000L)
         viewModel.insertPaperRecord(myPaperRecord)
@@ -221,8 +209,9 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         alertDialog.show(fm, "deleteConfirmation")
     }
 
-    private fun performSendAnonymousMessage() {
 
+
+    private fun performSendAnonymousMessage() {
         val toId = foundUserId
         val message = sentMessage
         val fromId = UID
@@ -251,8 +240,8 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
-
         }
+        foundUserId = ""
         val acquaintances = Acquaintances(toId, UID)
         viewModel.insert(acquaintances)
         mListener?.dismissLoadingDialog()
@@ -306,12 +295,12 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
                     getClosestUser()
                 } else {
                     mListener?.dismissLoadingDialog()
-//                    timerTask?.cancel()
-//                    Log.d("Timer", "it took ${milliSec/1000} seconds for 550km flight")
-                    // TODO : 상대방을 찾지 않았음을 알리지 않기 위해 우선 비행거리는 제공 X
-                    //   추후 사용자수가 확보되면 거리 제공
+
                     userFound = false
-                    foundUserId = ""
+                    if(UID != resources.getString(R.string.final_uid)) {
+                        foundUserId = resources.getString(R.string.final_uid)
+                        performSendAnonymousMessage()
+                    }
                     radius = 0.0
                     mListener?.showSuccessFragment()
                 }
