@@ -26,6 +26,7 @@ import com.sejigner.closest.ui.FragmentChatViewModelFactory
 import com.sejigner.closest.room.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.*
+import java.util.*
 
 // TODO : ChatLogActivity 내 chatRoomAndAllMessages 참고하여 일대다관계 데이터 활용
 //  chatRoomAndAllMessages ( UID - ChatRoomId - Message 구조)

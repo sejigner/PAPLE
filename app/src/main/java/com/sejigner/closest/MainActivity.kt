@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onResume() {
         super.onResume()
-        generateDummy()
+//        generateDummy()
         // 노티 푸시 타고 들어왔을 경우 ChatFragment로 swipe
         if(isNotification) {
             vp_main.currentItem = 1
