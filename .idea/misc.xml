@@ -56,7 +56,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_setting.xml" value="0.18489583333333334" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.536" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash_congrats.xml" value="0.14" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date.xml" value="0.18237704918032788" />
@@ -80,7 +80,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert_suspend.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.2" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_replied.xml" value="0.264" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_replied.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.536" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.4" />

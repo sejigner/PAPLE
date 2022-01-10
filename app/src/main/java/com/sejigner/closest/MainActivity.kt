@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onResume() {
         super.onResume()
-//        generateDummy()
+        generateDummy()
         // 노티 푸시 타고 들어왔을 경우 ChatFragment로 swipe
         if(isNotification) {
             vp_main.currentItem = 1
@@ -459,7 +459,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
                 val partnerId = snapshot.key!!
-                onCommunicationUpdated()
+                if(latestChatMessage.recipientId==UID) {
+                    onCommunicationUpdated()
+                }
                 CoroutineScope(Dispatchers.IO).launch {
                     val isPartnerId = ViewModel.exists(UID, partnerId).await()
                     // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
