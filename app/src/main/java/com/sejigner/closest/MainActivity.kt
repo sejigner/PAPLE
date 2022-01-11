@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
             mAdIsLoading = true
             loadAd()
         }
-
+        removePartnerFromPrefs()
     }
 
 
@@ -613,5 +613,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         val intent = Intent(this, ChatLogActivity::class.java)
         intent.putExtra(FragmentChat.USER_KEY, partnerUid)
         startActivity(intent)
+    }
+
+    private fun removePartnerFromPrefs() {
+        App.prefs.setString("partner", "")
     }
 }

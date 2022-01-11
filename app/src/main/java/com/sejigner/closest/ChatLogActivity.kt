@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
+import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.adapter.ChatLogAdapter
@@ -116,12 +117,23 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         rv_chat_log.addOnLayoutChangeListener(View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (bottom < oldBottom) {
                 rv_chat_log.postDelayed(Runnable {
-                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)
+                    rv_chat_log.smoothScrollToPosition(0)
                 }, 100)
             }
         })
 
         checkChatOver()
+        setPartnerToPrefs()
+    }
+
+    private fun setPartnerToPrefs() {
+        if(partnerUid!=null) {
+            prefs.setString("partner", partnerUid!!)
+        }
+    }
+
+    private fun removePartnerFromPrefs() {
+        prefs.setString("partner", "")
     }
 
     private fun watchEditText() {
@@ -248,6 +260,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         mMessageRef.removeEventListener(mMessageListener)
         mFinishRef.removeEventListener(mFinishListener)
         mPartnersTokenRef.removeEventListener(mPartnersTokenListener)
+        removePartnerFromPrefs()
     }
 
     override fun onBackPressed() {
