@@ -15,7 +15,7 @@ interface AcquaintancesDao {
 
 @Dao
 interface FirstPaperPlaneDao {
-    @Query("SELECT * FROM first_paper_planes WHERE uid = :uid ORDER BY timestamp DESC")
+    @Query("SELECT * FROM first_paper_planes WHERE uid = :uid ORDER BY timestamp ASC")
     fun getAllFirstPlanes(uid: String): LiveData<List<FirstPaperPlanes>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -69,7 +69,7 @@ interface MyPaperDao {
 
 @Dao
 interface RepliedPaperPlaneDao {
-    @Query("SELECT * FROM replied_paper_planes WHERE uid = :uid ORDER BY replyTimestamp DESC")
+    @Query("SELECT * FROM replied_paper_planes WHERE uid = :uid ORDER BY replyTimestamp ASC")
     fun getAllRepliedPlanes(uid: String): LiveData<List<RepliedPaperPlanes>>
 
 
@@ -193,7 +193,7 @@ interface ChatRoomsAndMessagesDao {
 
 @Dao
 interface ChatMessagesDao {
-    @Query("SELECT * FROM chat_messages WHERE uid = :uid and chatRoomId = :chatRoomId ORDER BY timestamp ASC ")
+    @Query("SELECT * FROM chat_messages WHERE uid = :uid and chatRoomId = :chatRoomId ORDER BY timestamp DESC ")
     fun getAllChatMessages(uid: String, chatRoomId: String): LiveData<List<ChatMessages>>
 
     @Query("DELETE FROM chat_messages WHERE uid = :uid and chatRoomId = :partnerId")

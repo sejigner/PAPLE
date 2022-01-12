@@ -163,6 +163,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
             sentPlaneAdapter.differ.submitList(it)
             tv_delete_all_records.isEnabled = it.isNotEmpty()
+            rv_sent_paper.scrollToPosition(sentPlaneAdapter.itemCount-1)
         })
     }
 

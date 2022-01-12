@@ -13,6 +13,9 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -30,6 +33,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: ${remoteMessage.from}")
@@ -38,20 +42,26 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (!remoteMessage.data.isNullOrEmpty()) {
             // TODO : 마이페이지 - 알림 설정 값을 바탕으로 분기 작성
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-            if(prefs.getBoolean("notification",true)) {
+            if (prefs.getBoolean("notification", true)) {
                 // Handle message within 10 seconds
-                sendNotification(remoteMessage)
+                val sender = remoteMessage.data["sender"]
+                val currentChatPartner = prefs.getString("partner", "")
+                if (sender != currentChatPartner) {
+                    sendNotification(remoteMessage)
+                }
             }
         }
     }
 
     private fun sendNotification(messageBody: RemoteMessage) {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("IS_NOTIFICATION", true)
-        intent.putExtra("IS_AD",false)
+        intent.putExtra("IS_AD", false)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 1994, intent, FLAG_ONE_SHOT)
+        val pendingIntent =
+            PendingIntent.getActivity(applicationContext, 1994, intent, FLAG_ONE_SHOT)
         val channelId = resources.getString(R.string.default_notification_channel_id)
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.mipmap.ic_launcher_paple_round)
@@ -63,7 +73,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setShowWhen(true)
         notification.priority = NotificationCompat.PRIORITY_MAX
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notification.setChannelId(channelId)
 
             val ringtoneManager = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

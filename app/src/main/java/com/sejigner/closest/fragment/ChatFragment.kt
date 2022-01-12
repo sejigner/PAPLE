@@ -109,7 +109,6 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         rv_paperplane_first.adapter = firstPlaneAdapter
         rv_paperplane_replied.adapter = repliedPlaneAdapter
 
-        // 역순 정렬
         val mLayoutManagerFirst = LinearLayoutManager(requireActivity())
         val mLayoutManagerReplied = LinearLayoutManager(requireActivity())
         val mLayoutManagerMessages = LinearLayoutManager(requireActivity())
@@ -121,12 +120,14 @@ class FragmentChat : Fragment(), FirstPlaneListener {
         mLayoutManagerReplied.orientation = HORIZONTAL
         mLayoutManagerMessages.orientation = VERTICAL
 
+
         rv_chat.layoutManager = mLayoutManagerMessages
         rv_paperplane_first.layoutManager = mLayoutManagerFirst
         rv_paperplane_replied.layoutManager = mLayoutManagerReplied
 
         ViewModel.allFirstPaperPlanes(UID).observe(viewLifecycleOwner, {
             firstPlaneAdapter.differ.submitList(it)
+            rv_paperplane_first.scrollToPosition(firstPlaneAdapter.itemCount-1)
             tv_count_first.text = it.size.toString()
             if(it.isNotEmpty()) {
                 tv_notice_first_paper.visibility = View.GONE
@@ -134,8 +135,10 @@ class FragmentChat : Fragment(), FirstPlaneListener {
                 tv_notice_first_paper.visibility = View.VISIBLE
             }
         })
+
         ViewModel.allRepliedPaperPlanes(UID).observe(viewLifecycleOwner, {
             repliedPlaneAdapter.differ.submitList(it)
+            rv_paperplane_replied.scrollToPosition(repliedPlaneAdapter.itemCount-1)
             tv_count_replied.text = it.size.toString()
             if(it.isNotEmpty()) {
                 tv_notice_replied_paper.text = resources.getText(R.string.tip_replied_paper)
@@ -146,6 +149,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
 
         ViewModel.allChatRooms(UID).observe(viewLifecycleOwner, {
             latestMessageAdapter.differ.submitList(it)
+            rv_paperplane_replied.scrollToPosition(latestMessageAdapter.itemCount-1)
         })
     }
 

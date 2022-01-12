@@ -27,7 +27,6 @@
                 android:id="@+id/tv_ask_alert_suspend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="안내"
                 android:textColor="#131313"
                 android:textSize="14sp"
                 android:textStyle="bold"
