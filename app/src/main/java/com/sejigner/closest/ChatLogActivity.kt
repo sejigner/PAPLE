@@ -88,13 +88,14 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         val mLayoutManagerMessages = LinearLayoutManager(this)
         mLayoutManagerMessages.orientation = LinearLayoutManager.VERTICAL
+        mLayoutManagerMessages.reverseLayout = true
         mLayoutManagerMessages.stackFromEnd = true
 
         rv_chat_log.layoutManager = mLayoutManagerMessages
 
         viewModel.allChatMessages(UID, partnerUid!!).observe(this, {
             chatLogAdapter.differ.submitList(it)
-            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+            rv_chat_log.scrollToPosition(0)
         })
 
         // 보내기 버튼 초기상태 false / 입력시 활성화
@@ -240,7 +241,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         softKeyboard.setSoftKeyboardCallback(object : SoftKeyboardChanged {
             override fun onSoftKeyboardHide() {
                 rv_chat_log.post(Runnable {
-                    rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                    rv_chat_log.scrollToPosition(0)
                 })
 //                Handler(Looper.getMainLooper()).post {
 //                    rv_chat_log.smoothScrollToPosition(chatLogAdapter.itemCount - 1)

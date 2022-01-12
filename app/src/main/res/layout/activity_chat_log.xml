@@ -56,9 +56,9 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/iv_back_chat_log"
-                        card_view:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/iv_back_chat_log"
                         card_view:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/iv_back_chat_log" />
+                        card_view:layout_constraintStart_toStartOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -66,7 +66,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         <ImageView
@@ -83,13 +82,13 @@
             android:id="@+id/et_message_chat_log"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginBottom="44dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="12dp"
-            android:maxLength="100"
+            android:layout_marginBottom="44dp"
             android:background="@null"
             android:ems="10"
             android:inputType="textPersonName"
+            android:maxLength="100"
             android:padding="4dp"
             android:textColor="@color/black"
             android:textCursorDrawable="@drawable/edit_text_cursor"
@@ -102,8 +101,8 @@
             android:layout_height="1dp"
             android:background="@color/gray_2"
             app:layout_constraintBottom_toBottomOf="@id/et_message_chat_log"
-            app:layout_constraintStart_toStartOf="@id/et_message_chat_log"
-            app:layout_constraintEnd_toEndOf="@id/et_message_chat_log"/>
+            app:layout_constraintEnd_toEndOf="@id/et_message_chat_log"
+            app:layout_constraintStart_toStartOf="@id/et_message_chat_log" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -112,6 +111,8 @@
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
             android:background="@color/bg_chat_log"
+            android:clipToPadding="false"
+            android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/et_message_chat_log"
             app:layout_constraintEnd_toEndOf="parent"
