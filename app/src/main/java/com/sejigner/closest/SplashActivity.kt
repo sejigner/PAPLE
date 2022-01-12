@@ -1,29 +1,37 @@
 package com.sejigner.closest
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.fragment.AlertDialogFragment
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.sejigner.closest.fragment.SuspendAlertDialogFragment
+import com.sejigner.closest.ui.FragmentChatViewModel
+import java.net.InetAddress
 
 
 private const val LOG_TAG = "SplashActivity"
+
 class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {
 
-    private lateinit var fbDatabase : FirebaseDatabase
-
-    private val time: Long = 2L
+    private lateinit var fbDatabase: FirebaseDatabase
+    lateinit var viewModel: FragmentChatViewModel
+    private val time: Long = 1L
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,26 +65,38 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
         alertDialog.show(fm, "suspend-confirmation")
     }
 
+    private fun confirmNoInternet() {
+        val alertDialog = SuspendAlertDialogFragment.newInstance(
+            "인터넷 연결 후 실행해주세요.", "종료하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "internet-confirmation")
+    }
+
 
     private fun verifyUserIsLoggedIn() {
-        val user : FirebaseUser ?= FirebaseAuth.getInstance().currentUser
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
         if (user != null) {
             val reference = fbDatabase.reference.child("Users").child(uid!!).child("status")
             reference.get()
                 .addOnSuccessListener { it ->
                     if (it.value != null) {
-                        if(it.value == "suspended") {
+                        if (it.value == "suspended") {
                             confirmSuspend()
                         } else {
-                            Log.d("SplashActivity", "Checked, User Info already set - user's status : ${it.value}")
+                            Log.d(
+                                "SplashActivity",
+                                "Checked, User Info already set - user's status : ${it.value}"
+                            )
                             val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                            intent.putExtra("IS_AD",true)
+                            intent.putExtra("IS_AD", true)
                             startActivity(intent)
                             finish()
                         }
                     } else {
-                        val setupIntent = Intent(this@SplashActivity, InitialSetupActivity::class.java)
+                        val setupIntent =
+                            Intent(this@SplashActivity, InitialSetupActivity::class.java)
                         setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(setupIntent)
@@ -86,7 +106,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
 
         } else {
             App.prefs.myNickname = ""
-            startActivity(Intent(applicationContext,SignInActivity::class.java))
+            startActivity(Intent(applicationContext, SignInActivity::class.java))
             finish()
         }
     }
