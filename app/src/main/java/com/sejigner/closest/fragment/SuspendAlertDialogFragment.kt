@@ -8,10 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import com.sejigner.closest.R
-import com.sejigner.closest.room.FirstPaperPlanes
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
+import kotlinx.android.synthetic.main.fragment_dialog_alert_suspend.*
 
 class SuspendAlertDialogFragment : DialogFragment() {
 
@@ -25,6 +26,8 @@ class SuspendAlertDialogFragment : DialogFragment() {
             confirm = it.getString("confirm")
             question =  it.getString("question")
         }
+
+
     }
 
     override fun onCreateView(
@@ -39,22 +42,27 @@ class SuspendAlertDialogFragment : DialogFragment() {
         super.onResume()
 //        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         if(dialog != null) {
-//            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tv_ask_alert.text = question
-        tv_confirm_alert.text = confirm
+        tv_ask_alert_suspend.text = question
+        tv_suspend_confirm_alert.text = confirm
 
-        tv_confirm_alert.setOnClickListener {
+        tv_suspend_confirm_alert.setOnClickListener {
             listener?.proceed()
             dismiss()
         }
+
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                listener?.proceed()
+            }
+        })
+
     }
 
     override fun onAttach(activity: Activity) {
