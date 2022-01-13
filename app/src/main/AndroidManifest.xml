@@ -17,10 +17,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_paple"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity
-            android:name=".GuideActivity"
-            android:exported="false" />
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".SignOutActivity"
             android:exported="false" />

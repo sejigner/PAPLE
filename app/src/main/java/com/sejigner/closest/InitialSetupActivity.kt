@@ -38,6 +38,9 @@ import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.room.User
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
@@ -319,12 +322,16 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 FragmentHome.TAG,
                 "Saved Users info to Firebase Realtime database: ${database.key}"
             )
+            setInfoToRoomDB()
+            val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }?.addOnFailureListener {
+            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
         }
-        val intent = Intent(this, SplashCongratsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
+
 
     }
 

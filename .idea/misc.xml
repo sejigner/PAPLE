@@ -12,6 +12,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row_new.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_edit_text_sign_out.xml" value="0.2375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_half_rounded_corner.xml" value="0.24114583333333334" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_paper.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button_theme_color.xml" value="0.2375" />
@@ -20,6 +21,8 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_next_phone_auth.xml" value="0.14342105263157895" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_next_phone_auth_inactive.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_paper_send.xml" value="0.24473684210526317" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_paper_success.xml" value="0.10520833333333333" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_paper_success_inactive.xml" value="0.10520833333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_report_send.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/btn_transparent_.xml" value="0.3333333333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/custom_ripple_effect.xml" value="0.10364583333333334" />
@@ -45,10 +48,13 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/round_edit_text.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.18055555555555555" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_auth.xml" value="0.24473684210526317" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_flight.xml" value="0.10520833333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_color.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_icon.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_profile.xml" value="0.2375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_send_paper.xml" value="0.10520833333333333" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/font/font_custom.xml" value="0.3640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_guide.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.23453947368421052" />
@@ -56,6 +62,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_setting.xml" value="0.18489583333333334" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_in.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash_congrats.xml" value="0.14" />
@@ -72,6 +79,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_sent_paper.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.22135416666666666" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet_chat.xml" value="0.16" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet_flight.xml" value="0.3578231292517007" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_bottom_sheet_plane.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/dialog_loading_send.xml" value="0.536" />
@@ -79,15 +87,16 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_alert_suspend.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_first.xml" value="0.264" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_flight.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_fly_success.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_replied.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report.xml" value="0.22" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.536" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_chat.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_report_plane.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_second.xml" value="0.22" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_sent.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_dialog_write.xml" value="0.2" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_home.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/fragment_my_page.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/latest_chat_row.xml" value="0.4" />
         <entry key="..\:/Develop/Closest/app/src/main/res/menu/navi_menu.xml" value="0.4" />

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ import com.sejigner.closest.fragment.ReportChatDialogFragment
 import com.sejigner.closest.models.ChatMessage
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.room.ChatMessages
+import com.sejigner.closest.room.FinishedChat
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.ui.ChatBottomSheet
@@ -108,7 +110,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         iv_send_chat_log.setOnClickListener {
             performSendMessage()
-            et_message_chat_log.text.clear()
+
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -420,30 +422,36 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
         val lastMessageToPartner = LatestChatMessage(toId,MYNICKNAME, text, timestamp)
-        lastMessagesPartnerReference.setValue(lastMessageToPartner)
+        lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
+            val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
 
+            CoroutineScope(IO).launch {
+                var lastMessageTimeStamp: Long? = 0L
+                var lastMessageDate: String?
 
-        val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
+                lastMessageTimeStamp = viewModel.getLatestTimestamp(UID, partnerUid!!).await()
+                lastMessageDate = getDateTime(lastMessageTimeStamp!!)
 
-        CoroutineScope(IO).launch {
-            var lastMessageTimeStamp: Long? = 0L
-            var lastMessageDate: String?
-
-            lastMessageTimeStamp = viewModel.getLatestTimestamp(UID, partnerUid!!).await()
-            lastMessageDate = getDateTime(lastMessageTimeStamp!!)
-
-            if (!lastMessageDate.equals(currentMessageDate)) {
-                lastMessageDate = currentMessageDate
-                val dateMessage = ChatMessages(null, partnerUid, UID, 2, lastMessageDate, timestamp)
-                viewModel.insert(dateMessage).join()
+                if (!lastMessageDate.equals(currentMessageDate)) {
+                    lastMessageDate = currentMessageDate
+                    val dateMessage = ChatMessages(null, partnerUid, UID, 2, lastMessageDate, timestamp)
+                    viewModel.insert(dateMessage).join()
+                }
+                viewModel.insert(chatMessages)
+                viewModel.updateLastMessages(
+                    UID,
+                    partnerUid!!,
+                    text,
+                    timestamp
+                ).join()
+                et_message_chat_log.text.clear()
             }
-            viewModel.insert(chatMessages)
-            viewModel.updateLastMessages(
-                UID,
-                partnerUid!!,
-                text,
-                timestamp
-            ).join()
+        }.addOnFailureListener {
+            Toast.makeText(
+                this,
+                resources.getText(R.string.no_internet),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -524,11 +532,14 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
             reportRef.setValue(messageList).addOnFailureListener {
                 Log.d("ReportChatLog", "Report 실패")
+                Toast.makeText(
+                    this@ChatLogActivity,
+                    resources.getText(R.string.no_internet),
+                    Toast.LENGTH_SHORT
+                ).show()
             }.addOnSuccessListener {
                 Log.d("Report", "신고가 접수되었어요")
-                viewModel.deleteAllMessages(UID, partnerUid!!)
-                viewModel.deleteChatRoom(UID, partnerUid!!)
-                startActivity(Intent(this@ChatLogActivity, MainActivity::class.java))
+                leaveChatRoom()
             }
         }
 
