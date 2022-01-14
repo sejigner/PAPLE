@@ -4,6 +4,10 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,7 +17,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -109,8 +112,11 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         }
 
         iv_send_chat_log.setOnClickListener {
-            performSendMessage()
-
+            if (isOnline) {
+                performSendMessage()
+            } else {
+                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
+            }
         }
 
         iv_back_chat_log.setOnClickListener {
@@ -130,10 +136,16 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     private fun setPartnerToPrefs() {
-        if(partnerUid!=null) {
+        if (partnerUid != null) {
             prefs.setString("partner", partnerUid!!)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
 
     private fun removePartnerFromPrefs() {
         prefs.setString("partner", "")
@@ -165,7 +177,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         et_message_chat_log.isEnabled = false
         iv_send_chat_log.isEnabled = false
     }
-
 
 
     private fun checkChatOver() {
@@ -258,12 +269,37 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         })
     }
 
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
+
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
+    }
+
     override fun onStop() {
         super.onStop()
         mMessageRef.removeEventListener(mMessageListener)
         mFinishRef.removeEventListener(mFinishListener)
         mPartnersTokenRef.removeEventListener(mPartnersTokenListener)
         removePartnerFromPrefs()
+        terminateNetworkCallback()
     }
 
     override fun onBackPressed() {
@@ -464,21 +500,29 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     private fun leaveChatRoom() {
-        sendFinishSignalToFirebase()
-        val intent = Intent(this, MainActivity::class.java)
         CoroutineScope(IO).launch {
-            val chatroom = viewModel.getChatRoom(UID, partnerUid!!).await()
-            viewModel.delete(chatroom)
-            confirmChatLeave()
+            if (isOnline) {
+                sendFinishSignalToFirebase()
+            }
+            viewModel.deleteAllMessages(UID, partnerUid!!)
+            viewModel.deleteChatRoom(UID, partnerUid!!)
+            viewModel.insert(FinishedChat(partnerUid!!, UID))
+            val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            finish()
         }
     }
 
     override fun reportPartner() {
-        val dialog = ReportChatDialogFragment()
-        val fm = supportFragmentManager
-        dialog.show(fm, "reportChatMessage")
+        if (isOnline) {
+            val dialog = ReportChatDialogFragment()
+            val fm = supportFragmentManager
+            dialog.show(fm, "reportChatMessage")
+        } else {
+            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun sendFinishSignalToFirebase(): Boolean {

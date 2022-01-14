@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
+import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.R
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.models.ReportMessage
@@ -104,31 +106,38 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
 
         iv_send_first_paper?.setOnClickListener {
-            textEntered = et_dialog_message_first?.text.toString()
-            if (textEntered.isNotEmpty()) {
-                val paperPlaneReceiverReference =
-                    FirebaseDatabase.getInstance()
-                        .getReference("/PaperPlanes/Receiver/$fromId/$UID")
-                val paperplaneMessage = PaperplaneMessage(
-                    paperPlaneReceiverReference.key!!,
-                    textEntered,
-                    UID,
-                    fromId!!,
-                    distance!!,
-                    System.currentTimeMillis() / 1000L,
-                    true
-                )
-                paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
-                    Log.d(TAG, "Reply 실패")
-                }.addOnSuccessListener {
-                    viewModel.delete(paper!!)
-                    mCallback?.showReplySuccessFragment(true, distance!!)
-                    dismiss()
+            if(isOnline) {
+                textEntered = et_dialog_message_first?.text.toString()
+                if (textEntered.isNotEmpty()) {
+                    val paperPlaneReceiverReference =
+                        FirebaseDatabase.getInstance()
+                            .getReference("/PaperPlanes/Receiver/$fromId/$UID")
+                    val paperplaneMessage = PaperplaneMessage(
+                        paperPlaneReceiverReference.key!!,
+                        textEntered,
+                        UID,
+                        fromId!!,
+                        distance!!,
+                        System.currentTimeMillis() / 1000L,
+                        true
+                    )
+                    paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+                        Log.d(TAG, "Reply 실패")
+                        Toast.makeText(
+                            requireActivity(),
+                            resources.getText(R.string.no_internet),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }.addOnSuccessListener {
+                        viewModel.delete(paper!!)
+                        callback?.showReplySuccessFragment(true, distance!!)
+                        dismiss()
+                    }
+                } else {
+                    Toast.makeText(requireActivity(), "메세지를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
-
-
             } else {
-                Toast.makeText(requireActivity(), "메세지를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), R.string.no_internet,Toast.LENGTH_SHORT).show()
             }
         }
     }

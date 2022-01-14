@@ -1,6 +1,10 @@
 package com.sejigner.closest
 
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,6 +32,7 @@ class SignInActivity : AppCompatActivity() {
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var loadingDialog: LoadingDialog
+    private var isOnline = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +43,15 @@ class SignInActivity : AppCompatActivity() {
         cl_request_otp.isEnabled = false
         loadingDialog = LoadingDialog(this@SignInActivity)
 
+
         // start verification on click of the button
         cl_request_otp.setOnClickListener {
-            signIn()
-            showLoadingDialog()
+            if (isOnline) {
+                signIn()
+                showLoadingDialog()
+            } else {
+                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Callback function for Phone Auth
@@ -102,6 +112,40 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
+
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        terminateNetworkCallback()
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
     }
 
     private fun showLoadingDialog() {

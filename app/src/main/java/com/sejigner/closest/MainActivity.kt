@@ -2,9 +2,12 @@ package com.sejigner.closest
 
 import android.content.Intent
 import android.location.*
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         const val ANONYMOUS = "anonymous"
         var UID = ""
         var MYNICKNAME = ""
+        var isOnline = false
 
         private lateinit var auth: FirebaseAuth
 
@@ -93,13 +97,16 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViewPager()
         initNavigationBar()
 
-        sendLoadingDialog = SendLoadingDialog(this@MainActivity)
+
+
         // 첫 실행시 광고 실행
         userName = ANONYMOUS
 
@@ -172,16 +179,40 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         removePartnerFromPrefs()
     }
 
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
 
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
+    }
 
     override fun onStart() {
         super.onStart()
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
         mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
         mRefFinish = FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver")
+        mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$UID")
         listenForPlanes()
         listenForMessages()
         listenForFinishedChat()
+        listenForStatus()
     }
 
     override fun onResume() {
@@ -191,6 +222,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         if(isNotification) {
             vp_main.currentItem = 1
         }
+        registerNetworkCallback()
     }
 
     override fun onStop() {
@@ -198,6 +230,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
         mRefFinish.removeEventListener(mListenerFinish)
+        mRefStatus.removeEventListener(mListenerStatus)
+        terminateNetworkCallback()
     }
 
     private fun loadAd() {

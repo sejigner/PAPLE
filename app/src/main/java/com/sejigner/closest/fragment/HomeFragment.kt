@@ -30,18 +30,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sejigner.closest.*
 import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.R
 import com.sejigner.closest.adapter.SentPaperPlaneAdapter
 import com.sejigner.closest.models.PaperplaneMessage
 import com.sejigner.closest.room.*
 import com.sejigner.closest.ui.FragmentChatViewModel
 import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import kotlinx.android.synthetic.main.activity_otp.*
-import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_dialog_sent.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -118,15 +114,20 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             iv_update_location.startAnimation(updateAnimation)
         }
 
-        iv_paper_send.setOnClickListener {
-            mListener?.confirmFlight()
+        tv_paper_send.setOnClickListener {
+            if(isOnline) {
+                mListener?.confirmFlight()
+            } else {
+                Toast.makeText(requireActivity(), R.string.no_internet,Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         tv_delete_all_records.setOnClickListener {
             confirmDelete()
         }
 
-        iv_paper_send.isEnabled = false
+        tv_paper_send.isEnabled = false
         et_write_paper?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 tv_count_letter_paper?.text = getString(R.string.limit_write)

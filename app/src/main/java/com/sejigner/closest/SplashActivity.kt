@@ -33,7 +33,6 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
     lateinit var viewModel: FragmentChatViewModel
     private val time: Long = 1L
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -64,15 +63,6 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
         val fm = supportFragmentManager
         alertDialog.show(fm, "suspend-confirmation")
     }
-
-    private fun confirmNoInternet() {
-        val alertDialog = SuspendAlertDialogFragment.newInstance(
-            "인터넷 연결 후 실행해주세요.", "종료하기"
-        )
-        val fm = supportFragmentManager
-        alertDialog.show(fm, "internet-confirmation")
-    }
-
 
     private fun verifyUserIsLoggedIn() {
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser

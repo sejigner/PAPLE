@@ -3,9 +3,11 @@ package com.sejigner.closest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
 import com.sejigner.closest.room.User

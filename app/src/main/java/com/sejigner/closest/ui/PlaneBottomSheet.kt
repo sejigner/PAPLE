@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.R
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_plane.*
 
@@ -64,7 +66,11 @@ class PlaneBottomSheet() : BottomSheetDialogFragment() {
             callback.confirmDiscardPaper()
         }
         tv_report_plane_bottom_sheet.setOnClickListener {
-            callback.confirmReportPaper()
+            if(isOnline) {
+                callback.confirmReportPaper()
+            } else {
+                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
+            }
         }
         tv_cancel_plane_bottom_sheet.setOnClickListener {
             dismiss()

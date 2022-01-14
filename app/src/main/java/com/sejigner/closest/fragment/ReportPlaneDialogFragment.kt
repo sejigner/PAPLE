@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.R
 import com.sejigner.closest.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
@@ -66,10 +68,14 @@ class ReportPlaneDialogFragment : DialogFragment() {
         }
 
         tv_send_report_plane.setOnClickListener {
-            if(callback!=null) {
-                callback!!.reportPaper()
+            if(isOnline) {
+                if(callback!=null) {
+                    callback!!.reportPaper()
+                }
+                dismiss()
+            } else {
+                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
-            dismiss()
         }
 
         tv_cancel_report_plane.setOnClickListener {

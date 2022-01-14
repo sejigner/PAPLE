@@ -1,6 +1,10 @@
 package com.sejigner.closest
 
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +23,8 @@ class SignOutActivity : AppCompatActivity() {
     var uid: String? = ""
     var birthYear = 0
     var gender: String = ""
+    var isOnline = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +45,15 @@ class SignOutActivity : AppCompatActivity() {
         }
 
         tv_sign_out.setOnClickListener {
-            if (!et_reason_sign_out.text.isNullOrBlank()) {
-                val vou = VoiceOfUser(gender, birthYear, et_reason_sign_out.text.toString())
-                submitReason(vou)
+            if (isOnline) {
+                if (!et_reason_sign_out.text.isNullOrBlank()) {
+                    val vou = VoiceOfUser(gender, birthYear, et_reason_sign_out.text.toString())
+                    submitReason(vou)
+                } else {
+                    signOut()
+                }
             } else {
-                signOut()
+                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -77,11 +87,37 @@ class SignOutActivity : AppCompatActivity() {
 
     }
 
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
+
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
+    }
+
     private fun submitReason(vou: VoiceOfUser) {
         val ref = FirebaseDatabase.getInstance().reference.child("VOU").push()
-        ref.setValue(vou).addOnCompleteListener {
+        ref.setValue(vou).addOnSuccessListener {
+            Log.d("SignOutActivity", "Submitted the VOU to the server")
             signOut()
         }.addOnFailureListener {
+            Log.d("SignOutActivity", "fail to submit the VOU to the server")
             signOut()
         }
     }
