@@ -62,13 +62,13 @@ class SignInActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, MainActivity::class.java))
                 finish()
                 Log.d("@MainActivity", "onVerificationCompleted Success")
-
             }
 
             // Called when verification is failed add log statement to see the exception
             override fun onVerificationFailed(e: FirebaseException) {
                 Log.d("@MainActivity", "onVerificationFailed $e")
-                Toast.makeText(this@SignInActivity,"인증 실패 - 번호를 확인해주세요.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SignInActivity, "인증 실패 - 번호를 확인해주세요.", Toast.LENGTH_SHORT)
+                    .show()
                 dismissLoadingDialog()
             }
 

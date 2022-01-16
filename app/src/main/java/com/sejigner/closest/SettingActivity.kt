@@ -49,11 +49,11 @@ class SettingActivity : AppCompatActivity() {
         }
 
         tv_sign_out_setting.setOnClickListener {
-            val intent = Intent(this@SettingActivity, SignOutActivity::class.java)
-            intent.putExtra("nickname", nickname)
-            intent.putExtra("birthYear", birthYear)
-            intent.putExtra("gender", gender)
-            startActivity(intent)
+                val intent = Intent(this@SettingActivity, SignOutActivity::class.java)
+                intent.putExtra("nickname", nickname)
+                intent.putExtra("birthYear", birthYear)
+                intent.putExtra("gender", gender)
+                startActivity(intent)
         }
 
         sb_toggle_notification.isChecked = prefs.getBoolean("notification", true)

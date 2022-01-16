@@ -33,7 +33,7 @@ class SignOutActivity : AppCompatActivity() {
         val nickname = intent.getStringExtra("nickname")
         birthYear = intent.getIntExtra("birthYear", 0)
         gender = intent.getStringExtra("gender").toString()
-        tv_content_sign_out_activity.text = nickname
+        tv_content_sign_out_activity.text = getString(R.string.content_sign_out, nickname)
 
         if (FirebaseAuth.getInstance().currentUser != null) {
             user = FirebaseAuth.getInstance().currentUser!!
@@ -63,18 +63,26 @@ class SignOutActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        terminateNetworkCallback()
+    }
+
     private fun signOut() {
-        user.delete().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val intent = Intent(this@SignOutActivity, SignInActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                Toast.makeText(this@SignOutActivity, "탈퇴되었습니다", Toast.LENGTH_SHORT).show()
-            } else {
-                Log.e("SignOutActivity","탈퇴 처리 에러 uid : $UID")
-                Toast.makeText(this@SignOutActivity, "다시 시도해주세요.", Toast.LENGTH_SHORT).show()
-            }
+        user.delete().addOnSuccessListener {
+            val intent = Intent(this@SignOutActivity, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            Toast.makeText(this@SignOutActivity, "탈퇴되었습니다", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Log.e("SignOutActivity","탈퇴 처리 에러 uid : $UID")
+            Toast.makeText(this@SignOutActivity, "다시 시도해주세요.", Toast.LENGTH_SHORT).show()
         }
 
         // 유저 위치정보 제거
