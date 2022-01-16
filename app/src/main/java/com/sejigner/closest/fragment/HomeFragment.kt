@@ -1,7 +1,6 @@
 package com.sejigner.closest.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.location.*
@@ -16,7 +15,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -102,10 +100,6 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        CoroutineScope(IO).launch {
-            getCurrentLocation()
-        }
-
         val updateAnimation : Animation = AnimationUtils.loadAnimation(requireActivity(),R.anim.anim_update_location)
         tv_update_location.setOnClickListener {
             CoroutineScope(IO).launch {
@@ -140,7 +134,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             override fun afterTextChanged(s: Editable?) {
                 val userinput = et_write_paper.text.toString()
                 tv_count_letter_paper?.text = userinput.length.toString() + " / 200"
-                iv_paper_send.isEnabled = s != null && s.toString().isNotEmpty()
+                tv_paper_send.isEnabled = s != null && s.toString().isNotEmpty()
             }
         })
 
@@ -343,11 +337,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 
     interface FlightListener {
         fun confirmFlight()
-        fun showSuccessFragment(flightDistance: Double)
-        fun showSuccessFragment()
         fun showLoadingDialog()
-        fun dismissLoadingDialog()
-//        fun runFragmentDialogWritePaper(currentAddress: String, latitude: Double, longitude: Double)
     }
     private var flightDistance: Double = 0.0
 

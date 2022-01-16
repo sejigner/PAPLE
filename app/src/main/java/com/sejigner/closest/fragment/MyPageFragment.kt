@@ -97,7 +97,7 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
         tv_nickname_my_page.text = nickname
         tv_current_version.text = getVersionInfo()
         CoroutineScope(IO).launch {
-            if(viewModel.isExists(UID).await()) {
+            if (viewModel.isExists(UID).await()) {
                 val info = viewModel.getUser(UID).await()
                 CoroutineScope(Main).launch {
                     if (info.gender == "male") {
@@ -109,7 +109,11 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
                 }
             } else {
                 val userInfo = getUserInfoFromFirebase()
-                setInfoToRoomDB(userInfo.nickname!!, userInfo.gender!!, userInfo.birthYear!!.toInt())
+                setInfoToRoomDB(
+                    userInfo.nickname!!,
+                    userInfo.gender!!,
+                    userInfo.birthYear!!.toInt()
+                )
                 CoroutineScope(Main).launch {
                     if (userInfo.gender == "male") {
                         tv_gender_my_page.text = "남성"
@@ -122,14 +126,14 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
         }
     }
 
-    private fun setInfoToRoomDB(nickname : String, gender : String, birthYear : Int) {
+    private fun setInfoToRoomDB(nickname: String, gender: String, birthYear: Int) {
         val user = User(UID, nickname, gender, birthYear)
         viewModel.insert(user)
     }
 
-    private suspend fun getUserInfoFromFirebase() : Users {
+    private suspend fun getUserInfoFromFirebase(): Users {
         val ref = FirebaseDatabase.getInstance().reference.child("Users/$UID")
-        var user : Users ?= null
+        var user: Users? = null
         CoroutineScope(IO).launch {
             ref.get().addOnSuccessListener {
                 val nickname = it.child("nickname").value.toString()
@@ -139,14 +143,16 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
                 val registrationToken = "0"
                 user = Users(nickname, gender, birthYear, status, registrationToken)
             }.addOnFailureListener {
-                user = Users("unknown", "unknown", 0.toString(),"unknown", "unknown")
+                user = Users("unknown", "unknown", 0.toString(), "unknown", "unknown")
+                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
             }.await()
         }.join()
         return user!!
     }
 
-    private fun getVersionInfo() : String {
-        val info: PackageInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
+    private fun getVersionInfo(): String {
+        val info: PackageInfo =
+            requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
         val version = info.versionName
         return version
     }

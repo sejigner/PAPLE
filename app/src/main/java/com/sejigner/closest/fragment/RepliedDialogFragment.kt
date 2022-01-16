@@ -1,7 +1,6 @@
 package com.sejigner.closest.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,10 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.sejigner.closest.ChatLogActivity
-import com.sejigner.closest.MainActivity
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.R
@@ -42,7 +39,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     private var paper: RepliedPaperPlanes? = null
     private var userMessage: String? = null
     private var firstTime: Long? = null
-    lateinit var mCallback: OnChatStartListener
+    lateinit var callback: OnChatStartListener
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
@@ -59,7 +56,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnChatStartListener) {
-            mCallback = context
+            callback = context
         } else {
             throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
         }
@@ -123,7 +120,6 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         addOnClickListenerMenu()
 
         tv_chat_yes.setOnClickListener {
-            // 답장을 할 경우 메세지는 사라지고, 채팅으로 넘어가는 점 숙지시킬 것 (Dialog 이용)
             if (fromId != null) {
                 getPartnerNicknameFromFirebase(object : PartnerNicknameCallback {
                     override fun onCallback(partnerNickname: String) {
@@ -179,7 +175,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     }
 
     private fun initChat() {
-        mCallback.showLoadingDialog()
+        callback.showLoadingDialog()
 
         invitePartner(object : ChatStartCallback {
             override fun onCallback() {
@@ -241,7 +237,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     override fun reportPaper() {
         val fromId = fromId!!
         val message = partnerMessage!!
-        val uid = MainActivity.UID
+        val uid = UID
 
         val ref =
             FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")

@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
-        ViewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
         isNotification = intent.getBooleanExtra("IS_NOTIFICATION", false)
         isAd = intent.getBooleanExtra("IS_AD", false)
 
@@ -416,7 +416,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 i*100.0,
             System.currentTimeMillis() / 1000L
             )
-            ViewModel.insert(item)
+            viewModel.insert(item)
         }
 
         for (i in 1..20 ) {
@@ -486,11 +486,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                 paperplane.flightDistance,
                                 paperplane.timestamp
                             )
-                            ViewModel.insert(item)
+                            viewModel.insert(item)
                             // immediate delete on setting data to local database
                             mRefPlane.child(paperplane.fromId).removeValue()
                             val acquaintances = Acquaintances(paperplane.fromId, UID)
-                            ViewModel.insert(acquaintances)
+                            viewModel.insert(acquaintances)
                         } else { // 상대가 날린 답장 비행기
                             setRepliedPaperPlane(paperplane)
                             mRefPlane.child(paperplane.fromId).removeValue()
@@ -617,9 +617,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                             noticeFinish,
                             timestamp
                         )
-                        ViewModel.updateChatRoom(UID, partnerUid, true).join()
-                        ViewModel.insert(chatMessages)
-                        ViewModel.updateLastMessages(
+                        viewModel.updateChatRoom(UID, partnerUid, true).join()
+                        viewModel.insert(chatMessages)
+                        viewModel.updateLastMessages(
                             UID,
                             partnerUid,
                             noticeFinish,
@@ -653,7 +653,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     suspend fun setRepliedPaperPlane(paperPlane: PaperplaneMessage) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val myPaperPlaneRecord = ViewModel.getWithId(UID, paperPlane.fromId).await()
+            val myPaperPlaneRecord = viewModel.getWithId(UID, paperPlane.fromId).await()
             if (myPaperPlaneRecord != null) {
                 val item = RepliedPaperPlanes(
                     myPaperPlaneRecord.partnerId,
@@ -664,8 +664,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     myPaperPlaneRecord.firstTimestamp,
                     paperPlane.timestamp
                 )
-                ViewModel.insert(item)
-                ViewModel.delete(myPaperPlaneRecord)
+                viewModel.insert(item)
+                viewModel.delete(myPaperPlaneRecord)
             }
         }.join()
     }
@@ -675,7 +675,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     override fun startChatRoom(message: ChatMessages, partnerUid : String) {
-        ViewModel.insert(message)
+        viewModel.insert(message)
         val intent = Intent(this, ChatLogActivity::class.java)
         intent.putExtra(FragmentChat.USER_KEY, partnerUid)
         startActivity(intent)

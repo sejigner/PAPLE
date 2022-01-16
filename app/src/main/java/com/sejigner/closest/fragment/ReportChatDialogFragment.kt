@@ -28,7 +28,7 @@ import java.util.*
  */
 class ReportChatDialogFragment : DialogFragment() {
 
-    private var callback : OnReportConfirmedListener ?= null
+    private var callback: OnReportConfirmedListener? = null
 
     interface OnReportConfirmedListener {
         fun reportMessagesFirebase()
@@ -77,7 +77,7 @@ class ReportChatDialogFragment : DialogFragment() {
     override fun onResume() {
         super.onResume()
 //        dialog!!.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        if(dialog != null) {
+        if (dialog != null) {
 //            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }

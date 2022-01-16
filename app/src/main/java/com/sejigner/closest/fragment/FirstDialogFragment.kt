@@ -37,11 +37,11 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private var time: Long? = null
     private var fromId: String? = null
     private var paper: FirstPaperPlanes? = null
-    private var mCallback: OnSuccessListener? = null
+    private var callback: OnSuccessListener? = null
     lateinit var repository: PaperPlaneRepository
     lateinit var factory: FragmentChatViewModelFactory
     lateinit var viewModel: FragmentChatViewModel
-    private var bottomSheet : PlaneBottomSheet ?= null
+    private var bottomSheet: PlaneBottomSheet? = null
 
     interface OnSuccessListener {
         fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double)
@@ -145,7 +145,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     private fun addOnClickListenerMenu() {
         iv_menu_first_plane.setOnClickListener {
             bottomSheet = PlaneBottomSheet()
-            if(bottomSheet!=null) {
+            if (bottomSheet != null) {
                 bottomSheet!!.show(childFragmentManager, bottomSheet!!.tag)
             }
         }
@@ -154,7 +154,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnSuccessListener) {
-            mCallback = context
+            callback = context
         } else {
             throw RuntimeException(context.toString() + "must implement FirstPlaneListenerMain")
         }
