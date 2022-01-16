@@ -42,6 +42,10 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         tv_request_resend.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         loadingDialog = LoadingDialog(this@OtpActivity)
 
+        iv_back_otp.setOnClickListener {
+            finish()
+        }
+
         et_otp.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
@@ -217,7 +221,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         alertDialog.show(fm, "suspend-confirmation")
     }
 
-    override fun proceed() {
+    override fun finishApp() {
         finish()
     }
 }

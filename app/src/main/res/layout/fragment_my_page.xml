@@ -22,6 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:text="@string/user_info"
             android:textColor="#a7a7a7"
             android:textSize="14sp"
@@ -33,10 +35,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:scrollbarSize="24sp"
+            android:textColor="@color/black"
             android:textSize="24dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title_my_page" />
 
@@ -47,6 +51,8 @@
             android:layout_marginStart="12dp"
             android:background="@drawable/round_edit_text"
             android:backgroundTint="@color/gray_2"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
             android:scrollbarSize="14sp"
@@ -61,6 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:scrollbarSize="14sp"
             android:text="@string/birth_year"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_birth_title"
@@ -94,7 +104,9 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@drawable/bg_my_page"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:gravity="center_vertical"
+            android:includeFontPadding="false"
             android:text="@string/setting"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +117,9 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@drawable/bg_my_page"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:gravity="center_vertical"
+            android:includeFontPadding="false"
             android:text="@string/open_source_license"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,40 +129,44 @@
             android:id="@+id/cl_version_my_page"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:paddingVertical="20dp"
             android:background="@drawable/bg_my_page"
-            app:layout_constraintTop_toBottomOf="@id/tv_open_source_license"
-            app:layout_constraintStart_toStartOf="parent">
+            android:paddingVertical="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_open_source_license">
 
             <TextView
-                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/version_title"
+                android:textColor="@color/black"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_current_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/version_current"
                 android:textColor="@color/paperplane_theme"
-                />
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/version_latest"
-                />
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -157,7 +175,9 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@drawable/bg_my_page"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:gravity="center_vertical"
+            android:includeFontPadding="false"
             android:text="@string/log_out"
             android:textColor="@color/warning"
             app:layout_constraintStart_toStartOf="parent"

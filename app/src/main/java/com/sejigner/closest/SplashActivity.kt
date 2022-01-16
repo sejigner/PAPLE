@@ -1,31 +1,26 @@
 package com.sejigner.closest
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.fragment.SuspendAlertDialogFragment
 import com.sejigner.closest.ui.FragmentChatViewModel
-import java.net.InetAddress
 
 
-private const val LOG_TAG = "SplashActivity"
+private const val TAG = "SplashActivity"
+
 
 class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {
 
@@ -80,6 +75,8 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                                 "Checked, User Info already set - user's status : ${it.value}"
                             )
                             val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             intent.putExtra("IS_AD", true)
                             startActivity(intent)
                             finish()
@@ -92,12 +89,22 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                         startActivity(setupIntent)
                         finish()
                     }
+                }.addOnFailureListener {
+                    Toast.makeText(this, "사용자 정보 요청에 실패하였습니다. 다시 로그인 해주세요.", Toast.LENGTH_SHORT)
+                        .show()
+                    FirebaseAuth.getInstance().signOut()
+                    val signInIntent =
+                        Intent(this@SplashActivity, SignInActivity::class.java)
+                    signInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(signInIntent)
+                    finish()
                 }
 
         } else {
-            App.prefs.myNickname = ""
-            startActivity(Intent(applicationContext, SignInActivity::class.java))
-            finish()
+                prefs.myNickname = ""
+                startActivity(Intent(applicationContext, SignInActivity::class.java))
+                finish()
         }
     }
 
@@ -143,7 +150,8 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
         window.attributes = winParams
     }
 
-    override fun proceed() {
+
+    override fun finishApp() {
         finish()
     }
 }

@@ -9,12 +9,12 @@
     tools:context=".fragment.FragmentDialogSent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/dialog_frame"
         android:id="@+id/cl_dialog_frame"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="20dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/dialog_frame">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_message_sent"
@@ -29,25 +29,28 @@
                 android:id="@+id/tv_discard_my_paper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/discard_paper"
                 android:textColor="@color/gray_2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_dialog_time_sent"
                 app:layout_constraintBottom_toBottomOf="@id/tv_dialog_time_sent"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_dialog_time_sent" />
 
             <TextView
                 android:id="@+id/tv_dialog_message_sent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
+                android:lineHeight="22dp"
+                android:maxLines="10"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                android:maxLines="10"
-                android:lineHeight="22dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_dialog_time_sent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_dialog_time_sent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -55,12 +58,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="time"
                 android:textColor="#c4c4c4"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_sent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_message_sent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

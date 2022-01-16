@@ -18,6 +18,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:id="@+id/tv_chat_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,6 +31,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:id="@+id/tv_chat_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -47,6 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="time"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_chat_message"
@@ -54,6 +60,8 @@
 
         <TextView
             android:id="@+id/tv_count_message"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            android:includeFontPadding="false"
             android:layout_width="20dp"
             android:layout_height="15dp"
             android:background="@drawable/ic_count"

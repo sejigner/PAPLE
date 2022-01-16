@@ -79,19 +79,26 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
     }
 
     private fun signOutFromFirebase() {
+
         FirebaseAuth.getInstance().signOut()
         // Firebase 내 토큰 제거
         val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(
             UID
         ).child("registrationToken")
-        fbDatabase.removeValue()
-        // SharedPreference 닉네임 값 제거
-        App.prefs.myNickname = ""
-        // 로그인 페이지 이동
-        val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        fbDatabase.removeValue().addOnFailureListener {
+            val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }.addOnSuccessListener {
+            // SharedPreference 닉네임 값 제거
+            App.prefs.myNickname = ""
+            // 로그인 페이지 이동
+            val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
     }
 
     private fun setInfo() {

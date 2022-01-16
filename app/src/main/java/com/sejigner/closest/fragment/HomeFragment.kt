@@ -48,7 +48,7 @@ private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
 
-class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
+class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
 
     companion object {
         const val TAG = "FlightLog"
@@ -158,8 +158,13 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
         viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
             sentPlaneAdapter.differ.submitList(it)
             tv_delete_all_records.isEnabled = it.isNotEmpty()
-            rv_sent_paper.scrollToPosition(sentPlaneAdapter.itemCount-1)
+            rv_sent_paper.scrollToPosition(it.size-1)
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getCurrentLocation()
     }
 
     override fun onStart() {
@@ -195,7 +200,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
     }
 
     private fun confirmDelete() {
-        val alertDialog = AlertDialogFragment.newInstance(
+        val alertDialog = AlertDialogChildFragment.newInstance(
             "날려보낸 모든 비행기 기록을 제거하시겠습니까?", "제거하기"
         )
         val fm = childFragmentManager
@@ -225,6 +230,11 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 
         paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
             Log.d(FragmentHome.TAG, "Receiver 실패")
+            Toast.makeText(
+                requireActivity(),
+                resources.getText(R.string.no_internet),
+                Toast.LENGTH_SHORT
+            ).show()
         }.addOnSuccessListener {
             val sentPaper = MyPaperPlaneRecord(
                 paperplaneMessage.toId,
@@ -362,7 +372,7 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
             .addOnFailureListener {
                 Toast.makeText(
                     requireActivity(),
-                    "Failed on getting current location",
+                    "현재 위치를 감지하지 못 했어요.",
                     Toast.LENGTH_SHORT
                 ).show()
             }

@@ -40,11 +40,8 @@
 
 
     <EditText
-        android:maxLength="10"
-        android:inputType="text"
         android:id="@+id/et_nickname"
         android:layout_width="0dp"
-        android:maxLines="1"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="80dp"
@@ -52,6 +49,9 @@
         android:hint="@string/initial_nickname"
         android:imeOptions="actionDone"
         android:includeFontPadding="false"
+        android:inputType="text"
+        android:maxLength="10"
+        android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/black"
         android:textSize="24sp"
@@ -61,21 +61,21 @@
         app:layout_constraintTop_toBottomOf="@id/tv_initial_guidance" />
 
     <TextView
+        android:id="@+id/duplication_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/duplication_check"
         android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/et_nickname"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_nickname" />
 
     <ProgressBar
-        android:visibility="invisible"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/et_nickname"
         android:id="@+id/duplication_check_progress_bar"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="20dp"
-        android:layout_height="20dp"/>
+        android:layout_height="20dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_nickname" />
 
     <TextView
         android:id="@+id/tv_initial_birth_year"
@@ -184,7 +184,9 @@
             android:layout_marginStart="10dp"
             android:background="@drawable/btn_initial_setting_normal"
             android:button="@android:color/transparent"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:paddingLeft="16dp"
             android:paddingTop="3dp"
             android:paddingRight="16dp"
@@ -201,6 +203,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
         android:solidColor="@color/bg_initialSetting"
         app:layout_constraintBottom_toTopOf="@id/cl_initial_start"
         app:layout_constraintEnd_toEndOf="parent"
@@ -231,6 +235,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/initial_start"
                 android:textColor="@color/white"
                 android:textSize="20sp"

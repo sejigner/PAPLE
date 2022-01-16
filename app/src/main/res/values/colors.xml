@@ -6,6 +6,8 @@
     <color name="bg_chat_log">#EDF1F5</color>
     <color name="txt_initialSetting">#8e8e8e</color>
     <color name="txt_gray">#A6A8AA</color>
+    <color name="gray">#CDCDCD</color>
+    <color name="gray2">#D9DEE6</color>
     <color name="title_gray">#5f5f5f</color>
     <color name="gray_2">#A7A7A7</color>
     <color name="point">#FF1779</color>

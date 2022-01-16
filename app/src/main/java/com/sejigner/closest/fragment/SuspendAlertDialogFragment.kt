@@ -53,16 +53,14 @@ class SuspendAlertDialogFragment : DialogFragment() {
         tv_suspend_confirm_alert.text = confirm
 
         tv_suspend_confirm_alert.setOnClickListener {
-            listener?.proceed()
+            listener?.finishApp()
             dismiss()
         }
+    }
 
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                listener?.proceed()
-            }
-        })
-
+    override fun onDestroy() {
+        super.onDestroy()
+        listener?.finishApp()
     }
 
     override fun onAttach(activity: Activity) {
@@ -74,7 +72,7 @@ class SuspendAlertDialogFragment : DialogFragment() {
     }
 
     interface OnConfirmedListener {
-        fun proceed()
+        fun finishApp()
     }
 
     companion object {

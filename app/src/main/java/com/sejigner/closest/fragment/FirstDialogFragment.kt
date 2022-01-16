@@ -202,6 +202,12 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
             viewModel.delete(paper!!)
             dismiss()
             Toast.makeText(requireActivity(), "비행기를 신고했어요.", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener {
+            Toast.makeText(
+                requireActivity(),
+                resources.getText(R.string.no_internet),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

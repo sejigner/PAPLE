@@ -35,6 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
         android:text="@string/phone_auth_info"
         android:textAppearance="@style/phone_auth_info"
         app:layout_constraintStart_toStartOf="@id/tv_title_phone_auth"
@@ -47,14 +49,15 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:ems="10"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:hint="@string/hint_enter_number"
+        android:includeFontPadding="false"
         android:inputType="phone"
         android:textAppearance="@style/phone_auth_et"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,8 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="30dp"
-            android:foreground="?android:attr/selectableItemBackground"
             android:background="@drawable/selector_auth"
+            android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -80,10 +83,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:text="@string/send_otp"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

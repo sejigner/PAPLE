@@ -22,6 +22,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:id="@+id/tv_first_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,6 +39,7 @@
                 android:id="@+id/tv_notice_first_paper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:text="@string/notice_no_paper"
@@ -98,6 +101,8 @@
                 android:layout_marginStart="16dp"
                 android:text="@string/returned_plane"
                 android:textColor="@color/black"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -140,6 +145,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:layout_marginTop="16dp"
                 android:text="@string/tip_replied_paper"
                 android:textSize="12sp"
@@ -168,6 +175,8 @@
             <TextView
                 android:id="@+id/tv_title_open_chat"
                 style="@style/fragment_chat_title"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
