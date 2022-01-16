@@ -147,12 +147,20 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.isExists(uid)
     }
 
+    fun isExist(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.isExist(uid, partnerId)
+    }
+
+
 
 
     // Here we initialized allPaperPlanes function with repository
     fun allFirstPaperPlanes(uid: String) = repository.allFirstPaperPlanes(uid)
     fun allRepliedPaperPlanes(uid: String) = repository.allRepliedPaperPlanes(uid)
     fun allChatMessages(uid: String, partnerId: String) = repository.allChatMessages(uid, partnerId)
+    fun allChatMessagesForReport(uid: String, partnerId: String) = CoroutineScope(IO).async {
+        repository.allChatMessagesForReport(uid, partnerId)
+    }
     fun allChatRooms(uid: String) = repository.allChatRooms(uid)
     fun allMyPaperPlaneRecord(uid: String) = repository.allPaperRecords(uid)
 }
