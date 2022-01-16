@@ -130,6 +130,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                         ).show()
                     }.addOnSuccessListener {
                         viewModel.delete(paper!!)
+                        viewModel.setResult("replied")
                         callback?.showReplySuccessFragment(true, distance!!)
                         dismiss()
                     }

@@ -49,9 +49,11 @@ import java.util.*
 //  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
 //  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentChat.OnCommunicationUpdatedListener,
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
+    FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
-    RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener, SuccessBottomSheet.OnFlightSuccess {
+    RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener,
+    SuccessBottomSheet.OnFlightSuccess {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -66,11 +68,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     lateinit var mRefPlane: DatabaseReference
-    lateinit var mRefStatus : DatabaseReference
+    lateinit var mRefStatus: DatabaseReference
     lateinit var mRefMessages: DatabaseReference
     lateinit var mRefFinish: DatabaseReference
     lateinit var mListenerPlane: ChildEventListener
-    lateinit var mListenerStatus : ChildEventListener
+    lateinit var mListenerStatus: ChildEventListener
     lateinit var mListenerMessages: ChildEventListener
     lateinit var mListenerFinish: ChildEventListener
     lateinit var viewModel: FragmentChatViewModel
@@ -100,14 +102,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViewPager()
         initNavigationBar()
-
 
 
         // 첫 실행시 광고 실행
@@ -223,7 +222,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
         super.onResume()
 //        generateDummy()
         // 노티 푸시 타고 들어왔을 경우 ChatFragment로 swipe
-        if(isNotification) {
+        if (isNotification) {
             vp_main.currentItem = 1
         }
         registerNetworkCallback()
@@ -363,7 +362,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
 
     override fun showLoadingBottomSheet() {
         bottomSheet = SuccessBottomSheet()
-        if(bottomSheet!=null) {
+        if (bottomSheet != null) {
             bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
         }
     }
@@ -397,24 +396,24 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
     }
 
     private fun generateDummy() {
-        for (i in 1..10 ) {
+        for (i in 1..10) {
             val item = FirstPaperPlanes(
                 i.toString(),
                 UID,
                 "test $i",
-                i*100.0,
-            System.currentTimeMillis() / 1000L
+                i * 100.0,
+                System.currentTimeMillis() / 1000L
             )
             viewModel.insert(item)
         }
 
-        for (i in 1..20 ) {
+        for (i in 1..20) {
             val item = RepliedPaperPlanes(
                 i.toString(),
                 UID,
                 "test $i",
                 "test $i",
-                i*100.0,
+                i * 100.0,
                 System.currentTimeMillis() / 1000L,
                 System.currentTimeMillis() / 1000L
             )
@@ -432,7 +431,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val status = snapshot.value
                 Log.d(TAG, "status : $status")
-                if(status == "suspended") {
+                if (status == "suspended") {
                     confirmSuspend()
                 }
             }
@@ -514,12 +513,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val latestChatMessage = snapshot.getValue(LatestChatMessage::class.java) ?: return
                 val partnerId = snapshot.key!!
-                if(latestChatMessage.recipientId==UID) {
+                if (latestChatMessage.recipientId == UID) {
                     onCommunicationUpdated()
                 }
                 CoroutineScope(Dispatchers.IO).launch {
                     val isFinishedChat = (viewModel.isExist(UID, partnerId)).await()
-                    if(!isFinishedChat) {
+                    if (!isFinishedChat) {
                         val isPartnerId = viewModel.exists(UID, partnerId).await()
                         // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
                         if (!isPartnerId) {
@@ -554,7 +553,11 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
                                     mRefMessages.child(snapshot.key!!).removeValue()
 
                                 }.addOnFailureListener {
-                                    Toast.makeText(this@MainActivity, "탈퇴한 유저입니다.", Toast.LENGTH_SHORT)
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "탈퇴한 유저입니다.",
+                                        Toast.LENGTH_SHORT
+                                    )
                                         .show()
                                 }
                             }
@@ -667,7 +670,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
         fragmentHome.sendPaperPlane()
     }
 
-    override fun startChatRoom(message: ChatMessages, partnerUid : String) {
+    override fun startChatRoom(message: ChatMessages, partnerUid: String) {
         viewModel.insert(message)
         val intent = Intent(this, ChatLogActivity::class.java)
         intent.putExtra(FragmentChat.USER_KEY, partnerUid)
@@ -680,5 +683,10 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentCh
 
     override fun finishApp() {
         finish()
+    }
+
+    override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
+        bottomSheet = SuccessBottomSheet()
+        bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
     }
 }
