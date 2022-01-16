@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_first_bottom_flight"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:background="@drawable/bg_half_rounded_corner"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:textColor="@color/black"
+            android:id="@+id/title_bottom_sheet_success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/loading_flying"/>
+
+        <TextView
+            android:id="@+id/tv_info_success"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/noto_sans_cjk_kr_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/wait"
+            app:layout_constraintTop_toBottomOf="@id/title_bottom_sheet_success"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_confirm_flight_success"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:background="@drawable/selector_flight"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/tv_confirm_flight_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                android:gravity="center"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:includeFontPadding="false"
+                android:padding="24sp"
+                android:text="@string/confirm"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
