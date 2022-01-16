@@ -24,8 +24,14 @@
     <string name="title_reason_sign_out">탈퇴 사유</string>
     <string name="hint_reason_sign_out">떠나시려는 사유를 말씀 해주시겠어요?\n서비스가 발전하는데 큰 도움이 됩니다.</string>
     <string name="confirm_sign_out">탈퇴할래요</string>
-
-
+    <!-- guide -->
+    <string name="title_guide">처음 오셨군요!</string>
+    <string name="subtitle_guide">페플을 시작하시기 전에\n몇 가지를 안내해 드릴게요</string>
+    <string name="rule_1_title_guide">신고당한 회원은 관리자의 검토 후\n활동이 부적절하다 판단되면 다시는 활동할 수 없어요!</string>
+    <string name="rule_1_body_guide">폭언, 욕설, 성희롱 등 부적절한 언어 사용을 목격하실 경우,\n즉시 신고해주세요! 관리자가 확인하여, 경고를 드리거나 계정을 무기한 정지시킵니다.</string>
+    <string name="rule_2_title_guide">종이비행기를 날리면 내 주변 가장 가까운 페플 사용자에게 비행기가 도달합니다.</string>
+    <string name="rule_2_body_guide">비행기를 한 번씩 주고 받으면 먼저 비행기를 날린 사용자가 대화를 시작할 수 있어요.</string>
+    <string name="confirm_guide">확인했어요!</string>
     <!-- sign_in_activity -->
     <string name="hint_enter_number">전화번호를 입력해주세요</string>
     <string name="send_otp">인증코드 요청하기</string>

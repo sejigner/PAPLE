@@ -37,8 +37,7 @@ class SplashCongratsActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
-                setupIntent.putExtra("IS_AD", false)
+                val setupIntent = Intent(this@SplashCongratsActivity, GuideActivity::class.java)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(setupIntent)
@@ -47,13 +46,13 @@ class SplashCongratsActivity : AppCompatActivity() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        val setupIntent = Intent(this@SplashCongratsActivity, MainActivity::class.java)
-        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(setupIntent)
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        val setupIntent = Intent(this@SplashCongratsActivity, GuideActivity::class.java)
+//        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//        startActivity(setupIntent)
+//    }
 
     private fun Activity.transparentStatusAndNavigation(
         systemUiScrim: Int = Color.parseColor("#40000000") // 25% black
