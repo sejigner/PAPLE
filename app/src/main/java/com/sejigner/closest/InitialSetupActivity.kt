@@ -205,8 +205,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     }
 
     override fun proceed() {
-        setInitialSetupToFireStore()
-        setInfoToRoomDB()
+        setInitialSetupToFirebase()
     }
 
     private fun setInfoToRoomDB() {
@@ -314,7 +313,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     }
 
 
-    private fun setInitialSetupToFireStore() {
+    private fun setInitialSetupToFirebase() {
         val database = fbDatabase?.reference
         userInfo.status = "active"
         database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {

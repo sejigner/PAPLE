@@ -23,6 +23,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserInfo
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
@@ -30,10 +31,9 @@ import com.sejigner.closest.adapter.MainViewPagerAdapter
 import com.sejigner.closest.fragment.*
 import com.sejigner.closest.models.LatestChatMessage
 import com.sejigner.closest.models.PaperplaneMessage
+import com.sejigner.closest.models.Users
 import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.ui.SendLoadingDialog
+import com.sejigner.closest.ui.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -41,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 // TODO: unread messages indicator
 //  1. sharedPreferences에 unreadMessages 변수를 추가
@@ -51,7 +52,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
-    RepliedDialogFragment.OnChatStartListener {
+    RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -63,18 +64,20 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private val fragmentMyPage by lazy { MyPageFragment() }
     private val fragments: List<Fragment> = listOf(fragmentHome, fragmentChat, fragmentMyPage)
     private val pagerAdapter: MainViewPagerAdapter by lazy { MainViewPagerAdapter(this, fragments) }
-    private lateinit var sendLoadingDialog: SendLoadingDialog
     private var mInterstitialAd: InterstitialAd? = null
     private var mAdIsLoading: Boolean = false
     lateinit var mRefPlane: DatabaseReference
+    lateinit var mRefStatus : DatabaseReference
     lateinit var mRefMessages: DatabaseReference
     lateinit var mRefFinish: DatabaseReference
     lateinit var mListenerPlane: ChildEventListener
+    lateinit var mListenerStatus : ChildEventListener
     lateinit var mListenerMessages: ChildEventListener
     lateinit var mListenerFinish: ChildEventListener
-    lateinit var ViewModel: FragmentChatViewModel
+    lateinit var viewModel: FragmentChatViewModel
     private var isAd = false
     private var isNotification = false
+    private var bottomSheet: SuccessBottomSheet? = null
 
 
     companion object {
@@ -254,13 +257,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     Log.d(TAG, adError.message)
                     mInterstitialAd = null
                     mAdIsLoading = false
-                    val error = "domain: ${adError.domain}, code: ${adError.code}, " +
-                            "message: ${adError.message}"
-                    Toast.makeText(
-                        this@MainActivity,
-                        "onAdFailedToLoad() with error $error",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         )
@@ -433,9 +429,45 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 System.currentTimeMillis() / 1000L,
                 System.currentTimeMillis() / 1000L
             )
-            ViewModel.insert(item)
+            viewModel.insert(item)
         }
 
+    }
+
+    private fun listenForStatus() {
+        mListenerStatus = mRefStatus.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val status = snapshot.value
+                Log.d(TAG, "status : $status")
+                if(status == "suspended") {
+                    confirmSuspend()
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun confirmSuspend() {
+        val alertDialog = SuspendAlertDialogFragment.newInstance(
+            "규정 위반으로 사용 정지된 계정입니다.", "종료하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "suspend-confirmation")
     }
 
     private fun listenForPlanes() {
@@ -651,5 +683,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     private fun removePartnerFromPrefs() {
         App.prefs.setString("partner", "")
+    }
+
+    override fun finishApp() {
+        finish()
     }
 }
