@@ -44,12 +44,12 @@ import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
-class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface, AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
+class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface,
+    AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
 
     companion object {
         const val TAG = "ChatLog"
@@ -68,8 +68,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private lateinit var softKeyboard: SoftKeyboard
     lateinit var mFinishListener: ChildEventListener
     lateinit var mFinishRef: DatabaseReference
-    lateinit var mPartnersTokenRef : DatabaseReference
-    lateinit var mPartnersTokenListener : ChildEventListener
+    lateinit var mPartnersTokenRef: DatabaseReference
+    lateinit var mPartnersTokenListener: ChildEventListener
+    private var isOnline = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +88,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         rv_chat_log.adapter = chatLogAdapter
 
         CoroutineScope(IO).launch {
-            partnerNickname = viewModel.getChatRoom(UID,partnerUid!!).await().partnerNickname!!
+            partnerNickname = viewModel.getChatRoom(UID, partnerUid!!).await().partnerNickname!!
             tv_partner_nickname_chat_log.text = partnerNickname
         }
 
@@ -190,19 +191,20 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun listenForFinishedChat() {
         mFinishListener = mFinishRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                if(snapshot.value==true) {
+                if (snapshot.value == true) {
                     CoroutineScope(IO).launch {
                         val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
                         val noticeFinish = getString(R.string.finish_chat_log)
-                        val chatMessages = ChatMessages(null,
+                        val chatMessages = ChatMessages(
+                            null,
                             partnerUid,
                             UID,
                             2,
                             noticeFinish,
                             timestamp
                         )
-                        viewModel.updateChatRoom(UID, partnerUid,true).join()
+                        viewModel.updateChatRoom(UID, partnerUid, true).join()
                         viewModel.insert(chatMessages)
                         viewModel.updateLastMessages(
                             UID,
@@ -330,27 +332,28 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun listenForPartnersToken() {
 
 
-        mPartnersTokenListener = mPartnersTokenRef.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                partnerFcmToken = snapshot.value.toString()
-            }
+        mPartnersTokenListener =
+            mPartnersTokenRef.addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    partnerFcmToken = snapshot.value.toString()
+                }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                partnerFcmToken = snapshot.value.toString()
-            }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    partnerFcmToken = snapshot.value.toString()
+                }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
+                override fun onChildRemoved(snapshot: DataSnapshot) {
 
-            }
+                }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
 
-            }
+                }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-            }
-        })
+                }
+            })
     }
 
     private fun listenForMessages() {
@@ -457,7 +460,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(toId,MYNICKNAME, text, timestamp)
+        val lastMessageToPartner = LatestChatMessage(toId, MYNICKNAME, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
             val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
 
@@ -470,7 +473,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
                 if (!lastMessageDate.equals(currentMessageDate)) {
                     lastMessageDate = currentMessageDate
-                    val dateMessage = ChatMessages(null, partnerUid, UID, 2, lastMessageDate, timestamp)
+                    val dateMessage =
+                        ChatMessages(null, partnerUid, UID, 2, lastMessageDate, timestamp)
                     viewModel.insert(dateMessage).join()
                 }
                 viewModel.insert(chatMessages)
@@ -482,12 +486,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 ).join()
                 et_message_chat_log.text.clear()
             }
-        }.addOnFailureListener {
-            Toast.makeText(
-                this,
-                resources.getText(R.string.no_internet),
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
@@ -530,36 +528,15 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             var result = false
 
             val lastMessagesPartnerReference = FirebaseDatabase.getInstance()
-                    .getReference("/Finished-chat/$partnerUid/isOver/$UID")
+                .getReference("/Finished-chat/$partnerUid/isOver/$UID")
             lastMessagesPartnerReference.setValue(true).addOnSuccessListener {
                 Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
                 result = true
             }.addOnFailureListener {
                 Log.d(ChatLogActivity.TAG, it.toString())
+                Log.d("ChatLogActivity", "대화 끝내기 실패")
                 result = false
             }
-            result
-        } catch (e: FirebaseException) {
-            Log.d(ChatLogActivity.TAG, e.toString())
-            false
-        }
-    }
-    private suspend fun sendMessage(): Boolean {
-        return try {
-            var result = false
-            val timestamp = System.currentTimeMillis() / 1000
-            val text = resources.getString(R.string.init_chat_log)
-            val toRef =
-                FirebaseDatabase.getInstance().getReference("/User-messages/$partnerUid/$UID")
-                    .push()
-            val chatMessage = ChatMessage(toRef.key!!, text, UID, partnerUid!!, timestamp)
-            toRef.setValue(chatMessage).addOnSuccessListener {
-                Log.d(TAG, "sent your message: ${toRef.key}")
-                result = true
-            }.addOnFailureListener {
-                Log.d(TAG, it.toString())
-                result = false
-            }.await()
             result
         } catch (e: FirebaseException) {
             Log.d(TAG, e.toString())
@@ -571,14 +548,14 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
             // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)
-            val messageList = viewModel.chatRoomAndAllMessages(UID, partnerUid!!).await()
+            val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
             reportRef.setValue(messageList).addOnFailureListener {
                 Log.d("ReportChatLog", "Report 실패")
                 Toast.makeText(
                     this@ChatLogActivity,
-                    resources.getText(R.string.no_internet),
+                    "접수에 문제가 발생하였습니다. 운영자에게 연락주시면 빠르게 처리해드리겠습니다.",
                     Toast.LENGTH_SHORT
                 ).show()
             }.addOnSuccessListener {
@@ -587,7 +564,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             }
         }
 
-//        ViewModel.allChatMessages(partnerUid!!).observe(this, {
+//        viewModel.allChatMessages(partnerUid!!).observe(this, {
 //            val reportRef =
 //                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
 //            reportRef.setValue(it)
