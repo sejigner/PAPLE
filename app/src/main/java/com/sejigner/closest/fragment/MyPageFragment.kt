@@ -117,20 +117,25 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
                     tv_birth_date_my_page.text = info.birthYear.toString()
                 }
             } else {
-                val userInfo = getUserInfoFromFirebase()
-                setInfoToRoomDB(
-                    userInfo.nickname!!,
-                    userInfo.gender!!,
-                    userInfo.birthYear!!.toInt()
-                )
-                CoroutineScope(Main).launch {
-                    if (userInfo.gender == "male") {
-                        tv_gender_my_page.text = "남성"
-                    } else {
-                        tv_gender_my_page.text = "여성"
+                getUserInfoFromFirebase(object : UserInfoCallback{
+                    override fun onReceiveDataListener(user: Users) {
+                        CoroutineScope(Main).launch {
+                            setInfoToRoomDB(
+                                user.nickname!!,
+                                user.gender!!,
+                                user.birthYear!!.toInt()
+                            )
+                            if (user.gender == "male") {
+                                tv_gender_my_page.text = "남성"
+                            } else {
+                                tv_gender_my_page.text = "여성"
+                            }
+                            tv_birth_date_my_page.text = user.birthYear
+                        }
                     }
-                    tv_birth_date_my_page.text = userInfo.birthYear
-                }
+                })
+
+
             }
         }
     }
@@ -140,23 +145,22 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
         viewModel.insert(user)
     }
 
-    private suspend fun getUserInfoFromFirebase(): Users {
+    private fun getUserInfoFromFirebase(firebaseCallback: UserInfoCallback) {
         val ref = FirebaseDatabase.getInstance().reference.child("Users/$UID")
         var user: Users? = null
-        CoroutineScope(IO).launch {
-            ref.get().addOnSuccessListener {
-                val nickname = it.child("nickname").value.toString()
-                val gender = it.child("gender").value.toString()
-                val birthYear = it.child("birthYear").value.toString()
-                val status = it.child("status").value.toString()
-                val registrationToken = "0"
-                user = Users(nickname, gender, birthYear, status, registrationToken)
-            }.addOnFailureListener {
-                user = Users("unknown", "unknown", 0.toString(), "unknown", "unknown")
-                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
-            }.await()
-        }.join()
-        return user!!
+        ref.get().addOnSuccessListener {
+            val nickname = it.child("nickname").value.toString()
+            val gender = it.child("gender").value.toString()
+            val birthYear = it.child("birthYear").value.toString()
+            val status = it.child("status").value.toString()
+            val registrationToken = "0"
+            user = Users(nickname, gender, birthYear, status, registrationToken)
+            firebaseCallback.onReceiveDataListener(user!!)
+        }.addOnFailureListener {
+            user = Users("unknown", "unknown", 0.toString(), "unknown", "unknown")
+            Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
+            firebaseCallback.onReceiveDataListener(user!!)
+        }
     }
 
     private fun getVersionInfo(): String {
@@ -168,5 +172,9 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
 
     override fun proceed() {
         signOutFromFirebase()
+    }
+
+    interface UserInfoCallback {
+        fun onReceiveDataListener(user : Users)
     }
 }
