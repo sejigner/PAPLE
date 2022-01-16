@@ -49,10 +49,9 @@ import java.util.*
 //  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
 //  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
 
-class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
-    FlySuccessFragment.FlySuccessListenerMain, FragmentChat.OnCommunicationUpdatedListener,
+class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
-    RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener {
+    RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener, SuccessBottomSheet.OnFlightSuccess {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private var isAd = false
     private var isNotification = false
     private var bottomSheet: SuccessBottomSheet? = null
+    private lateinit var sendLoadingDialog: SendLoadingDialog
 
 
     companion object {
@@ -127,6 +127,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
         isNotification = intent.getBooleanExtra("IS_NOTIFICATION", false)
         isAd = intent.getBooleanExtra("IS_AD", false)
+        sendLoadingDialog = SendLoadingDialog(this@MainActivity)
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
@@ -360,15 +361,19 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         }
     }
 
-    override fun showLoadingDialog() {
+    override fun showLoadingBottomSheet() {
         bottomSheet = SuccessBottomSheet()
         if(bottomSheet!=null) {
             bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
         }
     }
 
+    override fun showLoadingDialog() {
+        sendLoadingDialog.show()
+    }
+
     override fun dismissLoadingDialog() {
-        bottomSheet?.dismiss()
+        sendLoadingDialog.dismiss()
     }
 
     private fun closeYourDialogFragment() {
@@ -379,12 +384,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         }
         ft.addToBackStack(null)
         ft.commit() // or ft.commitAllowingStateLoss()
-    }
-
-    override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
-        closeYourDialogFragment()
-        val fragmentFlySuccess = FlySuccessFragment.newInstance(true, flightDistance)
-        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
     }
 
     private fun onCommunicationUpdated() {

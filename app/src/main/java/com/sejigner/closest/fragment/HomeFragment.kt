@@ -175,7 +175,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
     }
 
     fun sendPaperPlane() {
-        mListener?.showLoadingDialog()
+        mListener?.showLoadingBottomSheet()
         viewModel.setResult("flying")
         sentMessage = et_write_paper.text.toString()
         savePaperToDB(sentMessage)
@@ -341,7 +341,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
 
     interface FlightListener {
         fun confirmFlight()
-        fun showLoadingDialog()
+        fun showLoadingBottomSheet()
     }
     private var flightDistance: Double = 0.0
 
