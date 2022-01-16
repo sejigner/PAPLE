@@ -12,6 +12,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_chat_partner_row_new.xml" value="0.1640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_edit_text_sign_out.xml" value="0.2375" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_guide_round_box.xml" value="0.24583333333333332" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_half_rounded_corner.xml" value="0.24114583333333334" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_paper.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button.xml" value="0.2375" />
@@ -48,6 +49,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/round_edit_text.xml" value="0.24473684210526317" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/rounded_corner_chat_box.xml" value="0.18055555555555555" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_auth.xml" value="0.24473684210526317" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_confirm.xml" value="0.24583333333333332" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_flight.xml" value="0.10520833333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_chat.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_menu_color.xml" value="0.2375" />
@@ -56,7 +58,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/selector_send_paper.xml" value="0.10520833333333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/font/font_custom.xml" value="0.3640625" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_chat_log.xml" value="0.22" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_guide.xml" value="0.23453947368421052" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_guide.xml" value="0.3919270833333333" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
