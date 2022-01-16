@@ -14,6 +14,11 @@ import java.net.Socket
 
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {
 
+    val flightResult = MutableLiveData<String>()
+    fun setResult(result : String) {
+        flightResult.value = result
+    }
+
     // In coroutines thread insert item in insert function.
     fun insert(item: FirstPaperPlanes) = CoroutineScope(IO).launch {
         repository.insert(item)

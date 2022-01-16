@@ -171,14 +171,11 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
 
     fun sendPaperPlane() {
         mListener?.showLoadingDialog()
+        viewModel.setResult("flying")
         sentMessage = et_write_paper.text.toString()
         savePaperToDB(sentMessage)
         et_write_paper.text.clear()
         getClosestUser()
-
-//        timerTask = timer(period=1) {
-//            milliSec++
-//        }
     }
 
 
@@ -236,11 +233,11 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
+            val acquaintances = Acquaintances(toId, UID)
+            viewModel.insert(acquaintances)
         }
         foundUserId = ""
-        val acquaintances = Acquaintances(toId, UID)
-        viewModel.insert(acquaintances)
-        mListener?.dismissLoadingDialog()
+        viewModel.setResult("success")
     }
 
     fun getClosestUser() {
@@ -290,15 +287,12 @@ class FragmentHome : Fragment(), AlertDialogFragment.OnConfirmedListener{
                     Log.d("test","$radius")
                     getClosestUser()
                 } else {
-                    mListener?.dismissLoadingDialog()
-
                     userFound = false
                     if(UID != resources.getString(R.string.final_uid)) {
                         foundUserId = resources.getString(R.string.final_uid)
                         performSendAnonymousMessage()
                     }
                     radius = 0.0
-                    mListener?.showSuccessFragment()
                 }
             }
 

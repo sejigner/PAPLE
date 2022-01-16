@@ -360,25 +360,15 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         }
     }
 
-    // TODO : 유저가 어느정도 확보된 후 무조건 유저에게 도달하게 하고 거리 정보 제공
-    override fun showSuccessFragment(flightDistance: Double) {
-        closeYourDialogFragment()
-        val fragmentFlySuccess = FlySuccessFragment.newInstance(flightDistance)
-        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
-    }
-
-    override fun showSuccessFragment() {
-        closeYourDialogFragment()
-        val fragmentFlySuccess = FlySuccessFragment()
-        fragmentFlySuccess.show(supportFragmentManager, "successfulFlight")
-    }
-
     override fun showLoadingDialog() {
-        sendLoadingDialog.show()
+        bottomSheet = SuccessBottomSheet()
+        if(bottomSheet!=null) {
+            bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
+        }
     }
 
     override fun dismissLoadingDialog() {
-        sendLoadingDialog.dismiss()
+        bottomSheet?.dismiss()
     }
 
     private fun closeYourDialogFragment() {
