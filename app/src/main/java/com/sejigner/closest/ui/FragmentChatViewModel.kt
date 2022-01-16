@@ -86,8 +86,9 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
     }
 
     fun deleteAll(uid : String) = viewModelScope.launch {
-        repository.deleteAll(uid)
+        repository.deleteAllPaperRecord(uid)
     }
+
 
     fun getChatRoom(uid: String, partnerId: String) = CoroutineScope(IO).async {
         repository.getChatRoom(uid, partnerId)
