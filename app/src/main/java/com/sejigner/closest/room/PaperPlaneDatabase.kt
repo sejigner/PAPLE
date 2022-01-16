@@ -18,6 +18,7 @@ abstract class PaperPlaneDatabase: RoomDatabase() {
     abstract fun getChatRoomAndMessageDao() : ChatRoomsAndMessagesDao
     abstract fun getAcquaintancesDao() : AcquaintancesDao
     abstract fun getMyPaperDao() : MyPaperDao
+    abstract fun getFinishedChatDao() : FinishedChatDao
 
 
     companion object{

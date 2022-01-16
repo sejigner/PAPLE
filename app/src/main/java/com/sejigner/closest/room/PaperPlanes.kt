@@ -60,6 +60,14 @@ data class MyPaperPlaneRecord(
     val firstTimestamp: Long
 )
 
+@Entity(tableName = "finishedChat")
+data class FinishedChat(
+    @PrimaryKey @ColumnInfo(name = "partnerId", index = true)
+    val partnerId : String,
+    @ColumnInfo(name = "uid", index = true)
+    val uid: String
+)
+
 
 @Entity(tableName = "replied_paper_planes")
 data class RepliedPaperPlanes(

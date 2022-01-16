@@ -52,6 +52,10 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         repository.insert(acquaintance)
     }
 
+    fun insert(finishedChat: FinishedChat) = CoroutineScope(IO).launch {
+        repository.insert(finishedChat)
+    }
+
     fun insertPaperRecord(paper: MyPaper) = CoroutineScope(IO).launch {
         repository.insertPaperRecord(paper)
     }

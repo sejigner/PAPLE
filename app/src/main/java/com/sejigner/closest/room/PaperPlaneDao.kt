@@ -169,6 +169,15 @@ interface ChatRoomsDao {
 }
 
 @Dao
+interface FinishedChatDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(finishedChat: FinishedChat)
+
+    @Query("SELECT EXISTS(SELECT * FROM finishedChat WHERE uid = :uid and partnerId = :partnerId)")
+    fun isExist(uid: String, partnerId: String): Boolean
+}
+
+@Dao
 interface UserInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user : User)

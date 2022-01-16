@@ -519,28 +519,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                     onCommunicationUpdated()
                 }
                 CoroutineScope(Dispatchers.IO).launch {
-                    val isPartnerId = ViewModel.exists(UID, partnerId).await()
-                    // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
-                    if (!isPartnerId) {
-                        var partnerNickname: String
-                        if (latestChatMessage.nickname.isNotBlank()) {
-                            partnerNickname = latestChatMessage.nickname
-                            val chatRoom = ChatRooms(
-                                partnerId,
-                                partnerNickname,
-                                UID,
-                                latestChatMessage.message,
-                                latestChatMessage.time,
-                                false
-                            )
-                            ViewModel.insert(chatRoom)
-                            mRefMessages.child(snapshot.key!!).removeValue()
-                        } else {
-                            val ref2 =
-                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                    .child("nickname")
-                            ref2.get().addOnSuccessListener {
-                                partnerNickname = it.value.toString()
+                    val isFinishedChat = (viewModel.isExist(UID, partnerId)).await()
+                    if(!isFinishedChat) {
+                        val isPartnerId = viewModel.exists(UID, partnerId).await()
+                        // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
+                        if (!isPartnerId) {
+                            var partnerNickname: String
+                            if (latestChatMessage.nickname.isNotBlank()) {
+                                partnerNickname = latestChatMessage.nickname
                                 val chatRoom = ChatRooms(
                                     partnerId,
                                     partnerNickname,
@@ -549,25 +535,43 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                     latestChatMessage.time,
                                     false
                                 )
-                                ViewModel.insert(chatRoom)
+                                viewModel.insert(chatRoom)
                                 mRefMessages.child(snapshot.key!!).removeValue()
+                            } else {
+                                val ref2 =
+                                    FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                        .child("nickname")
+                                ref2.get().addOnSuccessListener {
+                                    partnerNickname = it.value.toString()
+                                    val chatRoom = ChatRooms(
+                                        partnerId,
+                                        partnerNickname,
+                                        UID,
+                                        latestChatMessage.message,
+                                        latestChatMessage.time,
+                                        false
+                                    )
+                                    viewModel.insert(chatRoom)
+                                    mRefMessages.child(snapshot.key!!).removeValue()
 
-                            }.addOnFailureListener {
-                                Toast.makeText(this@MainActivity, "탈퇴한 유저입니다.", Toast.LENGTH_SHORT)
-                                    .show()
+                                }.addOnFailureListener {
+                                    Toast.makeText(this@MainActivity, "탈퇴한 유저입니다.", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
                             }
+
+
+                        } else { // 이미 시작된 채팅
+                            viewModel.updateLastMessages(
+                                UID,
+                                partnerId,
+                                latestChatMessage.message,
+                                latestChatMessage.time
+                            ).join()
+                            mRefMessages.child(snapshot.key!!).removeValue()
                         }
-
-
-                    } else { // 이미 시작된 채팅
-                        ViewModel.updateLastMessages(
-                            UID,
-                            partnerId,
-                            latestChatMessage.message,
-                            latestChatMessage.time
-                        ).join()
-                        mRefMessages.child(snapshot.key!!).removeValue()
                     }
+
                 }
                 Log.d(FragmentChat.TAG, "Child added successfully")
             }
