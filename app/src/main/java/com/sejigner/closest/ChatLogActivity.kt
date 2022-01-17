@@ -70,6 +70,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
     private var isOnline = false
+    private var isOver = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,6 +183,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun checkChatOver() {
         CoroutineScope(IO).launch {
             if (viewModel.isOver(UID, partnerUid!!).await()) {
+                isOver = true
                 preventSend()
             }
         }
@@ -204,6 +206,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             timestamp
                         )
                         viewModel.updateChatRoom(UID, partnerUid, true).join()
+                        isOver = true
                         viewModel.insert(chatMessages)
                         viewModel.updateLastMessages(
                             UID,
@@ -500,17 +503,28 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun leaveChatRoom() {
         CoroutineScope(IO).launch {
             if (isOnline) {
-                sendFinishSignalToFirebase(object : FinishChatCallback{
-                    override fun onFinishChatListener() {
-                        viewModel.deleteAllMessages(UID, partnerUid!!)
-                        viewModel.deleteChatRoom(UID, partnerUid!!)
-                        viewModel.insert(FinishedChat(partnerUid!!, UID))
-                        val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }
-                })
+                if(!isOver) {
+                    sendFinishSignalToFirebase(object : FinishChatCallback{
+                        override fun onFinishChatListener() {
+                            viewModel.deleteAllMessages(UID, partnerUid!!)
+                            viewModel.deleteChatRoom(UID, partnerUid!!)
+                            viewModel.insert(FinishedChat(partnerUid!!, UID))
+                            val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                    })
+                } else {
+                    viewModel.deleteAllMessages(UID, partnerUid!!)
+                    viewModel.deleteChatRoom(UID, partnerUid!!)
+                    viewModel.insert(FinishedChat(partnerUid!!, UID))
+                    val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+
             }
         }
     }
@@ -552,14 +566,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
                 FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
-            reportRef.setValue(messageList).addOnFailureListener {
-                Log.d("ReportChatLog", "Report 실패")
-                Toast.makeText(
-                    this@ChatLogActivity,
-                    "접수에 문제가 발생하였습니다. 운영자에게 연락주시면 빠르게 처리해드리겠습니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }.addOnSuccessListener {
+            reportRef.setValue(messageList).addOnSuccessListener {
                 Toast.makeText(
                     this@ChatLogActivity,
                     R.string.success_report,
@@ -567,6 +574,13 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 ).show()
                 Log.d("Report", "신고가 접수되었어요")
                 leaveChatRoom()
+            }.addOnFailureListener {
+                Log.d("ReportChatLog", "Report 실패")
+                Toast.makeText(
+                    this@ChatLogActivity,
+                    "접수에 문제가 발생하였습니다. 운영자에게 연락주시면 빠르게 처리해드리겠습니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
