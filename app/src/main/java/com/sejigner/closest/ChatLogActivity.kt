@@ -131,7 +131,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 }, 100)
             }
         })
-
         checkChatOver()
         setPartnerToPrefs()
     }
@@ -242,15 +241,14 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     override fun onStart() {
         super.onStart()
-
-        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-        listenForMessages()
-        mFinishRef =
-            FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver/$partnerUid")
-        listenForFinishedChat()
-        mPartnersTokenRef =
-            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-        listenForPartnersToken()
+            mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+            listenForMessages()
+            mFinishRef =
+                FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver/$partnerUid")
+            listenForFinishedChat()
+            mPartnersTokenRef =
+                FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+            listenForPartnersToken()
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -552,9 +550,11 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         finishChatReference.setValue(true).addOnSuccessListener {
             Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
             firebaseCallback.onFinishChatListener()
+            isOver = true
         }.addOnFailureListener {
             Log.d("ChatLogActivity", "대화 끝내기 실패")
             firebaseCallback.onFinishChatListener()
+            isOver = true
         }
 
     }
