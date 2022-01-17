@@ -605,16 +605,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                         val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
                         val noticeFinish = getString(R.string.finish_chat_log)
-                        val chatMessages = ChatMessages(
-                            null,
-                            partnerUid,
-                            UID,
-                            2,
-                            noticeFinish,
-                            timestamp
-                        )
                         viewModel.updateChatRoom(UID, partnerUid, true).join()
-                        viewModel.insert(chatMessages)
+
                         viewModel.updateLastMessages(
                             UID,
                             partnerUid,

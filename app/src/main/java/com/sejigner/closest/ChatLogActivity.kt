@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
@@ -243,7 +242,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
         listenForMessages()
-        mFinishRef = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/isOver")
+        mFinishRef =
+            FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver/$partnerUid")
         listenForFinishedChat()
         mPartnersTokenRef =
             FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
@@ -500,15 +500,18 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun leaveChatRoom() {
         CoroutineScope(IO).launch {
             if (isOnline) {
-                sendFinishSignalToFirebase()
+                sendFinishSignalToFirebase(object : FinishChatCallback{
+                    override fun onFinishChatListener() {
+                        viewModel.deleteAllMessages(UID, partnerUid!!)
+                        viewModel.deleteChatRoom(UID, partnerUid!!)
+                        viewModel.insert(FinishedChat(partnerUid!!, UID))
+                        val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+                })
             }
-            viewModel.deleteAllMessages(UID, partnerUid!!)
-            viewModel.deleteChatRoom(UID, partnerUid!!)
-            viewModel.insert(FinishedChat(partnerUid!!, UID))
-            val intent = Intent(this@ChatLogActivity, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
         }
     }
 
@@ -523,25 +526,23 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     }
 
-    private fun sendFinishSignalToFirebase(): Boolean {
-        return try {
-            var result = false
+    private fun sendFinishSignalToFirebase(firebaseCallback: FinishChatCallback) {
+        val timestamp = System.currentTimeMillis() / 1000
+        val lastMessagesPartnerReference =
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
+        val lastMessageToPartner = LatestChatMessage(partnerUid!!, MYNICKNAME, resources.getString(R.string.finish_chat_log), timestamp)
+        lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
-            val lastMessagesPartnerReference = FirebaseDatabase.getInstance()
-                .getReference("/Finished-chat/$partnerUid/isOver/$UID")
-            lastMessagesPartnerReference.setValue(true).addOnSuccessListener {
-                Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
-                result = true
-            }.addOnFailureListener {
-                Log.d(ChatLogActivity.TAG, it.toString())
-                Log.d("ChatLogActivity", "대화 끝내기 실패")
-                result = false
-            }
-            result
-        } catch (e: FirebaseException) {
-            Log.d(TAG, e.toString())
-            false
+        val finishChatReference = FirebaseDatabase.getInstance()
+            .getReference("/Finished-chat/$partnerUid/isOver/$UID")
+        finishChatReference.setValue(true).addOnSuccessListener {
+            Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
+            firebaseCallback.onFinishChatListener()
+        }.addOnFailureListener {
+            Log.d("ChatLogActivity", "대화 끝내기 실패")
+            firebaseCallback.onFinishChatListener()
         }
+
     }
 
     override fun reportMessagesFirebase() {
@@ -559,76 +560,22 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                     Toast.LENGTH_SHORT
                 ).show()
             }.addOnSuccessListener {
+                Toast.makeText(
+                    this@ChatLogActivity,
+                    R.string.success_report,
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.d("Report", "신고가 접수되었어요")
                 leaveChatRoom()
             }
         }
-
-//        viewModel.allChatMessages(partnerUid!!).observe(this, {
-//            val reportRef =
-//                FirebaseDatabase.getInstance().getReference("/ChatReport/$UID")
-//            reportRef.setValue(it)
-//        })
     }
 
     override fun proceed() {
         leaveChatRoom()
     }
+
+    interface FinishChatCallback {
+        fun onFinishChatListener()
+    }
 }
-
-//class ChatFromItem(val text: String, val time: Long) : Item<GroupieViewHolder>() {
-//
-//    private var lastMessageTimeMe: String? = null
-//
-//    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-//        viewHolder.itemView.tv_message_me.text = text
-//        viewHolder.itemView.tv_time_me.text = setTime(time)
-//    }
-//
-//    override fun getLayout(): Int {
-//        return R.layout.chat_me_row
-//    }
-//
-//    private fun setTime(timestamp: Long): String {
-//        val sdf = SimpleDateFormat("a hh:mm")
-//        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-//        val date = sdf.format(timestamp * 1000L)
-//        return date.toString()
-//    }
-//
-//
-//}
-//
-//class ChatToItem(val text: String, val time: Long) : Item<GroupieViewHolder>() {
-//
-//    private var lastMessageTimePartner: String? = null
-//
-//    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-//        viewHolder.itemView.tv_message_partner.text = text
-//        viewHolder.itemView.tv_time_partner.text = setTime(time)
-//    }
-//
-//    override fun getLayout(): Int {
-//        return R.layout.chat_partner_row
-//    }
-//
-//    private fun setTime(timestamp: Long): String {
-//        val sdf = SimpleDateFormat("a hh:mm")
-//        sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-//        val date = sdf.format(timestamp * 1000L)
-//        return date.toString()
-//    }
-//
-//}
-//
-//class ChatDate(private val lastDate: String) : Item<GroupieViewHolder>() {
-//    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-//        viewHolder.itemView.tv_chat_date.text = lastDate
-//    }
-//
-//    override fun getLayout(): Int {
-//        return R.layout.chat_date
-//    }
-//
-//}
-

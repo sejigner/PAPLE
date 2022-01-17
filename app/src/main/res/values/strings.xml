@@ -110,6 +110,7 @@
     <string name="init_chat_log">대화가 시작되었습니다.</string>
     <string name="finish_chat_log">상대방이 대화방을 나갔어요.</string>
     <string name="report_title">정말 신고하시겠습니까?</string>
+    <string name="success_report">성공적으로 신고 처리되었습니다.</string>
     <string name="btn_login">로그인</string>
     <string name="reported_chatroom">신고처리된 채팅방입니다.</string>
     <string name="report_guidance">처리 결과는 운영자가 신고 내용을 검토한 후 안내해드려요. 상대 유저는 차단됩니다.</string>
