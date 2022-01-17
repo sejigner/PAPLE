@@ -121,18 +121,18 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                         System.currentTimeMillis() / 1000L,
                         true
                     )
-                    paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
+                    paperPlaneReceiverReference.setValue(paperplaneMessage).addOnSuccessListener {
+                        viewModel.delete(paper!!)
+                        viewModel.setResult("replied")
+                        callback?.showReplySuccessFragment(true, distance!!)
+                        dismiss()
+                    }.addOnFailureListener {
                         Log.d(TAG, "Reply 실패")
                         Toast.makeText(
                             requireActivity(),
                             resources.getText(R.string.no_internet),
                             Toast.LENGTH_SHORT
                         ).show()
-                    }.addOnSuccessListener {
-                        viewModel.delete(paper!!)
-                        viewModel.setResult("replied")
-                        callback?.showReplySuccessFragment(true, distance!!)
-                        dismiss()
                     }
                 } else {
                     Toast.makeText(requireActivity(), "메세지를 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -191,15 +191,12 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
             FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
 
         val reportMessage = ReportMessage(
-            uid,
+            fromId,
             message,
             System.currentTimeMillis() / 1000L
         )
 
-        ref.setValue(reportMessage).addOnFailureListener {
-            // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
-        }.addOnSuccessListener {
-            // 해당 플레인 DB에서 제거
+        ref.setValue(reportMessage).addOnSuccessListener {
             viewModel.delete(paper!!)
             dismiss()
             Toast.makeText(requireActivity(), "비행기를 신고했어요.", Toast.LENGTH_LONG).show()

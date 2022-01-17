@@ -162,11 +162,11 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         val refNickname =
             FirebaseDatabase.getInstance().getReference("/Users/$fromId")
                 .child("nickname")
-        refNickname.get().addOnFailureListener {
+        refNickname.get().addOnSuccessListener {
+            firebaseCallback.onCallback(it.value.toString())
+        }.addOnFailureListener {
             Log.d(ChatLogActivity.TAG, it.toString())
             firebaseCallback.onCallback("")
-        }.addOnSuccessListener {
-            firebaseCallback.onCallback(it.value.toString())
         }
     }
 
@@ -252,15 +252,12 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
             FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
 
         val reportMessage = ReportMessage(
-            uid,
+            fromId,
             message,
             System.currentTimeMillis() / 1000L
         )
 
-        ref.setValue(reportMessage).addOnFailureListener {
-            Log.e("Report", "${it.message}")
-            // TODO : 파이어베이스에 데이터를 쓸 수 없을 경우 다른 신고 루트 필요
-        }.addOnSuccessListener {
+        ref.setValue(reportMessage).addOnSuccessListener {
             Toast.makeText(requireActivity(), "정상적으로 신고되었습니다.", Toast.LENGTH_LONG).show()
             // 해당 플레인 DB에서 제거
             viewModel.delete(paper!!)
