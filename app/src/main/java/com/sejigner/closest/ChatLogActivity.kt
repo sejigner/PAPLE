@@ -190,7 +190,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         CoroutineScope(IO).launch {
             if (viewModel.isOver(UID, partnerUid!!).await()) {
                 isOver = true
-                preventSend()
+                withContext(Main) {
+                    preventSend()
+                }
             }
         }
     }
@@ -211,36 +213,35 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             noticeFinish,
                             timestamp
                         )
-                        viewModel.updateChatRoom(UID, partnerUid, true).join()
+                        viewModel.updateChatRoom(UID, partnerUid!!, true).join()
                         isOver = true
-                        viewModel.insert(chatMessages)
+                        viewModel.insert(chatMessages).join()
                         viewModel.updateLastMessages(
                             UID,
-                            partnerUid,
+                            partnerUid!!,
                             noticeFinish,
                             timestamp
                         )
-                        mFinishRef.child(partnerUid).removeValue()
-                        preventSend()
+                        fbDatabase?.getReference("Latest-messages/$UID/$partnerUid")?.removeValue()
+                        mFinishRef.child("isOver").removeValue()
+                        withContext(Main) {
+                            preventSend()
+                        }
                     }
                 }
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Log.d("FinishedChat", error.message)
             }
         })
     }
