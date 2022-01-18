@@ -296,11 +296,13 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
                     Log.d("test","$radius")
                     getClosestUser()
                 } else {
-                    userFound = false
-                    if(UID != resources.getString(R.string.final_uid)) {
-                        foundUserId = resources.getString(R.string.final_uid)
-                        performSendAnonymousMessage()
+                    if(!userFound) {
+                        if(UID != resources.getString(R.string.final_uid)) {
+                            foundUserId = resources.getString(R.string.final_uid)
+                            performSendAnonymousMessage()
+                        }
                     }
+                    userFound = false
                     radius = 0.0
                 }
             }

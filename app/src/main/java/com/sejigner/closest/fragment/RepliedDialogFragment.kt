@@ -257,7 +257,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         )
 
         ref.setValue(reportMessage).addOnSuccessListener {
-            Toast.makeText(requireActivity(), "정상적으로 신고되었습니다.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity(), R.string.success_report, Toast.LENGTH_LONG).show()
             // 해당 플레인 DB에서 제거
             viewModel.delete(paper!!)
             dismiss()
