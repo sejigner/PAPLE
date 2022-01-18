@@ -4,6 +4,8 @@
     <string name="default_notification_channel_id">알림 설정</string>
     <string name="no_internet">네트워크 연결 상태를 확인해주세요.</string>
     <string name="confirm">확인</string>
+    <!-- splash -->
+    <string name="subtitle_splash">우리끼리 날리는 종이비행기</string>
     <!-- menu -->
     <string name="user_info">개인정보</string>
     <string name="birth_year">태어나신 해</string>

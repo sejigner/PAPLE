@@ -4,12 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/paperplane_theme"
     tools:context=".SplashActivity">
 
     <ImageView
-        android:scaleType="fitXY"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/bg_splash"/>
+        android:id="@+id/iv_splash_logo"
+        android:adjustViewBounds="true"
+        android:layout_width="168dp"
+        android:layout_height="44dp"
+        android:src="@drawable/ic_logo_white"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_subtitle_splash"
+        />
+
+    <TextView
+        android:id="@+id/tv_subtitle_splash"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_splash"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
