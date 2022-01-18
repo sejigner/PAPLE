@@ -145,11 +145,11 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
     }
 
     inner class NoticeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val date: TextView = itemView.findViewById(R.id.tv_chat_notice)
+        private val notice: TextView = itemView.findViewById(R.id.tv_chat_notice)
 
         fun bind(item: ChatMessages?) {
             item?.let {
-                date.text = it.message
+                notice.text = it.message
             }
         }
     }

@@ -372,7 +372,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 CoroutineScope(IO).launch {
                     launch {
-                        val isPartner = 1
                         val chatMessage: ChatMessage? = snapshot.getValue(ChatMessage::class.java)
                         val currentMessageDate: String? = getDateTime(chatMessage!!.timestamp)
                         var lastMessageTimeStamp: Long? = 0L
@@ -381,7 +380,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             null,
                             partnerUid,
                             UID,
-                            isPartner,
+                            1,
                             chatMessage.message,
                             chatMessage.timestamp
                         )

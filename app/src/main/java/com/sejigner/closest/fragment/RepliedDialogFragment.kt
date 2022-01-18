@@ -202,12 +202,11 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
     }
 
     private fun invitePartner(firebaseCallback: ChatStartCallback) {
-        val myNickName = MYNICKNAME
         val timestamp = System.currentTimeMillis() / 1000
         val text = resources.getString(R.string.init_chat_log)
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
-        val lastMessageToPartner = LatestChatMessage(fromId!!, myNickName, text, timestamp)
+        val lastMessageToPartner = LatestChatMessage(fromId!!, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
             Log.d(ChatLogActivity.TAG, "sent your message: $fromId")
             firebaseCallback.onCallback()

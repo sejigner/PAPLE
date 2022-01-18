@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         val uid = getUid()
 
         MYNICKNAME = App.prefs.myNickname!!
-        if (MainActivity.MYNICKNAME.isBlank()) {
+        if (MYNICKNAME.isBlank()) {
             val ref =
                 FirebaseDatabase.getInstance().getReference("/Users/$uid")
                     .child("nickname")
@@ -512,15 +512,18 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 if (latestChatMessage.recipientId == UID) {
                     onCommunicationUpdated()
                 }
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(IO).launch {
                     val isFinishedChat = (viewModel.isExist(UID, partnerId)).await()
                     if (!isFinishedChat) {
                         val isPartnerId = viewModel.exists(UID, partnerId).await()
                         // 아직 채팅이 시작되지 않아서 채팅방 생성 필요
                         if (!isPartnerId) {
-                            var partnerNickname: String
-                            if (latestChatMessage.nickname.isNotBlank()) {
-                                partnerNickname = latestChatMessage.nickname
+                            var partnerNickname = ""
+                            val ref =
+                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                    .child("nickname")
+                            ref.get().addOnSuccessListener {
+                                partnerNickname = it.value.toString()
                                 val chatRoom = ChatRooms(
                                     partnerId,
                                     partnerNickname,
@@ -530,35 +533,14 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                     false
                                 )
                                 viewModel.insert(chatRoom)
+                                val noticeMessage =
+                                    ChatMessages(null, partnerId, UID, 3, getString(R.string.init_chat_log), latestChatMessage.time)
+                                viewModel.insert(noticeMessage)
                                 mRefMessages.child(snapshot.key!!).removeValue()
-                            } else {
-                                val ref2 =
-                                    FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
-                                        .child("nickname")
-                                ref2.get().addOnSuccessListener {
-                                    partnerNickname = it.value.toString()
-                                    val chatRoom = ChatRooms(
-                                        partnerId,
-                                        partnerNickname,
-                                        UID,
-                                        latestChatMessage.message,
-                                        latestChatMessage.time,
-                                        false
-                                    )
-                                    viewModel.insert(chatRoom)
-                                    mRefMessages.child(snapshot.key!!).removeValue()
 
-                                }.addOnFailureListener {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "탈퇴한 유저입니다.",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                }
+                            }.addOnFailureListener {
+                                Log.e("MainActivity",it.message.toString())
                             }
-
-
                         } else { // 이미 시작된 채팅
                             viewModel.updateLastMessages(
                                 UID,
@@ -568,6 +550,8 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                             ).join()
                             mRefMessages.child(snapshot.key!!).removeValue()
                         }
+                    } else {
+                        mRefMessages.child(snapshot.key!!).removeValue()
                     }
 
                 }
@@ -617,10 +601,12 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     }
 
     override fun startChatRoom(message: ChatMessages, partnerUid: String) {
-        viewModel.insert(message)
-        val intent = Intent(this, ChatLogActivity::class.java)
-        intent.putExtra(FragmentChat.USER_KEY, partnerUid)
-        startActivity(intent)
+        CoroutineScope(IO).launch {
+            viewModel.insert(message).join()
+            val intent = Intent(this@MainActivity, ChatLogActivity::class.java)
+            intent.putExtra(FragmentChat.USER_KEY, partnerUid)
+            startActivity(intent)
+        }
     }
 
     private fun removePartnerFromPrefs() {
