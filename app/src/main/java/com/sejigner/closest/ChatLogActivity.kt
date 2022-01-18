@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
+import com.google.protobuf.Value
 import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
 import com.sejigner.closest.MainActivity.Companion.UID
@@ -42,7 +43,9 @@ import com.sejigner.closest.ui.SoftKeyboard.SoftKeyboardChanged
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,6 +74,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mPartnersTokenListener: ChildEventListener
     private var isOnline = false
     private var isOver = false
+    private var userNickname = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +90,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
         rv_chat_log.adapter = chatLogAdapter
+        userNickname = prefs.myNickname!!
+
+
 
         CoroutineScope(IO).launch {
             partnerNickname = viewModel.getChatRoom(UID, partnerUid!!).await().partnerNickname!!
