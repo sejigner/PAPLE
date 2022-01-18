@@ -278,7 +278,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
                             calDistance(userFoundLocation)
 
                             performSendAnonymousMessage()
-                            // mCallbackMain?.dismissLoadingDialog()
                         }
                     }
                 }

@@ -39,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -70,11 +71,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     lateinit var mRefPlane: DatabaseReference
     lateinit var mRefStatus: DatabaseReference
     lateinit var mRefMessages: DatabaseReference
-    lateinit var mRefFinish: DatabaseReference
     lateinit var mListenerPlane: ChildEventListener
     lateinit var mListenerStatus: ChildEventListener
     lateinit var mListenerMessages: ChildEventListener
-    lateinit var mListenerFinish: ChildEventListener
     lateinit var viewModel: FragmentChatViewModel
     private var isAd = false
     private var isNotification = false
@@ -210,11 +209,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         super.onStart()
         mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
         mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
-        mRefFinish = FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver")
         mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$UID")
         listenForPlanes()
         listenForMessages()
-        listenForFinishedChat()
         listenForStatus()
     }
 
@@ -232,7 +229,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         super.onStop()
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
-        mRefFinish.removeEventListener(mListenerFinish)
         mRefStatus.removeEventListener(mListenerStatus)
         terminateNetworkCallback()
     }
@@ -576,48 +572,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
                 }
                 Log.d(FragmentChat.TAG, "Child added successfully")
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-    }
-
-    private fun listenForFinishedChat() {
-        mListenerFinish = mRefFinish.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(FragmentChat.TAG, "Detect the end signal")
-                if (snapshot.value == true) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val partnerUid = snapshot.key.toString()
-                        val timestamp = System.currentTimeMillis() / 1000
-                        val noticeFinish = getString(R.string.finish_chat_log)
-                        viewModel.updateChatRoom(UID, partnerUid, true).join()
-
-                        viewModel.updateLastMessages(
-                            UID,
-                            partnerUid,
-                            noticeFinish,
-                            timestamp
-                        )
-                        mRefFinish.child(partnerUid).removeValue()
-                    }
-                }
-
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {

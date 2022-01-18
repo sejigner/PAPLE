@@ -201,8 +201,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         mFinishListener = mFinishRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if (snapshot.value == true) {
+                    Log.d("FinishedChat", "${snapshot.key} : ${snapshot.value}")
                     CoroutineScope(IO).launch {
-                        val partnerUid = snapshot.key.toString()
                         val timestamp = System.currentTimeMillis() / 1000
                         val noticeFinish = getString(R.string.finish_chat_log)
                         val chatMessages = ChatMessages(
@@ -252,7 +252,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
             listenForMessages()
             mFinishRef =
-                FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/isOver/$partnerUid")
+                FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
             listenForFinishedChat()
             mPartnersTokenRef =
                 FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
@@ -360,7 +360,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-
+                    Log.d("FinishedChat", error.message)
                 }
             })
     }
@@ -464,12 +464,12 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         // TODO : 필요성 고민(보내자마자 updateLastMessages 실행해서 업데이트 하는 걸로 충분하지 않나?)
         val lastMessagesUserReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
-        val lastMessageToMe = LatestChatMessage(toId, partnerNickname, text, timestamp)
+        val lastMessageToMe = LatestChatMessage(toId, text, timestamp)
         lastMessagesUserReference.setValue(lastMessageToMe)
 
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
-        val lastMessageToPartner = LatestChatMessage(toId, MYNICKNAME, text, timestamp)
+        val lastMessageToPartner = LatestChatMessage(toId, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
             val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
 
@@ -550,11 +550,12 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         val timestamp = System.currentTimeMillis() / 1000
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
-        val lastMessageToPartner = LatestChatMessage(partnerUid!!, MYNICKNAME, resources.getString(R.string.finish_chat_log), timestamp)
+        val lastMessageToPartner = LatestChatMessage(partnerUid!!, resources.getString(R.string.finish_chat_log), timestamp)
+        lastMessagesPartnerReference.setValue(lastMessageToPartner)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
         val finishChatReference = FirebaseDatabase.getInstance()
-            .getReference("/Finished-chat/$partnerUid/isOver/$UID")
+            .getReference("/Finished-chat/$partnerUid/$UID/isOver")
         finishChatReference.setValue(true).addOnSuccessListener {
             Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
             firebaseCallback.onFinishChatListener()

@@ -105,12 +105,6 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
                 holder.setIsRecyclable(false)
             }
         }
-
-//        val currentPosition = list[position]
-//        holder.itemView.tv_chat_nickname.text = currentPosition.partnerNickname
-//        holder.itemView.tv_chat_time.text = setDateToTextView(currentPosition.lastMessageTimestamp!!)
-//        holder.itemView.tv_chat_message.text = currentPosition.lastMessage
-//        holder.itemView.setOnClickListener{ itemClick(currentPosition) }
     }
 
     override fun getItemCount(): Int = differ.currentList.size
@@ -166,17 +160,5 @@ class ChatLogAdapter(var list: List<ChatMessages>, val viewModel: FragmentChatVi
         val date = sdf.format(timestamp * 1000L)
         return date.toString()
     }
-
-//    private fun getDateTime(time: Long): String? {
-//        try {
-//            val sdf = SimpleDateFormat("yyyy년 MM월 dd일")
-//            sdf.timeZone = TimeZone.getTimeZone("Asia/Seoul")
-//            val netDate = Date(time * 1000)
-//            return sdf.format(netDate)
-//        } catch (e: Exception) {
-//            Log.d(ChatLogActivity.TAG, e.toString())
-//            return e.toString()
-//        }
-//    }
 }
 

@@ -89,18 +89,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                         startActivity(setupIntent)
                         finish()
                     }
-                }.addOnFailureListener {
-                    Toast.makeText(this, "사용자 정보 요청에 실패하였습니다. 다시 로그인 해주세요.", Toast.LENGTH_SHORT)
-                        .show()
-                    FirebaseAuth.getInstance().signOut()
-                    val signInIntent =
-                        Intent(this@SplashActivity, SignInActivity::class.java)
-                    signInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(signInIntent)
-                    finish()
                 }
-
         } else {
                 prefs.myNickname = ""
                 startActivity(Intent(applicationContext, SignInActivity::class.java))
