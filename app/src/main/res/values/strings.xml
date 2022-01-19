@@ -26,6 +26,7 @@
     <string name="title_reason_sign_out">탈퇴 사유</string>
     <string name="hint_reason_sign_out">떠나시려는 사유를 말씀 해주시겠어요?\n서비스가 발전하는데 큰 도움이 됩니다.</string>
     <string name="confirm_sign_out">탈퇴할래요</string>
+    <string name="success_sign_out">탈퇴하셨습니다.</string>
     <!-- guide -->
     <string name="title_guide">처음 오셨군요!</string>
     <string name="subtitle_guide">페플을 시작하시기 전에\n몇 가지를 안내해 드릴게요.\n하단의 버튼을 누르시면 페플을 시작합니다.</string>

@@ -5,6 +5,28 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+
+
+exports.deleteUser = functions.database.ref('/Users/{uid}')
+    .onDelete(async (change, context) => {
+        const uid = context.params.uid;
+
+        functions.logger.log(
+            uid, 'has deleted its user info'
+        );
+
+        let id = uid.toString();
+
+        // Delete User from Firebase Auth
+        admin.auth().deleteUser(id)
+        .then(function() {
+            console.log('Successfully deleted user');
+          })
+          .catch(function(error) {
+            console.log('Error deleting user:', error);
+          });
+    });
+
 exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}/{senderUid}/{messageId}')
     .onWrite(async (change, context) => {
         const recipientUid = context.params.recipientUid;

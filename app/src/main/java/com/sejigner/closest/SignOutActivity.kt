@@ -8,37 +8,42 @@ import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import androidx.core.content.ContextCompat
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.models.VoiceOfUser
 import kotlinx.android.synthetic.main.activity_sign_out.*
 import kotlinx.coroutines.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.*
+import com.google.firebase.database.*
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_initial_setup.*
+
 
 class SignOutActivity : AppCompatActivity() {
 
-    lateinit var user: FirebaseUser
     var uid: String? = ""
     var birthYear = 0
     var gender: String = ""
     var isOnline = false
-
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseDatabase: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_out)
 
+        auth = FirebaseAuth.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance()
+
         val nickname = intent.getStringExtra("nickname")
         birthYear = intent.getIntExtra("birthYear", 0)
         gender = intent.getStringExtra("gender").toString()
         tv_content_sign_out_activity.text = getString(R.string.content_sign_out, nickname)
-
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            user = FirebaseAuth.getInstance().currentUser!!
-            uid = user.uid
-        }
 
         iv_back_sign_out.setOnClickListener {
             finish()
@@ -73,26 +78,17 @@ class SignOutActivity : AppCompatActivity() {
         terminateNetworkCallback()
     }
 
+
     private fun signOut() {
-        user.delete().addOnSuccessListener {
+        val reference = firebaseDatabase.reference
+        reference.child("Users/$UID").removeValue()
+        reference.child("User-Location").child(UID).setValue(null).addOnSuccessListener {
+            Toast.makeText(this@SignOutActivity, R.string.success_sign_out, Toast.LENGTH_SHORT).show()
             val intent = Intent(this@SignOutActivity, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            Toast.makeText(this@SignOutActivity, "탈퇴되었습니다", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener {
-            Log.e("SignOutActivity","탈퇴 처리 에러 uid : $UID")
-            Toast.makeText(this@SignOutActivity, "다시 시도해주세요.", Toast.LENGTH_SHORT).show()
         }
-
-        // 유저 위치정보 제거
-        val userLocationRef = FirebaseDatabase.getInstance().reference.child("User-Location/$uid")
-        userLocationRef.removeValue()
-
-        // 유저 개인정보 제거
-        val userInfoRef = FirebaseDatabase.getInstance().reference.child("Users/$uid")
-        userInfoRef.removeValue()
-
     }
 
     private val networkCallBack = object : ConnectivityManager.NetworkCallback() {

@@ -221,6 +221,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         alertDialog.show(fm, "suspend-confirmation")
     }
 
+
     override fun finishApp() {
         finish()
     }
