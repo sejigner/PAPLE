@@ -1,5 +1,8 @@
 package com.sejigner.closest.models
 
+import androidx.annotation.Keep
+
+@Keep
 data class PaperplaneMessage(
     val id: String,
     val text: String,

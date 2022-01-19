@@ -3,7 +3,9 @@ package com.sejigner.closest.models
 import android.graphics.Point
 import android.location.Location
 import android.provider.ContactsContract
+import androidx.annotation.Keep
 
+@Keep
 data class Users(
     var nickname: String? = null,
     var gender : String? = null,
