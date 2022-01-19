@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.sejigner.closest.App.Companion.prefs
 import com.sejigner.closest.MainActivity.Companion.UID
 import com.sejigner.closest.MainActivity.Companion.isOnline
@@ -42,6 +43,8 @@ class SettingActivity : AppCompatActivity() {
             gender = userInfo.gender
         }
 
+        val auth = FirebaseAuth.getInstance()
+
 
 
         iv_back_setting_activity.setOnClickListener {
@@ -49,6 +52,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         tv_sign_out_setting.setOnClickListener {
+                auth.signOut()
                 val intent = Intent(this@SettingActivity, SignOutActivity::class.java)
                 intent.putExtra("nickname", nickname)
                 intent.putExtra("birthYear", birthYear)
