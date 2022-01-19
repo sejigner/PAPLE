@@ -406,7 +406,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
                         val job = viewModel.insert(chatMessages)
                         if (job.isCompleted) {
-                            rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                            withContext(Main) {
+                                rv_chat_log.scrollToPosition(chatLogAdapter.itemCount - 1)
+                            }
                         }
                     }.join()
                     mMessageRef.child(snapshot.key!!).removeValue()

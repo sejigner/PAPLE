@@ -114,9 +114,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
         fbDatabase = FirebaseDatabase.getInstance()
-
-        fireBaseAuth = FirebaseAuth.getInstance()
-        fbFirestore = FirebaseFirestore.getInstance()
         Log.d(TAG, "got instance from Firestore successfully")
         UID = getUid()
 

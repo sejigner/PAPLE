@@ -152,7 +152,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
 
     override fun onDestroy() {
         super.onDestroy()
-        finish()
+        dismissLoadingDialog()
     }
 
     private fun sendVerificationCode(phoneNumber: String) {
