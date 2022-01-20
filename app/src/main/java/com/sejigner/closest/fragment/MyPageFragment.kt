@@ -82,9 +82,7 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
 
         FirebaseAuth.getInstance().signOut()
         // Firebase 내 토큰 제거
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(
-            UID
-        ).child("registrationToken")
+        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$UID/registrationToken")
         fbDatabase.removeValue().addOnFailureListener {
             val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

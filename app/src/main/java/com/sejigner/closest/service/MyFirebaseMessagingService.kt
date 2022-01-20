@@ -103,10 +103,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onNewToken(token: String) {
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users").child(UID)
-            .child("registrationToken")
+        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$UID/registrationToken/")
         fbDatabase.removeValue()
-        fbDatabase.child(token).setValue(true).addOnSuccessListener {
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/registrationToken/")
+        ref.child(token).setValue(true).addOnSuccessListener {
             Log.d(FragmentHome.TAG, "updated fcmToken: $token")
         }
     }

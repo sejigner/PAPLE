@@ -161,8 +161,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
 
                 val ref =
-                    FirebaseDatabase.getInstance().getReference("/Users/$uid")
-                        .child("registrationToken")
+                    FirebaseDatabase.getInstance().getReference("/Users/$uid/registrationToken")
                 ref.removeValue()
                 // fcm토큰 업로드
                 ref.child(token).setValue(true)
