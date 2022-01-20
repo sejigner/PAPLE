@@ -32,14 +32,14 @@
   *** rewind();
 }
 
-# Basic ProGuard rules for Firebase Android SDK 2.0.0+
--keep class com.firebase.** { *; }
--keep class org.apache.** { *; }
--keepnames class com.fasterxml.jackson.** { *; }
--keepnames class javax.servlet.** { *; }
--keepnames class org.ietf.jgss.** { *; }
--dontwarn org.apache.**
--dontwarn org.w3c.dom.**
+-keepattributes Signature
+-keepclassmembers class com.sejigner.closest.models.** {
+      *;
+    }
+
+    -keep class * extends androidx.room.RoomDatabase
+    -keep @androidx.room.Entity class *
+    -dontwarn androidx.room.paging.**
 
 #coroutine
 # ServiceLoader support

@@ -1,8 +1,9 @@
 package com.sejigner.closest.room
 
+import androidx.annotation.Keep
 import androidx.room.*
 
-
+@Keep
 @Entity(tableName = "acquaintances")
 data class Acquaintances(
     @PrimaryKey @ColumnInfo(name = "partnerId")
@@ -11,7 +12,7 @@ data class Acquaintances(
     @ColumnInfo(name = "uid")
     val uid: String
 )
-
+@Keep
 @Entity(tableName = "first_paper_planes")
 data class FirstPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId", index = true)
@@ -29,7 +30,7 @@ data class FirstPaperPlanes(
     @ColumnInfo(name = "timestamp")
     val timestamp: Long
 )
-
+@Keep
 @Entity(tableName = "my_paper")
 data class MyPaper(
     @PrimaryKey(autoGenerate = true)
@@ -44,7 +45,7 @@ data class MyPaper(
     @ColumnInfo(name = "timestamp")
     val timestamp : Long
 )
-
+@Keep
 @Entity(tableName = "my_message_record")
 data class MyPaperPlaneRecord(
     @PrimaryKey @ColumnInfo(name = "partnerId")
@@ -59,7 +60,7 @@ data class MyPaperPlaneRecord(
     @ColumnInfo(name = "firstTimestamp")
     val firstTimestamp: Long
 )
-
+@Keep
 @Entity(tableName = "finishedChat")
 data class FinishedChat(
     @PrimaryKey @ColumnInfo(name = "partnerId", index = true)
@@ -68,7 +69,7 @@ data class FinishedChat(
     val uid: String
 )
 
-
+@Keep
 @Entity(tableName = "replied_paper_planes")
 data class RepliedPaperPlanes(
     @PrimaryKey @ColumnInfo(name = "fromId", index = true)
@@ -93,7 +94,7 @@ data class RepliedPaperPlanes(
     val replyTimestamp: Long
 )
 
-
+@Keep
 @Entity(tableName = "chat_rooms")
 data class ChatRooms(
     @PrimaryKey @ColumnInfo(name= "partnerId", index = true)
@@ -108,7 +109,7 @@ data class ChatRooms(
     @ColumnInfo(name = "isOver")
     val isOver : Boolean
 )
-
+@Keep
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey @ColumnInfo(name = "uid")
@@ -162,6 +163,7 @@ data class ChatRoomsWithUid(
         )
     ]
 )
+@Keep
 data class ChatMessages(
     @PrimaryKey(autoGenerate = true)
     var messageId: Int? = null,
@@ -170,10 +172,10 @@ data class ChatMessages(
     val uid: String,
     val meOrPartner: Int,
     val message: String?,
-    @ColumnInfo(name = "timestamp")
+    @ColumnInfo(name = "timestamp", index = true)
     val timestamp: Long?
 )
-
+@Keep
 data class ChatRoomsAndMessages(
     @Embedded val room: ChatRooms,
     @Relation(
