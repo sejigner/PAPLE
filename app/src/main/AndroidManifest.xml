@@ -21,18 +21,22 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".GuideActivity"
+            android:screenOrientation="sensorPortrait"
             android:exported="false" />
         <activity
             android:name=".SignOutActivity"
+            android:screenOrientation="sensorPortrait"
             android:exported="false" />
         <activity
             android:name=".SettingActivity"
+            android:screenOrientation="sensorPortrait"
             android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" /> <!-- 릴리즈 전 내 앱 UI로 변경 ca-app-pub-5118743253590971~3228826273 -->
         <activity
             android:name=".SplashCongratsActivity"
+            android:screenOrientation="sensorPortrait"
             android:exported="true" />
 
         <meta-data
@@ -50,6 +54,7 @@
         <activity
             android:name=".ChatLogActivity"
             android:exported="true"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,6 +68,7 @@
         </activity>
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="sensorPortrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,16 +78,19 @@
         </activity>
         <activity
             android:name=".OtpActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SignInActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".InitialSetupActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".MyPageActivity" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize" />
     </application>
 
