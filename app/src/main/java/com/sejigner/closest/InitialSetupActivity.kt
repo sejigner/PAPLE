@@ -32,6 +32,7 @@ import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
+import com.sejigner.closest.MainActivity.Companion.isOnline
 import com.sejigner.closest.fragment.AlertDialogFragment
 import com.sejigner.closest.room.PaperPlaneDatabase
 import com.sejigner.closest.room.PaperPlaneRepository
@@ -205,7 +206,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     }
 
     override fun proceed() {
-        setInitialSetupToFirebase()
+        if(isOnline) {
+            setInitialSetupToFirebase()
+        } else {
+            Toast.makeText(this, R.string.no_internet,Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setInfoToRoomDB() {

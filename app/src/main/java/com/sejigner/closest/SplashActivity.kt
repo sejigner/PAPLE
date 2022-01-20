@@ -3,6 +3,10 @@ package com.sejigner.closest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -35,6 +39,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
 
         fbDatabase = FirebaseDatabase.getInstance()
         transparentStatusAndNavigation()
+
         createTimer(time)
     }
 
@@ -82,19 +87,35 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                             finish()
                         }
                     } else {
-                        val setupIntent =
-                            Intent(this@SplashActivity, InitialSetupActivity::class.java)
-                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(setupIntent)
-                        finish()
+                        startInitialSetting()
                     }
+                }.addOnFailureListener {
+                    Log.e("SplashActivity", it.message.toString())
+                    startMainActivity()
                 }
         } else {
                 prefs.myNickname = ""
                 startActivity(Intent(applicationContext, SignInActivity::class.java))
                 finish()
         }
+    }
+
+    private fun startMainActivity() {
+        val intent = Intent(this@SplashActivity, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("IS_AD", true)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun startInitialSetting() {
+        val setupIntent =
+            Intent(this@SplashActivity, InitialSetupActivity::class.java)
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(setupIntent)
+        finish()
     }
 
     private fun Activity.transparentStatusAndNavigation(
