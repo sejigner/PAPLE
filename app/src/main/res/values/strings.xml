@@ -6,9 +6,13 @@
     <string name="confirm">확인</string>
     <!-- splash -->
     <string name="subtitle_splash">우리끼리 날리는 종이비행기</string>
+    <string name="congrats_splash">가입이 완료되었습니다!\n비행기를 날려보세요!</string>
     <!-- menu -->
     <string name="user_info">개인정보</string>
     <string name="birth_year">태어나신 해</string>
+    <!-- replied paper dialog-->
+    <string name="no">아니요</string>
+    <string name="start">네, 대화 나눠볼래요!</string>
     <!-- my page -->
     <string name="setting">설정</string>
     <string name="guide">PAPLE 사용법</string>

@@ -10,7 +10,9 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.activity_splash_congrats.*
 
@@ -26,6 +28,12 @@ class SplashCongratsActivity : AppCompatActivity() {
         transparentStatusAndNavigation()
         val splashAnimation : Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.anim_splash)
         val splashAnimationMove : Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.anim_splash_move)
+
+        val ivDecoUp = findViewById<ImageView>(R.id.iv_deco_up)
+        val ivDecoDown = findViewById<ImageView>(R.id.iv_deco_down)
+
+        Glide.with(this).load(R.drawable.bg_deco_up).into(ivDecoUp)
+        Glide.with(this).load(R.drawable.bg_deco_down).into(ivDecoDown)
 
         tv_second_splash.text = ""
 
@@ -45,14 +53,6 @@ class SplashCongratsActivity : AppCompatActivity() {
         }.start()
 
     }
-
-//    override fun onStop() {
-//        super.onStop()
-//        val setupIntent = Intent(this@SplashCongratsActivity, GuideActivity::class.java)
-//        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//        startActivity(setupIntent)
-//    }
 
     private fun Activity.transparentStatusAndNavigation(
         systemUiScrim: Int = Color.parseColor("#40000000") // 25% black

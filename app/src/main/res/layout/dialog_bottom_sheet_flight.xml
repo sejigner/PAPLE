@@ -12,6 +12,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:id="@+id/title_bottom_sheet_success"
             android:layout_width="wrap_content"

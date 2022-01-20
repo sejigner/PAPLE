@@ -5,23 +5,17 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.models.VoiceOfUser
-import kotlinx.android.synthetic.main.activity_sign_out.*
-import kotlinx.coroutines.*
-import com.google.android.gms.tasks.OnCompleteListener
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.*
 import com.google.firebase.database.*
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.sejigner.closest.MainActivity.Companion.UID
+import com.sejigner.closest.models.VoiceOfUser
 import kotlinx.android.synthetic.main.activity_initial_setup.*
+import kotlinx.android.synthetic.main.activity_sign_out.*
+import kotlinx.coroutines.*
 
 
 class SignOutActivity : AppCompatActivity() {
@@ -83,7 +77,8 @@ class SignOutActivity : AppCompatActivity() {
         val reference = firebaseDatabase.reference
         reference.child("Users/$UID").removeValue()
         reference.child("User-Location").child(UID).setValue(null).addOnSuccessListener {
-            Toast.makeText(this@SignOutActivity, R.string.success_sign_out, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SignOutActivity, R.string.success_sign_out, Toast.LENGTH_SHORT)
+                .show()
             val intent = Intent(this@SignOutActivity, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

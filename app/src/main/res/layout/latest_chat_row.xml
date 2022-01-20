@@ -53,10 +53,10 @@
             android:text="time"
             android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:includeFontPadding="false"
-            android:textColor="@color/black"
+            android:textColor="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_chat_message"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/tv_chat_nickname"
+            app:layout_constraintTop_toTopOf="@id/tv_chat_nickname" />
 
         <TextView
             android:id="@+id/tv_count_message"
