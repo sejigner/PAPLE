@@ -1,4 +1,4 @@
-package com.sejigner.closest.ui;
+package com.gievenbeck.paple.ui;
 
 import java.util.ArrayList;
 import java.util.List;

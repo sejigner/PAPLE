@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sejigner.closest.fragment.FragmentHome
-import com.sejigner.closest.models.Users
+import com.gievenbeck.paple.fragment.FragmentHome
+import com.gievenbeck.paple.models.Users
 import kotlinx.android.synthetic.main.activity_initial_setup.*
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_female
 import kotlinx.android.synthetic.main.activity_initial_setup.rb_male
@@ -32,16 +32,13 @@ import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
-import com.sejigner.closest.MainActivity.Companion.isOnline
-import com.sejigner.closest.fragment.AlertDialogFragment
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.User
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import com.gievenbeck.paple.MainActivity.Companion.isOnline
+import com.gievenbeck.paple.fragment.AlertDialogFragment
+import com.gievenbeck.paple.room.PaperPlaneDatabase
+import com.gievenbeck.paple.room.PaperPlaneRepository
+import com.gievenbeck.paple.room.User
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import java.util.regex.Pattern
 
 

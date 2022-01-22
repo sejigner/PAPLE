@@ -1,6 +1,6 @@
-package com.sejigner.closest.interfaces
+package com.gievenbeck.paple.interfaces
 
-import com.sejigner.closest.room.FirstPaperPlanes
+import com.gievenbeck.paple.room.FirstPaperPlanes
 
 interface FirstPlaneListener {
     fun onPaperClicked(item: FirstPaperPlanes)

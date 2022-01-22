@@ -1,4 +1,4 @@
-package com.sejigner.closest.adapter
+package com.gievenbeck.paple.adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

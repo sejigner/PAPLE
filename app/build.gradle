@@ -26,7 +26,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.sejigner.closest"
+        applicationId "com.gievenbeck.paple"
         minSdkVersion 23
         // S10 5G 기준
         targetSdkVersion 30

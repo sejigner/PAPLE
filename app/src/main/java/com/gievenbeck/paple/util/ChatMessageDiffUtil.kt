@@ -1,8 +1,7 @@
-package com.sejigner.closest.util
+package com.gievenbeck.paple.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.sejigner.closest.room.ChatMessages
-import com.sejigner.closest.room.RepliedPaperPlanes
+import com.gievenbeck.paple.room.ChatMessages
 
 class ChatMessageDiffUtil(private val oldList : List<ChatMessages>, private val currentList: List<ChatMessages>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size

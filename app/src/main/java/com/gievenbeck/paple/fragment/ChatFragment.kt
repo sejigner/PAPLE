@@ -1,4 +1,4 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -8,25 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
-import com.sejigner.closest.adapter.FirstPaperPlaneAdapter
-import com.sejigner.closest.adapter.LatestMessageAdapter
-import com.sejigner.closest.adapter.RepliedPaperPlaneAdapter
-import com.sejigner.closest.ChatLogActivity
-import com.sejigner.closest.MainActivity
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.R
-import com.sejigner.closest.interfaces.FirstPlaneListener
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.room.*
+import com.gievenbeck.paple.adapter.FirstPaperPlaneAdapter
+import com.gievenbeck.paple.adapter.LatestMessageAdapter
+import com.gievenbeck.paple.adapter.RepliedPaperPlaneAdapter
+import com.gievenbeck.paple.ChatLogActivity
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.interfaces.FirstPlaneListener
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.room.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.*
-import java.util.*
 
 // TODO : ChatLogActivity 내 chatRoomAndAllMessages 참고하여 일대다관계 데이터 활용
 //  chatRoomAndAllMessages ( UID - ChatRoomId - Message 구조)

@@ -1,15 +1,11 @@
-package com.sejigner.closest.ui
+package com.gievenbeck.paple.ui
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sejigner.closest.room.*
+import com.gievenbeck.paple.room.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Socket
 
 
 class FragmentChatViewModel(private val repository: PaperPlaneRepository) : ViewModel() {

@@ -1,6 +1,5 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Bundle
@@ -13,22 +12,20 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.*
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.models.Users
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.room.User
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.*
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.models.Users
+import com.gievenbeck.paple.room.PaperPlaneDatabase
+import com.gievenbeck.paple.room.PaperPlaneRepository
+import com.gievenbeck.paple.room.User
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_my_page.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlin.math.sign
 
 class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 

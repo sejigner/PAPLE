@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Context
 import android.content.SharedPreferences

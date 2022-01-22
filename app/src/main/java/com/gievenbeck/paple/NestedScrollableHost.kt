@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Context
 import android.util.AttributeSet

@@ -1,4 +1,4 @@
-package com.sejigner.closest.models
+package com.gievenbeck.paple.models
 
 import androidx.annotation.Keep
 

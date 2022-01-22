@@ -1,4 +1,4 @@
-package com.sejigner.closest.room
+package com.gievenbeck.paple.room
 
 import androidx.annotation.Keep
 import androidx.room.*

@@ -1,10 +1,9 @@
-package com.sejigner.closest.room
+package com.gievenbeck.paple.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 @Database(entities = [FirstPaperPlanes::class, RepliedPaperPlanes::class, MyPaper::class, MyPaperPlaneRecord::class, ChatMessages::class, ChatRooms::class, Acquaintances::class, ChatRoomMessageCrossRef::class, User::class, FinishedChat::class], version = 2, exportSchema = false)
 abstract class PaperPlaneDatabase: RoomDatabase() {

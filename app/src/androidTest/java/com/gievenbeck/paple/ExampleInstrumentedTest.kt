@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

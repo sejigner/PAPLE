@@ -1,4 +1,4 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
 import android.app.Activity
 import android.graphics.Color
@@ -7,10 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import com.sejigner.closest.R
-import com.sejigner.closest.room.FirstPaperPlanes
+import com.gievenbeck.paple.R
 import kotlinx.android.synthetic.main.fragment_dialog_alert.*
 
 class AlertDialogFragment : DialogFragment() {

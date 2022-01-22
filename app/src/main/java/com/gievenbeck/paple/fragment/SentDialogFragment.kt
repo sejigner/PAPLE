@@ -1,6 +1,5 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,11 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.sejigner.closest.R
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.room.*
-import kotlinx.android.synthetic.main.fragment_dialog_first.*
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_sent.*
 import java.text.SimpleDateFormat
 import java.util.*

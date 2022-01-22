@@ -1,26 +1,21 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.App.Companion.prefs
-import com.sejigner.closest.fragment.SuspendAlertDialogFragment
-import com.sejigner.closest.ui.FragmentChatViewModel
+import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
+import com.gievenbeck.paple.ui.FragmentChatViewModel
 
 
 private const val TAG = "SplashActivity"

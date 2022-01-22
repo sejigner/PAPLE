@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.app.Activity
 import android.content.Intent

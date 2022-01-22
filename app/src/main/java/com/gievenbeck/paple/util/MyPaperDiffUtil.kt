@@ -1,7 +1,7 @@
-package com.sejigner.closest.util
+package com.gievenbeck.paple.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.sejigner.closest.room.MyPaper
+import com.gievenbeck.paple.room.MyPaper
 
 class MyPaperDiffUtil(private val oldList : List<MyPaper>, private val currentList: List<MyPaper>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size

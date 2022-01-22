@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import com.sejigner.closest.ui.LoadingDialog
+import com.gievenbeck.paple.ui.LoadingDialog
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit

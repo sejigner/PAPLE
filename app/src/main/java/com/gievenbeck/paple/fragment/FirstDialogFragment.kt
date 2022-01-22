@@ -1,4 +1,4 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
 import android.content.Context
 import android.graphics.Color
@@ -14,16 +14,15 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.App.Companion.prefs
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.MainActivity.Companion.isOnline
-import com.sejigner.closest.R
-import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.models.ReportMessage
-import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.ui.PlaneBottomSheet
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.MainActivity.Companion.isOnline
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.models.PaperplaneMessage
+import com.gievenbeck.paple.models.ReportMessage
+import com.gievenbeck.paple.room.*
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.ui.PlaneBottomSheet
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import java.text.SimpleDateFormat
 import java.util.*

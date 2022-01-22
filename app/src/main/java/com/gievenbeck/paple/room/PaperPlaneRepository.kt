@@ -1,6 +1,4 @@
-package com.sejigner.closest.room
-
-import androidx.lifecycle.LiveData
+package com.gievenbeck.paple.room
 
 
 class PaperPlaneRepository(private val db: PaperPlaneDatabase) {

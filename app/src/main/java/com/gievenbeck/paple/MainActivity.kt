@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Intent
 import android.location.*
@@ -23,17 +23,15 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserInfo
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sejigner.closest.adapter.MainViewPagerAdapter
-import com.sejigner.closest.fragment.*
-import com.sejigner.closest.models.LatestChatMessage
-import com.sejigner.closest.models.PaperplaneMessage
-import com.sejigner.closest.models.Users
-import com.sejigner.closest.room.*
-import com.sejigner.closest.ui.*
+import com.gievenbeck.paple.adapter.MainViewPagerAdapter
+import com.gievenbeck.paple.fragment.*
+import com.gievenbeck.paple.models.LatestChatMessage
+import com.gievenbeck.paple.models.PaperplaneMessage
+import com.gievenbeck.paple.room.*
+import com.gievenbeck.paple.ui.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*

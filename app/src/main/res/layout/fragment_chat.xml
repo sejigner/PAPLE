@@ -50,7 +50,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_first_plane" />
 
-            <com.sejigner.closest.NestedScrollableHost
+            <com.gievenbeck.paple.NestedScrollableHost
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-            </com.sejigner.closest.NestedScrollableHost>
+            </com.gievenbeck.paple.NestedScrollableHost>
 
 
             <TextView
@@ -109,7 +109,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.sejigner.closest.NestedScrollableHost
+            <com.gievenbeck.paple.NestedScrollableHost
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -127,7 +127,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="parent" />
-            </com.sejigner.closest.NestedScrollableHost>
+            </com.gievenbeck.paple.NestedScrollableHost>
 
             <TextView
                 android:id="@+id/tv_count_replied"

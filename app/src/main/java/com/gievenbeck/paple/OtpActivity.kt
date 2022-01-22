@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Intent
 import android.graphics.Paint
@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
-import com.sejigner.closest.fragment.SuspendAlertDialogFragment
-import com.sejigner.closest.ui.LoadingDialog
+import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
+import com.gievenbeck.paple.ui.LoadingDialog
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_otp.*

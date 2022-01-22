@@ -1,20 +1,17 @@
-package com.sejigner.closest.fragment
+package com.gievenbeck.paple.fragment
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.sejigner.closest.MainActivity.Companion.isOnline
-import com.sejigner.closest.R
-import com.sejigner.closest.ui.PlaneBottomSheet
+import com.gievenbeck.paple.MainActivity.Companion.isOnline
+import com.gievenbeck.paple.R
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_chat.*
 import kotlinx.android.synthetic.main.fragment_dialog_report_plane.*

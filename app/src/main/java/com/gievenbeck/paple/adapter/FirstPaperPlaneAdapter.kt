@@ -1,4 +1,4 @@
-package com.sejigner.closest.adapter
+package com.gievenbeck.paple.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.sejigner.closest.R
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.ui.FragmentChatViewModel
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.room.FirstPaperPlanes
+import com.gievenbeck.paple.ui.FragmentChatViewModel
 import kotlinx.android.synthetic.main.column_paperplane.view.*
 import java.text.SimpleDateFormat
 import java.util.*

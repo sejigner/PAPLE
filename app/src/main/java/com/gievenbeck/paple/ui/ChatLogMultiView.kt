@@ -1,4 +1,4 @@
-package com.sejigner.closest.ui
+package com.gievenbeck.paple.ui
 // 내 메세지 오른쪽 정렬
 
 const val messageFromMe = 0

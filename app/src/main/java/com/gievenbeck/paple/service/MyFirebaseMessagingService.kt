@@ -1,4 +1,4 @@
-package com.sejigner.closest.service
+package com.gievenbeck.paple.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,18 +13,14 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.sejigner.closest.App.Companion.prefs
-import com.sejigner.closest.MainActivity
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.R
-import com.sejigner.closest.fragment.FragmentHome
+import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.MainActivity
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.fragment.FragmentHome
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

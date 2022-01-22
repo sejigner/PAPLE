@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.*
 import com.google.firebase.database.*
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.models.VoiceOfUser
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.models.VoiceOfUser
 import kotlinx.android.synthetic.main.activity_initial_setup.*
 import kotlinx.android.synthetic.main.activity_sign_out.*
 import kotlinx.coroutines.*

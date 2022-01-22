@@ -1,8 +1,5 @@
-package com.sejigner.closest.models
+package com.gievenbeck.paple.models
 
-import android.graphics.Point
-import android.location.Location
-import android.provider.ContactsContract
 import androidx.annotation.Keep
 
 @Keep

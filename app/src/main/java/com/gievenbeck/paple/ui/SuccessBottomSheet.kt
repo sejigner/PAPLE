@@ -1,4 +1,4 @@
-package com.sejigner.closest.ui
+package com.gievenbeck.paple.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.sejigner.closest.R
+import com.gievenbeck.paple.R
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_flight.*
 
 class SuccessBottomSheet() : BottomSheetDialogFragment() {

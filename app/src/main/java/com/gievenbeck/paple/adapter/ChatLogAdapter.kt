@@ -1,6 +1,5 @@
-package com.sejigner.closest.adapter
+package com.gievenbeck.paple.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.sejigner.closest.ChatLogActivity
-import com.sejigner.closest.R
-import com.sejigner.closest.room.ChatMessages
-import com.sejigner.closest.room.FirstPaperPlanes
-import com.sejigner.closest.ui.*
+import com.gievenbeck.paple.R
+import com.gievenbeck.paple.room.ChatMessages
+import com.gievenbeck.paple.ui.*
 import java.text.SimpleDateFormat
 import java.util.*
 
