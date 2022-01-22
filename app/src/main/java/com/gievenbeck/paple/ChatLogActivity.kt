@@ -1,4 +1,4 @@
-package com.sejigner.closest
+package com.gievenbeck.paple
 
 import android.app.Activity
 import android.app.Service
@@ -21,25 +21,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
-import com.google.protobuf.Value
-import com.sejigner.closest.App.Companion.prefs
-import com.sejigner.closest.MainActivity.Companion.MYNICKNAME
-import com.sejigner.closest.MainActivity.Companion.UID
-import com.sejigner.closest.adapter.ChatLogAdapter
-import com.sejigner.closest.fragment.AlertDialogFragment
-import com.sejigner.closest.fragment.FragmentChat
-import com.sejigner.closest.fragment.ReportChatDialogFragment
-import com.sejigner.closest.models.ChatMessage
-import com.sejigner.closest.models.LatestChatMessage
-import com.sejigner.closest.room.ChatMessages
-import com.sejigner.closest.room.FinishedChat
-import com.sejigner.closest.room.PaperPlaneDatabase
-import com.sejigner.closest.room.PaperPlaneRepository
-import com.sejigner.closest.ui.ChatBottomSheet
-import com.sejigner.closest.ui.FragmentChatViewModel
-import com.sejigner.closest.ui.FragmentChatViewModelFactory
-import com.sejigner.closest.ui.SoftKeyboard
-import com.sejigner.closest.ui.SoftKeyboard.SoftKeyboardChanged
+import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.adapter.ChatLogAdapter
+import com.gievenbeck.paple.fragment.AlertDialogFragment
+import com.gievenbeck.paple.fragment.FragmentChat
+import com.gievenbeck.paple.fragment.ReportChatDialogFragment
+import com.gievenbeck.paple.models.ChatMessage
+import com.gievenbeck.paple.models.LatestChatMessage
+import com.gievenbeck.paple.room.ChatMessages
+import com.gievenbeck.paple.room.FinishedChat
+import com.gievenbeck.paple.room.PaperPlaneDatabase
+import com.gievenbeck.paple.room.PaperPlaneRepository
+import com.gievenbeck.paple.ui.ChatBottomSheet
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.ui.SoftKeyboard
+import com.gievenbeck.paple.ui.SoftKeyboard.SoftKeyboardChanged
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -494,7 +492,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                     text,
                     timestamp
                 ).join()
-                et_message_chat_log.text.clear()
+                withContext(Main) {
+                    et_message_chat_log.text.clear()
+                }
             }
         }
     }
