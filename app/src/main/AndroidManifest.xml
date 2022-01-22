@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
@@ -17,6 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_paple"
         android:supportsRtl="true"
+        android:versionCode="2"
+        android:versionName="1.0.1"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
@@ -33,7 +34,7 @@
             android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" /> <!-- 릴리즈 전 내 앱 UI로 변경 ca-app-pub-5118743253590971~3228826273 -->
+            android:value="ca-app-pub-5118743253590971~3228826273" />
         <activity
             android:name="com.gievenbeck.paple.SplashCongratsActivity"
             android:screenOrientation="sensorPortrait"
@@ -86,8 +87,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.gievenbeck.paple.InitialSetupActivity"
-            android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="sensorPortrait"/>
         <activity
             android:name="com.gievenbeck.paple.MainActivity"
             android:screenOrientation="sensorPortrait"
