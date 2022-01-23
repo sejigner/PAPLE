@@ -33,7 +33,7 @@
 }
 
 -keepattributes Signature
--keepclassmembers class com.sejigner.closest.models.** {
+-keepclassmembers class com.gievenbeck.paple.models.** {
       *;
     }
 

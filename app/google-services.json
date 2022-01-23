@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1004291746435:android:4fb5854d2709bbbfec89b6",
         "android_client_info": {
-          "package_name": "com.sejigner.closest"
+          "package_name": "com.gievenbeck.paple"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "1004291746435-umqs99nfmagvs52gkrc9f8gj8348k80u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.sejigner.closest",
+            "package_name": "com.gievenbeck.paple",
             "certificate_hash": "fafc472c6a31ba180a18d4d9ed05a9eccbfe2e50"
           }
         },
