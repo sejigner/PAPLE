@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# closest
-push test on the new laptop
-=======
 # Closest
 ## Git Flow를 활용한 브랜치 관리
 
@@ -22,4 +18,3 @@ push test on the new laptop
 7. $ git pull origin develop(또는 원하는 Git Branch) 
 8. $ git flow init (최초 1회)
 9. Git Flow 활용 브랜치 관리 방법 따르기
->>>>>>> 46489b9ea3cfe98b68edb032d0aba2df27cf4775
