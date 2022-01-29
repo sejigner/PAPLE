@@ -65,7 +65,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_setting.xml" value="0.18489583333333334" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_in.xml" value="0.4" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_in.xml" value="0.152" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash_congrats.xml" value="0.152" />
@@ -76,7 +76,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_notice_row.xml" value="0.23453947368421052" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_partner_row.xml" value="0.176" />
-        <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane.xml" value="0.22135416666666666" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane.xml" value="0.536" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_first.xml" value="0.72" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_paperplane_replied.xml" value="0.33" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/column_sent_paper.xml" value="0.33" />
