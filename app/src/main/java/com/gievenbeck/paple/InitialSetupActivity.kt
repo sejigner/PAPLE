@@ -28,11 +28,14 @@ import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.app.Service
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
-import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.fragment.AlertDialogFragment
 import com.gievenbeck.paple.room.PaperPlaneDatabase
 import com.gievenbeck.paple.room.PaperPlaneRepository
@@ -55,6 +58,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
     lateinit var viewModel: FragmentChatViewModel
+    private var isOnline = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -329,11 +333,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
-        }?.addOnFailureListener {
-            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -347,6 +347,15 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        terminateNetworkCallback()
+    }
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - lastTimePressed < 2000) //short Toast duration, now should be faded out
@@ -356,6 +365,30 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         }
 
         lastTimePressed = System.currentTimeMillis()
+    }
+
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
+
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
     }
 
 }
