@@ -58,7 +58,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
     lateinit var viewModel: FragmentChatViewModel
-    private var isOnline = true
+    private var isOnline = false
+
+    companion object {
+        const val TAG = "InitialSetupActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +104,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 Log.d("Year", "$year")
                 numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
                 numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
+                userInfo.birthYear = "1994"
                 numberPicker_birth_year_initial_setup.value = 1994
                 Log.d(
                     "Year",
@@ -174,7 +179,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
 
         cl_initial_start.setOnClickListener {
-            if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear == null || userInfo.gender == null))
+            if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear.isNullOrEmpty() || userInfo.gender.isNullOrEmpty()))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
                 if (isDuplicated) {
@@ -300,7 +305,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.w(
-                        MainActivity.TAG,
+                        TAG,
                         "Fetching FCM registration token failed",
                         task.exception
                     )
@@ -310,10 +315,10 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 val token = task.result
 
                 val msg = getString(R.string.msg_token_fmt, token)
-                Log.d(MainActivity.TAG, msg)
+                Log.d(TAG, msg)
             })
         } else {
-            Log.w(MainActivity.TAG, "Device doesn't have google play services")
+            Log.w(TAG, "Device doesn't have google play services")
         }
 
     }
@@ -324,7 +329,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         userInfo.status = "active"
         database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
             Log.d(
-                FragmentHome.TAG,
+                TAG,
                 "Saved Users info to Firebase Realtime database: ${database.key}"
             )
             setInfoToRoomDB()
@@ -339,10 +344,10 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         return if (status != ConnectionResult.SUCCESS) {
-            Log.e(MainActivity.TAG, "Error")
+            Log.e(TAG, "Error")
             false
         } else {
-            Log.i(MainActivity.TAG, "Google play services updated")
+            Log.i(TAG, "Google play services updated")
             true
         }
     }
