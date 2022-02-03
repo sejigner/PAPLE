@@ -356,7 +356,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
             )
             return
         }
-
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
             // getting the last known or current location
             latitude = location.latitude

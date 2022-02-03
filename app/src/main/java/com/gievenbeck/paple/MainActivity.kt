@@ -41,13 +41,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
-
-// TODO: unread messages indicator
-//  1. sharedPreferences에 unreadMessages 변수를 추가
-//  2. Listener가 메시지 받으면 받은 갯수 만큼 unreadMessages 플러스
-//  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
-//  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
-
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
@@ -57,7 +50,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var fbFirestore: FirebaseFirestore? = null
     private var fbDatabase: FirebaseDatabase? = null
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
