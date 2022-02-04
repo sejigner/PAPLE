@@ -35,7 +35,7 @@
             android:exported="false" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5118743253590971/6381726931" />
+            android:value="ca-app-pub-5118743253590971~3228826273" />
         <activity
             android:name="com.gievenbeck.paple.SplashCongratsActivity"
             android:screenOrientation="sensorPortrait"
