@@ -111,8 +111,17 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         val factory = FragmentChatViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
         isNotification = intent.getBooleanExtra("IS_NOTIFICATION", false)
+
         isAd = intent.getBooleanExtra("IS_AD", false)
         sendLoadingDialog = SendLoadingDialog(this@MainActivity)
+
+        val networkConnect = NetworkConnection(this)
+        networkConnect.observe(this) { isConnected ->
+            isOnline = when (isConnected) {
+                true -> true
+                else -> false
+            }
+        }
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
@@ -208,7 +217,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         if (isNotification) {
             vp_main.currentItem = 1
         }
-        registerNetworkCallback()
     }
 
     override fun onStop() {
@@ -216,7 +224,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
         mRefStatus.removeEventListener(mListenerStatus)
-        terminateNetworkCallback()
     }
 
     private fun loadAd() {
