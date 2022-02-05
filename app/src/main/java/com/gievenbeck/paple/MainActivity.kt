@@ -44,11 +44,15 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
+private const val LOCATION_PERMISSION_REQ_CODE = 1000
+
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
     RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener,
-    SuccessBottomSheet.OnFlightSuccess {
+    SuccessBottomSheet.OnFlightSuccess,
+    PermissionAlertDialogFragment.OnPermissionConfirmedListener,
+    SettingAlertDialogFragment.OnPermissionSettingConfirmedListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
@@ -616,5 +620,88 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
         bottomSheet = SuccessBottomSheet()
         bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
+    }
+
+    override fun checkLocationAccessPermission() {
+        val isFirstCheck = prefs.getBoolean("isFirstPermissionCheck", true)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                confirmAccessPermission()
+            } else {
+                if (isFirstCheck) {
+                    prefs.setBoolean("isFirstPermissionCheck", false)
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        LOCATION_PERMISSION_REQ_CODE
+                    )
+                } else {
+                    confirmSystemSetting()
+                }
+            }
+        }
+    }
+
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        when (requestCode) {
+//            LOCATION_PERMISSION_REQ_CODE -> {
+//                // If request is cancelled, the result arrays are empty.
+//                if ((grantResults.isNotEmpty() &&
+//                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+//                ) {
+//                    fragmentHome.getCurrentLocation()
+//                } else {
+//                    confirmSystemSetting()
+//                }
+//                return
+//            }
+//        }
+//    }
+
+
+    override fun requestLocationAccessPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQ_CODE
+        )
+    }
+
+    override fun startSystemSetting() {
+        val packageName = applicationContext.packageName
+        val uri = Uri.fromParts("package", packageName, null)
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = uri
+        startActivity(intent)
+    }
+
+    private fun confirmSystemSetting() {
+        val alertDialog = SettingAlertDialogFragment.newInstance(
+            resources.getString(R.string.suggest_permission_grant_in_setting), "설정하러가기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "location info access permission in setting")
+    }
+
+    private fun confirmAccessPermission() {
+        val alertDialog = PermissionAlertDialogFragment.newInstance(
+            resources.getString(R.string.suggest_permission_grant_in_app), "허용하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "location info access permission in app")
     }
 }

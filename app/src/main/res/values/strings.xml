@@ -4,6 +4,8 @@
     <string name="default_notification_channel_id">알림 설정</string>
     <string name="no_internet">네트워크 연결 상태를 확인해주세요.</string>
     <string name="confirm">확인</string>
+    <string name="suggest_permission_grant_in_app">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!</string>
+    <string name="suggest_permission_grant_in_setting">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!\n[설정 -> 개인정보 보호 탭 -> 권한]</string>
     <!-- splash -->
     <string name="subtitle_splash">우리끼리 날리는 종이비행기</string>
     <string name="congrats_splash">가입이 완료되었습니다!\n비행기를 날려보세요!</string>
