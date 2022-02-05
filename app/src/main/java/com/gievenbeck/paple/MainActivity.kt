@@ -179,29 +179,29 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         removePartnerFromPrefs()
     }
 
-    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            isOnline = true
-        }
-
-        override fun onLost(network: Network) {
-            isOnline = false
-        }
-    }
-
-    private fun registerNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        val networkRequest = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
-    }
-
-    private fun terminateNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        connectivityManager.unregisterNetworkCallback(networkCallBack)
-    }
+//    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+//        override fun onAvailable(network: Network) {
+//            isOnline = true
+//        }
+//
+//        override fun onLost(network: Network) {
+//            isOnline = false
+//        }
+//    }
+//
+//    private fun registerNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        val networkRequest = NetworkRequest.Builder()
+//            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+//            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+//            .build()
+//        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+//    }
+//
+//    private fun terminateNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        connectivityManager.unregisterNetworkCallback(networkCallBack)
+//    }
 
     override fun onStart() {
         super.onStart()

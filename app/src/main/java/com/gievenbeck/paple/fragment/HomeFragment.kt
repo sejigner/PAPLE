@@ -100,19 +100,22 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        val updateAnimation : Animation = AnimationUtils.loadAnimation(requireActivity(),R.anim.anim_update_location)
+        val updateAnimation: Animation =
+            AnimationUtils.loadAnimation(requireActivity(), R.anim.anim_update_location)
         tv_update_location.setOnClickListener {
-            CoroutineScope(IO).launch {
-                getCurrentLocation()
-            }
             iv_update_location.startAnimation(updateAnimation)
+            getCurrentLocation()
         }
 
         tv_paper_send.setOnClickListener {
-            if(isOnline) {
-                mListener?.confirmFlight()
+            if (isOnline) {
+                if(userCurrentLocation!=null) {
+                    mListener?.confirmFlight()
+                } else {
+                    Toast.makeText(requireActivity(),"먼저 위치 정보를 업데이트 해주세요!", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(requireActivity(), R.string.no_internet,Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
 
         }
