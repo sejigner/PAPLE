@@ -15,6 +15,11 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
         flightResult.value = result
     }
 
+    val currentLocation = MutableLiveData<String>()
+    fun setCurrentLocation(location : String) {
+        currentLocation.value = location
+    }
+
     // In coroutines thread insert item in insert function.
     fun insert(item: FirstPaperPlanes) = CoroutineScope(IO).launch {
         repository.insert(item)

@@ -1,4 +1,10 @@
-# Closest
+
+# PAPLE
+
+Version 4 (1.0.3)
+
+Release Date #22.02.05
+
 ## Git Flow를 활용한 브랜치 관리
 
 1. Github Issue에 이슈 생성
@@ -18,3 +24,4 @@
 7. $ git pull origin develop(또는 원하는 Git Branch) 
 8. $ git flow init (최초 1회)
 9. Git Flow 활용 브랜치 관리 방법 따르기
+
