@@ -1,5 +1,6 @@
 package com.gievenbeck.paple.fragment
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Paint
@@ -36,9 +37,9 @@ import com.gievenbeck.paple.models.PaperplaneMessage
 import com.gievenbeck.paple.room.*
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import java.io.IOException
 import java.util.*
 import kotlin.math.round
@@ -46,25 +47,25 @@ import kotlin.math.round
 
 private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+private const val LOCATION_PERMISSION_REQ_CODE = 1000;
 
-
-class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
+class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     companion object {
         const val TAG = "FlightLog"
         val CURRENTADDRESS = "CURRENT_ADDRESS"
+
         // GeoFire Query 최대 거리
         const val MAX_RADIUS = 550
     }
 
-    private val LOCATION_PERMISSION_REQ_CODE = 1000;
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
     private var currentAddress: String = ""
     private var latitude: Double = 0.0
-    private var sentMessage : String = ""
+    private var sentMessage: String = ""
     private var longitude: Double = 0.0
     private var userFound: Boolean = false
     private var radius: Double = 0.0
@@ -100,19 +101,22 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        val updateAnimation : Animation = AnimationUtils.loadAnimation(requireActivity(),R.anim.anim_update_location)
+        val updateAnimation: Animation =
+            AnimationUtils.loadAnimation(requireActivity(), R.anim.anim_update_location)
         tv_update_location.setOnClickListener {
-            CoroutineScope(IO).launch {
-                getCurrentLocation()
-            }
             iv_update_location.startAnimation(updateAnimation)
+            getCurrentLocation()
         }
 
         tv_paper_send.setOnClickListener {
-            if(isOnline) {
-                mListener?.confirmFlight()
+            if (isOnline) {
+                if(userCurrentLocation!=null) {
+                    mListener?.confirmFlight()
+                } else {
+                    Toast.makeText(requireActivity(),"먼저 위치 정보를 업데이트 해주세요!", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(requireActivity(), R.string.no_internet,Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -158,19 +162,24 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
         viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
             sentPlaneAdapter.differ.submitList(it)
             tv_delete_all_records.isEnabled = it.isNotEmpty()
-            rv_sent_paper.scrollToPosition(it.size-1)
+            rv_sent_paper.scrollToPosition(it.size - 1)
         })
-    }
 
-    override fun onResume() {
-        super.onResume()
+        viewModel.setCurrentLocation("")
+        viewModel.currentLocation.observe(viewLifecycleOwner, {
+            Log.d("current location", "result : $it")
+            if(it.isNotEmpty()) {
+                tv_update_location.text = it
+            } else {
+                tv_update_location.text = resources.getString(R.string.update_address)
+            }
+        })
         getCurrentLocation()
     }
 
     override fun onStart() {
         super.onStart()
         tv_update_location.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        tv_update_location
         tv_delete_all_records.paint.isUnderlineText = true
     }
 
@@ -184,8 +193,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
     }
 
 
-
-    private fun savePaperToDB(message : String) {
+    private fun savePaperToDB(message: String) {
         val myPaperRecord = MyPaper(null, UID, message, System.currentTimeMillis() / 1000L)
         viewModel.insertPaperRecord(myPaperRecord)
     }
@@ -206,7 +214,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
         val fm = childFragmentManager
         alertDialog.show(fm, "deleteConfirmation")
     }
-
 
 
     private fun performSendAnonymousMessage() {
@@ -293,7 +300,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
             override fun onGeoQueryReady() {
                 if (!userFound && (radius < MAX_RADIUS)) {
                     radius++
-                    Log.d("test","$radius")
+                    Log.d("test", "$radius")
                     getClosestUser()
                 } else {
                     userFound = false
@@ -338,40 +345,39 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
     interface FlightListener {
         fun confirmFlight()
         fun showLoadingBottomSheet()
+        fun checkLocationAccessPermission()
     }
+
     private var flightDistance: Double = 0.0
 
     private fun getCurrentLocation() {
         // checking location permission
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // Request Permission
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQ_CODE
-            )
-            return
-        }
+            mListener?.checkLocationAccessPermission()
+        } else {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                // getting the last known or current location
+                latitude = location.latitude
+                longitude = location.longitude
+                userCurrentLocation = location
+                currentAddress = getAddress(location.latitude, location.longitude)
+                tv_update_location.text = currentAddress
+            }.addOnFailureListener {
 
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            // getting the last known or current location
-            latitude = location.latitude
-            longitude = location.longitude
-            userCurrentLocation = location
-            currentAddress = getAddress(location.latitude, location.longitude)
-            tv_update_location.text = currentAddress
-        }
-            .addOnFailureListener {
                 Toast.makeText(
                     requireActivity(),
-                    "현재 위치를 감지하지 못 했어요.",
+                    "현재 위치를 감지하지 못했어요.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
     }
 
 
@@ -431,7 +437,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener{
             }
         }
     }
-
 }
 
 

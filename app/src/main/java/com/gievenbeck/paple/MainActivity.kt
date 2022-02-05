@@ -1,20 +1,24 @@
 package com.gievenbeck.paple
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.*
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.net.*
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.gievenbeck.paple.App.Companion.prefs
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -24,7 +28,6 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gievenbeck.paple.adapter.MainViewPagerAdapter
 import com.gievenbeck.paple.fragment.*
@@ -41,23 +44,19 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
-
-// TODO: unread messages indicator
-//  1. sharedPreferences에 unreadMessages 변수를 추가
-//  2. Listener가 메시지 받으면 받은 갯수 만큼 unreadMessages 플러스
-//  3. unreadMessages에 Observer를 달아서 0이 아니면 UI에 표시
-//  4. 리사이클러뷰 아이템을 클릭하면 unreadMessage 0 대입
+private const val LOCATION_PERMISSION_REQ_CODE = 1000
 
 class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     FragmentChat.OnCommunicationUpdatedListener,
     FirstDialogFragment.OnSuccessListener, AlertDialogFragment.OnConfirmedListener,
     RepliedDialogFragment.OnChatStartListener, SuspendAlertDialogFragment.OnConfirmedListener,
-    SuccessBottomSheet.OnFlightSuccess {
+    SuccessBottomSheet.OnFlightSuccess,
+    PermissionAlertDialogFragment.OnPermissionConfirmedListener,
+    SettingAlertDialogFragment.OnPermissionSettingConfirmedListener {
 
     private var userName: String? = null
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var fbFirestore: FirebaseFirestore? = null
     private var fbDatabase: FirebaseDatabase? = null
     private val fragmentHome by lazy { FragmentHome() }
     private val fragmentChat by lazy { FragmentChat() }
@@ -119,8 +118,17 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         val factory = FragmentChatViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
         isNotification = intent.getBooleanExtra("IS_NOTIFICATION", false)
+
         isAd = intent.getBooleanExtra("IS_AD", false)
         sendLoadingDialog = SendLoadingDialog(this@MainActivity)
+
+        val networkConnect = NetworkConnection(this)
+        networkConnect.observe(this) { isConnected ->
+            isOnline = when (isConnected) {
+                true -> true
+                else -> false
+            }
+        }
 
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
@@ -175,29 +183,29 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         removePartnerFromPrefs()
     }
 
-    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            isOnline = true
-        }
-
-        override fun onLost(network: Network) {
-            isOnline = false
-        }
-    }
-
-    private fun registerNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        val networkRequest = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
-    }
-
-    private fun terminateNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        connectivityManager.unregisterNetworkCallback(networkCallBack)
-    }
+//    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+//        override fun onAvailable(network: Network) {
+//            isOnline = true
+//        }
+//
+//        override fun onLost(network: Network) {
+//            isOnline = false
+//        }
+//    }
+//
+//    private fun registerNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        val networkRequest = NetworkRequest.Builder()
+//            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+//            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+//            .build()
+//        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+//    }
+//
+//    private fun terminateNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        connectivityManager.unregisterNetworkCallback(networkCallBack)
+//    }
 
     override fun onStart() {
         super.onStart()
@@ -216,7 +224,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         if (isNotification) {
             vp_main.currentItem = 1
         }
-        registerNetworkCallback()
     }
 
     override fun onStop() {
@@ -224,7 +231,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         mRefPlane.removeEventListener(mListenerPlane)
         mRefMessages.removeEventListener(mListenerMessages)
         mRefStatus.removeEventListener(mListenerStatus)
-        terminateNetworkCallback()
     }
 
     private fun loadAd() {
@@ -528,12 +534,19 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                 )
                                 viewModel.insert(chatRoom)
                                 val noticeMessage =
-                                    ChatMessages(null, partnerId, UID, 3, getString(R.string.init_chat_log), latestChatMessage.time)
+                                    ChatMessages(
+                                        null,
+                                        partnerId,
+                                        UID,
+                                        3,
+                                        getString(R.string.init_chat_log),
+                                        latestChatMessage.time
+                                    )
                                 viewModel.insert(noticeMessage)
                                 mRefMessages.child(snapshot.key!!).removeValue()
 
                             }.addOnFailureListener {
-                                Log.e("MainActivity",it.message.toString())
+                                Log.e("MainActivity", it.message.toString())
                             }
                         } else { // 이미 시작된 채팅
                             viewModel.updateLastMessages(
@@ -614,5 +627,88 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
     override fun showReplySuccessFragment(isReply: Boolean, flightDistance: Double) {
         bottomSheet = SuccessBottomSheet()
         bottomSheet!!.show(supportFragmentManager, SuccessBottomSheet.TAG)
+    }
+
+    override fun checkLocationAccessPermission() {
+        val isFirstCheck = prefs.getBoolean("isFirstPermissionCheck", true)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                confirmAccessPermission()
+            } else {
+                if (isFirstCheck) {
+                    prefs.setBoolean("isFirstPermissionCheck", false)
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        LOCATION_PERMISSION_REQ_CODE
+                    )
+                } else {
+                    confirmSystemSetting()
+                }
+            }
+        }
+    }
+
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        when (requestCode) {
+//            LOCATION_PERMISSION_REQ_CODE -> {
+//                // If request is cancelled, the result arrays are empty.
+//                if ((grantResults.isNotEmpty() &&
+//                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+//                ) {
+//                    fragmentHome.getCurrentLocation()
+//                } else {
+//                    confirmSystemSetting()
+//                }
+//                return
+//            }
+//        }
+//    }
+
+
+    override fun requestLocationAccessPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQ_CODE
+        )
+    }
+
+    override fun startSystemSetting() {
+        val packageName = applicationContext.packageName
+        val uri = Uri.fromParts("package", packageName, null)
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = uri
+        startActivity(intent)
+    }
+
+    private fun confirmSystemSetting() {
+        val alertDialog = SettingAlertDialogFragment.newInstance(
+            resources.getString(R.string.suggest_permission_grant_in_setting), "설정하러가기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "location info access permission in setting")
+    }
+
+    private fun confirmAccessPermission() {
+        val alertDialog = PermissionAlertDialogFragment.newInstance(
+            resources.getString(R.string.suggest_permission_grant_in_app), "허용하기"
+        )
+        val fm = supportFragmentManager
+        alertDialog.show(fm, "location info access permission in app")
     }
 }

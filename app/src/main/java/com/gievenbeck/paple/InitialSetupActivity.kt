@@ -96,6 +96,13 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         })
 
+        val networkConnect = NetworkConnection(this)
+        networkConnect.observe(this) { isConnected ->
+            isOnline = when (isConnected) {
+                true -> true
+                else -> false
+            }
+        }
 
         btn_birth_year.setOnClickListener {
             if (numberPicker_birth_year_initial_setup.visibility == View.GONE) {
@@ -105,6 +112,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
                 numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
                 userInfo.birthYear = "1994"
+                tv_initial_birth_year.text = "1994"
                 numberPicker_birth_year_initial_setup.value = 1994
                 Log.d(
                     "Year",
@@ -354,12 +362,10 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     override fun onResume() {
         super.onResume()
-        registerNetworkCallback()
     }
 
     override fun onStop() {
         super.onStop()
-        terminateNetworkCallback()
     }
 
     override fun onBackPressed() {
@@ -372,29 +378,29 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         lastTimePressed = System.currentTimeMillis()
     }
 
-    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            isOnline = true
-        }
-
-        override fun onLost(network: Network) {
-            isOnline = false
-        }
-    }
-
-    private fun registerNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        val networkRequest = NetworkRequest.Builder()
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
-    }
-
-    private fun terminateNetworkCallback() {
-        val connectivityManager = getSystemService(ConnectivityManager::class.java)
-        connectivityManager.unregisterNetworkCallback(networkCallBack)
-    }
+//    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+//        override fun onAvailable(network: Network) {
+//            isOnline = true
+//        }
+//
+//        override fun onLost(network: Network) {
+//            isOnline = false
+//        }
+//    }
+//
+//    private fun registerNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        val networkRequest = NetworkRequest.Builder()
+//            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+//            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+//            .build()
+//        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+//    }
+//
+//    private fun terminateNetworkCallback() {
+//        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+//        connectivityManager.unregisterNetworkCallback(networkCallBack)
+//    }
 
 }
 
