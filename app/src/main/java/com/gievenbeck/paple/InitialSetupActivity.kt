@@ -28,11 +28,14 @@ import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.app.Service
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
-import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.fragment.AlertDialogFragment
 import com.gievenbeck.paple.room.PaperPlaneDatabase
 import com.gievenbeck.paple.room.PaperPlaneRepository
@@ -55,6 +58,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
     lateinit var viewModel: FragmentChatViewModel
+    private var isOnline = false
+
+    companion object {
+        const val TAG = "InitialSetupActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +104,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 Log.d("Year", "$year")
                 numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
                 numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
+                userInfo.birthYear = "1994"
                 numberPicker_birth_year_initial_setup.value = 1994
                 Log.d(
                     "Year",
@@ -170,7 +179,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
 
         cl_initial_start.setOnClickListener {
-            if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear == null || userInfo.gender == null))
+            if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear.isNullOrEmpty() || userInfo.gender.isNullOrEmpty()))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
                 if (isDuplicated) {
@@ -296,7 +305,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.w(
-                        MainActivity.TAG,
+                        TAG,
                         "Fetching FCM registration token failed",
                         task.exception
                     )
@@ -306,10 +315,10 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 val token = task.result
 
                 val msg = getString(R.string.msg_token_fmt, token)
-                Log.d(MainActivity.TAG, msg)
+                Log.d(TAG, msg)
             })
         } else {
-            Log.w(MainActivity.TAG, "Device doesn't have google play services")
+            Log.w(TAG, "Device doesn't have google play services")
         }
 
     }
@@ -320,7 +329,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         userInfo.status = "active"
         database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
             Log.d(
-                FragmentHome.TAG,
+                TAG,
                 "Saved Users info to Firebase Realtime database: ${database.key}"
             )
             setInfoToRoomDB()
@@ -329,24 +338,29 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
-        }?.addOnFailureListener {
-            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         return if (status != ConnectionResult.SUCCESS) {
-            Log.e(MainActivity.TAG, "Error")
+            Log.e(TAG, "Error")
             false
         } else {
-            Log.i(MainActivity.TAG, "Google play services updated")
+            Log.i(TAG, "Google play services updated")
             true
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerNetworkCallback()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        terminateNetworkCallback()
+    }
 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - lastTimePressed < 2000) //short Toast duration, now should be faded out
@@ -356,6 +370,30 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         }
 
         lastTimePressed = System.currentTimeMillis()
+    }
+
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            isOnline = true
+        }
+
+        override fun onLost(network: Network) {
+            isOnline = false
+        }
+    }
+
+    private fun registerNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallBack)
+    }
+
+    private fun terminateNetworkCallback() {
+        val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        connectivityManager.unregisterNetworkCallback(networkCallBack)
     }
 
 }
