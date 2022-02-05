@@ -112,6 +112,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
                 numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
                 userInfo.birthYear = "1994"
+                tv_initial_birth_year.text = "1994"
                 numberPicker_birth_year_initial_setup.value = 1994
                 Log.d(
                     "Year",

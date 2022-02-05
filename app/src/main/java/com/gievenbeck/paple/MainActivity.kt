@@ -534,12 +534,19 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                 )
                                 viewModel.insert(chatRoom)
                                 val noticeMessage =
-                                    ChatMessages(null, partnerId, UID, 3, getString(R.string.init_chat_log), latestChatMessage.time)
+                                    ChatMessages(
+                                        null,
+                                        partnerId,
+                                        UID,
+                                        3,
+                                        getString(R.string.init_chat_log),
+                                        latestChatMessage.time
+                                    )
                                 viewModel.insert(noticeMessage)
                                 mRefMessages.child(snapshot.key!!).removeValue()
 
                             }.addOnFailureListener {
-                                Log.e("MainActivity",it.message.toString())
+                                Log.e("MainActivity", it.message.toString())
                             }
                         } else { // 이미 시작된 채팅
                             viewModel.updateLastMessages(

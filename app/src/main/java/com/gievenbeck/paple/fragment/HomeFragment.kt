@@ -37,9 +37,9 @@ import com.gievenbeck.paple.models.PaperplaneMessage
 import com.gievenbeck.paple.room.*
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import java.io.IOException
 import java.util.*
 import kotlin.math.round
@@ -193,8 +193,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
 
-
-    private fun savePaperToDB(message : String) {
+    private fun savePaperToDB(message: String) {
         val myPaperRecord = MyPaper(null, UID, message, System.currentTimeMillis() / 1000L)
         viewModel.insertPaperRecord(myPaperRecord)
     }
@@ -215,7 +214,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         val fm = childFragmentManager
         alertDialog.show(fm, "deleteConfirmation")
     }
-
 
 
     private fun performSendAnonymousMessage() {
@@ -302,7 +300,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             override fun onGeoQueryReady() {
                 if (!userFound && (radius < MAX_RADIUS)) {
                     radius++
-                    Log.d("test","$radius")
+                    Log.d("test", "$radius")
                     getClosestUser()
                 } else {
                     userFound = false
