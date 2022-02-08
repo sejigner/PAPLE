@@ -403,7 +403,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             Log.d("CheckCurrentLocation", "$currentAddress")
         }
         setLocationToDatabase(latitude, longitude)
-
         return currentAddress
     }
 
