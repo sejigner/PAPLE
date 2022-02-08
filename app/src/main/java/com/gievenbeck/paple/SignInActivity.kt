@@ -163,6 +163,7 @@ class SignInActivity : AppCompatActivity() {
         if (phoneNumber.isNotEmpty()) {
             phoneNumber = "+82$phoneNumber"
             sendVerificationCode(phoneNumber)
+            Log.d("Verification", "Number inserted $phoneNumber")
         } else {
             Toast.makeText(this, "Enter mobile number", Toast.LENGTH_SHORT).show()
         }

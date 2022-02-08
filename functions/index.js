@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 
 const admin = require('firebase-admin');
+const { ref } = require('firebase-functions/v1/database');
 admin.initializeApp();
 
 
@@ -25,6 +26,15 @@ exports.deleteUser = functions.database.ref('/Users/{uid}')
           .catch(function(error) {
             console.log('Error deleting user:', error);
           });
+
+        var userLocationRef = admin.database().ref(`/User-Location/${id}`)
+        userLocationRef.remove()
+        .then(function(){
+            console.log("Location info remove succeeded.")
+        })
+        .catch(function(error){
+            console.log("Location info remove failed: " + error.message)
+        })
     });
 
 exports.notifyNewMessage = functions.database.ref('/User-messages/{recipientUid}/{senderUid}/{messageId}')

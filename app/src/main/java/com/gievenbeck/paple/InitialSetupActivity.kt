@@ -87,15 +87,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         rg_initial_gender.visibility = View.GONE
         numberPicker_birth_year_initial_setup.visibility = View.GONE
 
-        cl_initial_setup.setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-                et_nickname.clearFocus()
-                hideKeyboard()
-                return false
-            }
-
-        })
-
         val networkConnect = NetworkConnection(this)
         networkConnect.observe(this) { isConnected ->
             isOnline = when (isConnected) {
@@ -170,21 +161,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)
-
-        et_nickname.setOnEditorActionListener { textView, action, event ->
-            var handled = false
-
-            if (action == EditorInfo.IME_ACTION_DONE) {
-                // 키보드 내리기
-                val inputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(et_nickname.windowToken, 0)
-                handled = true
-            }
-
-            handled
-        }
-
 
         cl_initial_start.setOnClickListener {
             if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear.isNullOrEmpty() || userInfo.gender.isNullOrEmpty()))
@@ -299,8 +275,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 et_nickname.gravity = Gravity.START
                 duplication_check.text = ""
             }
-
-
         }
     }
 

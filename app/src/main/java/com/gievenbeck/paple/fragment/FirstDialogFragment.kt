@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -103,6 +104,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
 
         addOnClickListenerMenu()
 
+        tv_dialog_message_first.movementMethod= ScrollingMovementMethod()
 
         iv_send_first_paper?.setOnClickListener {
             if(isOnline) {
