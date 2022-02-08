@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -147,6 +148,8 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
                 })
             }
         }
+
+        tv_dialog_message_replied.movementMethod= ScrollingMovementMethod()
 
         tv_chat_no.setOnClickListener {
             dismiss()
