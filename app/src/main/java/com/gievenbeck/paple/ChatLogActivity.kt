@@ -575,7 +575,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
             val timestamp = System.currentTimeMillis() / 1000
             val reportDate = getDateTime(timestamp)
-            val reportedChat = ReportedChat(userNickname, partnerNickname, reportDate!!)
+            val reportedChat = ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
             val chatroomRef = fbDatabase?.getReference("/Reported-Chat/")?.push()
             chatroomRef?.setValue(reportedChat)
 
