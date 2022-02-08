@@ -28,10 +28,10 @@ android {
     defaultConfig {
         applicationId "com.gievenbeck.paple"
         minSdkVersion 23
-        // S10 5G 기준
-        targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.2"
+        // 안드로이드 12
+        targetSdkVersion 31
+        versionCode 4
+        versionName "1.0.3"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
