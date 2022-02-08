@@ -29,6 +29,7 @@ import com.gievenbeck.paple.fragment.FragmentChat
 import com.gievenbeck.paple.fragment.ReportChatDialogFragment
 import com.gievenbeck.paple.models.ChatMessage
 import com.gievenbeck.paple.models.LatestChatMessage
+import com.gievenbeck.paple.models.ReportedChat
 import com.gievenbeck.paple.room.ChatMessages
 import com.gievenbeck.paple.room.FinishedChat
 import com.gievenbeck.paple.room.PaperPlaneDatabase
@@ -440,7 +441,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             return sdf.format(netDate)
         } catch (e: Exception) {
             Log.d(TAG, e.toString())
-            return e.toString()
+            return ""
         }
     }
 
@@ -570,13 +571,18 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     override fun reportMessagesFirebase() {
-        // TODO : 신고 시 List<ChatMessages> -> Firebase 업로드
         CoroutineScope(IO).launch {
-            // TODO : chatRoomAndAllMessages 중첩된 관계 정의 (https://developer.android.com/training/data-storage/room/relationships)
+
+            val timestamp = System.currentTimeMillis() / 1000
+            val reportDate = getDateTime(timestamp)
+            val reportedChat = ReportedChat(userNickname, partnerNickname, reportDate!!)
+            val chatroomRef = fbDatabase?.getReference("/Reported-Chat/")?.push()
+            chatroomRef?.setValue(reportedChat)
+
             val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
-                FirebaseDatabase.getInstance().getReference("/Reports/Chat/$UID/$partnerUid")
-            reportRef.setValue(messageList).addOnSuccessListener {
+                fbDatabase?.getReference("/Reports/Chat/$UID/$partnerUid")
+            reportRef?.setValue(messageList)?.addOnSuccessListener {
                 Toast.makeText(
                     this@ChatLogActivity,
                     R.string.success_report,
@@ -584,11 +590,11 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 ).show()
                 Log.d("Report", "신고가 접수되었어요")
                 leaveChatRoom()
-            }.addOnFailureListener {
+            }?.addOnFailureListener {
                 Log.d("ReportChatLog", "Report 실패")
                 Toast.makeText(
                     this@ChatLogActivity,
-                    "접수에 문제가 발생하였습니다. 운영자에게 연락주시면 빠르게 처리해드리겠습니다.",
+                    "접수에 문제가 발생하였습니다. 관리자에게 연락주시면 빠르게 처리해드리겠습니다.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
