@@ -2,13 +2,16 @@ package com.gievenbeck.paple
 
 import android.app.Activity
 import android.app.Service
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.*
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -20,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.*
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.adapter.ChatLogAdapter
@@ -39,19 +41,18 @@ import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.SoftKeyboard
 import com.gievenbeck.paple.ui.SoftKeyboard.SoftKeyboardChanged
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import android.graphics.Bitmap
-import android.graphics.Rect
-import android.os.Build
-import android.os.Handler
-import android.view.PixelCopy
 
 
 // TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
@@ -576,54 +577,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     }
 
-    // for api level 28
-    fun getScreenShotFromView(view: View, activity: Activity, callback: (Bitmap) -> Unit) {
-        activity.window?.let { window ->
-            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-            val locationOfViewInWindow = IntArray(2)
-            view.getLocationInWindow(locationOfViewInWindow)
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    PixelCopy.request(
-                        window,
-                        Rect(
-                            locationOfViewInWindow[0],
-                            locationOfViewInWindow[1],
-                            locationOfViewInWindow[0] + view.width,
-                            locationOfViewInWindow[1] + view.height
-                        ), bitmap, { copyResult ->
-                            if (copyResult == PixelCopy.SUCCESS) {
-                                callback(bitmap) }
-                            else {
-
-                            }
-                            // possible to handle other result codes ...
-                        },
-                        Handler()
-                    )
-                } else {
-                    getScreenShot()
-                }
-            } catch (e: IllegalArgumentException) {
-                // PixelCopy may throw IllegalArgumentException, make sure to handle it
-                e.printStackTrace()
-            }
-        }
-    }
-
-    //deprecated version
-/*  Method which will return Bitmap after taking screenshot. We have to pass the view which we want to take screenshot.  */
-    fun getScreenShot(view: View): Bitmap {
-        val screenView = view.rootView
-        screenView.isDrawingCacheEnabled = true
-        val bitmap = Bitmap.createBitmap(screenView.drawingCache)
-        screenView.isDrawingCacheEnabled = false
-        return bitmap
-    }
 
     override fun reportMessagesFirebase() {
         CoroutineScope(IO).launch {
-
             val timestamp = System.currentTimeMillis() / 1000
             val reportDate = getDateTime(timestamp)
             val reportedChat = ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
@@ -650,6 +606,30 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 ).show()
             }
         }
+    }
+
+    private fun getScreenShotFromView(v: View): Bitmap? {
+        // create a bitmap object
+        var screenshot: Bitmap? = null
+        try {
+            // inflate screenshot object
+            // with Bitmap.createBitmap it
+            // requires three parameters
+            // width and height of the view and
+            // the background color
+            screenshot = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+            // Now draw this bitmap on a canvas
+            val canvas = Canvas(screenshot)
+            v.draw(canvas)
+        } catch (e: Exception) {
+            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
+        }
+        // return the bitmap
+        return screenshot
+    }
+
+    private fun uploadReportImage(report : Bitmap?) {
+        //TODO: 파이어베이스 스토리지에 저장 구현
     }
 
     override fun proceed() {
