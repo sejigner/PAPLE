@@ -1,24 +1,70 @@
 {
   "project_info": {
     "project_number": "1004291746435",
+    "firebase_url": "https://theclosest-fdd67-default-rtdb.firebaseio.com",
     "project_id": "theclosest-fdd67",
     "storage_bucket": "theclosest-fdd67.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1004291746435:android:4fb5854d2709bbbfec89b6",
+        "mobilesdk_app_id": "1:1004291746435:android:3621309e5af3adf3ec89b6",
         "android_client_info": {
           "package_name": "com.gievenbeck.paple"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1004291746435-umqs99nfmagvs52gkrc9f8gj8348k80u.apps.googleusercontent.com",
+          "client_id": "1004291746435-7ecvs37ummvp2on1u4a0s7hle088gj93.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.gievenbeck.paple",
-            "certificate_hash": "fafc472c6a31ba180a18d4d9ed05a9eccbfe2e50"
+            "certificate_hash": "68f55b40ed4a743c58115c164686c53ee8a9a395"
+          }
+        },
+        {
+          "client_id": "1004291746435-q9utp5ogjaqf0oitto3foj41fn9fcjac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gievenbeck.paple",
+            "certificate_hash": "7f998f02435cd6ef9b171fc020a233b081189f3b"
+          }
+        },
+        {
+          "client_id": "1004291746435-u72hr610tcs6taj8attcnq26p6up5q5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhxjUTZpCNFZWvGFKnBfUQjV3y9FJEbfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004291746435-u72hr610tcs6taj8attcnq26p6up5q5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004291746435:android:13dad46d7b318f8dec89b6",
+        "android_client_info": {
+          "package_name": "com.gievenbeck.paple_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004291746435-vj2j0ilsgea4kgts1dgc1v7sumk54s0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gievenbeck.paple_admin",
+            "certificate_hash": "7f998f02435cd6ef9b171fc020a233b081189f3b"
           }
         },
         {
