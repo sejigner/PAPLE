@@ -122,36 +122,6 @@ data class User(
     val birthYear : Int
 )
 
-data class FirstPlanesWithUid(
-    @Embedded val uid: User,
-    @Relation(
-        parentColumn = "uid",
-        entity = FirstPaperPlanes::class,
-        entityColumn = "uid"
-    )
-    var firstPlanes: List<FirstPaperPlanes> = ArrayList()
-)
-
-data class RepliedPlanesWithUid(
-    @Embedded val uid: User,
-    @Relation(
-        parentColumn = "uid",
-        entity = RepliedPaperPlanes::class,
-        entityColumn = "uid"
-    )
-    var repliedPlanes: List<RepliedPaperPlanes> = ArrayList()
-)
-
-data class ChatRoomsWithUid(
-    @Embedded val uid: User,
-    @Relation(
-        parentColumn = "uid",
-        entity = ChatRooms::class,
-        entityColumn = "uid"
-    )
-    var chatRooms: List<ChatRooms> = ArrayList()
-)
-
 @Entity(
     tableName = "chat_messages",
     foreignKeys = [
@@ -190,16 +160,6 @@ data class ChatRoomsAndMessages(
 data class ChatRoomMessageCrossRef(
     val partnerId: String,
     val messageId: Int
-)
-
-data class UidWithChatRoomsAndMessages (
-    @Embedded val uid : User,
-    @Relation(
-        entity = ChatRooms::class,
-        parentColumn = "uid",
-        entityColumn = "uid"
-    )
-    val chatRooms: List<ChatRoomsAndMessages>
 )
 
 
