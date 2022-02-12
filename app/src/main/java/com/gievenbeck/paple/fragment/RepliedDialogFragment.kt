@@ -102,7 +102,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
             cl_fragment_dialog_replied.requestDisallowInterceptTouchEvent(true)
         }
 
-        cl_start_chat_replied_paper.setOnClickListener {
+        cl_bottom.setOnClickListener {
             cl_fragment_dialog_replied.requestDisallowInterceptTouchEvent(true)
         }
 
