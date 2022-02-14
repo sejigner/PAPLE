@@ -282,8 +282,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                 }
             }
             mInterstitialAd?.show(this)
-        } else {
-            Toast.makeText(this, "Ad wasn't loaded.", Toast.LENGTH_SHORT).show()
         }
     }
 

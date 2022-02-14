@@ -12,6 +12,7 @@ import com.gievenbeck.paple.ui.FragmentChatViewModel
 import kotlinx.android.synthetic.main.column_paperplane.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 class RepliedPaperPlaneAdapter(
     var list: List<RepliedPaperPlanes>,
@@ -57,7 +58,7 @@ class RepliedPaperPlaneAdapter(
 
     private fun convertDistanceToString(distance: Double): String {
         return if (distance >= 1000) {
-            (((distance / 1000) * 100) / 100).toString() + "km"
+            (round((distance / 1000) * 100) / 100).toString() + "km"
         } else distance.toString() + "m"
     }
 

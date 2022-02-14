@@ -17,14 +17,15 @@
             android:id="@+id/cl_message_first"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/dialog_frame"
+            android:background="@drawable/bg_half_rounded_corner"
             android:paddingHorizontal="20dp"
             android:paddingVertical="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cl_content_reply_first"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
 
             <TextView
@@ -55,9 +56,8 @@
                 android:layout_height="0.5dp"
                 android:layout_marginTop="16dp"
                 android:background="#ECECEC"
-                app:layout_constraintBottom_toTopOf="@id/tv_dialog_message_first"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_first" />
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_distance_first" />
 
             <TextView
                 android:id="@+id/tv_dialog_message_first"
@@ -66,11 +66,10 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/noto_sans_cjk_kr_regular"
                 android:includeFontPadding="false"
-                android:maxLines="10"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/dialog_divider_first" />
+                app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_first" />
 
             <TextView
                 android:id="@+id/tv_dialog_time_first"
@@ -84,9 +83,7 @@
                 android:textColor="#c4c4c4"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_dialog_distance_first" />
-
-
+                app:layout_constraintTop_toBottomOf="@id/dialog_divider_first" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,10 +91,16 @@
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/bg_half_rounded_corner"
+            android:background="@color/white"
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <EditText
                 android:id="@+id/et_dialog_message_first"

@@ -58,7 +58,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra("IS_AD", false)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent =
-            PendingIntent.getActivity(applicationContext, 1994, intent, FLAG_ONE_SHOT)
+            PendingIntent.getActivity(applicationContext, 1994, intent, PendingIntent.FLAG_IMMUTABLE)
         val channelId = resources.getString(R.string.default_notification_channel_id)
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.mipmap.ic_launcher_paple_round)
