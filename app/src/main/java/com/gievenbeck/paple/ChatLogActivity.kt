@@ -2,16 +2,12 @@ package com.gievenbeck.paple
 
 import android.app.Activity
 import android.app.Service
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.*
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -50,6 +46,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -75,8 +72,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mFinishRef: DatabaseReference
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
-    lateinit var storage : FirebaseStorage
-    lateinit var storageRef : StorageReference
+    lateinit var storage: FirebaseStorage
+    lateinit var storageRef: StorageReference
     private var isOnline = false
     private var isOver = false
     private var userNickname = ""
@@ -255,15 +252,15 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     override fun onStart() {
         super.onStart()
-            mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-            listenForMessages()
-            mFinishRef =
-                FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
-            listenForFinishedChat()
-            mPartnersTokenRef =
-                FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-            storageRef = FirebaseStorage.getInstance().getReference("chat-report")
-            listenForPartnersToken()
+        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        listenForMessages()
+        mFinishRef =
+            FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
+        listenForFinishedChat()
+        mPartnersTokenRef =
+            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+        storageRef = FirebaseStorage.getInstance().getReference("chat-report")
+        listenForPartnersToken()
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -519,8 +516,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun leaveChatRoom() {
         CoroutineScope(IO).launch {
             if (isOnline) {
-                if(!isOver) {
-                    sendFinishSignalToFirebase(object : FinishChatCallback{
+                if (!isOver) {
+                    sendFinishSignalToFirebase(object : FinishChatCallback {
                         override fun onFinishChatListener() {
                             viewModel.deleteAllMessages(UID, partnerUid!!)
                             viewModel.deleteChatRoom(UID, partnerUid!!)
@@ -560,7 +557,11 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         val timestamp = System.currentTimeMillis() / 1000
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
-        val lastMessageToPartner = LatestChatMessage(partnerUid!!, resources.getString(R.string.finish_chat_log), timestamp)
+        val lastMessageToPartner = LatestChatMessage(
+            partnerUid!!,
+            resources.getString(R.string.finish_chat_log),
+            timestamp
+        )
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
@@ -581,9 +582,25 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     override fun reportMessagesFirebase() {
         CoroutineScope(IO).launch {
+            var data: ByteArray?
+            withContext(Main) {
+                val bitmap = getScreenShotFromView(window.decorView.rootView)
+                val baos = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                data = baos.toByteArray()
+            }
+            if(data != null) {
+                val uploadTask = storageRef.putBytes(data!!)
+                uploadTask.addOnFailureListener {
+                    Log.e(TAG, "스토리지 업로드 실패")
+                }
+            }
+
+
             val timestamp = System.currentTimeMillis() / 1000
             val reportDate = getDateTime(timestamp)
-            val reportedChat = ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
+            val reportedChat =
+                ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
             val chatroomRef = fbDatabase?.getReference("/Reported-Chat/")?.push()
             chatroomRef?.setValue(reportedChat)
 
@@ -612,7 +629,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun getScreenShotFromView(v: View): Bitmap? {
         var screenshot: Bitmap? = null
         try {
-            screenshot = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+            screenshot =
+                Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(screenshot)
             v.draw(canvas)
         } catch (e: Exception) {
@@ -620,10 +638,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         }
         // return the bitmap
         return screenshot
-    }
-
-    private fun uploadReportImage(report : Bitmap?) {
-        //TODO: 파이어베이스 스토리지에 저장 구현
     }
 
     override fun proceed() {
