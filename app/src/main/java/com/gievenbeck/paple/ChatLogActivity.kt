@@ -4,10 +4,9 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.*
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.adapter.ChatLogAdapter
@@ -39,16 +37,19 @@ import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.SoftKeyboard
 import com.gievenbeck.paple.ui.SoftKeyboard.SoftKeyboardChanged
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-// TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
 class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface,
     AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
 
@@ -71,6 +72,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mFinishRef: DatabaseReference
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
+    lateinit var storage: FirebaseStorage
+    lateinit var storageRef: StorageReference
     private var isOnline = false
     private var isOver = false
     private var userNickname = ""
@@ -85,6 +88,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
@@ -248,14 +252,15 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     override fun onStart() {
         super.onStart()
-            mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
-            listenForMessages()
-            mFinishRef =
-                FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
-            listenForFinishedChat()
-            mPartnersTokenRef =
-                FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-            listenForPartnersToken()
+        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        listenForMessages()
+        mFinishRef =
+            FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
+        listenForFinishedChat()
+        mPartnersTokenRef =
+            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+        storageRef = FirebaseStorage.getInstance().getReference("chat-report")
+        listenForPartnersToken()
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -511,8 +516,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun leaveChatRoom() {
         CoroutineScope(IO).launch {
             if (isOnline) {
-                if(!isOver) {
-                    sendFinishSignalToFirebase(object : FinishChatCallback{
+                if (!isOver) {
+                    sendFinishSignalToFirebase(object : FinishChatCallback {
                         override fun onFinishChatListener() {
                             viewModel.deleteAllMessages(UID, partnerUid!!)
                             viewModel.deleteChatRoom(UID, partnerUid!!)
@@ -552,7 +557,11 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         val timestamp = System.currentTimeMillis() / 1000
         val lastMessagesPartnerReference =
             FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
-        val lastMessageToPartner = LatestChatMessage(partnerUid!!, resources.getString(R.string.finish_chat_log), timestamp)
+        val lastMessageToPartner = LatestChatMessage(
+            partnerUid!!,
+            resources.getString(R.string.finish_chat_log),
+            timestamp
+        )
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
@@ -570,12 +579,28 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     }
 
+
     override fun reportMessagesFirebase() {
         CoroutineScope(IO).launch {
+            var data: ByteArray?
+            withContext(Main) {
+                val bitmap = getScreenShotFromView(window.decorView.rootView)
+                val baos = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                data = baos.toByteArray()
+            }
+            if(data != null) {
+                val uploadTask = storageRef.putBytes(data!!)
+                uploadTask.addOnFailureListener {
+                    Log.e(TAG, "스토리지 업로드 실패")
+                }
+            }
+
 
             val timestamp = System.currentTimeMillis() / 1000
             val reportDate = getDateTime(timestamp)
-            val reportedChat = ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
+            val reportedChat =
+                ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
             val chatroomRef = fbDatabase?.getReference("/Reported-Chat/")?.push()
             chatroomRef?.setValue(reportedChat)
 
@@ -599,6 +624,20 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 ).show()
             }
         }
+    }
+
+    private fun getScreenShotFromView(v: View): Bitmap? {
+        var screenshot: Bitmap? = null
+        try {
+            screenshot =
+                Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(screenshot)
+            v.draw(canvas)
+        } catch (e: Exception) {
+            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
+        }
+        // return the bitmap
+        return screenshot
     }
 
     override fun proceed() {

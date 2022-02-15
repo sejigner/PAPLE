@@ -407,13 +407,14 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
-        var userId: String? = FirebaseAuth.getInstance().currentUser?.uid
         var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location")
 
         var geoFire = GeoFire(ref)
-        geoFire.setLocation(
-            userId, GeoLocation(latitude, longitude)
-        )
+        if(UID.isNotEmpty()) {
+            geoFire.setLocation(
+                UID, GeoLocation(latitude, longitude)
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(
