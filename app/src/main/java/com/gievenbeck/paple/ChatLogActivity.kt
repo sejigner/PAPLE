@@ -54,8 +54,6 @@ import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-// TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
 class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface,
     AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
 
@@ -609,16 +607,9 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     private fun getScreenShotFromView(v: View): Bitmap? {
-        // create a bitmap object
         var screenshot: Bitmap? = null
         try {
-            // inflate screenshot object
-            // with Bitmap.createBitmap it
-            // requires three parameters
-            // width and height of the view and
-            // the background color
             screenshot = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
-            // Now draw this bitmap on a canvas
             val canvas = Canvas(screenshot)
             v.draw(canvas)
         } catch (e: Exception) {
