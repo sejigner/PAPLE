@@ -39,6 +39,8 @@ import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.SoftKeyboard
 import com.gievenbeck.paple.ui.SoftKeyboard.SoftKeyboardChanged
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -71,6 +73,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mFinishRef: DatabaseReference
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
+    lateinit var storage : FirebaseStorage
+    lateinit var storageRef : StorageReference
     private var isOnline = false
     private var isOver = false
     private var userNickname = ""
@@ -85,6 +89,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
@@ -255,6 +260,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             listenForFinishedChat()
             mPartnersTokenRef =
                 FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+            storageRef = FirebaseStorage.getInstance().getReference("chat-report")
             listenForPartnersToken()
 
         inputMethodManager =
