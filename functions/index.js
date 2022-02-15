@@ -173,7 +173,9 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
         tokens = Object.keys(tokensSnapshot.val());
 
         // Send notifications to all tokens.
-        const response = await admin.messaging().sendToDevice(tokens, payload, options);
+        if(planeMessage!=null) {
+            const response = await admin.messaging().sendToDevice(tokens, payload, options);
+        }
 
         // For each message check if there was an error.
         const tokensToRemove = [];

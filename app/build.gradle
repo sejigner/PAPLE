@@ -15,10 +15,12 @@ androidExtensions {
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
-
     packagingOptions {
-        exclude 'META-INF/atomicfu.kotlin_module'
+        resources {
+            excludes += ['META-INF/atomicfu.kotlin_module']
+        }
     }
+
 
     kotlinOptions {
         jvmTarget = "1.8"

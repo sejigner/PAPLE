@@ -16,6 +16,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -73,6 +75,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     private var userCurrentLocation: Location? = null
     private var mListener: FlightListener? = null
     lateinit var viewModel: FragmentChatViewModel
+    lateinit var locationManager: LocationManager
 //    private var timerTask: Timer ?= null
 //    private var milliSec = 0.0
 
@@ -98,6 +101,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         viewModel =
             ViewModelProvider(requireActivity(), factory)[FragmentChatViewModel::class.java]
 
+        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
@@ -362,27 +366,31 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         ) {
             mListener?.checkLocationAccessPermission()
         } else {
-            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                // getting the last known or current location
-                latitude = location.latitude
-                longitude = location.longitude
-                userCurrentLocation = location
-                currentAddress = getAddress(location.latitude, location.longitude)
-                tv_update_location.text = currentAddress
-            }.addOnFailureListener {
+            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                    // getting the last known or current location
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    userCurrentLocation = location
+                    currentAddress = getAddress(location.latitude, location.longitude)
+                    tv_update_location.text = currentAddress
+                }.addOnFailureListener {
 
-                Toast.makeText(
-                    requireActivity(),
-                    "현재 위치를 감지하지 못했어요.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    Toast.makeText(
+                        requireActivity(),
+                        "현재 위치를 감지하지 못했어요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                Toast.makeText(requireActivity(),"위치 정보를 업데이트 하시려면 기기의 GPS 기능을 켜주세요.",Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 
 
     private fun getAddress(latitude: Double, longitude: Double): String {
-        //locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         Log.d("CheckCurrentLocation", "현재 나의 위치 : $latitude, $longitude")
 
         var mGeocoder = Geocoder(requireActivity(), Locale.KOREAN)
