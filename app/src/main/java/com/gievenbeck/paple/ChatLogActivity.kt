@@ -601,12 +601,12 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             val reportDate = getDateTime(timestamp)
             val reportedChat =
                 ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
-            val chatroomRef = fbDatabase?.getReference("/Reported-Chat/")?.push()
+            val chatroomRef = fbDatabase?.getReference("/Reported-Chat/$UID/$partnerUid")
             chatroomRef?.setValue(reportedChat)
 
             val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
-                fbDatabase?.getReference("/Reports/Chat/$UID/$partnerUid")
+                fbDatabase?.getReference("/ReportStorage/Chat/$UID/$partnerUid")
             reportRef?.setValue(messageList)?.addOnSuccessListener {
                 Toast.makeText(
                     this@ChatLogActivity,
