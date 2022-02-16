@@ -259,7 +259,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         listenForFinishedChat()
         mPartnersTokenRef =
             FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-        storageRef = FirebaseStorage.getInstance().getReference("chat-report")
+        storageRef = FirebaseStorage.getInstance().getReference("chat-report/$UID/$partnerUid/report.jpg")
         listenForPartnersToken()
 
         inputMethodManager =
