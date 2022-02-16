@@ -72,8 +72,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mFinishRef: DatabaseReference
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
-    lateinit var storage: FirebaseStorage
-    lateinit var storageRef: StorageReference
+    private lateinit var storageRef: StorageReference
     private var isOnline = false
     private var isOver = false
     private var userNickname = ""
@@ -88,7 +87,6 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         viewModel = ViewModelProvider(this, factory)[FragmentChatViewModel::class.java]
 
         fbDatabase = FirebaseDatabase.getInstance()
-        storage = FirebaseStorage.getInstance()
 
         partnerUid = intent.getStringExtra(FragmentChat.USER_KEY)
         chatLogAdapter = ChatLogAdapter(listOf(), viewModel)
@@ -259,8 +257,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         listenForFinishedChat()
         mPartnersTokenRef =
             FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
-        storageRef = FirebaseStorage.getInstance().getReference("chat-report/$UID/$partnerUid/report.jpg")
         listenForPartnersToken()
+        storageRef = FirebaseStorage.getInstance().getReference("chat-report/$UID/$partnerUid/report.jpg")
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -589,8 +587,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                 data = baos.toByteArray()
             }
-            if(data != null) {
-                val uploadTask = storageRef.putBytes(data!!)
+            if (data != null) {
+                val uploadTask = this@ChatLogActivity.storageRef.putBytes(data!!)
                 uploadTask.addOnFailureListener {
                     Log.e(TAG, "스토리지 업로드 실패")
                 }
@@ -608,6 +606,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             val reportRef =
                 fbDatabase?.getReference("/ReportStorage/Chat/$UID/$partnerUid")
             reportRef?.setValue(messageList)?.addOnSuccessListener {
+                uploadReportImage(getScreenShotFromView(window.decorView.rootView))
                 Toast.makeText(
                     this@ChatLogActivity,
                     R.string.success_report,
@@ -631,13 +630,33 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         try {
             screenshot =
                 Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+
             val canvas = Canvas(screenshot)
             v.draw(canvas)
         } catch (e: Exception) {
-            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
+            Log.e(TAG, "Failed to capture screenshot because:" + e.message)
         }
-        // return the bitmap
         return screenshot
+    }
+
+    private fun uploadReportImage(report: Bitmap?) {
+        CoroutineScope(IO).launch {
+            var data: ByteArray?
+            withContext(Main) {
+                val bitmap = getScreenShotFromView(window.decorView.rootView)
+                val baos = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                data = baos.toByteArray()
+            }
+            if (data != null) {
+                val uploadTask = storageRef.putBytes(data!!)
+                uploadTask.addOnFailureListener {
+                    Log.e(TAG, "스토리지 업로드 실패")
+                }.addOnSuccessListener {
+                    Log.d(TAG, "스토리지 업로드 성공")
+                }
+            }
+        }
     }
 
     override fun proceed() {
