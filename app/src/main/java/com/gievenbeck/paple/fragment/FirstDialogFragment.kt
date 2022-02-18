@@ -194,7 +194,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         val reportMessage = ReportMessage(
             fromId,
             message,
-            System.currentTimeMillis() / 1000L
+            setDateToTextView(System.currentTimeMillis() / 1000L)
         )
 
         ref.setValue(reportMessage).addOnSuccessListener {
