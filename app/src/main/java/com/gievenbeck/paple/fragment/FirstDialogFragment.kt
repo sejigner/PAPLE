@@ -189,7 +189,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         val uid = UID
 
         val ref =
-            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid")
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
 
         val reportMessage = ReportMessage(
             fromId,
