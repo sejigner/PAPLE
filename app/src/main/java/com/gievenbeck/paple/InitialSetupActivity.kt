@@ -15,7 +15,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gievenbeck.paple.fragment.FragmentHome
 import com.gievenbeck.paple.models.Users
@@ -48,7 +47,6 @@ import java.util.regex.Pattern
 class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirmedListener {
     private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var fbFireStore: FirebaseFirestore? = null
     private var fbDatabase: FirebaseDatabase? = null
     private var isDuplicated: Boolean = false
     private var uid: String? = null
@@ -70,7 +68,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
-        fbFireStore = FirebaseFirestore.getInstance()
         fbDatabase = FirebaseDatabase.getInstance()
         uid = fireBaseAuth!!.currentUser?.uid
         initFcmToken()

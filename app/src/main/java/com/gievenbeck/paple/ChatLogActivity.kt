@@ -42,20 +42,22 @@ import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.SoftKeyboard
 import com.gievenbeck.paple.ui.SoftKeyboard.SoftKeyboardChanged
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-// TODO : 채팅방 나가기 기능 구현 - EditText 잠그기, 보내기 버튼 색상 변경
 class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogInterface,
     AlertDialogFragment.OnConfirmedListener, ReportChatDialogFragment.OnReportConfirmedListener {
 
@@ -78,6 +80,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     lateinit var mFinishRef: DatabaseReference
     lateinit var mPartnersTokenRef: DatabaseReference
     lateinit var mPartnersTokenListener: ChildEventListener
+    private lateinit var storageRef : FirebaseStorage
+    private lateinit var pathReference : StorageReference
     private var isOnline = false
     private var isOver = false
     private var userNickname = ""
@@ -263,6 +267,8 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             mPartnersTokenRef =
                 FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
             listenForPartnersToken()
+            storageRef = FirebaseStorage.getInstance()
+            pathReference = storageRef.getReference("chat-report/$UID/$partnerUid/report.jpg")
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -590,6 +596,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             val reportRef =
                 fbDatabase?.getReference("/Reports/Chat/$UID/$partnerUid")
             reportRef?.setValue(messageList)?.addOnSuccessListener {
+                uploadReportImage(getScreenShotFromView(window.decorView.rootView))
                 Toast.makeText(
                     this@ChatLogActivity,
                     R.string.success_report,
@@ -609,27 +616,35 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     }
 
     private fun getScreenShotFromView(v: View): Bitmap? {
-        // create a bitmap object
         var screenshot: Bitmap? = null
         try {
-            // inflate screenshot object
-            // with Bitmap.createBitmap it
-            // requires three parameters
-            // width and height of the view and
-            // the background color
             screenshot = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
-            // Now draw this bitmap on a canvas
             val canvas = Canvas(screenshot)
             v.draw(canvas)
         } catch (e: Exception) {
-            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
+            Log.e(TAG, "Failed to capture screenshot because:" + e.message)
         }
-        // return the bitmap
         return screenshot
     }
 
     private fun uploadReportImage(report : Bitmap?) {
-        //TODO: 파이어베이스 스토리지에 저장 구현
+        CoroutineScope(IO).launch {
+            var data: ByteArray?
+            withContext(Main) {
+                val bitmap = getScreenShotFromView(window.decorView.rootView)
+                val baos = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                data = baos.toByteArray()
+            }
+            if (data != null) {
+                val uploadTask = pathReference.putBytes(data!!)
+                uploadTask.addOnFailureListener {
+                    Log.e(TAG, "스토리지 업로드 실패")
+                }.addOnSuccessListener {
+                    Log.d(TAG, "스토리지 업로드 성공")
+                }
+            }
+        }
     }
 
     override fun proceed() {
