@@ -176,7 +176,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         et_nickname.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
             val ps: Pattern =
-                Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣu318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$")
+                Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55]+$")
             if (source.equals("") || ps.matcher(source).matches()) {
                 return@InputFilter source
             }
