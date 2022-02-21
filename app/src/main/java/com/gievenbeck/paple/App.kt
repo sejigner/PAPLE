@@ -11,19 +11,23 @@ private const val LOG_TAG = "AppOpenAdManager"
 class App : Application() {
     companion object {
         lateinit var prefs: MySharedPreferences
+        var countryCode = ""
     }
 
 
     override fun onCreate() {
         super.onCreate()
         prefs = MySharedPreferences(applicationContext)
-        if(prefs.getString("countryCode","").isEmpty()) {
+        countryCode = if(prefs.getString("countryCode","").isEmpty()) {
             val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 resources.configuration.locales.get(0)
             } else {
                 resources.configuration.locale
             }
             prefs.setString("countryCode",locale.country)
+            locale.country
+        } else {
+            prefs.getString("countryCode", "")
         }
     }
 }
