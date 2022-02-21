@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
@@ -112,7 +113,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                 if (textEntered.isNotEmpty()) {
                     val paperPlaneReceiverReference =
                         FirebaseDatabase.getInstance()
-                            .getReference("/PaperPlanes/Receiver/$fromId/$UID")
+                            .getReference("/PaperPlanes/Receiver/$countryCode/$fromId/$UID")
                     val paperplaneMessage = PaperplaneMessage(
                         paperPlaneReceiverReference.key!!,
                         textEntered,
@@ -189,7 +190,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
         val uid = UID
 
         val ref =
-            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$countryCode/$uid/$fromId")
 
         val reportMessage = ReportMessage(
             fromId,

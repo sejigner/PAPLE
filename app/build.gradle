@@ -15,10 +15,12 @@ androidExtensions {
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
-
     packagingOptions {
-        exclude 'META-INF/atomicfu.kotlin_module'
+        resources {
+            excludes += ['META-INF/atomicfu.kotlin_module']
+        }
     }
+
 
     kotlinOptions {
         jvmTarget = "1.8"
@@ -30,8 +32,8 @@ android {
         minSdkVersion 23
         // 안드로이드 12
         targetSdkVersion 31
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
@@ -180,7 +181,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
                 if (task.isSuccessful) {
                     val uid = FirebaseAuth.getInstance().currentUser?.uid
                     val reference =
-                        fbDatabase.reference.child("Users").child(uid!!).child("status")
+                        fbDatabase.reference.child("Users").child(countryCode).child(uid!!).child("status")
                     reference.get()
                         .addOnSuccessListener { it ->
                             if (it.value != null) {

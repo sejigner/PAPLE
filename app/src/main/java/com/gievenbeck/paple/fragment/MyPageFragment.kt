@@ -13,6 +13,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.*
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.models.Users
 import com.gievenbeck.paple.room.PaperPlaneDatabase
@@ -79,7 +80,7 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
 
         FirebaseAuth.getInstance().signOut()
         // Firebase 내 토큰 제거
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$UID/registrationToken")
+        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken")
         fbDatabase.removeValue().addOnFailureListener {
             val intent = Intent(this@MyPageFragment.context, SignInActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -141,7 +142,7 @@ class MyPageFragment : Fragment(), AlertDialogChildFragment.OnConfirmedListener 
     }
 
     private fun getUserInfoFromFirebase(firebaseCallback: UserInfoCallback) {
-        val ref = FirebaseDatabase.getInstance().reference.child("Users/$UID")
+        val ref = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID")
         var user: Users? = null
         ref.get().addOnSuccessListener {
             val nickname = it.child("nickname").value.toString()

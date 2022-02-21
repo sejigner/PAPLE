@@ -26,6 +26,7 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -227,7 +228,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         val distance = flightDistance
         val timestamp = System.currentTimeMillis() / 1000L
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$toId/$fromId")
 
         val paperplaneMessage = PaperplaneMessage(
             paperPlaneReceiverReference.key!!,
@@ -263,7 +264,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     fun getClosestUser() {
         val userLocation: DatabaseReference =
-            FirebaseDatabase.getInstance().reference.child("User-Location")
+            FirebaseDatabase.getInstance().reference.child("User-Location").child(countryCode)
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
@@ -415,7 +416,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
-        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location")
+        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
 
         var geoFire = GeoFire(ref)
         if(UID.isNotEmpty()) {
