@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.ChatLogActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
@@ -162,7 +163,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
 
     private fun getPartnerNicknameFromFirebase(firebaseCallback: PartnerNicknameCallback) {
         val refNickname =
-            FirebaseDatabase.getInstance().getReference("/Users/$fromId")
+            FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$fromId")
                 .child("nickname")
         refNickname.get().addOnSuccessListener {
             firebaseCallback.onCallback(it.value.toString())
@@ -207,7 +208,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         val timestamp = System.currentTimeMillis() / 1000
         val text = resources.getString(R.string.init_chat_log)
         val lastMessagesPartnerReference =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$fromId/$UID")
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$fromId/$UID")
         val lastMessageToPartner = LatestChatMessage(fromId!!, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
             Log.d(ChatLogActivity.TAG, "sent your message: $fromId")
@@ -250,7 +251,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
         val uid = UID
 
         val ref =
-            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$uid/$fromId")
+            FirebaseDatabase.getInstance().getReference("/Reports/Plane/$countryCode/$uid/$fromId")
 
         val reportMessage = ReportMessage(
             fromId,

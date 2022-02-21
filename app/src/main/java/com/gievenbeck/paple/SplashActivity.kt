@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
@@ -63,7 +64,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
         if (user != null) {
-            val reference = fbDatabase.reference.child("Users").child(uid!!).child("status")
+            val reference = fbDatabase.reference.child("Users").child(countryCode).child(uid!!).child("status")
             reference.get()
                 .addOnSuccessListener { it ->
                     if (it.value != null) {
