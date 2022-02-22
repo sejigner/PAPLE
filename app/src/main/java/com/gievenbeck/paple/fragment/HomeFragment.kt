@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -146,6 +148,16 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
                 tv_paper_send.isEnabled = s != null && s.toString().isNotEmpty()
             }
         })
+        et_write_paper.setOnEditorActionListener { v, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // 키보드 내리기
+                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(et_write_paper.windowToken, 0)
+                handled = true
+            }
+            handled
+        }
 
         val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { MyPaper ->
 
