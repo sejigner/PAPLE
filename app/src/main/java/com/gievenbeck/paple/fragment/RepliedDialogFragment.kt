@@ -254,7 +254,7 @@ class RepliedDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConf
             FirebaseDatabase.getInstance().getReference("/Reports/Plane/$countryCode/$uid/$fromId")
 
         val reportMessage = ReportMessage(
-            fromId,
+            UID,
             message,
             setDateToTextView(System.currentTimeMillis() / 1000L)
         )

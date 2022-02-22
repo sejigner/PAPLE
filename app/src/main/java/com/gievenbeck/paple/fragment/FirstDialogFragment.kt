@@ -193,7 +193,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
             FirebaseDatabase.getInstance().getReference("/Reports/Plane/$countryCode/$uid/$fromId")
 
         val reportMessage = ReportMessage(
-            fromId,
+            UID,
             message,
             setDateToTextView(System.currentTimeMillis() / 1000L)
         )
