@@ -2,6 +2,7 @@
 
     <!-- system -->
     <string name="default_notification_channel_id">알림 설정</string>
+    <string name="default_topic_channel_id">데일리 토픽</string>
     <string name="no_internet">네트워크 연결 상태를 확인해주세요.</string>
     <string name="confirm">확인</string>
     <string name="suggest_permission_grant_in_app">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!</string>
@@ -115,7 +116,8 @@
     <string name="finish_bottom_sheet">채팅방 나가기</string>
     <string name="report_bottom_sheet">신고하기</string>
     <string name="cancel_bottom_sheet">취소</string>
-
+    <!-- firebase messaging service-->
+    <string name="topic_notification_title">데일리 토픽이 날아왔어요!</string>
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장이 성공적으로 날아갔어요!\n상대방이 채팅방을 열면 대화할 수 있어요.</string>
