@@ -25,7 +25,9 @@
     <string name="log_out">로그아웃</string>
     <string name="setting_notification">알림 설정하기</string>
     <string name="sign_out">탈퇴하기</string>
-    <string name="content_setting_notification">비행기와 메시지가 오면 알림이 울려요!</string>
+    <string name="daily_topic">데일리 토픽</string>
+    <string name="description_setting_topic">매일매일 토픽 비행기가 날아와요.</string>
+    <string name="description_setting_notification">비행기와 메시지가 오면 알림이 울려요.</string>
     <!-- sign_out -->
     <string name="title_sign_out">정말 탈퇴 하시겠어요..?</string>
     <string name="content_sign_out">%1$s님과 이별한다니 정말 아쉬워요..\n계정 탈퇴를 하면 서비스 내의 모든 정보가 삭제됩니다.</string>
