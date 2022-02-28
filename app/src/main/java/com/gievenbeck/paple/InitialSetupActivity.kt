@@ -328,7 +328,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private fun subscribeToDailyTopic() {
         FirebaseMessaging.getInstance().subscribeToTopic("dailyTopic")
             .addOnCompleteListener { task ->
-                prefs.setBoolean("dailyTopic",true)
+                prefs.setBoolean("isDailyTopic",true)
             }
     }
 

@@ -51,13 +51,13 @@ class SettingActivity : AppCompatActivity() {
             finish()
         }
 
-        sb_toggle_subscription.isChecked = prefs.getBoolean("dailyTopic",true)
+        sb_toggle_subscription.isChecked = prefs.getBoolean("isDailyTopic",true)
 
         sb_toggle_subscription.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked) {
-                prefs.setBoolean("dailyTopic", true)
+                prefs.setBoolean("isDailyTopic", true)
             } else {
-                prefs.setBoolean("dailyTopic", false)
+                prefs.setBoolean("isDailyTopic", false)
 
             }
         }
@@ -71,7 +71,7 @@ class SettingActivity : AppCompatActivity() {
                 startActivity(intent)
         }
 
-        sb_toggle_notification.isChecked = prefs.getBoolean("notification", true)
+        sb_toggle_notification.isChecked = prefs.getBoolean("isNotification", true)
         sb_toggle_notification.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked) {
                 subscribeToDailyTopic()
@@ -83,14 +83,14 @@ class SettingActivity : AppCompatActivity() {
     private fun subscribeToDailyTopic() {
         FirebaseMessaging.getInstance().subscribeToTopic("dailyTopic")
             .addOnCompleteListener { task ->
-                prefs.setBoolean("dailyTopic",true)
+                prefs.setBoolean("isDailyTopic",true)
                 Toast.makeText(this,"데일리 토픽을 수신합니다.",Toast.LENGTH_SHORT).show()
             }
     }
     private fun unsubscribeFromDailyTopic() {
         FirebaseMessaging.getInstance().unsubscribeFromTopic("dailyTopic")
             .addOnCompleteListener { task ->
-                prefs.setBoolean("dailyTopic",false)
+                prefs.setBoolean("isDailyTopic",false)
                 Toast.makeText(this,"데일리 토픽을 수신하지 않습니다.",Toast.LENGTH_SHORT).show()
             }
     }

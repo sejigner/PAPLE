@@ -3,7 +3,6 @@ package com.gievenbeck.paple.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,14 +13,14 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.R
 import com.gievenbeck.paple.fragment.FragmentHome
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -31,23 +30,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        val isNotificationOn = prefs.getBoolean("notification", true)
-        if (!remoteMessage.data.isNullOrEmpty()) {
-            if (isNotificationOn) {
-                if(!remoteMessage.data["sender"].isNullOrEmpty()) {
+        val isNotification = prefs.getBoolean("isNotification", true)
+        val isDailyTopic = prefs.getBoolean("isDailyTopic", true)
+            if (isNotification&&!remoteMessage.data["sender"].isNullOrEmpty()) {
                     val sender = remoteMessage.data["sender"]
                     val currentChatPartner = prefs.getString("partner", "")
                     if (sender != currentChatPartner) {
                         sendNotification(remoteMessage)
                     }
-                } else {
-                    if(!remoteMessage.data["topic"].isNullOrEmpty()) {
-                        val topic = remoteMessage.data["topic"]
-                        sendTopicNotification(topic)
-                    }
-                }
+                } else if (isDailyTopic&&!remoteMessage.data["topic"].isNullOrEmpty()) {
+                val topic = remoteMessage.data["topic"]
+                sendTopicNotification(topic)
             }
-        }
+
     }
 
     private fun sendTopicNotification(topic: String?) {
@@ -58,7 +53,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra("IS_AD", false)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent =
-            PendingIntent.getActivity(applicationContext, 1994, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(
+                applicationContext,
+                1994,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
         val channelId = resources.getString(R.string.default_topic_channel_id)
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.mipmap.ic_launcher_paple_round)
@@ -102,7 +102,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra("IS_AD", false)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent =
-            PendingIntent.getActivity(applicationContext, 1994, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(
+                applicationContext,
+                1994,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
         val channelId = resources.getString(R.string.default_notification_channel_id)
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.mipmap.ic_launcher_paple_round)
@@ -140,9 +145,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onNewToken(token: String) {
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken/")
+        val fbDatabase =
+            FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken/")
         fbDatabase.removeValue()
-        val ref = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID/registrationToken/")
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("/Users/$countryCode/$UID/registrationToken/")
         ref.child(token).setValue(true).addOnSuccessListener {
             Log.d(FragmentHome.TAG, "updated fcmToken: $token")
         }
