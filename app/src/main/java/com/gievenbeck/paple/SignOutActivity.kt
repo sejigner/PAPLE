@@ -10,13 +10,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.auth.*
-import com.google.firebase.database.*
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.models.VoiceOfUser
-import kotlinx.android.synthetic.main.activity_initial_setup.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_out.*
-import kotlinx.coroutines.*
 
 
 class SignOutActivity : AppCompatActivity() {

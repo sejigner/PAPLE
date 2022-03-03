@@ -11,15 +11,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gievenbeck.paple.App.Companion.countryCode
+import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
+import com.gievenbeck.paple.ui.LoadingDialog
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
-import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
-import com.gievenbeck.paple.ui.LoadingDialog
-import kotlinx.android.synthetic.main.activity_chat_log.*
-import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_otp.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {

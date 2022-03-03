@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.ChatLogActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.R
@@ -23,6 +22,7 @@ import com.gievenbeck.paple.room.*
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.PlaneBottomSheet
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import kotlinx.android.synthetic.main.fragment_dialog_replied.*
 import java.text.SimpleDateFormat
