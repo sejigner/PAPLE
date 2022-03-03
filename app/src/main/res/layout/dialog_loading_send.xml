@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progressBar2"
         style="?android:attr/progressBarStyleLarge"
         android:indeterminateTint="@color/paperplane_theme"
         android:layout_width="wrap_content"

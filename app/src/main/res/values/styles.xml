@@ -2,12 +2,6 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name = "AppTheme" parent ="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/paperplane_theme</item>
-        <item name="colorAccent">@color/point</item>
-        <item name="fontFamily">@font/noto_sans_cjk_kr_regular</item>
-        <item name="android:fontFamily">@font/noto_sans_cjk_kr_regular</item>
-    </style>
 
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.MaterialComponents.Light.BottomSheetDialog">
