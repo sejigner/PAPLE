@@ -46,9 +46,8 @@ import java.util.regex.Pattern
 
 
 class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirmedListener {
-    private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var fbDatabase: FirebaseDatabase? = null
+    private lateinit var fbDatabase: FirebaseDatabase
     private var isDuplicated: Boolean = false
     private var uid: String? = null
     private var lastTimePressed = 0L
@@ -67,10 +66,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial_setup)
 
-        fireBaseAuth = FirebaseAuth.getInstance()
-        fireBaseUser = fireBaseAuth!!.currentUser
         fbDatabase = FirebaseDatabase.getInstance()
-        uid = fireBaseAuth!!.currentUser?.uid
+        fireBaseUser = FirebaseAuth.getInstance().currentUser
+        if(fireBaseUser!=null) {
+            uid = fireBaseUser!!.uid
+        }
         initFcmToken()
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
@@ -305,20 +305,23 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
 
     private fun setInitialSetupToFirebase() {
-        val database = fbDatabase?.reference
         userInfo.status = "active"
-        database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
-            Log.d(
-                TAG,
-                "Saved Users info to Firebase Realtime database: ${database.key}"
-            )
-            setInfoToRoomDB()
-            val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
+        if(uid!=null) {
+            val ref = fbDatabase.reference.child("Users").child(countryCode).child(uid!!)
+                ref.setValue(userInfo).addOnSuccessListener {
+                Log.d(
+                    TAG,
+                    "Saved Users info to Firebase Realtime database: ${ref.key}"
+                )
+                setInfoToRoomDB()
+                val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            }
         }
+
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -330,14 +333,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             Log.i(TAG, "Google play services updated")
             true
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     override fun onBackPressed() {
