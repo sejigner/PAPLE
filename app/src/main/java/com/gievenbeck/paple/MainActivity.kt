@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
         var UID = ""
-        var MYNICKNAME = ""
         var isOnline = false
 
         private lateinit var auth: FirebaseAuth
@@ -93,8 +92,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
             return auth.currentUser?.uid.toString()
         }
-
-
     }
 
 
@@ -133,8 +130,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
 
-        MYNICKNAME = App.prefs.myNickname!!
-        if (MYNICKNAME.isBlank()) {
+        if (prefs.myNickname!!.isBlank()) {
             val ref =
                 FirebaseDatabase.getInstance().getReference("/Users/$uid")
                     .child("nickname")
