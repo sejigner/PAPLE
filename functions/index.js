@@ -151,6 +151,14 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
         }
         const flightDistance = flightDistanceSnapshot.val();
         const planeMessage = planeMessageSnapshot.val();
+        strDistance = ''
+
+        if(flightDistance >= 1000) {
+            strDistance = Math.round((flightDistance/1000.0+Number.EPSILON)*100) /100 + ' km'
+        } else {
+            strDistance = Math.round((flightDistance+Number.EPSILON)*100) /100 + ' m'
+        }
+            
 
         console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
         console.log('got flight distance', flightDistance);
@@ -158,7 +166,7 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
 
         const payload = {
             data: {
-                title: (flightDistance + 'm 거리에서 비행기가 날아왔어요!'),
+                title: (strDistance + ' 거리에서 비행기가 날아왔어요!'),
                 body: planeMessage,
                 sender : senderUid,
                 type: 'plane'
