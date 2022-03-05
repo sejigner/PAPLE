@@ -26,6 +26,8 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
+import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.MainActivity.Companion.getUid
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -45,16 +47,12 @@ import java.io.IOException
 import java.util.*
 import kotlin.math.round
 
-
-private const val TAG = "MainActivity"
-private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 private const val LOCATION_PERMISSION_REQ_CODE = 1000;
 
 class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     companion object {
         const val TAG = "FlightLog"
-        val CURRENTADDRESS = "CURRENT_ADDRESS"
 
         // GeoFire Query 최대 거리
         const val MAX_RADIUS = 550
@@ -94,7 +92,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
-        uid = fireBaseAuth?.uid.toString()
+        uid = getUid()
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
