@@ -14,10 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +26,7 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
-import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.MainActivity.Companion.getUid
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -144,6 +144,16 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
                 tv_paper_send.isEnabled = s != null && s.toString().isNotEmpty()
             }
         })
+        et_write_paper.setOnEditorActionListener { v, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // 키보드 내리기
+                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(et_write_paper.windowToken, 0)
+                handled = true
+            }
+            handled
+        }
 
         val sentPlaneAdapter = SentPaperPlaneAdapter(listOf(), viewModel) { MyPaper ->
 
@@ -226,7 +236,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         val distance = flightDistance
         val timestamp = System.currentTimeMillis() / 1000L
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$toId/$fromId")
 
         val paperplaneMessage = PaperplaneMessage(
             paperPlaneReceiverReference.key!!,
@@ -262,7 +272,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     fun getClosestUser() {
         val userLocation: DatabaseReference =
-            FirebaseDatabase.getInstance().reference.child("User-Location")
+            FirebaseDatabase.getInstance().reference.child("User-Location").child(countryCode)
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
         geoQuery.removeAllListeners()
@@ -414,7 +424,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
-        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location")
+        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
 
         var geoFire = GeoFire(ref)
         if(uid.isNotEmpty()) {

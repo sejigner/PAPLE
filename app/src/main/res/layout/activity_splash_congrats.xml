@@ -15,6 +15,7 @@
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
         android:lineHeight="36dp"
+        android:textAlignment="center"
         android:text="@string/congrats_splash"
         android:textColor="@color/white"
         android:textSize="24sp"

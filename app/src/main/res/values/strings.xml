@@ -64,7 +64,7 @@
 
     <!-- initial_setup_activity -->
     <string name="initial_title">프로필 입력</string>
-    <string name="initial_guidance">닉네임을 제외한 개인정보는 노출되지 않아요.\n개인정보는 안전하게 보관되며, 동의없이 무단으로 활용되지 않습니다.</string>
+    <string name="initial_guidance">닉네임을 제외한 개인정보는 노출되지 않아요.\n개인정보는 안전하게 보관되며,\n동의없이 무단으로 활용되지 않습니다.</string>
     <string name="initial_nickname">닉네임</string>
     <string name="initial_start">시작하기</string>
     <!-- HomeFragment -->

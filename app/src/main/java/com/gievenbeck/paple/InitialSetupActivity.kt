@@ -34,6 +34,7 @@ import android.net.NetworkRequest
 import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.database.*
 import com.gievenbeck.paple.fragment.AlertDialogFragment
 import com.gievenbeck.paple.room.PaperPlaneDatabase
@@ -231,7 +232,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                     override fun run() {
                         val reference = fbDatabase?.reference!!
                         val query: Query =
-                            reference.child("Users").orderByChild("nickname").equalTo(s.toString())
+                            reference.child("Users").child(countryCode).orderByChild("nickname").equalTo(s.toString())
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 if (snapshot.exists()) {
