@@ -88,6 +88,7 @@
                         android:gravity="top"
                         android:hint="@string/advice_home_write"
                         android:includeFontPadding="false"
+                        android:imeOptions="actionDone"
                         android:lineHeight="30sp"
                         android:maxLength="200"
                         android:textColor="@color/black"

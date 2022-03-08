@@ -13,6 +13,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -99,9 +100,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onNewToken(token: String) {
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$UID/registrationToken/")
+        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken/")
         fbDatabase.removeValue()
-        val ref = FirebaseDatabase.getInstance().getReference("/Users/$UID/registrationToken/")
+        val ref = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID/registrationToken/")
         ref.child(token).setValue(true).addOnSuccessListener {
             Log.d(FragmentHome.TAG, "updated fcmToken: $token")
         }

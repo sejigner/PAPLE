@@ -62,7 +62,7 @@ class FragmentChat : Fragment(), FirstPlaneListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        Log.d(TAG, UID)
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
         // initialized View Model

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.App.Companion.prefs
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -82,7 +83,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         const val TAG = "MainActivity"
         const val ANONYMOUS = "anonymous"
         var UID = ""
-        var MYNICKNAME = ""
         var isOnline = false
 
         private lateinit var auth: FirebaseAuth
@@ -93,8 +93,6 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
             return auth.currentUser?.uid.toString()
         }
-
-
     }
 
 
@@ -133,10 +131,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
         // 실시간 데이터베이스에 저장된 정보 유무를 통해 개인정보 초기설정 실행 여부 판단
         val uid = getUid()
 
-        MYNICKNAME = App.prefs.myNickname!!
-        if (MYNICKNAME.isBlank()) {
+        if (prefs.myNickname!!.isBlank()) {
             val ref =
-                FirebaseDatabase.getInstance().getReference("/Users/$uid")
+                FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$uid")
                     .child("nickname")
             ref.get().addOnSuccessListener {
                 App.prefs.myNickname = it.value.toString()
@@ -167,7 +164,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
 
                 val ref =
-                    FirebaseDatabase.getInstance().getReference("/Users/$uid/registrationToken")
+                    FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$uid/registrationToken")
                 ref.removeValue()
                 // fcm토큰 업로드
                 ref.child(token).setValue(true)
@@ -209,9 +206,9 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onStart() {
         super.onStart()
-        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$UID")
-        mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/")
-        mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$UID")
+        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$UID")
+        mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$UID/")
+        mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID")
         listenForPlanes()
         listenForMessages()
         listenForStatus()
@@ -518,7 +515,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                         if (!isPartnerId) {
                             var partnerNickname = ""
                             val ref =
-                                FirebaseDatabase.getInstance().getReference("/Users/$partnerId")
+                                FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$partnerId")
                                     .child("nickname")
                             ref.get().addOnSuccessListener {
                                 partnerNickname = it.value.toString()
