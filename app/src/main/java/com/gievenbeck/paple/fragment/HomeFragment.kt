@@ -28,13 +28,14 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
+
 import com.gievenbeck.paple.App.Companion.countryCode
+import com.gievenbeck.paple.MainActivity.Companion.getUid
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.R
 import com.gievenbeck.paple.adapter.SentPaperPlaneAdapter
@@ -49,16 +50,12 @@ import java.io.IOException
 import java.util.*
 import kotlin.math.round
 
-
-private const val TAG = "MainActivity"
-private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 private const val LOCATION_PERMISSION_REQ_CODE = 1000;
 
 class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     companion object {
         const val TAG = "FlightLog"
-        val CURRENTADDRESS = "CURRENT_ADDRESS"
 
         // GeoFire Query 최대 거리
         const val MAX_RADIUS = 550
@@ -79,6 +76,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     private var mListener: FlightListener? = null
     lateinit var viewModel: FragmentChatViewModel
     lateinit var locationManager: LocationManager
+    private var uid = ""
 //    private var timerTask: Timer ?= null
 //    private var milliSec = 0.0
 
@@ -97,6 +95,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
+        uid = getUid()
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(requireActivity()))
         val factory = FragmentChatViewModelFactory(repository)
@@ -176,7 +175,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rv_sent_paper.layoutManager = mLayoutManager
 
-        viewModel.allMyPaperPlaneRecord(UID).observe(viewLifecycleOwner, Observer {
+        viewModel.allMyPaperPlaneRecord(uid).observe(viewLifecycleOwner, Observer {
             sentPlaneAdapter.differ.submitList(it)
             tv_delete_all_records.isEnabled = it.isNotEmpty()
             rv_sent_paper.scrollToPosition(it.size - 1)
@@ -211,7 +210,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
 
     private fun savePaperToDB(message: String) {
-        val myPaperRecord = MyPaper(null, UID, message, System.currentTimeMillis() / 1000L)
+        val myPaperRecord = MyPaper(null, uid, message, System.currentTimeMillis() / 1000L)
         viewModel.insertPaperRecord(myPaperRecord)
     }
 
@@ -220,7 +219,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun deleteAllMyPaper() {
-        viewModel.deleteAll(UID)
+        viewModel.deleteAll(uid)
         Toast.makeText(requireContext(), "제거되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
@@ -236,7 +235,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     private fun performSendAnonymousMessage() {
         val toId = foundUserId
         val message = sentMessage
-        val fromId = UID
+        val fromId = uid
         val distance = flightDistance
         val timestamp = System.currentTimeMillis() / 1000L
         val paperPlaneReceiverReference =
@@ -262,12 +261,12 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         }.addOnSuccessListener {
             val sentPaper = MyPaperPlaneRecord(
                 paperplaneMessage.toId,
-                UID,
+                uid,
                 paperplaneMessage.text,
                 paperplaneMessage.timestamp
             )
             viewModel.insert(sentPaper)
-            val acquaintances = Acquaintances(toId, UID)
+            val acquaintances = Acquaintances(toId, uid)
             viewModel.insert(acquaintances)
         }
         foundUserId = ""
@@ -285,9 +284,9 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             override fun onKeyEntered(key: String?, location: GeoLocation?) {
                 runBlocking {
                     Log.d("geoQuery", key.toString())
-                    if ((!userFound) && key != UID) {
+                    if ((!userFound) && key != uid) {
                         // Room DB로 대체
-                        val haveMet: Boolean = viewModel.haveMet(UID, key!!).await()
+                        val haveMet: Boolean = viewModel.haveMet(uid, key!!).await()
                         if (haveMet) {
                             // user exists in the database
                             Log.d(TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
@@ -431,9 +430,9 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
 
         var geoFire = GeoFire(ref)
-        if(UID.isNotEmpty()) {
+        if(uid.isNotEmpty()) {
             geoFire.setLocation(
-                UID, GeoLocation(latitude, longitude)
+                uid, GeoLocation(latitude, longitude)
             )
         }
     }
