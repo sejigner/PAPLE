@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity.Companion.UID
+import com.gievenbeck.paple.fragment.FragmentHome
 import com.gievenbeck.paple.room.PaperPlaneDatabase
 import com.gievenbeck.paple.room.PaperPlaneRepository
 import com.gievenbeck.paple.room.User
@@ -30,6 +32,7 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
+        Log.d(FragmentHome.TAG, UID)
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
         val factory = FragmentChatViewModelFactory(repository)
 
