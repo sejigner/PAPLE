@@ -23,48 +23,58 @@
             android:background="@color/bg_chat_log"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_top"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="74dp"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
-                card_view:cardBackgroundColor="@color/bg_chat_log"
-                card_view:cardCornerRadius="9dp"
-                card_view:cardElevation="8dp"
-                card_view:layout_constraintBottom_toBottomOf="parent">
+                app:cardBackgroundColor="@color/bg_chat_log"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_height="74dp"
+                app:layout_width="match_parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="1dp"
+                    android:background="#CDCDCD"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
 
-                    <ImageView
-                        android:id="@+id/iv_back_chat_log"
-                        android:layout_width="wrap_content"
-                        android:layout_height="16dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/ic_back"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                <ImageView
+                    android:id="@+id/iv_back_chat_log"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-                    <TextView
-                        android:id="@+id/tv_partner_nickname_chat_log"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/noto_sans_cjk_kr_regular"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/iv_back_chat_log"
-                        app:layout_constraintTop_toTopOf="@id/iv_back_chat_log"
-                        card_view:layout_constraintEnd_toEndOf="parent"
-                        card_view:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/tv_partner_nickname_chat_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans_cjk_kr_regular"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_back_chat_log"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_back_chat_log" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/iv_menu_chat_log"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_menu_horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_back_chat_log"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_back_chat_log" />
 
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,7 +101,7 @@
             android:ems="10"
             android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:includeFontPadding="false"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:maxLength="100"
             android:padding="4dp"
             android:textColor="@color/black"
@@ -122,16 +132,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_bar_chat_log" />
-
-        <ImageView
-            android:id="@+id/iv_menu_chat_log"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_menu_horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/cl_bar_chat_log"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

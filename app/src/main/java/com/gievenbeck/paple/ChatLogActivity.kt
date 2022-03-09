@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.adapter.ChatLogAdapter
@@ -223,7 +224,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                             noticeFinish,
                             timestamp
                         )
-                        fbDatabase?.getReference("Latest-messages/$UID/$partnerUid")?.removeValue()
+                        fbDatabase?.getReference("Latest-messages/$countryCode/$UID/$partnerUid")?.removeValue()
                         mFinishRef.child("isOver").removeValue()
                         withContext(Main) {
                             preventSend()
@@ -250,15 +251,15 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
     override fun onStart() {
         super.onStart()
-        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$UID/$partnerUid")
+        mMessageRef = FirebaseDatabase.getInstance().getReference("/User-messages/$countryCode/$UID/$partnerUid")
         listenForMessages()
         mFinishRef =
-            FirebaseDatabase.getInstance().getReference("/Finished-chat/$UID/$partnerUid")
+            FirebaseDatabase.getInstance().getReference("/Finished-chat/$countryCode/$UID/$partnerUid")
         listenForFinishedChat()
         mPartnersTokenRef =
-            FirebaseDatabase.getInstance().getReference("/Users/$partnerUid/registrationToken")
+            FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$partnerUid/registrationToken")
         listenForPartnersToken()
-        storageRef = FirebaseStorage.getInstance().getReference("chat-report/$UID/$partnerUid/report.jpg")
+        storageRef = FirebaseStorage.getInstance().getReference("chat-report/$countryCode/$UID/$partnerUid/report.jpg")
 
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -458,7 +459,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
 
         val toRef =
-            FirebaseDatabase.getInstance().getReference("/User-messages/$toId/$fromId").push()
+            FirebaseDatabase.getInstance().getReference("/User-messages/$countryCode/$toId/$fromId").push()
         val chatMessage = ChatMessage(toRef.key!!, text, fromId, toId!!, timestamp)
         toRef.setValue(chatMessage).addOnSuccessListener {
             Log.d(TAG, "sent your message: ${toRef.key}")
@@ -466,12 +467,12 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
         // TODO : 필요성 고민(보내자마자 updateLastMessages 실행해서 업데이트 하는 걸로 충분하지 않나?)
         val lastMessagesUserReference =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$UID/$toId")
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$UID/$toId")
         val lastMessageToMe = LatestChatMessage(toId, text, timestamp)
         lastMessagesUserReference.setValue(lastMessageToMe)
 
         val lastMessagesPartnerReference =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$toId/$UID")
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$toId/$UID")
         val lastMessageToPartner = LatestChatMessage(toId, text, timestamp)
         lastMessagesPartnerReference.setValue(lastMessageToPartner).addOnSuccessListener {
             val chatMessages = ChatMessages(null, toId, UID, 0, text, timestamp)
@@ -554,7 +555,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
     private fun sendFinishSignalToFirebase(firebaseCallback: FinishChatCallback) {
         val timestamp = System.currentTimeMillis() / 1000
         val lastMessagesPartnerReference =
-            FirebaseDatabase.getInstance().getReference("/Latest-messages/$partnerUid/$UID")
+            FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$partnerUid/$UID")
         val lastMessageToPartner = LatestChatMessage(
             partnerUid!!,
             resources.getString(R.string.finish_chat_log),
@@ -564,7 +565,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
         lastMessagesPartnerReference.setValue(lastMessageToPartner)
 
         val finishChatReference = FirebaseDatabase.getInstance()
-            .getReference("/Finished-chat/$partnerUid/$UID/isOver")
+            .getReference("/Finished-chat/$countryCode/$partnerUid/$UID/isOver")
         finishChatReference.setValue(true).addOnSuccessListener {
             Log.d(ChatLogActivity.TAG, "finished the chat: $partnerUid")
             firebaseCallback.onFinishChatListener()
@@ -599,12 +600,12 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
             val reportDate = getDateTime(timestamp)
             val reportedChat =
                 ReportedChat(userNickname, UID, partnerNickname, partnerUid!!, reportDate!!)
-            val chatroomRef = fbDatabase?.getReference("/Reported-Chat/$UID/$partnerUid")
+            val chatroomRef = fbDatabase?.getReference("/Reported-Chat/$countryCode/$UID/$partnerUid")
             chatroomRef?.setValue(reportedChat)
 
             val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
-                fbDatabase?.getReference("/ReportStorage/Chat/$UID/$partnerUid")
+                fbDatabase?.getReference("/ReportStorage/Chat/$countryCode/$UID/$partnerUid")
             reportRef?.setValue(messageList)?.addOnSuccessListener {
                 uploadReportImage(getScreenShotFromView(window.decorView.rootView))
                 Toast.makeText(

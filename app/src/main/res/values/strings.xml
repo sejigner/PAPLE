@@ -2,6 +2,7 @@
 
     <!-- system -->
     <string name="default_notification_channel_id">알림 설정</string>
+    <string name="default_topic_channel_id">데일리 토픽</string>
     <string name="no_internet">네트워크 연결 상태를 확인해주세요.</string>
     <string name="confirm">확인</string>
     <string name="suggest_permission_grant_in_app">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!</string>
@@ -25,7 +26,9 @@
     <string name="log_out">로그아웃</string>
     <string name="setting_notification">알림 설정하기</string>
     <string name="sign_out">탈퇴하기</string>
-    <string name="content_setting_notification">비행기와 메시지가 오면 알림이 울려요!</string>
+    <string name="daily_topic">데일리 토픽</string>
+    <string name="description_setting_topic">매일매일 토픽 비행기가 날아와요.</string>
+    <string name="description_setting_notification">비행기와 메시지가 오면 알림이 울려요.</string>
     <!-- sign_out -->
     <string name="title_sign_out">정말 탈퇴 하시겠어요..?</string>
     <string name="content_sign_out">%1$s님과 이별한다니 정말 아쉬워요..\n계정 탈퇴를 하면 서비스 내의 모든 정보가 삭제됩니다.</string>
@@ -113,7 +116,8 @@
     <string name="finish_bottom_sheet">채팅방 나가기</string>
     <string name="report_bottom_sheet">신고하기</string>
     <string name="cancel_bottom_sheet">취소</string>
-
+    <!-- firebase messaging service-->
+    <string name="topic_notification_title">데일리 토픽이 날아왔어요!</string>
 
     <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장이 성공적으로 날아갔어요!\n상대방이 채팅방을 열면 대화할 수 있어요.</string>

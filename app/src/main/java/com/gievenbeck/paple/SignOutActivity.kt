@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.gievenbeck.paple.App.Companion.countryCode
 import com.google.firebase.auth.*
 import com.google.firebase.database.*
 import com.gievenbeck.paple.MainActivity.Companion.UID
@@ -75,8 +76,8 @@ class SignOutActivity : AppCompatActivity() {
 
     private fun signOut() {
         val reference = firebaseDatabase.reference
-        reference.child("Users/$UID").removeValue()
-        reference.child("User-Location").child(UID).setValue(null).addOnSuccessListener {
+        reference.child("Users/$countryCode/$UID").removeValue()
+        reference.child("User-Location").child(countryCode).child(UID).setValue(null).addOnSuccessListener {
             Toast.makeText(this@SignOutActivity, R.string.success_sign_out, Toast.LENGTH_SHORT)
                 .show()
             val intent = Intent(this@SignOutActivity, SignInActivity::class.java)
@@ -111,7 +112,7 @@ class SignOutActivity : AppCompatActivity() {
     }
 
     private fun submitReason(vou: VoiceOfUser) {
-        val ref = FirebaseDatabase.getInstance().reference.child("VOU").push()
+        val ref = FirebaseDatabase.getInstance().reference.child("VOU").child(countryCode).push()
         ref.setValue(vou).addOnSuccessListener {
             Log.d("SignOutActivity", "Submitted the VOU to the server")
             signOut()
