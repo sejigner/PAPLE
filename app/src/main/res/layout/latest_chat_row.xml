@@ -59,7 +59,6 @@
             app:layout_constraintTop_toTopOf="@id/tv_chat_nickname" />
 
         <TextView
-            android:id="@+id/tv_count_message"
             android:fontFamily="@font/noto_sans_cjk_kr_regular"
             android:includeFontPadding="false"
             android:layout_width="20dp"

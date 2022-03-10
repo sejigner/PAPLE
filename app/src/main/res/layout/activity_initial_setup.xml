@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cl_initial_setup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_initialSetting"
@@ -35,15 +34,17 @@
 
             <TextView
                 android:id="@+id/tv_initial_guidance"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/noto_sans_cjk_kr_regular"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="-3sp"
                 android:text="@string/initial_guidance"
                 android:textColor="@color/txt_initialSetting"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_welcome"
                 app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
 

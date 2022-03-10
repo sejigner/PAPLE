@@ -1,54 +1,43 @@
 package com.gievenbeck.paple
 
+import android.app.Service
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.NumberPicker
 import android.widget.Toast
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.messaging.FirebaseMessaging
-import com.gievenbeck.paple.fragment.FragmentHome
-import com.gievenbeck.paple.models.Users
-import kotlinx.android.synthetic.main.activity_initial_setup.*
-import kotlinx.android.synthetic.main.activity_initial_setup.rb_female
-import kotlinx.android.synthetic.main.activity_initial_setup.rb_male
-import java.util.*
-import android.content.Context
-import android.view.MotionEvent
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.app.Service
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.text.InputFilter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.database.*
 import com.gievenbeck.paple.fragment.AlertDialogFragment
+import com.gievenbeck.paple.models.Users
 import com.gievenbeck.paple.room.PaperPlaneDatabase
 import com.gievenbeck.paple.room.PaperPlaneRepository
 import com.gievenbeck.paple.room.User
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.android.synthetic.main.activity_initial_setup.*
+import java.util.*
 import java.util.regex.Pattern
 
 
 class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirmedListener {
-    private var fireBaseAuth: FirebaseAuth? = null
     private var fireBaseUser: FirebaseUser? = null
-    private var fbDatabase: FirebaseDatabase? = null
+    private lateinit var fbDatabase: FirebaseDatabase
     private var isDuplicated: Boolean = false
     private var uid: String? = null
     private var lastTimePressed = 0L
@@ -67,10 +56,11 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial_setup)
 
-        fireBaseAuth = FirebaseAuth.getInstance()
-        fireBaseUser = fireBaseAuth!!.currentUser
         fbDatabase = FirebaseDatabase.getInstance()
-        uid = fireBaseAuth!!.currentUser?.uid
+        fireBaseUser = FirebaseAuth.getInstance().currentUser
+        if (fireBaseUser != null) {
+            uid = fireBaseUser!!.uid
+        }
         initFcmToken()
 
         val repository = PaperPlaneRepository(PaperPlaneDatabase(this))
@@ -194,10 +184,10 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     }
 
     override fun proceed() {
-        if(isOnline) {
+        if (isOnline) {
             setInitialSetupToFirebase()
         } else {
-            Toast.makeText(this, R.string.no_internet,Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -232,7 +222,8 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                     override fun run() {
                         val reference = fbDatabase?.reference!!
                         val query: Query =
-                            reference.child("Users").child(countryCode).orderByChild("nickname").equalTo(s.toString())
+                            reference.child("Users").child(countryCode).orderByChild("nickname")
+                                .equalTo(s.toString())
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 if (snapshot.exists()) {
@@ -305,20 +296,23 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
 
     private fun setInitialSetupToFirebase() {
-        val database = fbDatabase?.reference
         userInfo.status = "active"
-        database?.child("Users")?.child(uid!!)?.setValue(userInfo)?.addOnSuccessListener {
-            Log.d(
-                TAG,
-                "Saved Users info to Firebase Realtime database: ${database.key}"
-            )
-            setInfoToRoomDB()
-            val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
+        if (uid != null) {
+            val ref = fbDatabase.reference.child("Users").child(countryCode).child(uid!!)
+            ref.setValue(userInfo).addOnSuccessListener {
+                Log.d(
+                    TAG,
+                    "Saved Users info to Firebase Realtime database: ${ref.key}"
+                )
+                setInfoToRoomDB()
+                val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            }
         }
+
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -330,14 +324,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             Log.i(TAG, "Google play services updated")
             true
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     override fun onBackPressed() {

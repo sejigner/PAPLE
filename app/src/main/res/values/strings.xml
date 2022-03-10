@@ -17,7 +17,6 @@
     <string name="start">네, 대화 나눠볼래요!</string>
     <!-- my page -->
     <string name="setting">설정</string>
-    <string name="guide">PAPLE 사용법</string>
     <string name="open_source_license">오픈소스 라이선스</string>
     <string name="version_title">버전 정보</string>
     <string name="version_latest">최신버전 : %1$s</string>
@@ -46,7 +45,6 @@
     <!-- sign_in_activity -->
     <string name="hint_enter_number">전화번호를 입력해주세요</string>
     <string name="send_otp">인증코드 요청하기</string>
-    <string name="login_otp">인증코드 요청</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
     <string name="phone_auth_info">건전한 환경을 위해\n청소년 보호법을 준수하여 SMS 인증을 시행하고 있어요!\n전화번호는 사용자 인증 및 로그인 용도로만 사용됩니다.</string>
 
@@ -64,28 +62,22 @@
 
     <!-- initial_setup_activity -->
     <string name="initial_title">프로필 입력</string>
-    <string name="initial_guidance">페플 이용을 위해 여러분을 간략히 소개해주세요\n프로필은 이후에 수정이 불가능합니다</string>
+    <string name="initial_guidance">닉네임을 제외한 개인정보는 노출되지 않습니다.\n개인정보는 안전하게 보관되며,\n동의없이 무단으로 활용되지 않습니다.</string>
     <string name="initial_nickname">닉네임</string>
     <string name="initial_start">시작하기</string>
     <!-- HomeFragment -->
-    <string name="location_update">위치정보 업데이트</string>
     <string name="send_paper">비행기를 날릴래요!</string>
     <string name="advice_home_write">내 이야기를 들어줄 사람이 필요한데\n옆에 아무도 없을 때,\n\n털어놓고 싶은 이야기가 있는데\n지인에게는 할 수 없을 때,\n\n종이비행기에 적어 날려보세요.</string>
     <string name="delete_all_records">전체기록지우기</string>
-    <string name="title">PAPLE</string>
     <string name="app_name">PAPLE</string>
-    <string name="save">저장하기</string>
     <string name="user_birth_year">태어난 해</string>
     <string name="user_gender">성별</string>
     <string name="gender_male">남성</string>
     <string name="gender_female">여성</string>
     <string name="home">HOME</string>
     <string name="chat">Chat</string>
-    <string name="myPage_title">님, 안녕하세요</string>
-    <string name="next">다음</string>
     <string name="start_dialog_replied">채팅을 시작하시겠습니까?</string>
     <string name="my_page">My PAGE</string>
-    <string name="flight_distance">%1$sm 거리의 유저에게 도달했어요 :)</string>
     <string name="first_plane">새로운 비행기</string>
     <string name="first_plane_dialog">%1$s 거리에서\n비행기가 날아왔어요!</string>
     <string name="discard_paper">비행기 버리기</string>
@@ -94,16 +86,8 @@
     <string name="open_chat">열린 대화</string>
     <string name="tip_replied_paper">비행기 답장을 열면 대화창을 열 수 있어요!</string>
     <string name="notice_no_paper">아직 날아온 비행기가 없어요.</string>
-    <string name="chatting">채팅</string>
-    <string name="meter">m</string>
-    <string name="distance">%1$sm</string>
-    <string name="km">km</string>
-    <string name="flight_distance_home">%1$sm 비행합니다</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hint_home">다 적은 후에 종이비행기를 눌러주세요!</string>
     <string name="limit_write">0/200</string>
     <string name="flight_success">비행기가 잘 날아갔어요✈</string>
-    <string name="flight_result">%1$s 거리의 누군가에게\n비행기가 날아갔어요</string>
     <string name="flight_result_untargeted">비행기를 받은 사람이 답장 비행기를 날리면 대화를 시작할 수 있어요 :)</string>
     <string name="sent_paper">보낸 비행기</string>
     <string name="loading_flying">비행 중...✈</string>
@@ -115,14 +99,11 @@
     <string name="cancel_bottom_sheet">취소</string>
 
 
-    <string name="flight_reply_result">%1$s 거리의 상대에게\n답장 비행기를 날렸어요!\n이제 상대방이 대화를 신청할 수 있어요:)</string>
     <string name="flight_reply_result_untargeted">답장이 성공적으로 날아갔어요!\n상대방이 채팅방을 열면 대화할 수 있어요.</string>
     <string name="init_chat_log">대화가 시작되었습니다.</string>
     <string name="finish_chat_log">상대방이 대화를 종료했습니다.</string>
     <string name="report_title">정말 신고하시겠습니까?</string>
     <string name="success_report">성공적으로 신고 처리되었습니다.</string>
-    <string name="btn_login">로그인</string>
-    <string name="reported_chatroom">신고처리된 채팅방입니다.</string>
     <string name="report_guidance">지금 보고 계신 채팅 메시지의 스크린샷이 관리자에게 전송되고, 상대 유저는 차단됩니다.</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
 </resources>

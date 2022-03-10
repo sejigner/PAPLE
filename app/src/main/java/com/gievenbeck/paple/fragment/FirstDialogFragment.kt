@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.R
@@ -25,6 +24,7 @@ import com.gievenbeck.paple.room.*
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
 import com.gievenbeck.paple.ui.PlaneBottomSheet
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_dialog_first.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -113,7 +113,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                 if (textEntered.isNotEmpty()) {
                     val paperPlaneReceiverReference =
                         FirebaseDatabase.getInstance()
-                            .getReference("/PaperPlanes/Receiver/$countryCode/$fromId/$UID")
+                            .getReference("/PaperPlanes/$countryCode/$fromId/$UID")
                     val paperplaneMessage = PaperplaneMessage(
                         paperPlaneReceiverReference.key!!,
                         textEntered,

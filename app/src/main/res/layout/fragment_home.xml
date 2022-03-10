@@ -106,7 +106,7 @@
                         android:layout_width="200dp"
                         android:layout_height="56dp"
                         android:background="@drawable/selector_send_paper"
-                        android:fontFamily="@font/noto_sans_cjj_kr_medium"
+                        android:fontFamily="@font/noto_sans_cjk_kr_regular"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:gravity="center"
                         android:maxLength="250"

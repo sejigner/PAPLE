@@ -13,7 +13,6 @@
         android:background="@drawable/dialog_frame">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

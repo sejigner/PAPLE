@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gievenbeck.paple.R
-import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.room.ChatRooms
+import com.gievenbeck.paple.ui.FragmentChatViewModel
 import kotlinx.android.synthetic.main.latest_chat_row.view.*
 import java.text.SimpleDateFormat
 import java.util.*

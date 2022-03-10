@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_first_bottom_flight"
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:background="@drawable/bg_half_rounded_corner"
@@ -53,7 +52,6 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
-                android:id="@+id/tv_confirm_flight_success"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_cjk_kr_regular"

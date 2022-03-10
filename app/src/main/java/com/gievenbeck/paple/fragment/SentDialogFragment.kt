@@ -10,9 +10,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gievenbeck.paple.R
+import com.gievenbeck.paple.room.MyPaper
+import com.gievenbeck.paple.room.PaperPlaneDatabase
+import com.gievenbeck.paple.room.PaperPlaneRepository
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
-import com.gievenbeck.paple.room.*
 import kotlinx.android.synthetic.main.fragment_dialog_sent.*
 import java.text.SimpleDateFormat
 import java.util.*

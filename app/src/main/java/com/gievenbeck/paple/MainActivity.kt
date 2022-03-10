@@ -1,16 +1,12 @@
 package com.gievenbeck.paple
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.*
-import android.net.*
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,6 +16,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.adapter.MainViewPagerAdapter
+import com.gievenbeck.paple.fragment.*
+import com.gievenbeck.paple.models.LatestChatMessage
+import com.gievenbeck.paple.models.PaperplaneMessage
+import com.gievenbeck.paple.room.*
+import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.gievenbeck.paple.ui.SendLoadingDialog
+import com.gievenbeck.paple.ui.SuccessBottomSheet
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -30,20 +35,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
-import com.gievenbeck.paple.adapter.MainViewPagerAdapter
-import com.gievenbeck.paple.fragment.*
-import com.gievenbeck.paple.models.LatestChatMessage
-import com.gievenbeck.paple.models.PaperplaneMessage
-import com.gievenbeck.paple.room.*
-import com.gievenbeck.paple.ui.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_chat.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import java.util.*
 
 private const val LOCATION_PERMISSION_REQ_CODE = 1000
 
@@ -206,7 +202,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onStart() {
         super.onStart()
-        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$UID")
+        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$countryCode/$UID")
         mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$UID/")
         mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID")
         listenForPlanes()

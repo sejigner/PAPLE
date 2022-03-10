@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.R
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_bottom_sheet_plane.*
 
 class PlaneBottomSheet() : BottomSheetDialogFragment() {
