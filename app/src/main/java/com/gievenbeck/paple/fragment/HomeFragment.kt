@@ -236,7 +236,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         val distance = flightDistance
         val timestamp = System.currentTimeMillis() / 1000L
         val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$toId/$fromId")
+            FirebaseDatabase.getInstance().getReference("/PaperPlanes/$countryCode/$toId/$fromId")
 
         val paperplaneMessage = PaperplaneMessage(
             paperPlaneReceiverReference.key!!,

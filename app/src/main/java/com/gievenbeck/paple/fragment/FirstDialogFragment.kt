@@ -113,7 +113,7 @@ class FirstDialogFragment : DialogFragment(), ReportPlaneDialogFragment.OnConfir
                 if (textEntered.isNotEmpty()) {
                     val paperPlaneReceiverReference =
                         FirebaseDatabase.getInstance()
-                            .getReference("/PaperPlanes/Receiver/$countryCode/$fromId/$UID")
+                            .getReference("/PaperPlanes/$countryCode/$fromId/$UID")
                     val paperplaneMessage = PaperplaneMessage(
                         paperPlaneReceiverReference.key!!,
                         textEntered,

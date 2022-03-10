@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
 
     override fun onStart() {
         super.onStart()
-        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/Receiver/$countryCode/$UID")
+        mRefPlane = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$countryCode/$UID")
         mRefMessages = FirebaseDatabase.getInstance().getReference("/Latest-messages/$countryCode/$UID/")
         mRefStatus = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID")
         listenForPlanes()
