@@ -11,12 +11,12 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
 import com.gievenbeck.paple.ui.FragmentChatViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 
 
 private const val TAG = "SplashActivity"

@@ -2,7 +2,6 @@ package com.gievenbeck.paple
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.location.Location
 
 class MySharedPreferences(context: Context) {
 

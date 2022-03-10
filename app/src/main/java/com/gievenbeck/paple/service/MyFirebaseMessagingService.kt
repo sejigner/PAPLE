@@ -3,7 +3,6 @@ package com.gievenbeck.paple.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,14 +13,14 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.gievenbeck.paple.App.Companion.countryCode
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.R
 import com.gievenbeck.paple.fragment.FragmentHome
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

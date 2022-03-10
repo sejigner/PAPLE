@@ -1,11 +1,10 @@
 package com.gievenbeck.paple
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.gievenbeck.paple.App.Companion.prefs
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.fragment.FragmentHome
@@ -14,6 +13,7 @@ import com.gievenbeck.paple.room.PaperPlaneRepository
 import com.gievenbeck.paple.room.User
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_setting.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO

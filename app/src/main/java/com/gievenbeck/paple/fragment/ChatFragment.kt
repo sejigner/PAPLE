@@ -12,16 +12,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
-import com.gievenbeck.paple.adapter.FirstPaperPlaneAdapter
-import com.gievenbeck.paple.adapter.LatestMessageAdapter
-import com.gievenbeck.paple.adapter.RepliedPaperPlaneAdapter
 import com.gievenbeck.paple.ChatLogActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.R
+import com.gievenbeck.paple.adapter.FirstPaperPlaneAdapter
+import com.gievenbeck.paple.adapter.LatestMessageAdapter
+import com.gievenbeck.paple.adapter.RepliedPaperPlaneAdapter
 import com.gievenbeck.paple.interfaces.FirstPlaneListener
+import com.gievenbeck.paple.room.FirstPaperPlanes
+import com.gievenbeck.paple.room.PaperPlaneDatabase
+import com.gievenbeck.paple.room.PaperPlaneRepository
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.gievenbeck.paple.ui.FragmentChatViewModelFactory
-import com.gievenbeck.paple.room.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.android.synthetic.main.latest_chat_row.*
 
