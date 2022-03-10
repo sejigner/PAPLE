@@ -234,7 +234,7 @@ exports.notifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/{recipien
         })
     });
 
-exports.newNotifyNewMessage = functions.database.ref('/User-messages/KR/{recipientUid}/{senderUid}/{messageId}')
+exports.newNotifyNewMessage = functions.database.ref('/User-messages/{countryCode}/{recipientUid}/{senderUid}/{messageId}')
     .onWrite(async (change, context) => {
         const recipientUid = context.params.recipientUid;
         const senderUid = context.params.senderUid;
@@ -247,10 +247,10 @@ exports.newNotifyNewMessage = functions.database.ref('/User-messages/KR/{recipie
         );
 
         const getDeviceTokensPromise = admin.database()
-            .ref(`/Users/KR/${recipientUid}/registrationToken`).once('value');
+            .ref(`/Users/{countryCode}/${recipientUid}/registrationToken`).once('value');
 
         const getSenderProfilePromise = admin.database()
-            .ref(`/Users/KR/${senderUid}/nickname`).once('value');
+            .ref(`/Users/{countryCode}/${senderUid}/nickname`).once('value');
 
         let tokensSnapshot;
         let senderNicknameSnapshot;
@@ -309,7 +309,7 @@ exports.newNotifyNewMessage = functions.database.ref('/User-messages/KR/{recipie
         });
         return Promise.all(tokensToRemove);
     });
-exports.newNotifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/KR/{recipientUid}/{senderUid}')
+exports.newNotifyNewPlane = functions.database.ref('/PaperPlanes/{countryCode}/{recipientUid}/{senderUid}')
     .onWrite(async (change, context) => {
         const recipientUid = context.params.recipientUid;
         const senderUid = context.params.senderUid;
@@ -322,13 +322,13 @@ exports.newNotifyNewPlane = functions.database.ref('/PaperPlanes/Receiver/KR/{re
         );
 
         const getDeviceTokensPromise = admin.database()
-            .ref(`/Users/KR/${recipientUid}/registrationToken`).once('value');
+            .ref(`/Users/{countryCode}/${recipientUid}/registrationToken`).once('value');
 
         const getFlightDistance = admin.database()
-            .ref(`/PaperPlanes/Receiver/KR/${recipientUid}/${senderUid}/flightDistance`).once('value');
+            .ref(`/PaperPlanes/{countryCode}/${recipientUid}/${senderUid}/flightDistance`).once('value');
 
         const getPlaneMessage = admin.database()
-            .ref(`/PaperPlanes/Receiver/KR/${recipientUid}/${senderUid}/text`).once('value');
+            .ref(`/PaperPlanes/{countryCode}/${recipientUid}/${senderUid}/text`).once('value');
 
         let tokensSnapshot;
         let flightDistanceSnapshot;
