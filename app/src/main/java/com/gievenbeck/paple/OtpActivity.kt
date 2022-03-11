@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gievenbeck.paple.App.Companion.countryCode
+import com.gievenbeck.paple.InitialSetupActivity.Companion.TEST_UID
 import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
 import com.gievenbeck.paple.ui.LoadingDialog
 import com.google.firebase.FirebaseException
@@ -116,7 +117,8 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
             override fun onVerificationFailed(e: FirebaseException) {
                 Log.d("@OtpActivity", "onVerificationFailed $e")
                 dismissLoadingDialog()
-                Toast.makeText(this@OtpActivity, "인증 실패 - 번호를 다시 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OtpActivity, "인증 실패 - 번호를 다시 입력해주세요.", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             // On code is sent by the firebase this method is called
@@ -177,40 +179,83 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val uid = FirebaseAuth.getInstance().currentUser?.uid
-                    val reference =
-                        fbDatabase.reference.child("Users").child(countryCode).child(uid!!).child("status")
-                    reference.get()
-                        .addOnSuccessListener { it ->
-                            if (it.value != null) {
-                                if(it.value == "suspended") {
-                                    confirmSuspend()
+                    if (uid != TEST_UID) {
+                        val reference =
+                            fbDatabase.reference.child("Users").child(countryCode).child(uid!!)
+                                .child("status")
+                        reference.get()
+                            .addOnSuccessListener { it ->
+                                if (it.value != null) {
+                                    if (it.value == "suspended") {
+                                        confirmSuspend()
+                                    } else {
+                                        Log.d(
+                                            MainActivity.TAG,
+                                            "Checked, User Info already set - user's status : ${it.value}"
+                                        )
+                                        startActivity(
+                                            Intent(
+                                                applicationContext,
+                                                MainActivity::class.java
+                                            )
+                                        )
+                                        finish()
+                                    }
                                 } else {
-                                    Log.d(
-                                        MainActivity.TAG,
-                                        "Checked, User Info already set - user's status : ${it.value}"
-                                    )
-                                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                                    val setupIntent =
+                                        Intent(this@OtpActivity, InitialSetupActivity::class.java)
+                                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(setupIntent)
                                     finish()
                                 }
-                            } else {
-                                val setupIntent =
-                                    Intent(this@OtpActivity, InitialSetupActivity::class.java)
-                                setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivity(setupIntent)
-                                finish()
                             }
-                        }
+                    } else {
+                        val reference =
+                        fbDatabase.reference.child("Users").child("test").child(uid!!)
+                            .child("status")
+                        reference.get()
+                            .addOnSuccessListener { it ->
+                                if (it.value != null) {
+                                    if (it.value == "suspended") {
+                                        confirmSuspend()
+                                    } else {
+                                        Log.d(
+                                            MainActivity.TAG,
+                                            "Checked, User Info already set - user's status : ${it.value}"
+                                        )
+                                        startActivity(
+                                            Intent(
+                                                applicationContext,
+                                                MainActivity::class.java
+                                            )
+                                        )
+                                        finish()
+                                    }
+                                } else {
+                                    val setupIntent =
+                                        Intent(this@OtpActivity, InitialSetupActivity::class.java)
+                                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(setupIntent)
+                                    finish()
+                                }
+                            }
+
+                    }
+
                 } else {
                     // Sign in failed, display a message and update the UI
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
-                        Toast.makeText(this, "인증 실패 - 받으신 인증 코드를 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "인증 실패 - 받으신 인증 코드를 확인해주세요.", Toast.LENGTH_SHORT)
+                            .show()
                         dismissLoadingDialog()
                     }
                 }
             }
     }
+
     private fun confirmSuspend() {
         val alertDialog = SuspendAlertDialogFragment.newInstance(
             "규정 위반으로 사용 정지된 계정입니다.", "종료하기"
