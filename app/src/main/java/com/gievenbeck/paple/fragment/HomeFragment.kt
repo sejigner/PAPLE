@@ -30,6 +30,7 @@ import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
 import com.gievenbeck.paple.App.Companion.countryCode
+import com.gievenbeck.paple.InitialSetupActivity.Companion.TEST_UID
 import com.gievenbeck.paple.MainActivity.Companion.getUid
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.R
@@ -434,15 +435,28 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
-        var ref: DatabaseReference =
-            FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
+        if(uid != TEST_UID) {
+            val ref: DatabaseReference =
+                FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
 
-        var geoFire = GeoFire(ref)
-        if (uid.isNotEmpty()) {
-            geoFire.setLocation(
-                uid, GeoLocation(latitude, longitude)
-            )
+            val geoFire = GeoFire(ref)
+            if (uid.isNotEmpty()) {
+                geoFire.setLocation(
+                    uid, GeoLocation(latitude, longitude)
+                )
+            }
+        } else {
+            val ref: DatabaseReference =
+                FirebaseDatabase.getInstance().getReference("User-Location").child("test")
+
+            val geoFire = GeoFire(ref)
+            if (uid.isNotEmpty()) {
+                geoFire.setLocation(
+                    uid, GeoLocation(latitude, longitude)
+                )
+            }
         }
+
     }
 
     override fun onRequestPermissionsResult(
