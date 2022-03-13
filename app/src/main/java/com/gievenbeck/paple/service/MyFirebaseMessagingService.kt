@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.InitialSetupActivity.Companion.TEST_UID
 import com.gievenbeck.paple.MainActivity
 import com.gievenbeck.paple.MainActivity.Companion.UID
 import com.gievenbeck.paple.R
@@ -99,12 +100,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onNewToken(token: String) {
-        val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken/")
-        fbDatabase.removeValue()
-        val ref = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID/registrationToken/")
-        ref.child(token).setValue(true).addOnSuccessListener {
-            Log.d(FragmentHome.TAG, "updated fcmToken: $token")
+        if(UID != TEST_UID) {
+            val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/$countryCode/$UID/registrationToken/")
+            val ref = FirebaseDatabase.getInstance().getReference("/Users/$countryCode/$UID/registrationToken/")
+            ref.child(token).setValue(true).addOnSuccessListener {
+                Log.d(FragmentHome.TAG, "updated fcmToken: $token")
+                fbDatabase.removeValue()
+            }
+        } else {
+            val fbDatabase = FirebaseDatabase.getInstance().reference.child("Users/test/$UID/registrationToken/")
+            val ref = FirebaseDatabase.getInstance().getReference("/Users/test/$UID/registrationToken/")
+            ref.child(token).setValue(true).addOnSuccessListener {
+                Log.d(FragmentHome.TAG, "updated fcmToken: $token")
+                fbDatabase.removeValue()
+            }
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
