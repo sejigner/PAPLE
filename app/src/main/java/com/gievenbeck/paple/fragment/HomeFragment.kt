@@ -30,6 +30,7 @@ import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
 import com.gievenbeck.paple.App.Companion.countryCode
+import com.gievenbeck.paple.InitialSetupActivity.Companion.TEST_UID
 import com.gievenbeck.paple.MainActivity.Companion.getUid
 import com.gievenbeck.paple.MainActivity.Companion.isOnline
 import com.gievenbeck.paple.R
@@ -104,7 +105,8 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         viewModel =
             ViewModelProvider(requireActivity(), factory)[FragmentChatViewModel::class.java]
 
-        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
@@ -117,10 +119,11 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
         tv_paper_send.setOnClickListener {
             if (isOnline) {
-                if(userCurrentLocation!=null) {
+                if (userCurrentLocation != null) {
                     mListener?.confirmFlight()
                 } else {
-                    Toast.makeText(requireActivity(),"먼저 위치 정보를 업데이트 해주세요!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), "먼저 위치 정보를 업데이트 해주세요!", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 Toast.makeText(requireActivity(), R.string.no_internet, Toast.LENGTH_SHORT).show()
@@ -152,7 +155,8 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // 키보드 내리기
-                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val inputMethodManager =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(et_write_paper.windowToken, 0)
                 handled = true
             }
@@ -185,7 +189,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         viewModel.setCurrentLocation("")
         viewModel.currentLocation.observe(viewLifecycleOwner, {
             Log.d("current location", "result : $it")
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 tv_update_location.text = it
             } else {
                 tv_update_location.text = resources.getString(R.string.update_address)
@@ -239,8 +243,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         val fromId = uid
         val distance = flightDistance
         val timestamp = System.currentTimeMillis() / 1000L
-        val paperPlaneReceiverReference =
-            FirebaseDatabase.getInstance().getReference("/PaperPlanes/$countryCode/$toId/$fromId")
+        val paperPlaneReceiverReference = FirebaseDatabase.getInstance().getReference("/PaperPlanes/$countryCode/$toId/$fromId")
 
         val paperplaneMessage = PaperplaneMessage(
             paperPlaneReceiverReference.key!!,
@@ -379,7 +382,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         ) {
             mListener?.checkLocationAccessPermission()
         } else {
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                     // getting the last known or current location
                     latitude = location.latitude
@@ -396,7 +399,11 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
                     ).show()
                 }
             } else {
-                Toast.makeText(requireActivity(),"위치 정보를 업데이트 하시려면 기기의 GPS 기능을 켜주세요.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireActivity(),
+                    "위치 정보를 업데이트 하시려면 기기의 GPS 기능을 켜주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
@@ -428,14 +435,28 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
     }
 
     private fun setLocationToDatabase(latitude: Double, longitude: Double) {
-        var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
+        if(uid != TEST_UID) {
+            val ref: DatabaseReference =
+                FirebaseDatabase.getInstance().getReference("User-Location").child(countryCode)
 
-        var geoFire = GeoFire(ref)
-        if(uid.isNotEmpty()) {
-            geoFire.setLocation(
-                uid, GeoLocation(latitude, longitude)
-            )
+            val geoFire = GeoFire(ref)
+            if (uid.isNotEmpty()) {
+                geoFire.setLocation(
+                    uid, GeoLocation(latitude, longitude)
+                )
+            }
+        } else {
+            val ref: DatabaseReference =
+                FirebaseDatabase.getInstance().getReference("User-Location").child("test")
+
+            val geoFire = GeoFire(ref)
+            if (uid.isNotEmpty()) {
+                geoFire.setLocation(
+                    uid, GeoLocation(latitude, longitude)
+                )
+            }
         }
+
     }
 
     override fun onRequestPermissionsResult(

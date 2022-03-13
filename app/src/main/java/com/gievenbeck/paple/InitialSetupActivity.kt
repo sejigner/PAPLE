@@ -50,6 +50,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     companion object {
         const val TAG = "InitialSetupActivity"
+        const val TEST_UID = "fkAkIu5a9ea5LXRqzgzLAPI4dMD2"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -297,7 +298,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
     private fun setInitialSetupToFirebase() {
         userInfo.status = "active"
-        if (uid != null) {
+        if (uid != null && uid != TEST_UID) {
             val ref = fbDatabase.reference.child("Users").child(countryCode).child(uid!!)
             ref.setValue(userInfo).addOnSuccessListener {
                 Log.d(
@@ -311,8 +312,21 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 startActivity(intent)
                 finish()
             }
+        } else if (uid == TEST_UID) {
+            val ref = fbDatabase.reference.child("Users").child("test").child(uid!!)
+            ref.setValue(userInfo).addOnSuccessListener {
+                Log.d(
+                    TAG,
+                    "Saved Users info to Firebase Realtime database: ${ref.key}"
+                )
+                setInfoToRoomDB()
+                val intent = Intent(this@InitialSetupActivity, SplashCongratsActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            }
         }
-
     }
 
     private fun checkGooglePlayServices(): Boolean {
