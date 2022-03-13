@@ -12,6 +12,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.gievenbeck.paple.App.Companion.countryCode
 import com.gievenbeck.paple.App.Companion.prefs
+import com.gievenbeck.paple.InitialSetupActivity.Companion.TEST_UID
 import com.gievenbeck.paple.fragment.SuspendAlertDialogFragment
 import com.gievenbeck.paple.ui.FragmentChatViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -63,8 +64,9 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
     private fun verifyUserIsLoggedIn() {
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
-        if (user != null) {
-            val reference = fbDatabase.reference.child("Users").child(countryCode).child(uid!!).child("status")
+        if (user != null && uid != TEST_UID) {
+            val reference =
+                fbDatabase.reference.child("Users").child(countryCode).child(uid!!).child("status")
             reference.get()
                 .addOnSuccessListener { it ->
                     if (it.value != null) {
@@ -89,10 +91,29 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
                     Log.e("SplashActivity", it.message.toString())
                     startMainActivity()
                 }
+        } else if (user != null && uid == TEST_UID) {
+            // 테스트용
+            val reference =
+                fbDatabase.reference.child("Users").child("test").child(uid).child("status")
+            reference.get()
+                .addOnSuccessListener { it ->
+                    if (it.value != null) {
+                        val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.putExtra("IS_AD", false)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        startInitialSetting()
+                    }
+                }.addOnFailureListener {
+                    startMainActivity()
+                }
         } else {
-                prefs.myNickname = ""
-                startActivity(Intent(applicationContext, SignInActivity::class.java))
-                finish()
+            prefs.myNickname = ""
+            startActivity(Intent(applicationContext, SignInActivity::class.java))
+            finish()
         }
     }
 
@@ -133,26 +154,6 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
             systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
             navigationBarColor = Color.TRANSPARENT
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            systemUiVisibility = systemUiVisibility or
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            window.decorView.systemUiVisibility = systemUiVisibility
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            winParams.flags = winParams.flags or
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            winParams.flags = winParams.flags and
-                    (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or
-                            WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION).inv()
-            window.statusBarColor = statusBarColor
-            window.navigationBarColor = navigationBarColor
-        }
-
         window.attributes = winParams
     }
 
