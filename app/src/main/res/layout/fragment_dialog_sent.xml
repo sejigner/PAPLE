@@ -46,7 +46,7 @@
                 android:maxLines="20"
                 android:scrollbars="vertical"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@id/tv_dialog_time_sent"
                 app:layout_constraintEnd_toEndOf="parent"
