@@ -531,7 +531,7 @@ class MainActivity : AppCompatActivity(), FragmentHome.FlightListener,
                                         UID,
                                         3,
                                         getString(R.string.init_chat_log),
-                                        latestChatMessage.time
+                                        latestChatMessage.time - 1
                                     )
                                 viewModel.insert(noticeMessage)
                                 mRefMessages.child(snapshot.key!!).removeValue()
