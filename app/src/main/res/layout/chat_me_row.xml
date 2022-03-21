@@ -15,7 +15,7 @@
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
         android:maxWidth="240dp"
-        android:textColor="@color/black"
+        android:textColor="@color/black1"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

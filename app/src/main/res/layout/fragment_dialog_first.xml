@@ -67,7 +67,7 @@
                 android:fontFamily="@font/noto_sans_cjk_kr_regular"
                 android:includeFontPadding="false"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_dialog_time_first" />
 
@@ -115,7 +115,7 @@
                 android:maxHeight="100dp"
                 android:maxLength="250"
                 android:padding="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/black1"
                 android:textColorHint="#c4c4c4"
                 android:textCursorDrawable="@drawable/edit_text_cursor"
                 android:textSize="18sp"
