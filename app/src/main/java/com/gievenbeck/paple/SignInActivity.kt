@@ -39,12 +39,12 @@ class SignInActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
-        cl_request_otp.isEnabled = false
+        tv_request_otp.isEnabled = false
         loadingDialog = LoadingDialog(this@SignInActivity)
 
 
         // start verification on click of the button
-        cl_request_otp.setOnClickListener {
+        tv_request_otp.setOnClickListener {
             if (isOnline) {
                 signIn()
                 showLoadingDialog()
@@ -96,7 +96,7 @@ class SignInActivity : AppCompatActivity() {
         et_phone_number.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    cl_request_otp.isEnabled = false
+                    tv_request_otp.isEnabled = false
                 }
 
             }
@@ -107,7 +107,7 @@ class SignInActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    cl_request_otp.isEnabled = true
+                    tv_request_otp.isEnabled = true
                 }
             }
         })
