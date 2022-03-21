@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
@@ -47,6 +48,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.util.*
@@ -176,25 +180,34 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
         val mLayoutManager = LinearLayoutManager(requireActivity())
         mLayoutManager.reverseLayout = true
-        mLayoutManager.stackFromEnd = true
+        mLayoutManager.stackFromEnd = false
         mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rv_sent_paper.layoutManager = mLayoutManager
 
-        viewModel.allMyPaperPlaneRecord(uid).observe(viewLifecycleOwner, Observer {
-            sentPlaneAdapter.differ.submitList(it)
+//        sentPlaneAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+//
+//            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+//                super.onItemRangeChanged(positionStart, itemCount)
+//                rv_sent_paper.scrollToPosition(itemCount-1)
+//            }
+//        })
+
+        viewModel.allMyPaperPlaneRecord(uid).observe(viewLifecycleOwner) {
+            sentPlaneAdapter.differ.submitList(it) {
+                rv_sent_paper.scrollToPosition(it.size-1)
+            }
             tv_delete_all_records.isEnabled = it.isNotEmpty()
-            rv_sent_paper.scrollToPosition(it.size - 1)
-        })
+        }
 
         viewModel.setCurrentLocation("")
-        viewModel.currentLocation.observe(viewLifecycleOwner, {
+        viewModel.currentLocation.observe(viewLifecycleOwner) {
             Log.d("current location", "result : $it")
             if (it.isNotEmpty()) {
                 tv_update_location.text = it
             } else {
                 tv_update_location.text = resources.getString(R.string.update_address)
             }
-        })
+        }
         getCurrentLocation()
     }
 
@@ -255,14 +268,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             false
         )
 
-        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnFailureListener {
-            Log.d(FragmentHome.TAG, "Receiver 실패")
-            Toast.makeText(
-                requireActivity(),
-                resources.getText(R.string.no_internet),
-                Toast.LENGTH_SHORT
-            ).show()
-        }.addOnSuccessListener {
+        paperPlaneReceiverReference.setValue(paperplaneMessage).addOnSuccessListener {
             val sentPaper = MyPaperPlaneRecord(
                 paperplaneMessage.toId,
                 uid,
@@ -279,31 +285,27 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
 
     fun getClosestUser() {
         val userLocation: DatabaseReference =
-            FirebaseDatabase.getInstance().reference.child("User-Location").child(countryCode)
+            FirebaseDatabase.getInstance().getReference("User-Location/$countryCode")
         val geoFire = GeoFire(userLocation)
         val geoQuery: GeoQuery = geoFire.queryAtLocation(GeoLocation(latitude, longitude), radius)
-        geoQuery.removeAllListeners()
 
+        geoQuery.removeAllListeners()
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
             override fun onKeyEntered(key: String, location: GeoLocation) {
                 runBlocking {
-                    Log.d("geoQuery", key.toString())
                     if ((!userFound) && key != uid) {
-                        // Room DB로 대체
+
                         val haveMet: Boolean = viewModel.haveMet(uid, key).await()
-                        if (haveMet) {
-                            // user exists in the database
-                            Log.d(TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
-                        } else {
-                            // user does not exist in the database
+                        if (!haveMet) {
                             userFound = true
                             foundUserId = key
                             val userFoundLocation =
                                 GeoLocation(location.latitude, location.longitude)
 
                             calDistance(userFoundLocation)
-
                             performSendAnonymousMessage()
+                        } else {
+                            Log.d("query-debug", "found : $haveMet")
                         }
                     }
                 }
@@ -320,7 +322,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             override fun onGeoQueryReady() {
                 if (!userFound && (radius < MAX_RADIUS)) {
                     radius++
-                    Log.d("test", "$radius")
                     getClosestUser()
                 } else {
                     userFound = false
@@ -330,7 +331,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             }
 
             override fun onGeoQueryError(error: DatabaseError) {
-
             }
         })
     }
