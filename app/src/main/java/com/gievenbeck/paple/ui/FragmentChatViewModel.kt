@@ -14,12 +14,12 @@ class FragmentChatViewModel(private val repository: PaperPlaneRepository) : View
 
     val flightResult = MutableLiveData<String>()
     fun setResult(result : String) {
-        flightResult.value = result
+        flightResult.postValue(result)
     }
 
     val currentLocation = MutableLiveData<String>()
     fun setCurrentLocation(location : String) {
-        currentLocation.value = location
+        currentLocation.postValue(location)
     }
 
     // In coroutines thread insert item in insert function.
