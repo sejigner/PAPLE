@@ -86,10 +86,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/initial_nickname"
+        android:text="@string/initial_birth_year"
         android:textColor="@color/black1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_nickname_box" />
+        app:layout_constraintTop_toBottomOf="@id/duplication_check" />
 
     <ImageView
         android:id="@+id/iv_birth_year_box"
@@ -121,10 +121,11 @@
 
     <TextView
         android:id="@+id/duplication_check"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/iv_nickname_box"
         app:layout_constraintTop_toBottomOf="@id/iv_nickname_box" />
 
     <ProgressBar
@@ -158,7 +159,7 @@
         android:text="@string/user_gender"
         android:textColor="@color/black1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_birth_year_box" />
+        app:layout_constraintTop_toBottomOf="@id/tv_validate_birth_year" />
 
     <ImageView
         android:id="@+id/iv_gender_box"
@@ -190,7 +191,7 @@
         android:textAlignment="center"
         android:textColor="@color/black2"
         android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_initial_start"
+        app:layout_constraintBottom_toTopOf="@id/tv_initial_start"/>
 
 
     <TextView

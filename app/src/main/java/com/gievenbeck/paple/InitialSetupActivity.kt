@@ -217,13 +217,16 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 et_nickname.gravity = Gravity.END
                 timer.schedule(object : TimerTask() {
                     override fun run() {
-                        val reference = fbDatabase?.reference!!
+                        val reference = fbDatabase.reference
                         val query: Query =
                             reference.child("Users").child(countryCode).orderByChild("nickname")
                                 .equalTo(s.toString())
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 if (snapshot.exists()) {
+                                    duplication_check.text =
+                                        getString(R.string.initial_duplicated_nickname)
+                                    duplication_check.visibility = View.VISIBLE
                                     duplication_check.setTextColor(
                                         ContextCompat.getColor(
                                             applicationContext,
@@ -232,21 +235,24 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                                     )
                                     userInfo.nickname = s.toString()
                                     isDuplicated = true
-                                    Log.d(this.toString(), "닉네임 중복 : $s")
-                                    duplication_check_progress_bar.visibility = View.INVISIBLE
-                                    duplication_check.text = "이미 사용중인 닉네임이에요!"
+                                    duplication_check_progress_bar.visibility = View.GONE
+                                    iv_nickname_box.setBackgroundColor(
+                                        ContextCompat.getColor(
+                                            this@InitialSetupActivity,
+                                            R.color.txt_red
+                                        )
+                                    )
                                 } else {
                                     duplication_check.setTextColor(
                                         ContextCompat.getColor(
                                             applicationContext,
-                                            R.color.paperplane_theme
+                                            R.color.black2
                                         )
                                     )
-                                    Log.d(this.toString(), "닉네임 사용 가능 : $s")
                                     userInfo.nickname = s.toString()
                                     isDuplicated = false
-                                    duplication_check_progress_bar.visibility = View.INVISIBLE
-                                    duplication_check.text = "사용 가능한 닉네임이에요!"
+                                    duplication_check.visibility = View.GONE
+                                    duplication_check_progress_bar.visibility = View.GONE
                                 }
                             }
 
