@@ -6,6 +6,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,8 +19,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 
 class SignInActivity : AppCompatActivity() {
@@ -46,8 +49,12 @@ class SignInActivity : AppCompatActivity() {
         // start verification on click of the button
         tv_request_otp.setOnClickListener {
             if (isOnline) {
-                signIn()
-                showLoadingDialog()
+                if (!Pattern.matches("^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$", et_phone_number.text)) {
+                    Toast.makeText(this, "전화번호 형식에 맞춰 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                } else {
+                    signIn()
+                    showLoadingDialog()
+                }
             } else {
                 Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
@@ -92,6 +99,8 @@ class SignInActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        et_phone_number.addTextChangedListener(PhoneNumberFormattingTextWatcher())
 
         et_phone_number.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -160,6 +169,7 @@ class SignInActivity : AppCompatActivity() {
 
         // get the phone number from edit text and append the country cde with it
         if (phoneNumber.isNotEmpty()) {
+            phoneNumber.replace("[^0-9]","")
             phoneNumber = "+82$phoneNumber"
             sendVerificationCode(phoneNumber)
             Log.d("Verification", "Number inserted $phoneNumber")

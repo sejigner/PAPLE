@@ -21,7 +21,7 @@
         android:layout_width="143dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:src="@drawable/bg_logo"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
@@ -30,38 +30,96 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back_otp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/black2"
+        android:text="@string/title_phone_number"
+        app:layout_constraintBottom_toTopOf="@id/iv_phone_number"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_number_input"
+        app:layout_constraintBottom_toTopOf="@id/tv_title_otp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="28dp"/>
+
+    <TextView
+        android:id="@+id/tv_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textColor="@color/black2"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
+        android:inputType="number"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/iv_phone_number"
+        app:layout_constraintBottom_toBottomOf="@id/iv_phone_number"
+        app:layout_constraintLeft_toLeftOf="@id/iv_phone_number"
+        app:layout_constraintRight_toRightOf="@id/iv_phone_number" />
 
 
-    <!--We will use it to enter OTP after we receive OTP-->
+    <TextView
+        android:id="@+id/tv_title_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_otp"
+        app:layout_constraintBottom_toTopOf="@id/iv_input_box_otp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black1"
+        android:layout_marginBottom="12dp"/>
+
+
+    <ImageView
+        android:id="@+id/iv_input_box_otp"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_number_input"
+        app:layout_constraintBottom_toTopOf="@id/tv_request_resend"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="28dp"/>
+
     <EditText
         android:id="@+id/et_otp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:hint="@string/hint_otp"
+        android:background="@null"
+        android:textColor="@color/black2"
         android:includeFontPadding="false"
         android:inputType="number"
-        android:textSize="24sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tv_request_resend"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/iv_input_box_otp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_input_box_otp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_input_box_otp"
+        app:layout_constraintRight_toRightOf="@id/iv_input_box_otp" />
 
     <TextView
         android:id="@+id/tv_request_resend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="33dp"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
-        android:text="@string/otp_body_no_otp"
-        android:textSize="14sp"
+        android:background="@drawable/ic_no_otp"
+        android:text="@string/otp_resend"
+        android:textColor="@color/black2"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/tv_otp_confirm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <TextView
@@ -70,6 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:textColor="@color/paperplane_theme"
         android:includeFontPadding="false"
         android:text="@string/otp_time"
         android:textSize="14sp"
