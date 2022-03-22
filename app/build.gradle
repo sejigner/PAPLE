@@ -17,7 +17,15 @@ android {
     buildToolsVersion "30.0.3"
     packagingOptions {
         resources {
-            excludes += ['META-INF/atomicfu.kotlin_module']
+            excludes += ['META-INF/atomicfu.kotlin_module', 'META-INF/DEPENDENCIES']
+        }
+    }
+    signingConfigs {
+        release {
+            keyAlias 'key'
+            keyPassword 'tpwls1229717'
+            storeFile file('paple.jks')
+            storePassword 'tpwls1229717'
         }
     }
 
@@ -114,12 +122,12 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation platform('com.google.firebase:firebase-bom:29.0.4')
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
+    implementation 'com.google.firebase:firebase-auth:21.0.2'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
+    implementation 'com.google.firebase:firebase-messaging:23.0.1'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.4'
     implementation 'com.google.firebase:firebase-storage'
 
     // 오픈소스 라이선스 자동 목록

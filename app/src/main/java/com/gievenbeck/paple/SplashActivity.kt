@@ -42,7 +42,7 @@ class SplashActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirm
 
     private fun createTimer(seconds: Long) {
 
-        val countDownTimer: CountDownTimer = object : CountDownTimer(seconds * 1000, 1000) {
+        val countDownTimer: CountDownTimer = object : CountDownTimer(seconds * 800, 1000) {
             override fun onTick(millisUntilFinished: Long) {
             }
 

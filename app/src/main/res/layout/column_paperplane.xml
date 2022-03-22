@@ -27,7 +27,7 @@
             android:letterSpacing="-0.03"
             android:lineSpacingExtra="3dp"
             android:maxLines="1"
-            android:textColor="@color/black"
+            android:textColor="@color/black1"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/tv_paperplane_distance"
             app:layout_constraintEnd_toEndOf="parent"
