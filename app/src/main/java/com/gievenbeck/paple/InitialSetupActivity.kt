@@ -9,9 +9,9 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.NumberPicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -73,9 +73,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         inputMethodManager =
             getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        rg_initial_gender.visibility = View.GONE
-        numberPicker_birth_year_initial_setup.visibility = View.GONE
-
         val networkConnect = NetworkConnection(this)
         networkConnect.observe(this) { isConnected ->
             isOnline = when (isConnected) {
@@ -84,69 +81,54 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             }
         }
 
-        btn_birth_year.setOnClickListener {
-            if (numberPicker_birth_year_initial_setup.visibility == View.GONE) {
-                et_nickname.clearFocus()
-                hideKeyboard()
-                Log.d("Year", "$year")
-                numberPicker_birth_year_initial_setup.minValue = date.get(Calendar.YEAR) - 80
-                numberPicker_birth_year_initial_setup.maxValue = date.get(Calendar.YEAR) - 12
-                userInfo.birthYear = "1994"
-                tv_initial_birth_year.text = "1994"
-                numberPicker_birth_year_initial_setup.value = 1994
-                Log.d(
-                    "Year",
-                    "${numberPicker_birth_year_initial_setup.minValue}~${numberPicker_birth_year_initial_setup.maxValue}"
-                )
+        val items= resources.getStringArray(R.array.gender_array)
+        val spinnerAdapter= object : ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, items) {
 
-                rg_initial_gender.visibility = View.GONE
-                numberPicker_birth_year_initial_setup.visibility = View.VISIBLE
-
-                numberPicker_birth_year_initial_setup.setOnValueChangedListener { picker: NumberPicker, oldVal, newVal ->
-                    Log.d("InitialSetupActivity", "oldVal : ${oldVal}, newVal : $newVal")
-                    userInfo.birthYear = newVal.toString()
-                    tv_initial_birth_year.text = newVal.toString()
-                    tv_initial_birth_year.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.black1
-                        )
-                    )
-                    Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
-
-                }
+            override fun isEnabled(position: Int): Boolean {
+                // Disable the first item from Spinner
+                // First item will be used for hint
+                return position != 0
             }
+
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
+                val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
+                //set the color of first item in the drop down list to gray
+                if(position == 0) {
+                    view.setTextColor(ContextCompat.getColor(this@InitialSetupActivity, R.color.black2))
+                } else {
+                    //here it is possible to define color for other items by
+                    //view.setTextColor(Color.RED)
+                }
+                return view
+            }
+
         }
 
-        btn_gender.setOnClickListener {
-            if (rg_initial_gender.visibility == View.GONE) {
-                hideKeyboard()
-                numberPicker_birth_year_initial_setup.visibility = View.GONE
-                rg_initial_gender.visibility = View.VISIBLE
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_gender.adapter = spinnerAdapter
 
-                rb_female.setOnClickListener {
-                    userInfo.gender = "female"
-                    tv_initial_gender.text = "여성"
-                    tv_initial_gender.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.black1
-                        )
-                    )
-                }
+        spinner_gender.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
 
-                rb_male.setOnClickListener {
-                    userInfo.gender = "male"
-                    tv_initial_gender.text = "남성"
-                    tv_initial_gender.setTextColor(
-                        ContextCompat.getColor(
-                            applicationContext,
-                            R.color.black1
-                        )
-                    )
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val value = parent!!.getItemAtPosition(position).toString()
+                if(value == items[0]){
+                    (view as TextView).setTextColor(ContextCompat.getColor(this@InitialSetupActivity, R.color.black1))
                 }
             }
+
         }
+
 
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)

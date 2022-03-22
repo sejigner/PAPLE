@@ -112,7 +112,7 @@
         android:id="@+id/iv_input_box"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/bg_number_input"
+        android:background="@drawable/bg_edit_text_input"
         app:layout_constraintBottom_toTopOf="@id/tv_request_otp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="28dp"/>

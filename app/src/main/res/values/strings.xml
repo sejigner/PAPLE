@@ -45,39 +45,37 @@
     <!-- sign_in_activity -->
     <string name="title_phone_number">휴대폰 번호</string>
     <string name="hint_enter_number">로그인 및 회원가입을 위해\n휴대폰 번호를 입력해주세요</string>
-    <string name="send_otp">인증코드 전송</string>
+    <string name="send_otp">인증번호 전송</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
     <string name="phone_auth_info">건전한 환경과 청소년보호법 준수를 위해\nSMS 인증을 시행하고 있어요!</string>
-<<<<<<< HEAD
     <string name="hint_number_format">010–0000–0000</string>
-=======
-    <string name="hint_number_hint">010–0000-0000</string>
->>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
+
 
     <!-- otp_activity -->
     <string name="otp_title">인증번호를 보냈어요!</string>
     <string name="otp_subtitle">잠시 후 휴대전화로 인증번호가 도착합니다 :)</string>
-<<<<<<< HEAD
     <string name="title_otp">인증 번호</string>
     <string name="hint_otp">SMS로 전송된 인증 번호를 입력해주세요.</string>
     <string name="otp_check">로그인 또는 회원가입</string>
     <string name="otp_resend">인증 번호 재요청</string>
-=======
-    <string name="hint_otp">인증 번호</string>
-    <string name="otp_check">로그인 또는 회원가입</string>
-    <string name="otp_time">%1$d초 내 입력</string>
-    <string name="otp_resend">다시 요청하기</string>
-    <string name="otp_body_no_otp">인증 번호가 오지 않아요</string>
->>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
     <string name="otp_failure">인증 요청이 만료되었습니다. 다시 요청해주세요.</string>
     <!-- splash_congrats_activity -->
     <string name="splash_congrats">초 후 메인홈으로 이동</string>
 
     <!-- initial_setup_activity -->
     <string name="initial_title">프로필 입력</string>
-    <string name="initial_guidance">닉네임을 제외한 개인정보는 노출되지 않습니다.\n개인정보는 안전하게 보관되며,\n동의없이 무단으로 활용되지 않습니다.</string>
+    <string name="request_info">여러분을 간략히 소개해주세요!</string>
+    <string name="initial_warning"> (이후 수정 불가)</string>
+    <string name="initial_guidance">* 닉네임을 제외한 개인정보는 노출되지 않습니다.\n개인정보는 안전하게 보관되며, 동의없이 무단으로 활용되지 않습니다.</string>
+    <string name="initial_nickname_hint">사용하실 닉네임을 입력해주세요</string>
     <string name="initial_nickname">닉네임</string>
+    <string name="initial_birth_year_hint">0000 년도</string>
     <string name="initial_start">시작하기</string>
+    <string-array name="gender_array">
+        <item>성별을 선택해주세요</item>
+        <item>여성</item>
+        <item>남성</item>
+    </string-array>
     <!-- HomeFragment -->
     <string name="send_paper">비행기를 날릴래요!</string>
     <string name="advice_home_write">내 이야기를 들어줄 사람이 필요한데\n옆에 아무도 없을 때,\n\n털어놓고 싶은 이야기가 있는데\n지인에게는 할 수 없을 때,\n\n종이비행기에 적어 날려보세요.</string>
