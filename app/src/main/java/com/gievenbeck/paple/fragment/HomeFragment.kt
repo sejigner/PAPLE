@@ -285,22 +285,21 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
         geoQuery.removeAllListeners()
 
         geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
-            override fun onKeyEntered(key: String?, location: GeoLocation?) {
+            override fun onKeyEntered(key: String, location: GeoLocation) {
                 runBlocking {
                     Log.d("geoQuery", key.toString())
                     if ((!userFound) && key != uid) {
                         // Room DB로 대체
-                        val haveMet: Boolean = viewModel.haveMet(uid, key!!).await()
+                        val haveMet: Boolean = viewModel.haveMet(uid, key).await()
                         if (haveMet) {
                             // user exists in the database
                             Log.d(TAG, "전에 만난 적이 있는 유저를 만났습니다. $key")
                         } else {
                             // user does not exist in the database
                             userFound = true
-
                             foundUserId = key
                             val userFoundLocation =
-                                GeoLocation(location!!.latitude, location.longitude)
+                                GeoLocation(location.latitude, location.longitude)
 
                             calDistance(userFoundLocation)
 
@@ -310,10 +309,11 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
                 }
             }
 
-            override fun onKeyExited(key: String?) {
+            override fun onKeyExited(key: String) {
+
             }
 
-            override fun onKeyMoved(key: String?, location: GeoLocation?) {
+            override fun onKeyMoved(key: String, location: GeoLocation) {
 
             }
 
@@ -329,7 +329,7 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
                 }
             }
 
-            override fun onGeoQueryError(error: DatabaseError?) {
+            override fun onGeoQueryError(error: DatabaseError) {
 
             }
         })
