@@ -39,7 +39,7 @@
             android:includeFontPadding="false"
             android:padding="24sp"
             android:text="@string/report_bottom_sheet"
-            android:textColor="@color/black"
+            android:textColor="@color/black1"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/tv_finish_bottom_sheet" />
 

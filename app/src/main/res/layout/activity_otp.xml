@@ -11,58 +11,132 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_title_otp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/iv_title_otp"
+        android:layout_width="143dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
+<<<<<<< HEAD
+        android:layout_marginTop="12dp"
+=======
         android:layout_marginTop="20dp"
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
+        android:src="@drawable/bg_logo"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
-        android:text="@string/otp_title"
         android:textAppearance="@style/otp_title"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back_otp" />
 
+<<<<<<< HEAD
     <TextView
-        android:id="@+id/tv_subtitle_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/black2"
+        android:text="@string/title_phone_number"
+        app:layout_constraintBottom_toTopOf="@id/iv_phone_number"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_number_input"
+        app:layout_constraintBottom_toTopOf="@id/tv_title_otp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="28dp"/>
+
+    <TextView
+        android:id="@+id/tv_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textColor="@color/black2"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
-        android:text="@string/otp_subtitle"
-        android:textAppearance="@style/otp_subtitle"
+        android:inputType="number"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/iv_phone_number"
+        app:layout_constraintBottom_toBottomOf="@id/iv_phone_number"
+        app:layout_constraintLeft_toLeftOf="@id/iv_phone_number"
+        app:layout_constraintRight_toRightOf="@id/iv_phone_number" />
+
+
+    <TextView
+        android:id="@+id/tv_title_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_otp"
+        app:layout_constraintBottom_toTopOf="@id/iv_input_box_otp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title_otp" />
+        android:textColor="@color/black1"
+        android:layout_marginBottom="12dp"/>
+=======
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
 
 
-    <!--We will use it to enter OTP after we receive OTP-->
+    <ImageView
+        android:id="@+id/iv_input_box_otp"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_number_input"
+        app:layout_constraintBottom_toTopOf="@id/tv_request_resend"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="28dp"/>
+
     <EditText
         android:id="@+id/et_otp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:hint="@string/hint_otp"
+        android:background="@null"
+        android:textColor="@color/black2"
         android:includeFontPadding="false"
         android:inputType="number"
-        android:textSize="24sp"
+<<<<<<< HEAD
+        android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/cl_otp_check_outer"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle_otp" />
+        app:layout_constraintTop_toTopOf="@id/iv_input_box_otp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_input_box_otp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_input_box_otp"
+        app:layout_constraintRight_toRightOf="@id/iv_input_box_otp" />
 
     <TextView
-        android:id="@+id/tv_no_otp"
+        android:id="@+id/tv_request_resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="33dp"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
+        android:background="@drawable/ic_no_otp"
+        android:text="@string/otp_resend"
+        android:textColor="@color/black2"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_otp_confirm"
+        app:layout_constraintEnd_toEndOf="parent" />
+=======
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tv_request_resend"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_request_resend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
@@ -72,24 +146,11 @@
         android:includeFontPadding="false"
         android:text="@string/otp_body_no_otp"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/cl_otp_check_outer"
-        app:layout_constraintEnd_toStartOf="@id/tv_request_resend"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_request_resend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="6dp"
-        android:fontFamily="@font/noto_sans_cjk_kr_regular"
-        android:includeFontPadding="false"
-        android:text="@string/otp_resend"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/cl_otp_check_outer"
+        app:layout_constraintBottom_toTopOf="@id/tv_otp_confirm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_no_otp" />
+        app:layout_constraintHorizontal_chainStyle="packed" />
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
+
 
     <TextView
         android:id="@+id/tv_time_left"
@@ -97,47 +158,34 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:textColor="@color/paperplane_theme"
         android:includeFontPadding="false"
         android:text="@string/otp_time"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/et_otp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/et_otp"
+        app:layout_constraintBottom_toBottomOf="@id/et_otp"
+        app:layout_constraintEnd_toEndOf="@id/et_otp" />
     <!--On click of this button final authentication will start-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_otp_check_outer"
-        android:layout_width="match_parent"
-        android:layout_height="112dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-        <!--On click of this buttton OTP will be send to phone-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_otp_check"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+
+        <TextView
+            android:id="@+id/tv_otp_confirm"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:text="@string/otp_check"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginTop="28dp"
-            android:background="@drawable/selector_auth"
+            android:background="@drawable/selector_confirm"
             android:foreground="?android:attr/selectableItemBackground"
+            android:layout_marginBottom="55dp"
+            android:layout_marginHorizontal="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/noto_sans_cjk_kr_regular"
-                android:includeFontPadding="false"
-                android:text="@string/otp_check"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

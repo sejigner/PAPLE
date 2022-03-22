@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="bg">#EDF1F5</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="black">#131313</color>
+    <color name="black1">#131313</color>
+    <color name="black2">#a7a7a7</color>
     <color name="black3">#a7a7a7</color>
     <color name="bg_initialSetting">#E7ECF2</color>
     <color name="bg_chat_log">#EDF1F5</color>

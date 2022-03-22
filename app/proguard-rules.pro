@@ -32,6 +32,10 @@
   *** rewind();
 }
 
+-keep class * extends com.firebase.geofire.** {
+ *;
+}
+
 -keepattributes Signature
 -keepclassmembers class com.gievenbeck.paple.models.** {
       *;

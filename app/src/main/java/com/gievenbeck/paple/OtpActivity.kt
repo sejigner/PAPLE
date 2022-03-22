@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -19,6 +20,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_otp.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedListener {
 
@@ -37,7 +39,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
         fbDatabase = FirebaseDatabase.getInstance()
-        cl_otp_check.isEnabled = false
+        tv_otp_confirm.isEnabled = false
         tv_request_resend.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         loadingDialog = LoadingDialog(this@OtpActivity)
 
@@ -48,7 +50,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         et_otp.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    cl_otp_check.isEnabled = false
+                    tv_otp_confirm.isEnabled = false
                 }
 
             }
@@ -59,7 +61,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    cl_otp_check.isEnabled = true
+                    tv_otp_confirm.isEnabled = true
                 }
             }
         })
@@ -68,8 +70,14 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         var storedVerificationId = intent.getStringExtra("storedVerificationId")
         val phoneNumber = intent.getStringExtra("phoneNumber")
 
+<<<<<<< HEAD
+        tv_phone_number.text = PhoneNumberUtils.formatNumber(phoneNumber, "KR")
+
+            // fill otp and call the on click on button
+=======
         // fill otp and call the on click on button
-        cl_otp_check.setOnClickListener {
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
+        tv_otp_confirm.setOnClickListener {
             val otp = findViewById<EditText>(R.id.et_otp).text.trim().toString()
             if (otp.isNotEmpty()) {
                 val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(
@@ -84,19 +92,19 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
 
         timerTask = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                tv_time_left.text =
-                    getString(R.string.otp_time, millisUntilFinished / 1000.0f.toInt())
+                tv_time_left.text = (millisUntilFinished / 1000.0f.toInt()).toString()
             }
 
             override fun onFinish() {
                 tv_request_resend.isEnabled = true
-                tv_time_left.text = getString(R.string.otp_failure)
+                tv_time_left.text = "만료"
             }
         }
 
         startTimer()
 
         tv_request_resend.setOnClickListener {
+            //핸드폰번호 유효성
             startTimer()
             sendVerificationCode(phoneNumber!!)
             showLoadingDialog()
@@ -142,6 +150,11 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     private fun showLoadingDialog() {
         loadingDialog.show()
     }
@@ -167,7 +180,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
     }
 
     private fun startTimer() {
-        tv_time_left.text = getString(R.string.otp_time, 60)
+        tv_time_left.text = "60"
         tv_request_resend.isEnabled = false
         timerTask.start()
     }

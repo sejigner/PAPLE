@@ -7,7 +7,7 @@
     <string name="suggest_permission_grant_in_app">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!</string>
     <string name="suggest_permission_grant_in_setting">비행기를 날리시려면\n위치정보 접근 권한을 허용해주세요!\n[설정 -> 개인정보 보호 탭 -> 권한]</string>
     <!-- splash -->
-    <string name="subtitle_splash">우리끼리 날리는 종이비행기</string>
+    <string name="subtitle_splash">가장 가까운 곳으로 날아가는 종이비행기</string>
     <string name="congrats_splash">가입이 완료되었습니다!\n비행기를 날려보세요!</string>
     <!-- menu -->
     <string name="user_info">개인정보</string>
@@ -43,19 +43,32 @@
     <string name="rule_3_body_guide">다른 사용자와 비행기를 주고받을 때에 두 사람 간의 거리가 공개되오니 섣불리 개인 정보를 묻거나 알리지 않는 것이 좋습니다.</string>
     <string name="confirm_guide">확인했어요!</string>
     <!-- sign_in_activity -->
-    <string name="hint_enter_number">전화번호를 입력해주세요</string>
-    <string name="send_otp">인증코드 요청하기</string>
+    <string name="title_phone_number">휴대폰 번호</string>
+    <string name="hint_enter_number">로그인 및 회원가입을 위해\n휴대폰 번호를 입력해주세요</string>
+    <string name="send_otp">인증코드 전송</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
-    <string name="phone_auth_info">건전한 환경을 위해\n청소년 보호법을 준수하여 SMS 인증을 시행하고 있어요!\n전화번호는 사용자 인증 및 로그인 용도로만 사용됩니다.</string>
+    <string name="phone_auth_info">건전한 환경과 청소년보호법 준수를 위해\nSMS 인증을 시행하고 있어요!</string>
+<<<<<<< HEAD
+    <string name="hint_number_format">010–0000–0000</string>
+=======
+    <string name="hint_number_hint">010–0000-0000</string>
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
 
     <!-- otp_activity -->
     <string name="otp_title">인증번호를 보냈어요!</string>
     <string name="otp_subtitle">잠시 후 휴대전화로 인증번호가 도착합니다 :)</string>
+<<<<<<< HEAD
+    <string name="title_otp">인증 번호</string>
+    <string name="hint_otp">SMS로 전송된 인증 번호를 입력해주세요.</string>
+    <string name="otp_check">로그인 또는 회원가입</string>
+    <string name="otp_resend">인증 번호 재요청</string>
+=======
     <string name="hint_otp">인증 번호</string>
-    <string name="otp_check">인증 번호 확인</string>
+    <string name="otp_check">로그인 또는 회원가입</string>
     <string name="otp_time">%1$d초 내 입력</string>
     <string name="otp_resend">다시 요청하기</string>
     <string name="otp_body_no_otp">인증 번호가 오지 않아요</string>
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
     <string name="otp_failure">인증 요청이 만료되었습니다. 다시 요청해주세요.</string>
     <!-- splash_congrats_activity -->
     <string name="splash_congrats">초 후 메인홈으로 이동</string>

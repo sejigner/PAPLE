@@ -25,7 +25,7 @@
         android:includeFontPadding="false"
         android:letterSpacing="-0.03"
         android:text="@string/setting"
-        android:textColor="@color/black"
+        android:textColor="@color/black1"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/setting_notification"
-            android:textColor="@color/black"
+            android:textColor="@color/black1"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +85,7 @@
         android:includeFontPadding="false"
         android:paddingVertical="20dp"
         android:text="@string/sign_out"
-        android:textColor="@color/black"
+        android:textColor="@color/black1"
         app:layout_constraintTop_toBottomOf="@id/cl_notification_setting" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

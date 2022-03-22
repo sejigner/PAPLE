@@ -608,7 +608,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
 
             val messageList = viewModel.allChatMessagesForReport(UID, partnerUid!!).await()
             val reportRef =
-                fbDatabase?.getReference("/ReportStorage/Chat/$countryCode/$UID/$partnerUid")
+                fbDatabase?.getReference("/Report-Storage/Chat/$countryCode/$UID/$partnerUid")
             reportRef?.setValue(messageList)?.addOnSuccessListener {
                 uploadReportImage(getScreenShotFromView(window.decorView.rootView))
                 Toast.makeText(
@@ -619,7 +619,7 @@ class ChatLogActivity : AppCompatActivity(), ChatBottomSheet.BottomSheetChatLogI
                 Log.d("Report", "신고가 접수되었어요")
                 leaveChatRoom()
             }?.addOnFailureListener {
-                Log.d("ReportChatLog", "Report 실패")
+                Log.d("ReportChatLog", "Report 실패 ${it.message}")
                 Toast.makeText(
                     this@ChatLogActivity,
                     "접수에 문제가 발생하였습니다. 관리자에게 연락주시면 빠르게 처리해드리겠습니다.",

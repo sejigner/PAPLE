@@ -109,7 +109,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                     tv_initial_birth_year.setTextColor(
                         ContextCompat.getColor(
                             applicationContext,
-                            R.color.black
+                            R.color.black1
                         )
                     )
                     Log.d("InitialSetupActivity", "User's birthday's been set as $newVal")
@@ -130,7 +130,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                     tv_initial_gender.setTextColor(
                         ContextCompat.getColor(
                             applicationContext,
-                            R.color.black
+                            R.color.black1
                         )
                     )
                 }
@@ -141,7 +141,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                     tv_initial_gender.setTextColor(
                         ContextCompat.getColor(
                             applicationContext,
-                            R.color.black
+                            R.color.black1
                         )
                     )
                 }

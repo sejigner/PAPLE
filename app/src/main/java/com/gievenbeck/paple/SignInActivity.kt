@@ -6,6 +6,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,8 +19,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.android.synthetic.main.activity_otp.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 
 class SignInActivity : AppCompatActivity() {
@@ -39,15 +42,19 @@ class SignInActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
-        cl_request_otp.isEnabled = false
+        tv_request_otp.isEnabled = false
         loadingDialog = LoadingDialog(this@SignInActivity)
 
 
         // start verification on click of the button
-        cl_request_otp.setOnClickListener {
+        tv_request_otp.setOnClickListener {
             if (isOnline) {
-                signIn()
-                showLoadingDialog()
+                if (!Pattern.matches("^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$", et_phone_number.text)) {
+                    Toast.makeText(this, "전화번호 형식에 맞춰 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                } else {
+                    signIn()
+                    showLoadingDialog()
+                }
             } else {
                 Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show()
             }
@@ -93,10 +100,12 @@ class SignInActivity : AppCompatActivity() {
             }
         }
 
+        et_phone_number.addTextChangedListener(PhoneNumberFormattingTextWatcher())
+
         et_phone_number.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    cl_request_otp.isEnabled = false
+                    tv_request_otp.isEnabled = false
                 }
 
             }
@@ -107,7 +116,7 @@ class SignInActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    cl_request_otp.isEnabled = true
+                    tv_request_otp.isEnabled = true
                 }
             }
         })
@@ -160,6 +169,7 @@ class SignInActivity : AppCompatActivity() {
 
         // get the phone number from edit text and append the country cde with it
         if (phoneNumber.isNotEmpty()) {
+            phoneNumber.replace("[^0-9]","")
             phoneNumber = "+82$phoneNumber"
             sendVerificationCode(phoneNumber)
             Log.d("Verification", "Number inserted $phoneNumber")
