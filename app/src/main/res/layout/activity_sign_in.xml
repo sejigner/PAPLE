@@ -91,7 +91,11 @@
         android:ems="10"
         android:textSize="14sp"
         android:textColor="@color/black1"
+<<<<<<< HEAD
         android:hint="@string/hint_number_format"
+=======
+        android:hint="@string/hint_number_hint"
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
         android:inputType="phone"

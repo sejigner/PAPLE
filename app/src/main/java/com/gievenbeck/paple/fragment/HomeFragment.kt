@@ -294,7 +294,6 @@ class FragmentHome : Fragment(), AlertDialogChildFragment.OnConfirmedListener {
             override fun onKeyEntered(key: String, location: GeoLocation) {
                 runBlocking {
                     if ((!userFound) && key != uid) {
-
                         val haveMet: Boolean = viewModel.haveMet(uid, key).await()
                         if (!haveMet) {
                             userFound = true

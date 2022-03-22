@@ -48,15 +48,27 @@
     <string name="send_otp">인증코드 전송</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
     <string name="phone_auth_info">건전한 환경과 청소년보호법 준수를 위해\nSMS 인증을 시행하고 있어요!</string>
+<<<<<<< HEAD
     <string name="hint_number_format">010–0000–0000</string>
+=======
+    <string name="hint_number_hint">010–0000-0000</string>
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
 
     <!-- otp_activity -->
     <string name="otp_title">인증번호를 보냈어요!</string>
     <string name="otp_subtitle">잠시 후 휴대전화로 인증번호가 도착합니다 :)</string>
+<<<<<<< HEAD
     <string name="title_otp">인증 번호</string>
     <string name="hint_otp">SMS로 전송된 인증 번호를 입력해주세요.</string>
     <string name="otp_check">로그인 또는 회원가입</string>
     <string name="otp_resend">인증 번호 재요청</string>
+=======
+    <string name="hint_otp">인증 번호</string>
+    <string name="otp_check">로그인 또는 회원가입</string>
+    <string name="otp_time">%1$d초 내 입력</string>
+    <string name="otp_resend">다시 요청하기</string>
+    <string name="otp_body_no_otp">인증 번호가 오지 않아요</string>
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
     <string name="otp_failure">인증 요청이 만료되었습니다. 다시 요청해주세요.</string>
     <!-- splash_congrats_activity -->
     <string name="splash_congrats">초 후 메인홈으로 이동</string>

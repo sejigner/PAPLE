@@ -16,6 +16,7 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_guide_round_box.xml" value="0.24583333333333332" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_half_rounded_corner.xml" value="0.24114583333333334" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_logo.xml" value="0.2175" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_number_input.xml" value="0.306" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_paper.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button.xml" value="0.2375" />
         <entry key="..\:/Develop/Closest/app/src/main/res/drawable/bg_round_button_theme_color.xml" value="0.2375" />
@@ -67,11 +68,19 @@
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_initial_setup.xml" value="0.25" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_new_sign_in.xml" value="0.25" />
+<<<<<<< HEAD
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_setting.xml" value="0.18489583333333334" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_in.xml" value="0.264" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.2" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.2328125" />
+=======
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_otp.xml" value="0.25" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_setting.xml" value="0.18489583333333334" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_in.xml" value="0.18" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_sign_out.xml" value="0.2" />
+        <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash.xml" value="0.2" />
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/activity_splash_congrats.xml" value="0.152" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date.xml" value="0.18237704918032788" />
         <entry key="..\:/Develop/Closest/app/src/main/res/layout/chat_date_row.xml" value="0.23453947368421052" />

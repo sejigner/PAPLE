@@ -21,7 +21,11 @@
         android:layout_width="143dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
+<<<<<<< HEAD
         android:layout_marginTop="12dp"
+=======
+        android:layout_marginTop="20dp"
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
         android:src="@drawable/bg_logo"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
@@ -30,6 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back_otp" />
 
+<<<<<<< HEAD
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,6 +82,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="@color/black1"
         android:layout_marginBottom="12dp"/>
+=======
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
 
 
     <ImageView
@@ -99,6 +106,7 @@
         android:textColor="@color/black2"
         android:includeFontPadding="false"
         android:inputType="number"
+<<<<<<< HEAD
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="@id/iv_input_box_otp"
@@ -120,6 +128,28 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/tv_otp_confirm"
         app:layout_constraintEnd_toEndOf="parent" />
+=======
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tv_request_resend"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_request_resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/noto_sans_cjk_kr_regular"
+        android:includeFontPadding="false"
+        android:text="@string/otp_body_no_otp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/tv_otp_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed" />
+>>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
 
 
     <TextView
