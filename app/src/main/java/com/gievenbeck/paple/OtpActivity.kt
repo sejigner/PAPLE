@@ -37,7 +37,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         auth = FirebaseAuth.getInstance()
         auth.setLanguageCode("kr")
         fbDatabase = FirebaseDatabase.getInstance()
-        cl_otp_check.isEnabled = false
+        tv_otp_confirm.isEnabled = false
         tv_request_resend.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         loadingDialog = LoadingDialog(this@OtpActivity)
 
@@ -48,7 +48,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         et_otp.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim { it <= ' ' }.isEmpty()) {
-                    cl_otp_check.isEnabled = false
+                    tv_otp_confirm.isEnabled = false
                 }
 
             }
@@ -59,7 +59,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0.toString().trim { it <= ' ' }.isNotEmpty()) {
-                    cl_otp_check.isEnabled = true
+                    tv_otp_confirm.isEnabled = true
                 }
             }
         })
@@ -69,7 +69,7 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         val phoneNumber = intent.getStringExtra("phoneNumber")
 
         // fill otp and call the on click on button
-        cl_otp_check.setOnClickListener {
+        tv_otp_confirm.setOnClickListener {
             val otp = findViewById<EditText>(R.id.et_otp).text.trim().toString()
             if (otp.isNotEmpty()) {
                 val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(

@@ -54,7 +54,7 @@
     <string name="otp_title">인증번호를 보냈어요!</string>
     <string name="otp_subtitle">잠시 후 휴대전화로 인증번호가 도착합니다 :)</string>
     <string name="hint_otp">인증 번호</string>
-    <string name="otp_check">인증 번호 확인</string>
+    <string name="otp_check">로그인 또는 회원가입</string>
     <string name="otp_time">%1$d초 내 입력</string>
     <string name="otp_resend">다시 요청하기</string>
     <string name="otp_body_no_otp">인증 번호가 오지 않아요</string>
