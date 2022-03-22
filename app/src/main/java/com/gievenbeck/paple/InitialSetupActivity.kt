@@ -83,37 +83,44 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
             }
         }
 
-        val items= resources.getStringArray(R.array.gender_array)
-        val spinnerAdapter= object : ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, items) {
+        val items = resources.getStringArray(R.array.gender_array)
+        val spinnerAdapter =
+            object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {
 
-            override fun isEnabled(position: Int): Boolean {
-                // Disable the first item from Spinner
-                // First item will be used for hint
-                return position != 0
-            }
-
-            override fun getDropDownView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                val view: TextView = super.getDropDownView(position, convertView, parent) as TextView
-                //set the color of first item in the drop down list to gray
-                if(position == 0) {
-                    view.setTextColor(ContextCompat.getColor(this@InitialSetupActivity, R.color.black2))
-                } else {
-                    //here it is possible to define color for other items by
-                    //view.setTextColor(Color.RED)
+                override fun isEnabled(position: Int): Boolean {
+                    // Disable the first item from Spinner
+                    // First item will be used for hint
+                    return position != 0
                 }
-                return view
-            }
 
-        }
+                override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                ): View {
+                    val view: TextView =
+                        super.getDropDownView(position, convertView, parent) as TextView
+                    //set the color of first item in the drop down list to gray
+                    if (position == 0) {
+                        view.setTextColor(
+                            ContextCompat.getColor(
+                                this@InitialSetupActivity,
+                                R.color.black2
+                            )
+                        )
+                    } else {
+                        //here it is possible to define color for other items by
+                        //view.setTextColor(Color.RED)
+                    }
+                    return view
+                }
+
+            }
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner_gender.adapter = spinnerAdapter
 
-        spinner_gender.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+        spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
