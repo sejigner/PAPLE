@@ -69,14 +69,8 @@ class OtpActivity : AppCompatActivity(), SuspendAlertDialogFragment.OnConfirmedL
         // get storedVerificationId from the intent
         var storedVerificationId = intent.getStringExtra("storedVerificationId")
         val phoneNumber = intent.getStringExtra("phoneNumber")
-
-<<<<<<< HEAD
         tv_phone_number.text = PhoneNumberUtils.formatNumber(phoneNumber, "KR")
 
-            // fill otp and call the on click on button
-=======
-        // fill otp and call the on click on button
->>>>>>> da8ac1ff3a11c62ba4825496f0042d8a6b1b75d7
         tv_otp_confirm.setOnClickListener {
             val otp = findViewById<EditText>(R.id.et_otp).text.trim().toString()
             if (otp.isNotEmpty()) {
