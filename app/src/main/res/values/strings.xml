@@ -43,10 +43,12 @@
     <string name="rule_3_body_guide">다른 사용자와 비행기를 주고받을 때에 두 사람 간의 거리가 공개되오니 섣불리 개인 정보를 묻거나 알리지 않는 것이 좋습니다.</string>
     <string name="confirm_guide">확인했어요!</string>
     <!-- sign_in_activity -->
-    <string name="hint_enter_number">전화번호를 입력해주세요</string>
+    <string name="title_phone_number">휴대폰 번호</string>
+    <string name="hint_enter_number">로그인 및 회원가입을 위해\n휴대폰 번호를 입력해주세요</string>
     <string name="send_otp">인증코드 전송</string>
     <string name="phone_auth_title">전화번호 인증하기</string>
     <string name="phone_auth_info">건전한 환경과 청소년보호법 준수를 위해\nSMS 인증을 시행하고 있어요!</string>
+    <string name="hint_number_hint">010–0000-0000</string>
 
     <!-- otp_activity -->
     <string name="otp_title">인증번호를 보냈어요!</string>

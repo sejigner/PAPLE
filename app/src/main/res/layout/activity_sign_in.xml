@@ -33,25 +33,78 @@
         app:layout_constraintStart_toStartOf="@id/iv_logo_sign_in"
         app:layout_constraintTop_toBottomOf="@id/iv_logo_sign_in" />
 
-    <!--This will be used to enter the phone number-->
-    <!-- TODO: 상자 안에 EditText 넣고 밑줄 제거, 힌트에 010-0000-0000 -->
+    <TextView
+        android:id="@+id/tv_notice_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="@string/hint_enter_number"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_title_phone_number"
+        android:layout_marginBottom="28dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_notice_phone_number"
+        app:layout_constraintTop_toTopOf="@id/tv_notice_phone_number"
+        app:layout_constraintBottom_toBottomOf="@id/tv_notice_phone_number"
+        android:background="@color/black2"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="34dp"
+        app:layout_constraintStart_toEndOf="@id/tv_notice_phone_number"
+        app:layout_constraintTop_toTopOf="@id/tv_notice_phone_number"
+        app:layout_constraintBottom_toBottomOf="@id/tv_notice_phone_number"
+        android:background="@color/black2"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_title_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_phone_number"
+        android:textSize="14sp"
+        android:textColor="@color/black1"
+        app:layout_constraintBottom_toTopOf="@id/iv_input_box"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="12dp"
+        />
+
     <EditText
         android:id="@+id/et_phone_number"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:ems="10"
-        android:autofillHints="phone"
+        android:textSize="14sp"
+        android:textColor="@color/black1"
+        android:hint="@string/hint_number_hint"
         android:fontFamily="@font/noto_sans_cjk_kr_regular"
         android:includeFontPadding="false"
         android:inputType="phone"
         android:textAppearance="@style/phone_auth_et"
-        app:layout_constraintBottom_toTopOf="@id/tv_request_otp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle_sign_in" />
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="@id/iv_input_box"
+        app:layout_constraintBottom_toBottomOf="@id/iv_input_box"
+        app:layout_constraintStart_toStartOf="@id/iv_input_box"
+        app:layout_constraintEnd_toEndOf="@id/iv_input_box"
+        />
 
     <ImageView
+        android:id="@+id/iv_input_box"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:background="@drawable/bg_number_input"
