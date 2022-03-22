@@ -133,8 +133,21 @@
         android:layout_height="20dp"
         android:layout_marginEnd="20dp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/iv_nickname_box"
         app:layout_constraintTop_toBottomOf="@id/iv_nickname_box" />
+
+    <TextView
+        android:id="@+id/tv_validate_birth_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/initial_invalid_birth_year"
+        app:layout_constraintTop_toBottomOf="@id/iv_birth_year_box"
+        android:textColor="@color/txt_red"
+        app:layout_constraintStart_toStartOf="@id/iv_birth_year_box"/>
+
+
+
 
     <TextView
         android:id="@+id/tv_gender"

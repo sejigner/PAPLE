@@ -68,7 +68,10 @@
     <string name="initial_warning"> (이후 수정 불가)</string>
     <string name="initial_guidance">* 닉네임을 제외한 개인정보는 노출되지 않습니다.\n개인정보는 안전하게 보관되며, 동의없이 무단으로 활용되지 않습니다.</string>
     <string name="initial_nickname_hint">사용하실 닉네임을 입력해주세요</string>
+    <string name="initial_duplicated_nickname">중복되는 닉네임입니다</string>
     <string name="initial_nickname">닉네임</string>
+    <string name="initial_birth_year">태어난 해</string>
+    <string name="initial_invalid_birth_year">14세 이상만 이용할 수 있어요</string>
     <string name="initial_birth_year_hint">0000 년도</string>
     <string name="initial_start">시작하기</string>
     <string-array name="gender_array">

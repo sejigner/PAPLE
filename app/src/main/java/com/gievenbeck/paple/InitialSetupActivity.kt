@@ -2,6 +2,8 @@ package com.gievenbeck.paple
 
 import android.app.Service
 import android.content.Intent
+import android.icu.util.LocaleData
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -31,6 +33,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_initial_setup.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import java.util.regex.Pattern
 
@@ -41,8 +45,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
     private var isDuplicated: Boolean = false
     private var uid: String? = null
     private var lastTimePressed = 0L
-    private val date: Calendar = Calendar.getInstance()
-    private val year = date.get(Calendar.YEAR)
     private var userInfo = Users()
     lateinit var inputMethodManager: InputMethodManager
     lateinit var viewModel: FragmentChatViewModel
@@ -122,8 +124,13 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                 id: Long
             ) {
                 val value = parent!!.getItemAtPosition(position).toString()
-                if(value == items[0]){
-                    (view as TextView).setTextColor(ContextCompat.getColor(this@InitialSetupActivity, R.color.black1))
+                if (value == items[0]) {
+                    (view as TextView).setTextColor(
+                        ContextCompat.getColor(
+                            this@InitialSetupActivity,
+                            R.color.black1
+                        )
+                    )
                 }
             }
 
@@ -132,8 +139,9 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         // 닉네임 입력 감지 리스너
         et_nickname.addTextChangedListener(textWatcherNickname)
+        et_birth_year.addTextChangedListener(textWatcherBirthYear)
 
-        cl_initial_start.setOnClickListener {
+        tv_initial_start.setOnClickListener {
             if ((userInfo.nickname.isNullOrEmpty() || userInfo.birthYear.isNullOrEmpty() || userInfo.gender.isNullOrEmpty()))
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             else {
@@ -195,7 +203,6 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         }
 
         override fun afterTextChanged(s: Editable?) {
-            // TODO : 입력 딜레이 시키기
             duplication_check_progress_bar.visibility = View.VISIBLE
             timer.cancel()
             timer = Timer()
@@ -250,8 +257,39 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
         }
     }
 
-    private fun hideKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(et_nickname.windowToken, 0)
+    private val textWatcherBirthYear = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            tv_validate_birth_year.visibility = View.GONE
+            if (s != null && s.toString().isNotEmpty()) {
+                val formattedBirthYear = "$s 년도"
+                et_birth_year.setText(formattedBirthYear)
+                if (s.length == 4) {
+                    if (validateAge(s.toString())) {
+                        userInfo.birthYear = s.toString()
+                    } else {
+                        tv_validate_birth_year.visibility = View.VISIBLE
+                        userInfo.birthYear = ""
+                    }
+                }
+            }
+        }
+    }
+
+    private fun validateAge(birthYear: String): Boolean {
+        val cal: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate.now().year - birthYear.toInt()
+        } else {
+            Calendar.YEAR - birthYear.toInt()
+        }
+        return cal + 1 >= 14
     }
 
     private fun initFcmToken() {
