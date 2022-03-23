@@ -122,6 +122,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
 
         spinner_gender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
+                userInfo.gender = ""
             }
 
             override fun onItemSelected(
@@ -138,6 +139,7 @@ class InitialSetupActivity : AppCompatActivity(), AlertDialogFragment.OnConfirme
                             R.color.black1
                         )
                     )
+                    userInfo.gender = value
                 }
             }
 
